@@ -1,7 +1,7 @@
 import { useI18n } from "vue-i18n";
 
 const fields = () => {
-    const url = "lead-status?fields=id,xid,name,color";
+    const url = "lead-status?fields=id,xid,name,color,type";
     const addEditUrl = "lead-status";
     const { t } = useI18n();
 
@@ -19,10 +19,14 @@ const fields = () => {
             title: t("lead_status.name"),
             dataIndex: "name",
         },
-        // {
-        //     title: t("lead_status.color"),
-        //     dataIndex: "color",
-        // },
+        {
+            title: t("lead_status.color"),
+            dataIndex: "color",
+        },
+        {
+            title: t("lead_status.type"),
+            dataIndex: "type",
+        },
         {
             title: t("common.action"),
             dataIndex: "action",

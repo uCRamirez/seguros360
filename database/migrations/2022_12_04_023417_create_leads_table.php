@@ -76,7 +76,7 @@ return new class extends Migration
             $table->longText('lead_data')->nullable();
             $table->longText('lead_data_json')->nullable();
 
-            $table->boolean('started')->default(false);
+            $table->boolean('started')->default(true);
 
             // Legacy status
             $table->unsignedBigInteger('lead_status')->nullable();

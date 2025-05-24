@@ -294,7 +294,7 @@ export default {
                         successMessage: t("campaign.new_lead_added"),
                         success: (res) => {
                             router.push({
-                                name: "admin.formsUCB.CRM",
+                                name: "admin.formsUCB.Correspondencia",
                                 params: { id: res.x_lead_id },
                             });
                         },

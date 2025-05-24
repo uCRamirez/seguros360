@@ -103,8 +103,32 @@
                             >
                                 {{ category.name }}
                             </a-select-option>
-                        </a-select></a-col
-                    >
+                        </a-select>
+                    </a-col>
+                    <a-col :xs="24" :sm="24" :md="8" :lg="8" :xl="6">
+                        <a-select
+                            v-model:value="filters.campaign_id"
+                            :placeholder="
+                                $t('common.select_default_text', [
+                                    $t('product.campaign'),
+                                ])
+                            "
+                            :allowClear="true"
+                            style="width: 100%"
+                            optionFilterProp="title"
+                            show-search
+                            @change="setUrlData"
+                        >
+                            <a-select-option
+                                v-for="campaign in allCampaigns"
+                                :key="campaign.xid"
+                                :title="campaign.name"
+                                :value="campaign.xid"
+                            >
+                                {{ campaign.name }}
+                            </a-select-option>
+                        </a-select>
+                    </a-col>
                 </a-row>
             </a-col>
         </a-row>
@@ -118,6 +142,7 @@
             @addEditSuccess="addEditSuccess"
             @closed="onCloseAddEdit"
             :formData="formData"
+            :campaigns="allCampaigns"
             :data="viewData"
             :pageTitle="pageTitle"
             :successMessage="successMessage"
@@ -151,6 +176,9 @@
                             </template>
                             <template v-if="column.dataIndex === 'category_id'">
                                 {{ record.categories?.name }}
+                            </template>
+                            <template v-if="column.dataIndex === 'campaign_id'">
+                                {{ record.campaigns?.name }}
                             </template>
                             <template
                                 v-if="column.dataIndex === 'product_type'"
@@ -203,7 +231,7 @@
 </template>
 
 <script>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 import {
     PlusOutlined,
     EditOutlined,
@@ -235,6 +263,8 @@ export default {
             columns,
             filterableColumns,
             hashableColumns,
+            getPrefetchData,
+            allCampaigns,
         } = fields();
 
         const { t } = useI18n();
@@ -243,10 +273,12 @@ export default {
         const categories = ref([]);
         const filters = ref({
             category_id: undefined,
+            campaign_id: undefined,
         });
 
         onMounted(() => {
             setUrlData();
+            getPrefetchData();
         });
 
         const setUrlData = () => {
@@ -283,6 +315,7 @@ export default {
             setUrlData,
 
             filters,
+            allCampaigns,
             categories,
             sampleFileUrl,
         };

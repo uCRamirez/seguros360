@@ -2,8 +2,9 @@
     <div class="right-sidebar" :style="{
         borderLeft: themeMode == 'dark' ? '1px solid #303030' : '1px solid #f0f0f0',
     }">
-        <iframe src="https://desarrollocr.ucontactcloud.com/uphone/" width="100%" frameborder="0" scrolling="no"
-            allow="camera;microphone" id="ucontact" ref="iframe" @load="onIframeLoad" style="height: 100vh"></iframe>
+        <!-- iframe de sofphone de ucontact -->
+        <!-- <iframe src="https://desarrollocr.ucontactcloud.com/uphone/" width="100%" frameborder="0" scrolling="no"
+            allow="camera;microphone" id="ucontact" ref="iframe" @load="onIframeLoad" style="height: 100vh"></iframe> -->
     </div>
 </template>
 <script>

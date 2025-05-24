@@ -26,6 +26,7 @@ class StoreRequest extends BaseRequest
         $rules = [
             'name' => 'required',
             'product_type' => 'required',
+            'campaign_id' => 'required',
             'price' => 'required|numeric',
             'internal_code' => 'required',
             'category_id' => 'required',

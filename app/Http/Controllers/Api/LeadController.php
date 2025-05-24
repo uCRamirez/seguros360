@@ -19,6 +19,7 @@ use App\Models\Campaign;
 use App\Models\CampaignUser;
 use App\Models\EmailProvider;
 use App\Models\Lead;
+use App\Models\LeadAux;
 use App\Models\User;
 use App\Models\LeadLog;
 use App\Models\MessageProvider;
@@ -103,6 +104,8 @@ class LeadController extends ApiBaseController
     {
 
         $user = user();
+        // \Log::info('createLead', ['data' => $request]);
+
 
         if (!$user->ability('admin', 'leads_create')) {
             throw new ApiException("Not Allowed");
@@ -139,10 +142,24 @@ class LeadController extends ApiBaseController
         $lead->lead_data = $request->lead_data;
         $lead->created_by = $loggedUser->id;
         $lead->lead_hash = md5($leadHashString . $campaignId);
+
+        // 5) Mapear campos personales
+        $lead->cedula          = $request['cedula']              ?? $lead->cedula;
+        $lead->nombre          = $request['nombre']              ?? $lead->nombre;
+        $lead->apellido1       = $request['apellido1']           ?? $lead->apellido1;
+        $lead->apellido2       = $request['apellido2']           ?? $lead->apellido2;
+        $lead->tel1            = $request['tel1']                ?? $lead->tel1;
+        $lead->tel2            = $request['tel2']                ?? $lead->tel2;
+        $lead->tel3            = $request['tel3']                ?? $lead->tel3;
+        $lead->tel4            = $request['tel4']                ?? $lead->tel4;
+        $lead->tel5            = $request['tel5']                ?? $lead->tel5;
+        $lead->tel6            = $request['tel6']                ?? $lead->tel6;
+        $lead->email           = $request['email']               ?? $lead->email;
+
         $lead->save();
 
         // Saving Lead Data JSON
-        Common::generateAndSaveLeadData($lead->id);
+        //Common::generateAndSaveLeadData($lead->id);
 
         // Calculating Lead Counts
         Common::recalculateCampaignLeads($campaignId);

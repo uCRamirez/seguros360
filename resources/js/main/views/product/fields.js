@@ -1,14 +1,36 @@
 import { useI18n } from "vue-i18n";
+import common from "../../../common/composable/common";
+import { ref } from "vue";
+
 
 const fields = () => {
     const url =
-        "products?fields=id,xid,name,price,product_type,tax_rate,tax_label,image,image_url,internal_code,category_id,x_category_id,categories{id,xid,name}";
+        "products?fields=id,xid,name,coverage,description,price,campaign_id,x_campaign_id,product_type,tax_rate,tax_label,image,image_url,internal_code,category_id,x_category_id,categories{id,xid,name},campaigns{id,xid,name}";
     const addEditUrl = "products";
     const { t } = useI18n();
-    const hashableColumns = ["category_id"];
+    const hashableColumns = ["category_id", "campaign_id"];
+    const allCampaigns = ref([]);
+    const { getCampaignUrl } = common();
+
+    const getPrefetchData = () => {
+        const campaignsUrl = getCampaignUrl();
+        const campaignsPromise = axiosAdmin.get(campaignsUrl);
+
+        return Promise.all([
+            campaignsPromise,
+        ]).then(
+            ([
+                campaignsResponse,
+            ]) => {
+                allCampaigns.value = campaignsResponse.data;
+            }
+        );
+    };
 
     const initData = {
         name: "",
+        coverage: "",
+        description: "",
         price: "",
         product_type: "product",
         tax_rate: 0,
@@ -17,6 +39,7 @@ const fields = () => {
         image_url: undefined,
         internal_code: "",
         category_id: undefined,
+        campaign_id: undefined,
     };
 
     const columns = [
@@ -33,12 +56,24 @@ const fields = () => {
             dataIndex: "category_id",
         },
         {
+            title: t("product.campaign"),
+            dataIndex: "campaign_id",
+        },
+        {
             title: t("product.product_type"),
             dataIndex: "product_type",
         },
         {
+            title: t("product.internal_code"),
+            dataIndex: "internal_code",
+        },
+        {
             title: t("product.name"),
             dataIndex: "name",
+        },
+        {
+            title: t("product.coverage"),
+            dataIndex: "coverage",
         },
         {
             title: t("product.price"),
@@ -63,9 +98,19 @@ const fields = () => {
             key: "name",
             value: t("common.name"),
         },
+        {
+            key: "coverage",
+            value: t("product.coverage"),
+        },
+        {
+            key: "internal_code",
+            value: t("product.internal_code"),
+        },
     ];
 
     return {
+        getPrefetchData,
+        allCampaigns,
         url,
         addEditUrl,
         initData,

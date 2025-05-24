@@ -32,7 +32,7 @@
                 </a-col>
                 <a-col :xs="24" :sm="24" :md="18" :lg="18">
                     <a-row :gutter="16">
-                        <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                        <a-col :xs="24" :sm="24" :md="12" :lg="12">
                             <a-form-item
                                 :label="$t('product.product_type')"
                                 name="product_type"
@@ -67,6 +67,42 @@
                                         value="service"
                                     >
                                         {{ $t("common.service") }}
+                                    </a-select-option>
+                                </a-select>
+                            </a-form-item>
+                        </a-col>
+                        <a-col :xs="24" :sm="24" :md="12" :lg="12">
+                            <a-form-item
+                                :label="$t('product.campaign')"
+                                name="campaign_id"
+                                :help="
+                                    rules.campaign_id
+                                        ? rules.campaign_id.message
+                                        : null
+                                "
+                                :validateStatus="
+                                    rules.campaign_id ? 'error' : null
+                                "
+                                class="required"
+                            >
+                                <a-select
+                                    v-model:value="formData.campaign_id"
+                                    :placeholder="
+                                        $t('common.select_default_text', [
+                                            $t('product.campaign'),
+                                        ])
+                                    "
+                                    :allowClear="true"
+                                    optionFilterProp="label"
+                                    show-search
+                                >
+                                    <a-select-option
+                                        v-for="campaign in campaigns"
+                                        :key="campaign.xid"
+                                        :value="campaign.xid"
+                                        :label="campaign.name"
+                                    >
+                                        {{ campaign.name }}
                                     </a-select-option>
                                 </a-select>
                             </a-form-item>
@@ -113,6 +149,26 @@
                                         {{ appSetting.currency.symbol }}
                                     </template>
                                 </a-input-number>
+                            </a-form-item>
+                        </a-col>
+                    </a-row>
+                    <a-row :gutter="16">
+                        <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                            <a-form-item
+                                :label="$t('product.coverage')"
+                                name="coverage"
+                                :help="rules.coverage ? rules.coverage.message : null"
+                                :validateStatus="rules.coverage ? 'error' : null"
+                                class="required"
+                            >
+                                <a-input
+                                    v-model:value="formData.coverage"
+                                    :placeholder="
+                                        $t('common.placeholder_default_text', [
+                                            $t('product.coverage'),
+                                        ])
+                                    "
+                                />
                             </a-form-item>
                         </a-col>
                     </a-row>
@@ -279,6 +335,7 @@ import CategoryAddButton from "../categories/AddButton.vue";
 export default defineComponent({
     props: [
         "formData",
+        "campaigns",
         "data",
         "visible",
         "url",

@@ -33,7 +33,7 @@ import AdminPageHeader from "../../../../common/layouts/AdminPageHeader.vue";
 
 const route = useRoute();
 
-const pageTitle = computed(() => route.meta.menuKey || "Formularios UCB");
+const pageTitle = computed(() => route.meta.menuKey || "Formularios");
 
 const formComponent = computed(() => {
     if (route.meta.formPath) {

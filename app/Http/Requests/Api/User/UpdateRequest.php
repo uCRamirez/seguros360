@@ -52,10 +52,10 @@ class UpdateRequest extends BaseRequest
             $rules['role_id'] = 'required';
         }
         
-        if($this->ucontact == 1){
-            $rules['ucontact_user'] = 'required';
-            $rules['ucontact_password'] = 'required';
-        }
+        // if($this->ucontact == 1){
+        //     $rules['ucontact_user'] = 'required';
+        //     $rules['ucontact_password'] = 'required';
+        // }
       
 
         if ($this->password != '') {

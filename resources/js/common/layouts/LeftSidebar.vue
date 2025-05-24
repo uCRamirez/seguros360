@@ -70,7 +70,7 @@
                     <!-- OPCION FORMS UCBUSINESS -->
                     <!-- La variable  formFolders se toma del archivo common.js -->
 
-                    <a-sub-menu key="formsUCB" v-if="formFolders.length">
+                    <a-sub-menu key="formsUCB" v-if="(formFolders.length && permsArray.includes('forms_view')) || permsArray.includes('admin')">
                         <template #title>
                             <span>
                                 <FolderOpenOutlined /><span>{{ $t("menu.forms") }}</span>
@@ -88,6 +88,16 @@
 
                     <!-- FIN OPCION FORMS UCBUSINESS -->
                     <!--#############################-->
+
+                    <LeftSideBarMainHeading  v-if="
+                        permsArray.includes('categories_view') ||
+                        permsArray.includes('admin') ||
+                        ((permsArray.includes('products_view') ||
+                                permsArray.includes('admin')) &&
+                                willSubscriptionModuleVisible('salesman'))
+                        " 
+                        :title="$t('menu.products')" :visible="menuCollapsed" 
+                    />
 
                     <a-menu-item v-if="
                         (permsArray.includes('categories_view') ||
@@ -118,7 +128,7 @@
                         <CopyrightCircleOutlined />
                         <span>{{ $t("menu.products") }}</span>
                     </a-menu-item>
-                    <a-sub-menu key="expense_manager" v-if="
+                    <!-- <a-sub-menu key="expense_manager" v-if="
                         (permsArray.includes('expense_categories_view') ||
                             permsArray.includes('expenses_view') ||
                             permsArray.includes('admin')) &&
@@ -156,7 +166,7 @@
                         ">
                             {{ $t("menu.expenses") }}
                         </a-menu-item>
-                    </a-sub-menu>
+                    </a-sub-menu> -->
 
                     <LeftSideBarMainHeading v-if="
                         permsArray.includes('users_view') ||
@@ -179,7 +189,7 @@
                         <span>{{ $t("menu.staff_members") }}</span>
                     </a-menu-item>
 
-                    <a-sub-menu v-if="
+                    <!-- <a-sub-menu v-if="
                         (permsArray.includes('salesmans_view') ||
                             permsArray.includes('admin')) &&
                         willSubscriptionModuleVisible('salesman')
@@ -212,7 +222,7 @@
                             <ShoppingCartOutlined />
                             <span>{{ $t("menu.salesman_bookings") }}</span>
                         </a-menu-item>
-                    </a-sub-menu>
+                    </a-sub-menu> -->
 
                     <LeftSideBarMainHeading :title="$t('menu.lead_management')" :visible="menuCollapsed" />
 
@@ -281,7 +291,7 @@
                             <span>{{ $t("menu.lead_notes") }}</span>
                         </a-menu-item>
                     </a-sub-menu>
-                    <a-menu-item v-if="willSubscriptionModuleVisible('lead_follow_up')" @click="
+                   <!-- <a-menu-item v-if="willSubscriptionModuleVisible('lead_follow_up')" @click="
                         () => {
                             menuSelected();
                             $router.push({
@@ -292,7 +302,7 @@
                         <ScheduleOutlined />
                         <span>{{ $t("menu.lead_follow_up") }}</span>
                     </a-menu-item>
-                    <a-menu-item v-if="
+                     <a-menu-item v-if="
                         permsArray.includes('uphone_calls_view') ||
                         permsArray.includes('admin')
                     " @click="
@@ -305,7 +315,8 @@
                     " key="uphone_calls">
                         <UnderlineOutlined />
                         <span>{{ $t("menu.uphone_calls") }}</span>
-                    </a-menu-item>
+                    </a-menu-item> -->
+                    
                     <a-menu-item v-if="
                         permsArray.includes('notes_typifications_view') ||
                         permsArray.includes('admin')
@@ -320,9 +331,10 @@
                         <LineHeightOutlined />
                         <span>{{ $t("menu.notes_typifications") }}</span>
                     </a-menu-item>
+
                     <LeftSideBarMainHeading :title="$t('menu.settings')" :visible="menuCollapsed" />
 
-                    <a-menu-item v-if="
+                    <!-- <a-menu-item v-if="
                         permsArray.includes('form_field_names_view') ||
                         permsArray.includes('admin')
                     " @click="
@@ -390,7 +402,7 @@
                     " key="forms">
                         <FolderOpenOutlined />
                         <span>{{ $t("menu.forms") }}</span>
-                    </a-menu-item>
+                    </a-menu-item> -->
 
                     
                     <component v-for="(appModule, index) in appModules" :key="index" v-bind:is="appModule + 'Menu'"

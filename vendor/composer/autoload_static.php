@@ -837,6 +837,7 @@ class ComposerStaticInit8bb40aceb2f9a567968abfbb06df5242
         'App\\Http\\Controllers\\Api\\LeadController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/LeadController.php',
         'App\\Http\\Controllers\\Api\\LeadFollowUpController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/LeadFollowUpController.php',
         'App\\Http\\Controllers\\Api\\LeadLogController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/LeadLogController.php',
+        'App\\Http\\Controllers\\Api\\VentasController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/VentasController.php',
         'App\\Http\\Controllers\\Api\\LeadStatusController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/LeadStatusController.php',
         'App\\Http\\Controllers\\Api\\MessageProviderController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/MessageProviderController.php',
         'App\\Http\\Controllers\\Api\\MessageTemplateController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/MessageTemplateController.php',
@@ -10434,7 +10435,7 @@ class ComposerStaticInit8bb40aceb2f9a567968abfbb06df5242
         'ZipStream\\ZipStream' => __DIR__ . '/..' . '/maennchen/zipstream-php/src/ZipStream.php',
         'ZipStream\\Zs\\ExtendedInformationExtraField' => __DIR__ . '/..' . '/maennchen/zipstream-php/src/Zs/ExtendedInformationExtraField.php',
         'voku\\helper\\ASCII' => __DIR__ . '/..' . '/voku/portable-ascii/src/voku/helper/ASCII.php',
-        '©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
+        'ï¿½' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

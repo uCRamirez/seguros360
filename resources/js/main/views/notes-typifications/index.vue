@@ -23,7 +23,7 @@
                 <a-space>
                     <template
                         v-if="
-                            permsArray.includes('notes_typifications_create') ||
+                            permsArray.includes('notes_typifications_add') ||
                             permsArray.includes('admin')
                         "
                     >

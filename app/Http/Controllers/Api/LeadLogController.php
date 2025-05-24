@@ -25,7 +25,8 @@ class LeadLogController extends ApiBaseController
     {
         $user = user();
         $request = request();
-        // dd($request);
+        // \Log::info('modifyIndexLeadLogController', ['data' => $query]);
+
 
         $query = $query->join('leads', 'leads.id', '=', 'lead_logs.lead_id')
             ->join('campaigns', 'campaigns.id', 'leads.campaign_id');
@@ -99,6 +100,8 @@ class LeadLogController extends ApiBaseController
     {
         $loggedUser = user();
         $request = request();
+        // \Log::info('storing', ['data' => $leadLog]);
+
 
         if ($request->log_type == '' || $request->log_type != 'notes') {
             throw new ApiException("Not Allowed");
@@ -112,6 +115,7 @@ class LeadLogController extends ApiBaseController
 
     public function stored($leadLog)
     {
+        // \Log::info('stored', ['data' => $leadLog]);
         $notesCount = LeadLog::where('lead_id', $leadLog->lead_id)
         ->where('log_type', 'notes')
         ->count();
@@ -124,7 +128,7 @@ class LeadLogController extends ApiBaseController
     public function updating($leadLog)
     {
         $request = request();
-
+        // \Log::info('updating', ['data' => $leadLog]);
         if ($request->has('user_id') || $request->has('date_time') || $request->log_type == '' || $request->log_type != 'notes') {
             throw new ApiException("Not Allowed");
         }

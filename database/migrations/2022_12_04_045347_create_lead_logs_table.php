@@ -15,8 +15,11 @@ return new class extends Migration
     {
         Schema::create('lead_logs', function (Blueprint $table) {
             $table->id();
+            $table->boolean('isSale')->default(false);
             $table->bigInteger('company_id')->unsigned()->nullable()->default(null);
             $table->foreign('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('cascade');
+            $table->bigInteger('campaign_id')->unsigned()->nullable()->default(null);
+            $table->foreign('campaign_id')->references('id')->on('campaigns')->onUpdate('cascade')->onDelete('cascade');
             $table->bigInteger('lead_id')->unsigned()->nullable()->default(null);
             $table->foreign('lead_id')->references('id')->on('leads')->onUpdate('cascade')->onDelete('cascade');
             $table->string('log_type', 20)->default('call_log');  // ['call_log', 'notes', 'lead_follow_up', 'eamil', 'salesman_booking', 'sms']

@@ -134,6 +134,10 @@ class PermsSeed
         ],
 
         // Forms
+        'formsUCB_view' => [
+            'name' => 'formsUCB_view',
+            'display_name' => 'formsUCB'
+        ],
         'forms_view' => [
             'name' => 'forms_view',
             'display_name' => 'form View'
@@ -154,6 +158,25 @@ class PermsSeed
             'name' => 'forms_delete',
             'display_name' => 'Forms Delete'
         ],
+
+            // Localidades
+        'localidades_view' => [
+            'name'         => 'localidades_view',
+            'display_name' => 'Localidades View',
+        ],
+        'localidades_create' => [
+            'name'         => 'localidades_create',
+            'display_name' => 'Localidades Create',
+        ],
+        'localidades_edit' => [
+            'name'         => 'localidades_edit',
+            'display_name' => 'Localidades Edit',
+        ],
+        'localidades_delete' => [
+            'name'         => 'localidades_delete',
+            'display_name' => 'Localidades Delete',
+        ],
+
 
         // Lead Table Fields
         'form_field_names_view' => [
@@ -368,6 +391,59 @@ class PermsSeed
             'name' => 'email_providers_delete',
             'display_name' => 'Email Providers Delete'
         ],
+
+        // Localidades
+        'audits_view' => [
+            'name'         => 'audits_view',
+            'display_name' => 'Audits View',
+        ],
+        'password_settings_view' => [
+            'name'         => 'password_settings_view',
+            'display_name' => 'Password Settings View',
+        ],
+        'password_settings_edit' => [
+            'name'         => 'password_settings_edit',
+            'display_name' => 'Password Settings Edit',
+        ],
+
+        // tipificaciones
+        'notes_typifications_view' => [
+            'name'         => 'notes_typifications_view',
+            'display_name' => 'Notes typifications View',
+        ],
+        'notes_typifications_add' => [
+            'name'         => 'notes_typifications_add',
+            'display_name' => 'Notes typifications Add',
+        ],
+        'notes_typifications_edit' => [
+            'name'         => 'notes_typifications_edit',
+            'display_name' => 'Notes typifications Edit',
+        ],
+        'notes_typifications_delete' => [
+            'name'         => 'notes_typifications_delete',
+            'display_name' => 'Notes typifications Delete',
+        ],
+
+        // lead status
+        'lead_status_view' => [
+            'name'         => 'lead_status_view',
+            'display_name' => 'Lead status View',
+        ],
+        'lead_status_add' => [
+            'name'         => 'lead_status_add',
+            'display_name' => 'Lead status Add',
+        ],
+        'lead_status_edit' => [
+            'name'         => 'lead_status_edit',
+            'display_name' => 'Lead status Edit',
+        ],
+        'lead_status_delete' => [
+            'name'         => 'lead_status_delete',
+            'display_name' => 'Lead status Delete',
+        ],
+
+
+        
 
     ];
 

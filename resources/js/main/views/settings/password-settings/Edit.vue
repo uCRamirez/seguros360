@@ -363,8 +363,12 @@
                         </a-row>
                         <a-row :gutter="16">
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                                <a-form-item>
+                                <a-form-item >
                                     <a-button
+                                        v-if="
+                                            permsArray.includes('password_settings_edit') ||
+                                            permsArray.includes('admin')
+                                        "
                                         type="primary"
                                         @click="onSubmit"
                                         :loading="loading"
@@ -422,7 +426,7 @@ export default {
         const passwordSettingUrl =
             "password-settings?fields=id,xid,upper_case,lower_case,special_character,number,password_length,password_expiration,login_failed_attempts,last_used_passwords,disable_inactive_user";
         const xid = ref("");
-        const { themeMode } = common();
+        const { themeMode, permsArray } = common();
 
         onMounted(() => {
             const passwordSettingPromise = axiosAdmin.get(passwordSettingUrl);
@@ -469,6 +473,7 @@ export default {
             formData,
             onSubmit,
             themeMode,
+            permsArray,
         };
     },
 };

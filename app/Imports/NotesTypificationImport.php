@@ -17,7 +17,7 @@ class NotesTypificationImport implements ToArray, WithHeadingRow
             foreach ($notesTypifications as $typification) {
 
                 if (
-                    !array_key_exists('typification_1', $typification) || !array_key_exists('typification_2', $typification) || !array_key_exists('typification_3', $typification)
+                    !array_key_exists('typification_1', $typification) || !array_key_exists('typification_2', $typification) || !array_key_exists('typification_3', $typification) || !array_key_exists('typification_4', $typification)
                 ) {
                     throw new ApiException('Field missing from header.');
                 }
@@ -40,6 +40,13 @@ class NotesTypificationImport implements ToArray, WithHeadingRow
                     $typification3->name = $typification['typification_3'];
                     $typification3->parent_id = $typification2->id;
                     $typification3->save();
+                }
+
+                if ($typification['typification_1'] && $typification['typification_2'] && $typification['typification_3'] && $typification['typification_4']) {
+                    $typification4 = new NotesTypification();
+                    $typification4->name = $typification['typification_4'];
+                    $typification4->parent_id = $typification3->id;
+                    $typification4->save();
                 }
 
             }

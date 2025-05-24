@@ -43,18 +43,18 @@ const fields = () => {
                     title: t("campaign.members"),
                     dataIndex: "members",
                 },
-                {
-                    title: t("campaign.form"),
-                    dataIndex: "form",
-                },
+                // {
+                //     title: t("campaign.form"),
+                //     dataIndex: "form",
+                // },
                 {
                     title: t("campaign.started_on"),
                     dataIndex: "started_on",
                 },
-                {
-                    title: t("campaign.last_actioner"),
-                    dataIndex: "last_actioner",
-                },
+                // {
+                //     title: t("campaign.last_actioner"),
+                //     dataIndex: "last_actioner",
+                // },
                 {
                     title: t("campaign.distribution_method"),
                     dataIndex: "lead_distribution_method",

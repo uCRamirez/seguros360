@@ -7,6 +7,7 @@
         @closed="onCloseAddEdit"
         :formData="formData"
         :leadInfo="leadInfo"
+        :allProductos="allProductos"
         :data="viewData"
         :pageTitle="pageTitle"
         :successMessage="successMessage"
@@ -57,32 +58,12 @@
         :gutter="[15, 15]"
         class="mb-20"
     >
-        <!-- El btn de agregar tipificaciones :disabled="managing === false" -->
+        <!-- El btn de agregar tipificaciones -->
         <a-col v-if="showAddButton" :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
-            <a-button type="primary"  @click="addItem" block>
+            <a-button type="primary" :disabled="managing === false" @click="addItem" block>
                 <PlusOutlined />
                 {{ $t("notes.add") }}
             </a-button>
-        </a-col>
-        <a-col v-if="showTableSearch" :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
-            <a-select
-                v-model:value="extraFilters.campaign_id"
-                :placeholder="$t('common.select_default_text', [$t('lead.campaign')])"
-                :allowClear="true"
-                style="width: 100%"
-                optionFilterProp="title"
-                show-search
-                @change="setUrlData"
-            >
-                <a-select-option
-                    v-for="allCampaign in allCampaigns"
-                    :key="allCampaign.xid"
-                    :title="allCampaign.name"
-                    :value="allCampaign.xid"
-                >
-                    {{ allCampaign.name }}
-                </a-select-option>
-            </a-select>
         </a-col>
         <!-- El select de los usuarios -->
         <a-col
@@ -153,7 +134,7 @@
                     :scroll="scrollStyle"
                 >
                     <template #bodyCell="{ column, record }">
-                        <template v-if="column.dataIndex === 'cedula'">
+                        <!-- <template v-if="column.dataIndex === 'document'">
                             <a-button
                                 v-if="showLeadDetails"
                                 type="link"
@@ -162,15 +143,15 @@
                             >
                                 {{
                                     record.lead &&
-                                    record.lead.cedula != "" &&
-                                    record.lead.cedula != undefined
-                                        ? record.lead.cedula
+                                    record.lead.document != "" &&
+                                    record.lead.document != undefined
+                                        ? record.lead.document
                                         : "---"
                                 }}
                             </a-button>
-                            <span v-else>{{ record.lead.cedula }}</span>
-                        </template>
-                        <template v-if="column.dataIndex === 'campaign'">
+                            <span v-else>{{ record.lead.document }}</span>
+                        </template> -->
+                        <!-- <template v-if="column.dataIndex === 'campaign'">
                             {{
                                 record.lead &&
                                 record.lead.campaign &&
@@ -199,7 +180,7 @@
                                     )
                                 }}
                             </template>
-                        </template>
+                        </template> -->
                         <template v-if="column.dataIndex === 'notes'">
                             <a-comment>
                                 <template #author>{{ record.user.name }}</template>
@@ -240,12 +221,7 @@
                             </a-typography-link>
                         </template>
                         <template v-if="column.dataIndex === 'action'">
-                            <a-space
-                                v-if="
-                                    permsArray.includes('admin') ||
-                                    record.x_user_id == user.xid
-                                "
-                            >
+                            <a-space>
                                 <a-typography-link
                                     v-if="record && record.notes_file_url"
                                     :href="record.notes_file_url"
@@ -256,9 +232,12 @@
                                     </a-button>
                                 </a-typography-link>
                                 <a-button type="primary" @click="editItem(record)">
-                                    <template #icon><EditOutlined /></template>
+                                    <template #icon><EditOutlined v-if="permsArray.includes('admin')"/>  <EyeOutlined v-else/> </template>
                                 </a-button>
                                 <a-button
+                                    v-if="
+                                        permsArray.includes('admin')
+                                    "
                                     type="primary"
                                     @click="showDeleteConfirm(record.xid)"
                                 >
@@ -285,6 +264,7 @@ import { onMounted, ref, watch } from "vue";
 import {
     PlusOutlined,
     EditOutlined,
+    EyeOutlined,
     DeleteOutlined,
     PlayCircleOutlined,
     StopOutlined,
@@ -347,6 +327,7 @@ export default {
     components: {
         PlusOutlined,
         EditOutlined,
+        EyeOutlined,
         DeleteOutlined,
         PlayCircleOutlined,
         StopOutlined,
@@ -374,6 +355,7 @@ export default {
             allCampaigns,
             allUsers,
             getPrefetchData,
+            allProductos,
         } = fields(props);
         const crudVariables = crud();
         const leadInfo = ref({});
@@ -503,6 +485,7 @@ export default {
             onAddEditSuccess,
 
             allCampaigns,
+            allProductos,
             allUsers,
             filters,
             extraFilters,

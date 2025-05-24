@@ -26,8 +26,39 @@
                         />
                     </a-form-item>
                 </a-col>
-                <!-- <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                <a-col :xs="24" :sm="24" :md="24" :lg="24">
                     <a-form-item
+                        :label="$t('lead_status.type')"
+                        name="type"
+                        :help="rules.type ? rules.type.message : null"
+                        :validateStatus="rules.type ? 'error' : null"
+                        class="required"
+                    >
+                        <a-select
+                            v-model:value="formData.type"
+                            :placeholder="
+                                $t('common.select_default_text', [$t('lead_status.type'),])"
+                                :allowClear="true"
+                                show-search
+                        >
+                            <a-select-option
+                                key="lead_status"
+                                value="lead_status"
+                            >
+                                {{ $t("lead.lead_status") }}
+                            </a-select-option>
+                            <a-select-option
+                                key="marital_status"
+                                value="marital_status"
+                            >
+                                {{ $t("lead.marital_status") }}
+                            </a-select-option>
+                        </a-select>
+                    </a-form-item>
+                </a-col>
+                <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                    <a-form-item
+                        v-if="formData.type === 'lead_status'"
                         :label="$t('lead_status.color')"
                         name="color"
                         :help="rules.color ? rules.color.message : null"
@@ -41,7 +72,7 @@
                             v-model:gradientColor="gradientColor"
                         />
                     </a-form-item>
-                </a-col> -->
+                </a-col>
             </a-row>
         </a-form>
         <template #footer>
@@ -95,6 +126,9 @@ export default defineComponent({
             "linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 100%)"
         );
         const onSubmit = () => {
+            // if(props.formData.type == 'marital_status'){
+            //     props.formData.color = '';
+            // }
             addEditRequestAdmin({
                 url: props.url,
                 data: props.formData,

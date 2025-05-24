@@ -82,6 +82,13 @@ class NotesTypificationController extends ApiBaseController
                 $typification3->parent_id = $typification2->id;
                 $typification3->save();
             }
+
+            if ($typfication['typification_1'] && $typfication['typification_2'] && $typfication['typification_3'] && $typfication['typification_4']) {
+                $typification4 = new NotesTypification();
+                $typification4->name = $typfication['typification_4'];
+                $typification4->parent_id = $typification3->id;
+                $typification4->save();
+            }
         }
 
         return ApiResponse::make('Success', []);

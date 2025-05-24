@@ -150,6 +150,7 @@ export default defineComponent({
         const { t } = useI18n();
         const currentUploadedFile = ref(undefined);
         const parsedFileData = ref([]);
+        const fullData = ref([])  
         const tableRecords = ref([]);
         const parsedHeader = ref([]);
         const formProperties = ref({});
@@ -182,7 +183,7 @@ export default defineComponent({
             reader.readAsText(info.file, "UTF-8");
             reader.onload = function (evt) {
                 const parsedResult = Papa.parse(evt.target.result, {
-                    preview: 3,
+                    // preview: 3,
                     header: true,
                     skipEmptyLines: true,
                     transformHeader: function (header) {
@@ -208,6 +209,30 @@ export default defineComponent({
                     },
                 });
 
+                const fullResult = Papa.parse(evt.target.result, {
+                    preview: 3,
+                    header: true,
+                    skipEmptyLines: true,
+                    transformHeader: function (header) {
+                        return header.toLowerCase() === "agent" ? null : header;
+                    },
+                    complete: function (results) {
+                        const filteredFields = results.meta.fields.filter(
+                            (field) => field !== null
+                        );
+                        const filteredData = results.data.map((row) => {
+                            const filteredRow = {};
+                            filteredFields.forEach((field) => {
+                                filteredRow[field] = row[field];
+                            });
+                            return filteredRow;
+                        });
+                        results.meta.fields = filteredFields;
+                        results.data = filteredData;
+                    },
+                });
+
+                fullData.value = fullResult.data;
                 parsedFileData.value = parsedResult.data;
                 parsedHeader.value = parsedResult.meta.fields;
                 currentUploadedFile.value = info.file;
@@ -232,7 +257,7 @@ export default defineComponent({
         const getPreviewData = (fieldName) => {
             var fieldDataString = "";
 
-            forEach(parsedFileData.value, (filterValue, filterKey) => {
+            forEach(fullData.value, (filterValue, filterKey) => {
                 fieldDataString += `${filterValue[fieldName]}<br />`;
             });
 
@@ -251,7 +276,8 @@ export default defineComponent({
 
             tabChanged(activeTabKey.value);
 
-            emit("leadColumnChanged", formProperties.value);
+            // emit("leadColumnChanged", formProperties.value);
+            emit("leadColumnChanged", parsedFileData.value);
         };
 
         const unMatchedColumnsCount = computed(() => {

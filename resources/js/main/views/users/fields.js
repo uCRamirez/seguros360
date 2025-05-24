@@ -44,11 +44,11 @@ const fields = () => {
             title: t("user.created_at"),
             dataIndex: "created_at",
         },
-        {
-            title: t("user.ucontact"),
-            dataIndex: "ucontact",
-            key: "ucontact",
-        },
+        // {
+        //     title: t("user.ucontact"),
+        //     dataIndex: "ucontact",
+        //     key: "ucontact",
+        // },
         {
             title: t("user.status"),
             dataIndex: "status",

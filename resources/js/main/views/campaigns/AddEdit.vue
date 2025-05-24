@@ -33,7 +33,7 @@
                 </a-row>
 
                 <a-row :gutter="16">
-                    <a-col :xs="24" :sm="24" :md="12" :lg="12">
+                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
                         <a-form-item :label="$t('campaign.members')" name="user_id"
                             :help="rules.user_id ? rules.user_id.message : null"
                             :validateStatus="rules.user_id ? 'error' : null" class="required">
@@ -51,117 +51,7 @@
                             </span>
                         </a-form-item>
                     </a-col>
-                    <a-col :xs="24" :sm="24" :md="12" :lg="12">
-                        <a-form-item :label="$t('campaign.lead_distribution_method')" name="lead_distribution_method"
-                            :help="rules.lead_distribution_method
-                                ? rules.lead_distribution_method.message
-                                : null
-                                " :validateStatus="rules.lead_distribution_method ? 'error' : null
-                                    ">
-                            <a-select v-model:value="formData.lead_distribution_method" :placeholder="$t('common.select_default_text', [
-                                $t('campaign.lead_distribution_method'),
-                            ])
-                                " :allowClear="true">
-                                <a-select-option value="random">
-                                    {{ $t("campaign.random") }}
-                                </a-select-option>
-                                <a-select-option value="linear">
-                                    {{ $t("campaign.linear") }}
-                                </a-select-option>
-                            </a-select>
-                        </a-form-item>
-                    </a-col>
                 </a-row>
-
-                <a-row :gutter="16">
-                    <a-col :xs="24" :sm="24" :md="12" :lg="12">
-                        <a-form-item :label="$t('campaign.form')" name="form_id"
-                            :help="rules.form_id ? rules.form_id.message : null"
-                            :validateStatus="rules.form_id ? 'error' : null" class="required">
-                            <span style="display: flex">
-                                <a-select v-model:value="formData.form_id" :placeholder="$t('common.select_default_text', [
-                                    $t('campaign.form'),
-                                ])
-                                    " :allowClear="true" @change="formSelected">
-                                    <a-select-option v-for="allForm in allForms" :key="allForm.xid" :value="allForm.xid"
-                                        :form="allForm">
-                                        {{ allForm.name }}
-                                    </a-select-option>
-                                </a-select>
-                                <FormAddButton @onAddSuccess="formAdded" />
-                            </span>
-                        </a-form-item>
-                    </a-col>
-                    <a-col :xs="24" :sm="24" :md="12" :lg="12">
-                        <a-form-item :label="$t('campaign.email_template')" name="email_template_id" :help="rules.email_template_id
-                            ? rules.email_template_id.message
-                            : null
-                            " :validateStatus="rules.email_template_id ? 'error' : null" class="required">
-                            <span style="display: flex">
-                                <a-select v-model:value="formData.email_template_id" :placeholder="$t('common.select_default_text', [
-                                    $t('campaign.email_template'),
-                                ])
-                                    " :allowClear="true">
-                                    <a-select-option v-for="allEmailTemplate in allEmailTemplates"
-                                        :key="allEmailTemplate.xid" :value="allEmailTemplate.xid">
-                                        {{ allEmailTemplate.name }}
-                                    </a-select-option>
-                                </a-select>
-                                <EmailTemplateAddButton @onAddSuccess="emailTemplateAdded" />
-                            </span>
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-
-                <a-row :gutter="16" class="mt-20">
-                    <a-col :xs="24" :sm="24" :md="8" :lg="8">
-                        <a-form-item :label="$t('campaign.allow_reference_prefix')" name="allow_reference_prefix" :help="rules.allow_reference_prefix
-                            ? rules.allow_reference_prefix.message
-                            : null
-                            " :validateStatus="rules.allow_reference_prefix ? 'error' : null
-                                " class="required">
-                            <a-switch v-model:checked="formData.allow_reference_prefix" :checkedValue="1"
-                                :unCheckedValue="0" />
-                        </a-form-item>
-                    </a-col>
-                    <a-col v-if="formData.allow_reference_prefix" :xs="24" :sm="24" :md="16" :lg="16">
-                        <a-form-item :label="$t('campaign.reference_prefix')" name="reference_prefix" :help="rules.reference_prefix
-                            ? rules.reference_prefix.message
-                            : null
-                            " :validateStatus="rules.reference_prefix ? 'error' : null" class="required">
-                            <a-input v-model:value="formData.reference_prefix" :placeholder="$t('common.placeholder_default_text', [
-                                $t('campaign.reference_prefix'),
-                            ])
-                                " />
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-
-                <!-- To indicate whether the hoods with which they must be approved with uContact -->
-                <a-row :gutter="16" class="mt-20">
-                    <a-col :xs="24" :sm="24" :md="8" :lg="8">
-                        <a-form-item :label="$t('campaign.uc_campaign')" name="uc_campaignsActive">
-                            <a-switch v-model:checked="isChecked" />
-                        </a-form-item>
-                    </a-col>
-
-                    <a-col v-if="isChecked" :xs="24" :sm="24" :md="16" :lg="16">
-                        <a-form-item :label="$t('campaign.campaign')" class="required">
-                            <span style="display: flex">
-                                <a-select v-model:value="uc_campaignsArray" mode="multiple"
-                                    :placeholder="$t('common.select_default_text', [$t('campaign.campaign')])"
-                                    :allowClear="true">
-                                    <a-select-option v-for="campaign in all_uc_campaigns" :key="campaign.queue_name"
-                                        :value="campaign.queue_name"
-                                        :disabled="isDisabledCampaign(formData.name, campaign.queue_name)">
-                                        {{ campaign.queue_name }}
-                                    </a-select-option>
-                                </a-select>
-                            </span>
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-
             </template>
 
             <template v-if="currentStep == 1">
@@ -359,21 +249,22 @@ export default defineComponent({
             const allUsedUCs = new Set(); // Para recolectar todas las campañas usadas
             const namedUCs = new Set();   // Para evitar duplicados en Inabilitar
 
-            all_use_uc_campaigns.value.forEach(c => {
-                const ucList = c.uc_campaigns
-                    ? c.uc_campaigns.split(',').map(s => s.trim())
-                    : [];
+            if(all_use_uc_campaigns.value){
+               all_use_uc_campaigns.value.forEach(c => {
+                    const ucList = c.uc_campaigns
+                        ? c.uc_campaigns.split(',').map(s => s.trim())
+                        : [];
 
-                // Guardamos por nombre
-                none_uc_campaigns.value[c.name] = ucList;
+                    // Guardamos por nombre
+                    none_uc_campaigns.value[c.name] = ucList;
 
-                // Recolectamos para Inabilitar
-                ucList.forEach(uc => {
-                    allUsedUCs.add(uc);
-                    namedUCs.add(`${c.name}:${uc}`); // combinación única para filtrar luego
-                });
-            });
-
+                    // Recolectamos para Inabilitar
+                    ucList.forEach(uc => {
+                        allUsedUCs.add(uc);
+                        namedUCs.add(`${c.name}:${uc}`); // combinación única para filtrar luego
+                    });
+                }); 
+            }
         };
 
         // para indicar en el select de campanas uc cuales quedan habilitado y cuales no
@@ -417,12 +308,7 @@ export default defineComponent({
         const onSubmit = () => {
             if (currentStep.value == 0) {
                 if (
-                    props.formData.name == "" ||
-                    props.formData.user_id.length == 0 ||
-                    props.formData.form_id == undefined ||
-                    props.formData.email_template_id == undefined ||
-                    (props.formData.allow_reference_prefix &&
-                        props.formData.reference_prefix == "")
+                    props.formData.name == ""
                 ) {
                     submitForm();
                 } else {
@@ -452,6 +338,8 @@ export default defineComponent({
 
             newFormData.import_lead_fields = importLeadColumns.value;
 
+            let isCSV = newFormData.import_lead_fields ? { data: newFormData.import_lead_fields, file: newFormData.file.name } : false;
+
             addEditFileRequestAdmin({
                 url: props.url,
                 fieldTypes: {
@@ -464,6 +352,19 @@ export default defineComponent({
                     emit("addEditSuccess", res.xid);
                 },
             });
+
+            if (isCSV) {
+                addEditRequestAdmin({
+                    url: 'leadcsv/push',
+                    data: isCSV,
+                    successMessage: props.successMessage,
+                    success: (res) => {
+                        console.log(res);
+                    },
+                });
+            }
+
+            
         };
 
         const goBack = () => {
@@ -521,21 +422,25 @@ export default defineComponent({
             importLeadColumns.value = allColumns;
         };
 
-        const formSelected = (seletedValue, options) => {
-            if (options && options.form && options.form.form_fields) {
-                var allFields = [];
-
-                forEach(options.form.form_fields, (formFieldValue, formFieldKey) => {
-                    allFields.push(formFieldValue.name);
-                });
+        const formSelected = () => {
+            axiosAdmin.get('columns/leads')
+                .then(response => {
+                // AxiosAdmin parece devolverte el body ya parseado en `response`
+                const payload = response.message ?? response.data ?? response;
+                // convierto a array si es objeto
+                const allFields = Array.isArray(payload)
+                    ? payload
+                    : Object.values(payload);
                 selectedFormFields.value = allFields;
-            } else {
+                })
+                .catch(err => {
+                console.error('Error cargando columnas', err);
                 selectedFormFields.value = [];
-            }
+            });
         };
 
-        watch(
-            () => props.visible,
+
+        watch(() => props.visible,
             (newVal, oldVal) => {
                 // For campaign members
                 if (
@@ -553,7 +458,7 @@ export default defineComponent({
                 }
 
                 // For Form Fields
-                formSelected("", props.data);
+                formSelected();
 
                 isChecked.value = uc_campaignsArray.value.length !== 0 ? true : false;
 
@@ -562,6 +467,9 @@ export default defineComponent({
                     all_use_uc_campaigns.value = response.message.campaigns;
                     isCampaignInUse();
                 });
+
+                // se consulta nuevamente las campanas en uso para poder actualizar el front del addEdit
+               
 
                 setStep(0);
             }
@@ -594,7 +502,7 @@ export default defineComponent({
             leadFileUploaded,
             leadColumnChanged,
             selectedFormFields,
-            formSelected,
+            // formSelected,
 
             drawerWidth: window.innerWidth <= 991 ? "90%" : "60%",
         };

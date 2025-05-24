@@ -31,6 +31,10 @@
                     {{ $t("menu.profile") }}
                 </a-menu-item>
                 <a-menu-item
+                    v-if="
+                        permsArray.includes('password_settings_view') ||
+                        permsArray.includes('admin')
+                    "
                     key="password_settings"
                     @click="
                         $router.push({
@@ -44,6 +48,10 @@
                     {{ $t("menu.password_settings") }}
                 </a-menu-item>
                 <a-menu-item
+                    v-if="
+                        permsArray.includes('lead_status_view') ||
+                        permsArray.includes('admin')
+                    "
                     key="lead_status"
                     @click="
                         $router.push({
@@ -57,6 +65,10 @@
                     {{ $t("menu.lead_status") }}
                 </a-menu-item>
                 <a-menu-item
+                    v-if="
+                        permsArray.includes('audits_view') ||
+                        permsArray.includes('admin')
+                    "
                     key="audits"
                     @click="
                         $router.push({
@@ -131,7 +143,7 @@
                     {{ $t("menu.email_settings") }}
                 </a-menu-item>
                 <template v-if="appType == 'non-saas'">
-                    <a-menu-item
+                    <!-- <a-menu-item
                         key="modules"
                         v-if="permsArray.includes('admin')"
                         @click="
@@ -144,7 +156,7 @@
                             <AppstoreAddOutlined />
                         </template>
                         {{ $t("menu.modules") }}
-                    </a-menu-item>
+                    </a-menu-item> -->
                     <a-menu-item
                         key="storage_settings"
                         v-if="
@@ -162,7 +174,7 @@
                         </template>
                         {{ $t("menu.storage_settings") }}
                     </a-menu-item>
-                    <a-menu-item
+                    <!-- <a-menu-item
                         key="email_settings"
                         v-if="
                             permsArray.includes('email_edit') ||
@@ -174,8 +186,8 @@
                             <MailOutlined />
                         </template>
                         {{ $t("menu.email_settings") }}
-                    </a-menu-item>
-                    <a-menu-item
+                    </a-menu-item> -->
+                    <!-- <a-menu-item
                         key="message_providers"
                         v-if="
                             permsArray.includes('message_provider_edit') ||
@@ -191,8 +203,8 @@
                             <CommentOutlined />
                         </template>
                         {{ $t("menu.message_providers") }}
-                    </a-menu-item>
-                    <a-menu-item
+                    </a-menu-item> -->
+                    <!-- <a-menu-item
                         key="email_providers"
                         v-if="
                             permsArray.includes('message_provider_edit') ||
@@ -208,7 +220,7 @@
                             <IeOutlined />
                         </template>
                         {{ $t("menu.email_providers") }}
-                    </a-menu-item>
+                    </a-menu-item> -->
                     <a-menu-item
                         key="database_backup"
                         v-if="

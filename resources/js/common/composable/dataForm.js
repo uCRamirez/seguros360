@@ -8,9 +8,6 @@ const locations = ref([]);
 const provinceOptions = ref([]);
 const cantonOptions = ref([]);
 const districtOptions = ref([]);
-const selectedProvince = ref(null);
-const selectedCanton = ref(null);
-const selectedDistrict = ref(null);
 
 
 // This js return general information for al the forms
@@ -76,9 +73,6 @@ const dataForm = () => {
         provinceOptions,
         cantonOptions,
         districtOptions,
-        selectedProvince,
-        selectedCanton,
-        selectedDistrict,
         ////////
     };
 };

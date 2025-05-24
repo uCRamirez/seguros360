@@ -27,6 +27,8 @@ class CreateLeadRequest extends BaseRequest
         $rules = [
             'assign_to' => 'required',
             'campaign_id' => 'required',
+            'cedula' => 'required',
+            'tel1' => 'required',
         ];
 
         // TODO - condition according to required Type

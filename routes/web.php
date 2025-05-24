@@ -88,6 +88,12 @@ ApiRoute::group(['namespace' => 'App\Http\Controllers\Api'], function () {
 
         // Localidades
         ApiRoute::resource('localidades', 'LocalidadesController', ['as' => 'api', 'only' => ['index']]);
+        // ventas
+        ApiRoute::post('ventas/save', ['as' => 'api.ventas.save', 'uses' => 'VentasController@save']);
+        // columnas
+        ApiRoute::get('columns/{table}', ['as' => 'api.leads.columns', 'uses' => 'ColumnController@allColumns']);
+        // csv leads aux
+        ApiRoute::post('leadcsv/push', ['as' => 'api.leadcsv.push', 'uses' => 'LeadAuxController@pushData']);
 
 
         ApiRoute::post('campaigns/uc-campaigns', ['as' => 'api.campaigns.uc-campaigns', 'uses' => 'CampaignController@getUContactCampaigns']);

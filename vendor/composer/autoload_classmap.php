@@ -74,6 +74,7 @@ return array(
     'App\\Http\\Controllers\\Api\\LeadController' => $baseDir . '/app/Http/Controllers/Api/LeadController.php',
     'App\\Http\\Controllers\\Api\\LeadFollowUpController' => $baseDir . '/app/Http/Controllers/Api/LeadFollowUpController.php',
     'App\\Http\\Controllers\\Api\\LeadLogController' => $baseDir . '/app/Http/Controllers/Api/LeadLogController.php',
+    'App\\Http\\Controllers\\Api\\VentasLogController' => $baseDir . '/app/Http/Controllers/Api/VentasLogController.php',
     'App\\Http\\Controllers\\Api\\LeadStatusController' => $baseDir . '/app/Http/Controllers/Api/LeadStatusController.php',
     'App\\Http\\Controllers\\Api\\MessageProviderController' => $baseDir . '/app/Http/Controllers/Api/MessageProviderController.php',
     'App\\Http\\Controllers\\Api\\MessageTemplateController' => $baseDir . '/app/Http/Controllers/Api/MessageTemplateController.php',
@@ -9671,5 +9672,5 @@ return array(
     'ZipStream\\ZipStream' => $vendorDir . '/maennchen/zipstream-php/src/ZipStream.php',
     'ZipStream\\Zs\\ExtendedInformationExtraField' => $vendorDir . '/maennchen/zipstream-php/src/Zs/ExtendedInformationExtraField.php',
     'voku\\helper\\ASCII' => $vendorDir . '/voku/portable-ascii/src/voku/helper/ASCII.php',
-    '©' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
+    'ï¿½' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
 );

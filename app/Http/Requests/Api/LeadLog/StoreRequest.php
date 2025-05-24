@@ -32,6 +32,7 @@ class StoreRequest extends BaseRequest
         if ($this->log_type == 'notes') {
             $rules['lead_id'] = 'required';
             $rules['notes'] = 'required';
+            $rules['notes_typification_id_1'] = 'required';
         }
 
         return $rules;

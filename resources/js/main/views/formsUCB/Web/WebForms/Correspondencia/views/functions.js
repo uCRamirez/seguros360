@@ -129,9 +129,6 @@ const functionsCRM = () => {
         provinceOptions,
         cantonOptions,
         districtOptions,
-        selectedProvince,
-        selectedCanton,
-        selectedDistrict,
         /////////////////
     } = dataForm();
 
@@ -312,9 +309,7 @@ const functionsCRM = () => {
 
     // To manage a selected client from the search table
     const clientToManage = async () => {
-        //const leadCallLogPromise = await axiosAdmin.get(`leads/create-call-log/${crmState.client.xid}`);
         crmState.client.toManage = false;
-        //crmState.client.call_log = leadCallLogPromise.data.call_log;
         crmState.client.managing = true;
         timer.reset(crmState.client.time_taken, true);
         activeKey.value = "lead_details";
@@ -324,11 +319,6 @@ const functionsCRM = () => {
     watch(
         () => crmState.client.provincia,
         provincia => {
-            // limpio cantón y distrito
-            if(!crmState.client.toManage){
-                crmState.client.canton = null;
-                crmState.client.distrito = null;
-            }
 
             if (provincia) {
                 // poblo cantones únicos de esa provincia
@@ -340,7 +330,10 @@ const functionsCRM = () => {
                     )
                 );
             } else {
+                crmState.client.canton = null;
+                crmState.client.distrito = null;
                 cantonOptions.value = [];
+                districtOptions.value = [];
             }
             // siempre limpio distritos aquí
             districtOptions.value = [];
@@ -352,11 +345,6 @@ const functionsCRM = () => {
     watch(
         () => crmState.client.canton,
         canton => {
-            // limpio distrito
-            if(!crmState.client.toManage){
-                crmState.client.distrito = null;
-
-            }
 
             if (canton) {
                 // poblo distritos de la provincia + cantón
@@ -369,6 +357,8 @@ const functionsCRM = () => {
                     .map(l => l.distrito);
             } else {
                 districtOptions.value = [];
+                crmState.client.distrito = null;
+
             }
         },
         { immediate: true }
@@ -393,9 +383,6 @@ const functionsCRM = () => {
         provinceOptions,
         cantonOptions,
         districtOptions,
-        selectedProvince,
-        selectedCanton,
-        selectedDistrict,
         activeKey,
         clientToManage,
         clearSerchInformation,

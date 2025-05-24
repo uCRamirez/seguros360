@@ -21,6 +21,7 @@ use App\Models\CampaignUser;
 use App\Models\EmailTemplate;
 use App\Models\Form;
 use App\Models\Lead;
+use App\Models\LeadAux;
 use App\Models\LeadLog;
 use Carbon\Carbon;
 use Examyou\RestAPI\ApiResponse;
@@ -99,6 +100,7 @@ class CampaignController extends ApiBaseController
 
     public function stored(Campaign $campaign)
     {
+        \Log::info('stored - campaign', ['campaign' => $campaign]);
         $request = request();
         $allUsers = json_decode($request->user_id);
 
@@ -117,6 +119,7 @@ class CampaignController extends ApiBaseController
 
     public function updated(Campaign $campaign)
     {
+        // \Log::info('updated - campaign', ['campaign' => $campaign]);
         $request = request();
         $allUsers = json_decode($request->user_id);
         CampaignUser::where('campaign_id', $campaign->id)->delete();
@@ -137,6 +140,7 @@ class CampaignController extends ApiBaseController
     public function saveCsvFileData($campaign)
     {
         $request = request();
+        // \Log::info('saveCsvFileData - campaign', ['campaign' => $campaign]);
 
         // Saving csv file data
         if ($request->hasFile('file')) {
@@ -235,17 +239,17 @@ class CampaignController extends ApiBaseController
             $lead->reference_number = $campaign->reference_prefix . Carbon::now()->timestamp;
         }
 
-        if ($campaign->form_id && $campaign->form && $campaign->form->form_fields) {
-            $newLeadData = [];
-            foreach ($campaign->form->form_fields as $allFormFields) {
-                $newLeadData[] = [
-                    'id' => strtolower(Str::random(12)),
-                    'field_name' => $allFormFields['name'],
-                    'field_value' => '',
-                ];
-            }
-            $lead->lead_data = $newLeadData;
-        }
+        // if ($campaign->form_id && $campaign->form && $campaign->form->form_fields) {
+        //     $newLeadData = [];
+        //     foreach ($campaign->form->form_fields as $allFormFields) {
+        //         $newLeadData[] = [
+        //             'id' => strtolower(Str::random(12)),
+        //             'field_name' => $allFormFields['name'],
+        //             'field_value' => '',
+        //         ];
+        //     }
+        //     $lead->lead_data = $newLeadData;
+        // }
 
         $lead->started = 1;
         $lead->assign_to = $loggedUser->id;
@@ -255,7 +259,7 @@ class CampaignController extends ApiBaseController
         $lead->save();
 
         // Saving Lead Data JSON
-        Common::generateAndSaveLeadData($lead->id);
+        //Common::generateAndSaveLeadData($lead->id);
 
         Common::recalculateCampaignLeads($campaign->id);
 
@@ -264,7 +268,7 @@ class CampaignController extends ApiBaseController
 
     public function takeLeadAction(TakeLeadActionRequest $request)
     {
-        // \Log::info('takeLeadAction', ['request' => $request]);
+        //\Log::info('takeLeadAction', ['request' => $request]);
 
         $data       = $request->validated();
         $actionType = $data['action_type'] ?? null;
@@ -281,7 +285,7 @@ class CampaignController extends ApiBaseController
 
     public function updateActionedLead(TakeLeadActionRequest $request)
     {
-        // \Log::info('updateActionedLead', ['request' => $request]);
+        //\Log::info('updateActionedLead', ['request' => $request]);
         $data = $request->validated();
         $lead = Common::saveLeadData($data);
 

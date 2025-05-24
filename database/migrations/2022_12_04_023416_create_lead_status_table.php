@@ -33,7 +33,7 @@ return new class extends Migration
             $table->bigInteger('company_id')->unsigned()->nullable()->default(null);
             $table->foreign('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('cascade');
             $table->string('name');
-            $table->string('color', 20)->default('1f87e8');
+            $table->string('color', 20)->default('#1f87e8');
             $table->string('type');
             $table->timestamps();
         });

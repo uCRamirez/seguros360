@@ -245,7 +245,7 @@
                                 $t('lead.lead_status'),
                             ])
                                 " :allowClear="true" style="width: 100%" @change="setUrlData">
-                                <a-select-option v-for="allLeadStatu in allLeadStatus" :key="allLeadStatu.xid"
+                                <a-select-option v-for="allLeadStatu in allLeadStatus.filter(s => s.type === 'lead_status')" :key="allLeadStatu.xid"
                                     :value="allLeadStatu.xid">
                                     {{ allLeadStatu.name }}
                                 </a-select-option>
@@ -289,7 +289,7 @@
                             </a-col>
                         </template>
                     </a-row>
-
+                    <!-- TABLA DE DETALLE DE LEADS -->
                     <a-row class="mt-20">
                         <a-col :span="24">
                             <div class="table-responsive" v-if="columns && columns.length > 0">
@@ -324,6 +324,11 @@
                                                     ? record.assign_users.name
                                                     : "-"
                                             }}
+                                        </template>
+                                        <template v-if="column.dataIndex === 'lead_status' && record.lead_status">
+                                            <a-tag :color="record.lead_status.color">
+                                                {{ record.lead_status.name }}
+                                            </a-tag>
                                         </template>
 
                                         <template v-for="allFormFieldName in allFormFieldNames"
@@ -390,7 +395,7 @@
                                                         </template>
                                                     </a-button>
                                                 </a-tooltip>
-                                                <a-tooltip :title="$t('lead.lead_details')">
+                                                <!-- <a-tooltip :title="$t('lead.lead_details')">
                                                     <a-button type="primary" @click="
                                                         viewLeadUphoneData(record)
                                                         ">
@@ -398,7 +403,7 @@
                                                             <EyeOutlined />
                                                         </template>
                                                     </a-button>
-                                                </a-tooltip>
+                                                </a-tooltip> -->
                                             </a-space>
                                             <span v-else>-</span>
                                         </template>
@@ -561,7 +566,7 @@ export default {
         };
 
         onMounted(() => {
-            axiosAdmin.get("lead-status?fields=id,xid,name,color").then((response) => {
+            axiosAdmin.get("lead-status?fields=id,xid,name,color,type").then((response) => {
                 allLeadStatus.value = response.data;
             });
 
@@ -635,7 +640,7 @@ export default {
                 onOk() {
                     router.push({
                         // name: "admin.call_manager.take_action",
-                        name: "admin.formsUCB.CRM",
+                        name: "admin.formsUCB.Correspondencia",
                         params: {
                             id: record.xid,
                         },

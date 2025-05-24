@@ -29,6 +29,11 @@ class UpdateRequest extends BaseRequest
             'log_type' => 'required|in:notes',
         ];
 
+        if ($this->log_type == 'notes') {
+            $rules['notes'] = 'required';
+            $rules['notes_typification_id_1'] = 'required';
+        }
+
         return $rules;
     }
 }

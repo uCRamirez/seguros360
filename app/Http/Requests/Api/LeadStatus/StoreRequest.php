@@ -27,6 +27,7 @@ class StoreRequest extends BaseRequest
 
         $rules = [
             'name'    => 'required',
+            'type'    => 'required',
             // 'color'    => 'required',
         ];
 

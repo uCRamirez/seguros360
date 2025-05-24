@@ -2,7 +2,6 @@ import { useI18n } from "vue-i18n";
 
 const fields = () => {
     const { t } = useI18n();
-    
 
     // COLUMNAS DE LA TABLA DE BUSQUEDA
     const columns = [

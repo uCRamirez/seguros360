@@ -30,5 +30,28 @@ class ProductController extends ApiBaseController
 
         return ApiResponse::make('Imported Successfully', []);
     }
+
+    protected function modifyIndex($query)
+    {
+        $user    = user();
+        $request = request();
+
+        // Si no tiene permiso o pide 'self' (o no viene view_type), restringir
+        if (
+            ! $user->ability('admin', 'campaigns_view_all')
+            || ! $request->has('view_type')
+            || $request->get('view_type') === 'self'
+        ) {
+            $query->whereIn('campaign_id', function($q) use ($user) {
+                $q->select('campaign_id')
+                ->from('campaign_users')
+                ->where('user_id', $user->id);
+            });
+        }
+
+        return $query;
+    }
+
+
     
 }

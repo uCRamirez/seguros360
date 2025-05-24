@@ -87,6 +87,7 @@ export default [
                     requireAuth: true,
                     menuParent: "settings",
                     menuKey: (route) => "audits",
+                    permission: "audits_view",
                 },
             },
             {
@@ -97,6 +98,7 @@ export default [
                     requireAuth: true,
                     menuParent: "settings",
                     menuKey: (route) => "password_settings",
+                    permission: "password_settings_view",
                 },
             },
 

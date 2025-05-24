@@ -7,7 +7,7 @@ const fields = () => {
     const { convertStringToKey, getCampaignUrl, getCampaignStatsUrl } =
         common();
     const url =
-        "leads?fields=id,xid,reference_number,lead_data,started,campaign_id,x_campaign_id,campaign{id,xid,name,status},time_taken,first_action_by,x_first_action_by,firstActioner{id,xid,name},last_action_by,x_last_action_by,lastActioner{id,xid,name},notes_count,campaignUsers{id,xid,user_id,x_user_id},campaignUsers:user{id,xid,name},assign_to,x_assign_to,assignUsers{id,xid,name}";
+        "leads?fields=id,xid,cedula,nombre,tel1,lead_data,started,campaign_id,x_campaign_id,campaign{id,xid,name,status},time_taken,first_action_by,x_first_action_by,firstActioner{id,xid,name},last_action_by,x_last_action_by,lastActioner{id,xid,name},notes_count,campaignUsers{id,xid,user_id,x_user_id},campaignUsers:user{id,xid,name},assign_to,x_assign_to,assignUsers{id,xid,name},leadStatus{id,xid,name,color,type}";
     const addEditUrl = "leads";
     const hashableColumns = ["campaign_id", "lead_status_id"];
     const { t } = useI18n();
@@ -137,8 +137,16 @@ const fields = () => {
 
                 var newColumnsArray = [
                     {
-                        title: t("lead.reference_number"),
-                        dataIndex: "reference_number",
+                        title: t("lead.document"),
+                        dataIndex: "cedula",
+                    },
+                    {
+                        title: t("lead.name"),
+                        dataIndex: "nombre",
+                    },
+                    {
+                        title: t("lead.phone"),
+                        dataIndex: "tel1",
                     },
                     {
                         title: t("lead.campaign"),
@@ -161,6 +169,11 @@ const fields = () => {
                 newColumnsArray.push({
                     title: t("lead.assign_to"),
                     dataIndex: "assign_to",
+                });
+
+                newColumnsArray.push({
+                    title: t("lead.lead_status"),
+                    dataIndex: "lead_status",
                 });
 
                 newColumnsArray.push({

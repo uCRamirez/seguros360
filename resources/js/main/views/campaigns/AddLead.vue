@@ -51,31 +51,131 @@
                     </a-col>
                 </a-row>
                 <a-row :gutter="16">
-                    <a-col
-                        v-for="leadData in formData.lead_data"
-                        :key="leadData.id"
-                        :xs="24"
-                        :sm="24"
-                        :md="12"
-                        :lg="12"
-                    >
+                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
                         <a-form-item
-                            :label="leadData.field_name"
-                            :name="leadData.field_name"
-                            :help="rules.name ? rules.name.message : null"
-                            :validateStatus="rules.name ? 'error' : null"
+                            :label="$t('lead.document')"
+                            name="cedula"
+                            :help="rules.cedula ? rules.cedula.message : null"
+                            :validateStatus="rules.cedula ? 'error' : null"
+                            class="required"
                         >
-                            <a-input
-                                v-model:value="leadData.field_value"
-                                :placeholder="
-                                    $t('common.placeholder_default_text', [
-                                        leadData.field_name,
-                                    ])
-                                "
-                            />
+                        <a-input v-model:value="formData.cedula"
+                                :placeholder="$t('common.placeholder_default_text',[$t('lead.document'),])" />
                         </a-form-item>
                     </a-col>
                 </a-row>
+                <!-- Nombre completo -->
+                <a-row :gutter="16">
+                    <a-col :xs="24" :sm="24" :md="8" :lg="8">
+                        <a-form-item
+                            :label="$t('lead.name')"
+                            name="name"
+                            :help="rules.name ? rules.name.message : null"
+                            :validateStatus="rules.name ? 'error' : null"
+                        >
+                        <a-input v-model:value="formData.nombre"
+                                :placeholder="$t('common.placeholder_default_text',[$t('lead.name'),])" />
+                        </a-form-item>
+                    </a-col>
+                    <a-col :xs="24" :sm="24" :md="8" :lg="8">
+                        <a-form-item
+                            :label="$t('lead.first_last_name')"
+                            name="first_last_name"
+                            :help="rules.first_last_name ? rules.first_last_name.message : null"
+                            :validateStatus="rules.first_last_name ? 'error' : null"
+                        >
+                        <a-input v-model:value="formData.apellido1"
+                                :placeholder="$t('common.placeholder_default_text',[$t('lead.first_last_name'),])" />
+                        </a-form-item>
+                    </a-col>
+                    <a-col :xs="24" :sm="24" :md="8" :lg="8">
+                        <a-form-item
+                            :label="$t('lead.second_last_name')"
+                            name="second_last_name"
+                            :help="rules.second_last_name ? rules.second_last_name.message : null"
+                            :validateStatus="rules.second_last_name ? 'error' : null"
+                        >
+                        <a-input v-model:value="formData.apellido2"
+                                :placeholder="$t('common.placeholder_default_text',[$t('lead.second_last_name'),])" />
+                        </a-form-item>
+                    </a-col>
+                </a-row>
+
+                <!-- tel 1 tel 2 tel 3 -->
+                <a-row :gutter="16">
+                    <a-col :xs="24" :sm="24" :md="8" :lg="8">
+                        <a-form-item
+                            :label="`${$t('lead.phone')} 1`"
+                            name="phone"
+                            :help="rules.tel1 ? rules.tel1.message : null"
+                            :validateStatus="rules.tel1 ? 'error' : null"
+                            class="required"
+                        >
+                        <a-input v-model:value="formData.tel1"
+                                :placeholder="$t('common.placeholder_default_text',[$t('lead.phone'),])" />
+                        </a-form-item>
+                    </a-col>
+                    <a-col :xs="24" :sm="24" :md="8" :lg="8">
+                        <a-form-item
+                            :label="`${$t('lead.phone')} 2`"
+                            name="phone2"
+                        >
+                        <a-input v-model:value="formData.tel2"
+                                :placeholder="$t('common.placeholder_default_text',[$t('lead.phone'),])" />
+                        </a-form-item>
+                    </a-col>
+                    <a-col :xs="24" :sm="24" :md="8" :lg="8">
+                        <a-form-item
+                            :label="`${$t('lead.phone')} 3`"
+                            name="phone3"
+                        >
+                        <a-input v-model:value="formData.tel3"
+                                :placeholder="$t('common.placeholder_default_text',[$t('lead.phone'),])" />
+                        </a-form-item>
+                    </a-col>
+                </a-row>
+                <!-- tel 4 tel 5 tel 6 -->
+                <a-row :gutter="16">
+                    <a-col :xs="24" :sm="24" :md="8" :lg="8">
+                        <a-form-item
+                            :label="`${$t('lead.phone')} 4`"
+                            name="phone4"
+                        >
+                        <a-input v-model:value="formData.tel4"
+                                :placeholder="$t('common.placeholder_default_text',[$t('lead.phone'),])" />
+                        </a-form-item>
+                    </a-col>
+                    <a-col :xs="24" :sm="24" :md="8" :lg="8">
+                        <a-form-item
+                            :label="`${$t('lead.phone')} 5`"
+                            name="phone5"
+                        >
+                        <a-input v-model:value="formData.tel5"
+                                :placeholder="$t('common.placeholder_default_text',[$t('lead.phone'),])" />
+                        </a-form-item>
+                    </a-col>
+                    <a-col :xs="24" :sm="24" :md="8" :lg="8">
+                        <a-form-item
+                            :label="`${$t('lead.phone')} 6`"
+                            name="phone6"
+                        >
+                        <a-input v-model:value="formData.tel6"
+                                :placeholder="$t('common.placeholder_default_text',[$t('lead.phone'),])" />
+                        </a-form-item>
+                    </a-col>
+                </a-row>
+                <a-row :gutter="16">
+                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                        <a-form-item
+                            :label="$t('lead.email')"
+                            name="email"
+                        >
+                        <a-input v-model:value="formData.email"
+                                :placeholder="$t('common.placeholder_default_text',[$t('lead.email'),])" />
+                        </a-form-item>
+                    </a-col>
+                </a-row>
+                
             </a-form>
             <template #footer>
                 <a-space>

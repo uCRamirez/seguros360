@@ -60,10 +60,10 @@ class StoreRequest extends BaseRequest
             $passSettingLength = $passwordSettings['password_length'];
         }
 
-        if($this->ucontact == 1){
-            $rules['ucontact_user'] = 'required';
-            $rules['ucontact_password'] = 'required';
-        }
+        // if($this->ucontact == 1){
+        //     $rules['ucontact_user'] = 'required';
+        //     $rules['ucontact_password'] = 'required';
+        // }
       
         if(!$password){
             $rules['password'] = [

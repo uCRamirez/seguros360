@@ -19,7 +19,7 @@ const formRoutes = Object.keys(formFiles).map((path) => {
             requireAuth: true,
             menuParent: "formsUCB",
             menuKey: crmName,
-            permission: "forms_view_uCB",
+            permission: "formsUCB",
             formPath: formFiles[path],
         },
     };
@@ -37,7 +37,7 @@ const baseFormRoute = {
         requireAuth: true,
         menuParent: "formsUCB",
         menuKey: "formsUCB",
-        permission: "forms_view_uCB",
+        permission: "formsUCB_view",
     }
 };
 
@@ -49,48 +49,3 @@ export default [
     }
 ];
 
-
-
-// import FormIndex from '../views/formsUCB/forms/index.vue';
-
-// // Importación dinámica de formularios en "WebForms/{CRM}/*.vue"
-// const formFiles = import.meta.glob('../views/formsUCB/Web/WebForms/*/*.vue');
-
-// const formRoutes = Object.keys(formFiles).map((path) => {
-//     const parts = path.split("/");
-//     const crmName = parts[parts.length - 2]; // Obtiene el nombre de la carpeta CRM (Ej: CRM1, CRM2)
-
-//     return {
-//         path: /admin/formsUCB/${crmName},
-//         name: admin.formsUCB.${crmName},
-//         component: FormIndex, //  Siempre usa la misma vista, pero cambia el formulario dinámicamente
-//         meta: {
-//             requireAuth: true,
-//             menuParent: "formsUCB",
-//             menuKey: crmName,
-//             permission: "forms_view_uCB",
-//             formPath: formFiles[path], //  Guarda la referencia al formulario
-//         }
-//     };
-// });
-
-// //  Ruta base de Forms UCB
-// const baseFormRoute = {
-//     path: "/admin/formsUCB",
-//     component: FormIndex,
-//     name: "admin.formsUCB.index",
-//     meta: {
-//         requireAuth: true,
-//         menuParent: "formsUCB",
-//         menuKey: "formsUCB",
-//         permission: "forms_view_uCB",
-//     }
-// };
-
-// export default [
-//     {
-//         path: '/',
-//         component: () => import('../../common/layouts/Admin.vue'),
-//         children: [baseFormRoute, ...formRoutes] //  Se añaden todas las rutas dinámicas
-//     }
-// ];

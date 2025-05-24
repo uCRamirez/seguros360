@@ -33,8 +33,8 @@ class StoreRequest extends BaseRequest
         // Step First
         if ($currentStep == 0) {
             $rules['name'] = 'required';
-            $rules['form_id'] = 'required';
-            $rules['email_template_id'] = 'required';
+            // $rules['form_id'] = 'required';
+            // $rules['email_template_id'] = 'required';
 
             $allUsers = $this->user_id != "" ? json_decode($this->user_id) : [];
             $totalMembers = count($allUsers);
@@ -43,9 +43,9 @@ class StoreRequest extends BaseRequest
                 $rules['user_id'] = 'required';
             }
 
-            if ($this->allow_reference_prefix == 1 && $this->reference_prefix == '') {
-                $rules['reference_prefix'] = 'required';
-            }
+            // if ($this->allow_reference_prefix == 1 && $this->reference_prefix == '') {
+            //     $rules['reference_prefix'] = 'required';
+            // }
         }
 
         return $rules;

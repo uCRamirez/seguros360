@@ -14,22 +14,24 @@ class Product extends BaseModel implements Auditable
     
     protected $table = 'products';
 
-    protected $default = ['xid', 'name', 'product_type', 'image_url', 'price', 'tax_rate', 'tax_label'];
+    protected $default = ['xid', 'name','coverage','description', 'product_type', 'image_url', 'price', 'tax_rate', 'tax_label'];
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $hidden = ['category_id'];
 
-    protected $appends = ['xid', 'image_url','x_category_id'];
+    protected $appends = ['xid', 'image_url','x_category_id','x_campaign_id'];
 
-    protected $filterable = ['name','category_id'];
+    protected $filterable = ['name','coverage', 'internal_code','category_id','campaign_id'];
 
     protected $hashableGetterFunctions = [
         'getXCategoryIdAttribute' => 'category_id',
+        'getXCampaignIdAttribute' => 'campaign_id',
     ];
 
     protected $casts = [
         'category_id' => Hash::class . ':hash',
+        'campaign_id' => Hash::class . ':hash',
     ];
 
     protected static function boot()
@@ -42,6 +44,11 @@ class Product extends BaseModel implements Auditable
     public function categories()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
+
+    public function campaigns()
+    {
+        return $this->belongsTo(Campaign::class, 'campaign_id', 'id');
     }
 
     public function getImageUrlAttribute()

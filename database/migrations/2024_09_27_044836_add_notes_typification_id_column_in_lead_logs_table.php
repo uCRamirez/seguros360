@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreign('notes_typification_id_2')->references('id')->on('notes_typifications')->onUpdate('cascade')->onDelete('cascade');
             $table->bigInteger('notes_typification_id_3')->unsigned()->nullable()->default(null);
             $table->foreign('notes_typification_id_3')->references('id')->on('notes_typifications')->onUpdate('cascade')->onDelete('cascade');
+            $table->bigInteger('notes_typification_id_4')->unsigned()->nullable()->default(null);
+            $table->foreign('notes_typification_id_4')->references('id')->on('notes_typifications')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -30,10 +32,12 @@ return new class extends Migration
             $table->dropForeign('lead_logs_notes_typification_id_1_foreign');
             $table->dropForeign('lead_logs_notes_typification_id_2_foreign');
             $table->dropForeign('lead_logs_notes_typification_id_3_foreign');
+            $table->dropForeign('lead_logs_notes_typification_id_4_foreign');
 
             $table->dropColumn('notes_typification_id_1');
             $table->dropColumn('notes_typification_id_2');
             $table->dropColumn('notes_typification_id_3');
+            $table->dropColumn('notes_typification_id_4');
         });
     }
 };

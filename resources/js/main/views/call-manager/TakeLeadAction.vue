@@ -864,7 +864,7 @@ export default {
             const leadDetailsPromise = axiosAdmin.get(leadDetailsUrl);
             const leadCallLogPromise = axiosAdmin.get(`leads/create-call-log/${leadId}`);
             const leadStatusPromise = axiosAdmin.get(
-                `lead-status?fields=id,xid,name,color`
+                `lead-status?fields=id,xid,name,color,type`
             );
             const uphoneCampaignsPromise = axiosAdmin.post(`leads/uphone-campaigns`);
 

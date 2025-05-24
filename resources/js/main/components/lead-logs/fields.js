@@ -48,7 +48,7 @@ const fields = (props) => {
                             dataIndex: "id",
                         },
                         {
-                            title: t("lead.cedula"),
+                            title: t("lead.document"),
                             dataIndex: "cedula",
                         },
                         {

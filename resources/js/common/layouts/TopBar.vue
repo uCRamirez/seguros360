@@ -15,13 +15,14 @@
             <a-col :span="20">
                 <HeaderRightIcons>
                     <a-space>
-                        <a-button @click="openRightSidebar" style="border: none"
+                        <!-- activar sofphone de uC -->
+                        <!-- <a-button @click="openRightSidebar" style="border: none"
                             ><span v-if="rightSidebarValue == false"
                                 ><StepBackwardOutlined />
                             </span>
 
                             <span v-else><StepForwardOutlined /></span>
-                        </a-button>
+                        </a-button> -->
                         <ThemeModeChanger />
                         <a-divider type="vertical" />
                         <a-dropdown

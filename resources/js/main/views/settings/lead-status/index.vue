@@ -40,7 +40,7 @@
                         <a-space>
                             <template
                                 v-if="
-                                    permsArray.includes('lead_status_create') ||
+                                    permsArray.includes('lead_status_add') ||
                                     permsArray.includes('admin')
                                 "
                             >
@@ -136,6 +136,30 @@
                                 size="middle"
                             >
                                 <template #bodyCell="{ column, record }">
+
+                                    <template v-if="column.dataIndex === 'color'">
+                                        <div  v-if="record.type === 'lead_status'" style="display:flex; align-items:center;">
+                                            <span
+                                                :style="{
+                                                display: 'inline-block',
+                                                width: '16px',
+                                                height: '16px',
+                                                backgroundColor: `${record.color}`,
+                                                borderRadius: '50%',
+                                                marginRight: '8px',
+                                                border: '1px solid #ccc'
+                                                }"
+                                            ></span>
+                                            <code>{{ record.color }}</code>
+                                        </div>
+                                        <span v-else></span>
+                                    </template>
+
+                                    <template v-if="column.dataIndex === 'type'">
+                                        <span v-if="record.type ==  'marital_status'">{{ $t('lead.marital_status') }}</span>
+                                        <span v-else>{{ $t('lead.lead_status') }}</span>
+                                    </template>
+
                                     <template
                                         v-if="column.dataIndex === 'action'"
                                     >

@@ -49,42 +49,6 @@
                                 </a-row>
 
                                 <a-row class="mt-10">
-                                    <!-- <a-col :span="24">
-                                        <a-space>
-                                            <BookingModal
-                                                
-                                                key="lead_follow_up"
-                                                :leadId="leadDetails.xid"
-                                                bookingType="lead_follow_up"
-                                                @success="
-                                                    (resultValue) => {
-                                                        leadFollowUp = resultValue;
-                                                        refreshTimeLine = true;
-                                                    }
-                                                "
-                                            >
-                                                <ScheduleOutlined />
-                                                {{ $t("menu.lead_follow_up") }}
-                                            </BookingModal>
-
-                                            <BookingModal
-                                                
-                                                key="salesman_bookings"
-                                                :leadId="leadDetails.xid"
-                                                bookingType="salesman_bookings"
-                                                @success="
-                                                    (resultValue) => {
-                                                        salesmanBooking = resultValue;
-                                                        refreshTimeLine = true;
-                                                    }
-                                                "
-                                            >
-                                                <ShoppingCartOutlined />
-                                                {{ $t("menu.salesman_bookings") }}
-                                            </BookingModal>
-                                        </a-space>
-                                        
-                                    </a-col> -->
                                     <a-col :span="24" style="margin-top: 1em;">
                                         <a-space>
                                             <a-button
@@ -208,7 +172,7 @@
                                     <template #tab>
                                         <span>
                                             <FileTextOutlined />
-                                            {{ $t("lead.lead_details") }}
+                                            {{ $t("lead.mfisico") }}
                                         </span>
                                     </template>
                                     <perfect-scrollbar
@@ -228,21 +192,10 @@
                                                     :lg="12"
                                                 >
                                                     <a-form-item
-                                                        :label="
-                                                            $t('lead.document')
-                                                        "
-                                                        name="document"
-                                                        :help="
-                                                            rules.document
-                                                                ? rules.document
-                                                                      .message
-                                                                : null
-                                                        "
-                                                        :validateStatus="
-                                                            rules.document
-                                                                ? 'error'
-                                                                : null
-                                                        "
+                                                        :label="$t('lead.document')"
+                                                        name="cedula"
+                                                        :help="rules.cedula ? rules.cedula.message : null"
+                                                        :validateStatus="rules.cedula ? 'error' : ''"
                                                         class="required"
                                                     >
                                                         <a-input-group compact>
@@ -260,10 +213,8 @@
                                                                         ]
                                                                     )
                                                                 "
-                                                                style="width: calc(100% - 35px);"
-                                                                
                                                             />
-                                                            <SearchLead />
+                                                            <!-- <SearchLead /> style="width: calc(100% - 35px);" -->
                                                         </a-input-group>
                                                         
                                                     </a-form-item>
@@ -276,37 +227,37 @@
                                                     :lg="12"
                                                 >
                                                     <a-form-item
-                                                        :label="$t('lead.lead_status')"
-                                                        name="lead_status"
-                                                        :help="
-                                                            rules.lead_status
-                                                                ? rules.lead_status
-                                                                      .message
-                                                                : null
-                                                        "
-                                                        :validateStatus="
-                                                            rules.lead_status
-                                                                ? 'error'
-                                                                : null
-                                                        "
-                                                    >
-                                                        <a-select
-                                                            v-model:value="leadStatusModel"
-                                                            show-search
-                                                            option-filter-prop="title"
-                                                            :allowClear="true"
-                                                            :placeholder="$t( 'common.select_default_text',[$t('lead.lead_status' ),])"
+                                                            :label="$t('lead.lead_status')"
+                                                            name="lead_status"
+                                                            :help="
+                                                                rules.lead_status
+                                                                    ? rules.lead_status
+                                                                        .message
+                                                                    : null
+                                                            "
+                                                            :validateStatus="
+                                                                rules.lead_status
+                                                                    ? 'error'
+                                                                    : null
+                                                            "
                                                         >
-                                                            <a-select-option
-                                                                v-for="status in allLeadStatus.filter(s => s.type === 'lead_status')"
-                                                                :key="status.xid"
-                                                                :value="status.id"
-                                                                :title="status.name"
+                                                            <a-select
+                                                                v-model:value="leadStatusModel"
+                                                                show-search
+                                                                option-filter-prop="title"
+                                                                :allowClear="true"
+                                                                :placeholder="$t( 'common.select_default_text',[$t('lead.lead_status' ),])"
                                                             >
-                                                                {{ status.name }}
-                                                            </a-select-option>
-                                                        </a-select>
-                                                    </a-form-item>
+                                                                <a-select-option
+                                                                    v-for="status in allLeadStatus.filter(s => s.type === 'lead_status')"
+                                                                    :key="status.id"
+                                                                    :value="status.id"
+                                                                    :title="status.name"
+                                                                >
+                                                                    {{ status.name }}
+                                                                </a-select-option>
+                                                            </a-select>
+                                                        </a-form-item>
                                                 </a-col>
                                                 <!-- nombre -->
                                                 <a-col
@@ -614,7 +565,6 @@
                                                         />
                                                     </a-form-item>
                                                 </a-col>
-
                                                 <!-- Tel1 -->
                                                 <a-col
                                                     :xs="24"
@@ -624,7 +574,7 @@
                                                 >
                                                     <a-form-item
                                                         :label="`${$t('lead.phone')} 1`"
-                                                        name="phone1"
+                                                        name="tel1"
                                                         :help="
                                                             rules.phone1
                                                                 ? rules.phone1
@@ -636,6 +586,7 @@
                                                                 ? 'error'
                                                                 : null
                                                         "
+                                                        class="required"
                                                     >
                                                         <a-input
                                                             v-model:value="
@@ -654,7 +605,6 @@
                                                         />
                                                     </a-form-item>
                                                 </a-col>
-
                                                 <!-- Tel2 -->
                                                 <a-col
                                                     :xs="24"
@@ -694,7 +644,6 @@
                                                         />
                                                     </a-form-item>
                                                 </a-col>
-
                                                 <!-- Tel3 -->
                                                 <a-col
                                                     :xs="24"
@@ -734,7 +683,6 @@
                                                         />
                                                     </a-form-item>
                                                 </a-col>
-
                                                 <!-- Tel4 -->
                                                 <a-col
                                                     :xs="24"
@@ -774,7 +722,6 @@
                                                         />
                                                     </a-form-item>
                                                 </a-col>
-
                                                 <!-- Tel5 -->
                                                 <a-col
                                                     :xs="24"
@@ -814,7 +761,6 @@
                                                         />
                                                     </a-form-item>
                                                 </a-col>
-
                                                 <!-- Tel6 -->
                                                 <a-col
                                                     :xs="24"
@@ -854,7 +800,6 @@
                                                         />
                                                     </a-form-item>
                                                 </a-col>
-
                                                  <!-- email -->
                                                  <a-col
                                                     :xs="24"
@@ -896,7 +841,6 @@
                                                         />
                                                     </a-form-item>
                                                 </a-col>
-
                                                 <!-- Provincia - Canton - Distrito -->
                                                 <a-col :xxl="24" :xl="24" :xs="24" style="display: flex;">
                                                     <!-- Provincia -->
@@ -950,7 +894,7 @@
                                                                 option-filter-prop="title"
                                                                 :allowClear="true"
                                                                 :placeholder="$t('common.select_default_text', [$t('lead.district')])"
-                                                                :disabled="!crmState.client.canton"
+                                                                :disabled="!crmState.client.canton || !crmState.client.provincia"
                                                             >
                                                                 <a-select-option
                                                                     v-for="dist in districtOptions"
@@ -1169,7 +1113,7 @@
                                     <a-col :xs="24" :sm="24" :md="8" :lg="8">
                                         <div
                                             style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%;">
-                                            <a-button @click="serchInformationClient" type="primary" style="min-width: 130px;">{{ $t('common.search')}}</a-button>
+                                            <a-button @click="serchInformationClient" :disabled="crmState.client.managing === true" type="primary" style="min-width: 130px;">{{ $t('common.search')}}</a-button>
                                             <a-button @click="clearSerchInformation" :disabled="crmState.client.managing === true" type="primary" style="margin-top: 10px;min-width: 130px;">{{$t('common.clear')}}</a-button>
                                             <a-button @click="handleClientToManage" :disabled="crmState.client.toManage === false" type="primary"
                                             style="margin-top: 10px;min-width: 130px;">{{ $t('common.management') }}</a-button>
@@ -1244,13 +1188,14 @@
                                     <template #tab>
                                         <span>
                                             <FileTextOutlined />
-                                            {{ $t("common.notes") }}
+                                            {{ $t("menu.correspondence") }}
                                         </span>
                                     </template>
                                     <LeadNotesTable
                                         pageName="lead_action"
                                         :leadId="crmState.client.xid"
                                         :leadInfo="crmState.client"
+                                        :managing="crmState.client.managing"
                                         :scrollStyle="{ y: 'calc(100vh - 320px)' }"
                                         @success="() => (refreshTimeLine = true)"
                                         :showAddButton="
@@ -1262,58 +1207,6 @@
                                         "
                                     />
                                 </a-tab-pane>
-
-                                <a-tab-pane key="message_history">
-                                    <template #tab>
-                                        <span>
-                                            <MessageOutlined />
-                                            {{ $t("common.message_history") }}
-                                        </span>
-                                    </template>
-                                    <LeadLogTable
-                                        key="lead_logs"
-                                        pageName="lead_action"
-                                        logType="message"
-                                        :leadId="leadDetails.xid"
-                                        :showLeadDetails="false"
-                                        :showTableSearch="false"
-                                        :showUserFilter="false"
-                                        :showDateFilter="false"
-                                    />
-                                </a-tab-pane>
-
-                                <a-tab-pane key="email_history">
-                                    <template #tab>
-                                        <span>
-                                            <IeOutlined />
-                                            {{ $t("common.email_history") }}
-                                        </span>
-                                    </template>
-                                    <LeadLogTable
-                                        key="lead_logs"
-                                        pageName="lead_action"
-                                        logType="email"
-                                        :leadId="leadDetails.xid"
-                                        :showLeadDetails="false"
-                                        :showTableSearch="false"
-                                        :showUserFilter="false"
-                                        :showDateFilter="false"
-                                    />
-                                </a-tab-pane>
-
-                                <!-- <a-tab-pane key="uphone_calls">
-                                    <template #tab>
-                                        <span>
-                                            <MobileOutlined />
-                                            {{ $t("common.uphone_calls") }}
-                                        </span>
-                                    </template>
-                                    <UphoneCallTable
-                                        :leadId="leadDetails.xid"
-                                        :visible="true"
-                                    />
-                                </a-tab-pane> -->
-
                             </a-tabs>
                         </a-card>
                     </a-col>
@@ -1322,7 +1215,7 @@
 </template>
 
 <script>
-import { onMounted, onUnmounted, ref, createVNode, watch, computed, reactive, nextTick } from "vue";
+import { onMounted, onUnmounted, ref, createVNode, watch, computed } from "vue";
 import {
     SaveOutlined,
     DoubleRightOutlined,
@@ -1418,7 +1311,6 @@ export default {
         const { t } = useI18n();
         const referenceNumber = ref("");
         const leadFollowUp = ref({});
-        const salesmanBooking = ref({});
         const leadNumber = ref(0);
         const newPageLoad = ref(true);
         const refreshTimeLine = ref(false);
@@ -1450,9 +1342,6 @@ export default {
             provinceOptions,
             cantonOptions,
             districtOptions,
-            selectedProvince,
-            selectedCanton,
-            selectedDistrict,
             activeKey,
             clientToManage,
             //////////
@@ -1474,12 +1363,10 @@ export default {
                 return ls?.id != null ? ls.id : null
             },
             set(val) {
-                // si aún no hay objeto, créalo
                 if (!crmState.client.lead_status) {
                     crmState.client.lead_status = { id: val }
                     return
                 }
-                // si le están pasando un objeto (sólo al principio)
                 if (val && typeof val === 'object') {
                     crmState.client.lead_status = val
                 } else {
@@ -1512,7 +1399,9 @@ export default {
             allLeadStatus.value = await fetchLeadStatus() || [];
             
             fetchLocalidades();
-           // fetchInitData()
+            if(route.params.id){
+                fetchInitData(route.params.id)
+            }
 
         });
 
@@ -1530,15 +1419,14 @@ export default {
             const leadId = xid;
             if(leadId){
                 const campaignUrl =
-                    "campaign{id,xid,name,status,remaining_leads,total_leads,form_id,x_form_id,email_template_id,x_email_template_id,detail_fields,last_action_by,x_last_action_by,completed_by,x_completed_by,started_on,completed_on,upcoming_lead_action},campaign:campaignUsers{id,xid,user_id,x_user_id,campaign_id,x_campaign_id},campaign:campaignUsers:user{id,xid,name,profile_image,profile_image_url},campaign:emailTemplate{id,xid,name},campaign:form{id,xid,name,form_fields},campaign:lastActioner{id,xid,name},campaign:completedBy{id,xid,name}";
-                const leadDetailsUrl = `leads/${leadId}?fields=id,xid,reference_number,lead_data,started,time_taken,last_action_by,x_last_action_by,lastActioner{id,xid,name},campaign_id,x_campaign_id,${campaignUrl},leadFollowUp{id,xid,log_type,user_id,x_user_id,date_time,notes},leadFollowUp:user{id,xid,name},salesmanBooking{id,xid,log_type,user_id,x_user_id,date_time,notes},salesmanBooking:user{id,xid,name},lead_status_id,x_lead_status_id`;
+                    "campaign{id,xid,name,last_action_by,x_last_action_by,completed_by,x_completed_by,started_on,completed_on,upcoming_lead_action},campaign:lastActioner{id,xid,name},campaign:completedBy{id,xid,name}";
+                const leadDetailsUrl = `leads/${leadId}?fields=id,xid,cedula,nombre,apellido1,apellido2,email,tel1,tel2,tel3,tel4,tel5,tel6,provincia,canton,distrito,hijos,fechaNacimiento,tarjeta,nombreBase,edad,nacionalidad,started,time_taken,last_action_by,x_last_action_by,lastActioner{id,xid,name},campaign_id,x_campaign_id,${campaignUrl},leadFollowUp{id,xid,log_type,user_id,x_user_id,date_time,notes},leadFollowUp:user{id,xid,name},leadStatus{id,xid,name,type},estadoCivil{id,xid,name,type},'assignTo{id,xid,name}'`;
                 leadDetails.value = {};
                 leadCallLogDetails.value = {};
                 activeKey.value = "lead_details";
                 activeLeftPanelKey.value = "lead_details";
                 leadFormData.value = {};
                 leadFollowUp.value = {};
-                salesmanBooking.value = {};
                 referenceNumber.value = "";
                 leadStatusId.value = undefined;
                 leadNumber.value = 0;
@@ -1546,80 +1434,23 @@ export default {
 
                 const leadDetailsPromise = axiosAdmin.get(leadDetailsUrl);
                 const leadCallLogPromise = axiosAdmin.get(`leads/create-call-log/${leadId}`);
-                // const leadStatusPromise = axiosAdmin.get(`lead-status?fields=id,xid,name,color`);
-                // const uphoneCampaignsPromise = axiosAdmin.post(`leads/uphone-campaigns`);
 
                 Promise.all([
                     leadDetailsPromise,
                     leadCallLogPromise,
-                    // leadStatusPromise,
-                    // uphoneCampaignsPromise,
                 ]).then(
                     ([
                         leadDetailsResponse,
                         leadCallLogResponse,
-                        // leadStatusResponse,
-                        // uphoneCampaignsResponse,
                     ]) => {
-                        var leadResult = leadDetailsResponse.data;
-                        // allLeadStatus.value = leadStatusResponse.data;
-                        // uPhoneCampaignsLists.value = uphoneCampaignsResponse.data.campaigns;
-                        // uPhoneEmailCampaignsLists.value =
-                        //     uphoneCampaignsResponse.data.email_campaigns;
 
                         leadNumber.value = leadCallLogResponse.data.lead_number;
+                        if(route.params.id){
+                            // crmState.client = leadDetailsResponse.data;
+                            onClientSelected(leadDetailsResponse.data);
+                            clientToManage();
+                        }
                         crmState.client.call_log = leadCallLogResponse.data.call_log;
-                        // leadDetails.value = leadResult;
-                        var newLeadDataArray = [];
-                        if (leadResult.lead_data && leadResult.lead_data.length > 0) {
-                            forEach(leadResult.lead_data, (fieldData) => {
-                                newLeadDataArray.push({
-                                    id: fieldData.id,
-                                    field_name: fieldData.field_name,
-                                    field_value: fieldData.field_value,
-                                });
-                            });
-                        }
-
-                        if (
-                            leadResult.campaign &&
-                            leadResult.campaign.form &&
-                            leadResult.campaign.form.form_fields &&
-                            leadResult.campaign.form.form_fields.length > 0
-                        ) {
-                            forEach(
-                                leadResult.campaign.form.form_fields,
-                                (leadFormFields) => {
-                                    var newResult = find(newLeadDataArray, {
-                                        field_name: leadFormFields.name,
-                                    });
-
-                                    if (newResult == undefined) {
-                                        newLeadDataArray.push({
-                                            id: Math.random().toString(36).slice(2),
-                                            field_name: leadFormFields.name,
-                                            field_value: "",
-                                        });
-                                    }
-                                }
-                            );
-                        }
-
-                        // leadFormData.value = {
-                        //     campaign_id: leadResult.x_campaign_id,
-                        //     lead_data: newLeadDataArray,
-                        // };
-                        // referenceNumber.value = leadResult.reference_number;
-
-                        leadFollowUp.value = leadResult.lead_follow_up
-                            ? leadResult.lead_follow_up
-                            : [];
-                        salesmanBooking.value = leadResult.salesman_booking
-                            ? leadResult.salesman_booking
-                            : [];
-                        // leadStatusId.value = leadResult.x_lead_status_id;
-
-                        // timer.reset(leadResult.time_taken, true);
 
                         newPageLoad.value = false;
                         refreshTimeLine.value = false;
@@ -1660,45 +1491,36 @@ export default {
         };
 
         const saveLead = (saveType = "auto") => {
-            if(crmState.client.leadStatus || crmState.client.estado_civil){
-                if (saveType == "save") {
-                    saveLoading.value = true;
-                } else if (saveType == "save_exit") {
-                    saveExitLoading.value = true;
-                }
-
-                addEditRequestAdmin({
-                    url: `campaigns/update-actioned-lead`,
-                    data: {
-                        ...crmState.client,
-                        //cedula: crmState.client.cedula,
-                        //lead_status_id: crmState.client.lead_status.id,
-                        call_log_id: crmState.client.call_log.xid,
-                        call_time: calculateTotalTimeInSeconds(),
-                        x_lead_id: crmState.client.xid,
-                    },
-                    success: (res) => {
-                        autoSaved.value = true;
-                        saveLoading.value = false;
-
-                        if (saveType == "save_exit") {
-                            saveExitLoading.value = false;
-
-                            router.push({
-                                name: "admin.call_manager.index",
-                            });
-
-                            // store.dispatch("auth/showNotificaiton", {});
-                        }else{
-                            crmState.client.managing = false;
-                            timer.reset(crmState.client.time_taken, false);
-                        }
-                    },
-                });    
-            }else{
-                alert('HOLAA');
+            if (saveType == "save") {
+                saveLoading.value = true;
+            } else if (saveType == "save_exit") {
+                saveExitLoading.value = true;
             }
-            
+
+            addEditRequestAdmin({
+                url: `campaigns/update-actioned-lead`,
+                data: {
+                    ...crmState.client,
+                    call_log_id: crmState.client.call_log.xid,
+                    call_time: calculateTotalTimeInSeconds(),
+                    x_lead_id: crmState.client.xid,
+                },
+                success: (res) => {
+                    autoSaved.value = true;
+                    saveLoading.value = false;
+
+                    if (saveType == "save_exit") {
+                        saveExitLoading.value = false;
+                        router.push({
+                            name: "admin.call_manager.index",
+                        });
+                        // store.dispatch("auth/showNotificaiton", {});
+                    }else{
+                        crmState.client.managing = false;
+                        timer.reset(crmState.client.time_taken, false);
+                    }
+                },
+            });    
         };
 
         const takeLeadAction = (actionName) => {
@@ -1871,9 +1693,6 @@ export default {
             provinceOptions,
             cantonOptions,
             districtOptions,
-            selectedProvince,
-            selectedCanton,
-            selectedDistrict,
             clientToManage,
             leadStatusModel,
             maritalStatusModel,
@@ -1888,7 +1707,6 @@ export default {
             leadFormData,
             referenceNumber,
             leadFollowUp,
-            salesmanBooking,
             loading,
             rules,
 

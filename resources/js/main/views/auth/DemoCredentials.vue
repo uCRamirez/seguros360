@@ -70,9 +70,9 @@ export default defineComponent({
                 password: 12345678,
             },
             {
-                name: "Member",
-                email: "member@example.com",
-                password: 12345678,
+                name: "Supervisor",
+                email: "jose@gmail.com",
+                password: 123,
             },
         ]);
 
@@ -80,9 +80,9 @@ export default defineComponent({
             if (appType == "saas") {
                 demoCredentials.value = [
                     {
-                        name: "SuperAdmin",
-                        email: "superadmin@example.com",
-                        password: 12345678,
+                        name: "Supervisor",
+                        email: "jose@gmail.com",
+                        password: 123,
                     },
                     ...demoCredentials.value,
                 ];

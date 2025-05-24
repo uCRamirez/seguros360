@@ -8,10 +8,14 @@ const fields = (props) => {
     const leadUrl =
         "lead{id,xid,reference_number,lead_data,started,campaign_id,x_campaign_id,time_taken,first_action_by,x_first_action_by,last_action_by,x_last_action_by},lead:campaign{id,xid,name,status},lead:firstActioner{id,xid,name},lead:lastActioner{id,xid,name}";
     const formFieldNamesUrl = "form-field-names/all";
-    const url = `lead-logs?fields=id,xid,log_type,time_taken,date_time,user_id,x_user_id,notes,phone,message,user{id,xid,name,profile_image,profile_image_url},lead_id,x_lead_id,notes_file,,notes_file_url,${leadUrl},notes_typification_id_1,x_notes_typification_id_1,notes_typification_id_2,x_notes_typification_id_2,notes_typification_id_3,x_notes_typification_id_3`;
+    const url = 
+        `lead-logs?fields=id,xid,log_type,time_taken,date_time,user_id,x_user_id,notes,phone,message,user{id,xid,name,profile_image,profile_image_url},lead_id,x_lead_id,notes_file,notes_file_url,${leadUrl},campaign_id,notes_typification_id_1,x_notes_typification_id_1,notes_typification_id_2,x_notes_typification_id_2,notes_typification_id_3,x_notes_typification_id_3,notes_typification_id_4,x_notes_typification_id_4,isSale{idVenta,idNota,idLead,user_id,telVenta,estadoVenta,tarjeta,idProducto,cantidadProducto,aplicaBeneficiarios,cantidadBeneficiarios,beneficiarios,montoTotal,calidad}}`;
     const allFormFieldNames = ref([]);
     const addEditUrl = "lead-logs";
-    const hashableColumns = ["lead_id", "campaign_id", "user_id", "notes_typification_id_1", "notes_typification_id_2", "notes_typification_id_3"];
+    const hashableColumns = ["lead_id", "campaign_id", "user_id", "notes_typification_id_1", "notes_typification_id_2", "notes_typification_id_3","notes_typification_id_4"];
+    const urlProductos =
+    "products?fields=id,xid,name,coverage,price,campaign_id,x_campaign_id,product_type,tax_rate,tax_label,image,image_url,internal_code,category_id,x_category_id,categories{id,xid,name},campaigns{id,xid,name}";
+
     const { t } = useI18n();
     const initData = {
         notes: "",
@@ -21,12 +25,15 @@ const fields = (props) => {
         notes_typification_id_1: undefined,
         notes_typification_id_2: undefined,
         notes_typification_id_3: undefined,
+        notes_typification_id_4: undefined,
+        is_sale: undefined,
         phone: "",
         message: ""
     };
     const columns = ref([]);
     const allCampaigns = ref([]);
     const allUsers = ref([]);
+    const allProductos = ref([]);
 
     const filterableColumns = [];
 
@@ -37,20 +44,24 @@ const fields = (props) => {
         const staffMembersPromise = axiosAdmin.get(
             `all-users?log_type=${props.logType}`
         );
+        const productosPromise = axiosAdmin.get(urlProductos);
 
         return Promise.all([
             formFieldNamesPromise,
             campaignsPromise,
             staffMembersPromise,
+            productosPromise,
         ]).then(
             ([
                 formFieldNamesResponse,
                 campaignsResponse,
                 staffMembersResponse,
+                productosResponse,
             ]) => {
                 allFormFieldNames.value = formFieldNamesResponse.data.data;
                 allCampaigns.value = campaignsResponse.data;
                 allUsers.value = staffMembersResponse.data.users;
+                allProductos.value = productosResponse.data;
 
                 var newColumnsArray = [];
 
@@ -118,6 +129,7 @@ const fields = (props) => {
         hashableColumns,
         allFormFieldNames,
         allCampaigns,
+        allProductos,
         allUsers,
         getPrefetchData,
     };

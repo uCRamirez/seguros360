@@ -87,6 +87,32 @@
                         </a-form-item>
                     </a-col>
 
+                    <a-col
+                        v-show="data.typification_1 != '' && data.typification_2 != '' && data.typification_3 != ''"
+                        :xs="24"
+                        :sm="24"
+                        :md="7"
+                        :lg="7"
+                    >
+                        <a-form-item
+                            :label="$t('lead_notes.typification_4')"
+                            :name="['form_data', index, 'typification_4']"
+                            :help="
+                                rules.typification_4 ? rules.typification_4.message : null
+                            "
+                            :validateStatus="rules.typification_4 ? 'error' : null"
+                        >
+                            <a-input
+                                v-model:value="data.typification_4"
+                                :placeholder="
+                                    $t('common.placeholder_default_text', [
+                                        $t('lead_notes.typification_4'),
+                                    ])
+                                "
+                            />
+                        </a-form-item>
+                    </a-col>
+
                     <a-col :span="1" style="margin-top: 6px">
                         <MinusSquareOutlined @click="removeFormField(data)" />
                     </a-col>
@@ -152,6 +178,7 @@ export default defineComponent({
                 typification_1: "",
                 typification_2: "",
                 typification_3: "",
+                typification_4: "",
             },
         ]);
 
@@ -163,6 +190,7 @@ export default defineComponent({
                 typification_1: "",
                 typification_2: "",
                 typification_3: "",
+                typification_4: "",
             });
         };
 
@@ -219,7 +247,8 @@ export default defineComponent({
                 return (
                     some(formData.value, { typification_1: "" }) ||
                     some(formData.value, { typification_2: "" }) ||
-                    some(formData.value, { typification_3: "" })
+                    some(formData.value, { typification_3: "" }) ||
+                    some(formData.value, { typification_4: "" })
                 );
             }
         });
@@ -249,7 +278,7 @@ export default defineComponent({
             (newVal, oldVal) => {
                 onlyValidateErrors.value = {};
                 formData.value = [
-                    { typification_1: "", typification_2: "", typification_3: "" },
+                    { typification_1: "", typification_2: "", typification_3: "",  typification_4: "" },
                 ];
             }
         );

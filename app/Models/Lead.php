@@ -24,8 +24,6 @@ class Lead extends BaseModel implements Auditable
 
     protected $appends = ['xid', 'x_company_id', 'x_campaign_id', 'x_first_action_by', 'x_last_action_by', 'x_lead_follow_up_id', 'x_salesman_booking_id', 'x_estadoCivil_id','x_lead_status_id', 'x_assign_to'];
 
-    //protected $filterable = ['reference_number', 'campaign_id', 'lead_status_id'];
-    //Columnas por las que se permite filtrar
     protected $filterable = [
         'reference_number',
         'campaign_id',

@@ -413,8 +413,9 @@ class Common
         if (isset($data['reference_number'])) {
             $lead->reference_number = $data['reference_number'];
         }
-        if (isset($data['lead_status_id'])) {
-            $lead->lead_status_id = $data['lead_status_id'];
+        if (isset($data['lead_status'])) {
+            $lead->lead_status_id = $data['lead_status']['id'];
+            //\Log::info('lead_status', ['data' => $data['lead_status']]);
         }
 
         if (isset($data['assign_to']['id'])) {
@@ -426,7 +427,7 @@ class Common
         $lead->time_taken     = $totalTime;
 
         // 8) Guardar Lead
-        // \Log::info('saveLead', ['data' => $data]);
+        //\Log::info('saveLead', ['data' => $data]);
 
         $lead->save();
 
