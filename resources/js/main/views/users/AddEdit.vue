@@ -110,6 +110,32 @@
                     <a-row>
                         <a-col :span="24">
                             <a-form-item
+                                :label="$t('user.user')"
+                                name="user"
+                                :help="
+                                    rules.user
+                                        ? rules.user.message
+                                        : null
+                                "
+                                :validateStatus="
+                                    rules.user ? 'error' : null
+                                "
+                                class="required"
+                            >
+                                <a-input
+                                    v-model:value="formData.user"
+                                    :placeholder="
+                                        $t('common.placeholder_default_text', [
+                                            $t('user.user'),
+                                        ])
+                                    "
+                                />
+                            </a-form-item>
+                        </a-col>
+                    </a-row>
+                    <a-row>
+                        <a-col :span="24">
+                            <a-form-item
                                 :label="$t('user.password')"
                                 name="password"
                                 :help="

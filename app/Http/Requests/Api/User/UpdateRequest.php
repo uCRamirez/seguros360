@@ -44,7 +44,7 @@ class UpdateRequest extends BaseRequest
                 })->ignore($id)
             ],
             'name' => 'required',
-           
+            'user' => 'required',
             'status' => 'required',
         ];
 

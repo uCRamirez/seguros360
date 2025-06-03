@@ -13,8 +13,8 @@
                 </p>
                 <p class="ant-upload-text">Click or drag file to this area to upload</p>
                 <p class="ant-upload-hint">
-                    Support for a single or bulk upload. Strictly prohibit from uploading
-                    company data or other band files
+                    1- Solo se admiten archivos <strong>.csv</strong> <br>
+                    2- Formato de fechas: <strong>año-mes-día hora:minutos:segundos</strong>  
                 </p>
             </a-upload-dragger>
         </a-col>

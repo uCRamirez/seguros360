@@ -85,10 +85,23 @@
             :url="addEditUrl"
             @addEditSuccess="addEditSuccess"
             @closed="onCloseAddEdit"
+            :permsArray="permsArray"
             :formData="formData"
             :data="viewData"
             :pageTitle="pageTitle"
             :successMessage="successMessage"
+        />
+
+        <AddBase
+            :addEditType="'add'"  
+            :formData="formData"
+            :permsArray="permsArray"
+            :visible="addBaseVisible"
+            :campaign="selectedCampaign"
+            :pageTitle="basePageTitle"
+            :successMessage="baseSuccessMsg"
+            @addEditSuccess="onBaseSuccess"
+            @closed="closeAddBase"
         />
 
         <a-row
@@ -243,20 +256,13 @@
                                             <template #icon><EditOutlined /></template>
                                         </a-button>
                                     </a-tooltip>
-                                    <a-tooltip :title="$t('common.delete')">
+                                    <a-tooltip :title="`${$t('common.add')} ${$t('bases.base')}`">
                                         <a-button
-                                            v-if="
-                                                (permsArray.includes(
-                                                    'campaigns_delete'
-                                                ) ||
-                                                    permsArray.includes('admin')) &&
-                                                (!record.children ||
-                                                    record.children.length == 0)
-                                            "
-                                            type="primary"
-                                            @click="showDeleteConfirm(record.xid)"
+                                           v-if="permsArray.includes('bases_view') || permsArray.includes('admin')"
+                                           type="primary"
+                                           @click="showAddBase(record)"
                                         >
-                                            <template #icon><DeleteOutlined /></template>
+                                            <template #icon><FileAddOutlined/></template>
                                         </a-button>
                                     </a-tooltip>
                                     <a-tooltip
@@ -275,6 +281,23 @@
                                             <template #icon><SwapOutlined /></template>
                                         </a-button>
                                     </a-tooltip>
+                                    <a-tooltip :title="$t('common.delete')">
+                                        <a-button
+                                            v-if="
+                                                (permsArray.includes(
+                                                    'campaigns_delete'
+                                                ) ||
+                                                    permsArray.includes('admin')) &&
+                                                (!record.children ||
+                                                    record.children.length == 0)
+                                            "
+                                            type="primary"
+                                            danger
+                                            @click="showDeleteConfirm(record.xid)"
+                                        >
+                                            <template #icon><DeleteOutlined /></template>
+                                        </a-button>
+                                    </a-tooltip>
                                 </a-space>
                             </template>
                         </template>
@@ -291,6 +314,7 @@ import { onMounted, ref, createVNode } from "vue";
 import {
     PlusOutlined,
     EditOutlined,
+    FileAddOutlined,
     DeleteOutlined,
     PlayCircleOutlined,
     StopOutlined,
@@ -304,6 +328,7 @@ import crud from "../../../common/composable/crud";
 import common from "../../../common/composable/common";
 import fields from "./fields";
 import AddEdit from "./AddEdit.vue";
+import AddBase from "./AddBase.vue";
 import AdminPageHeader from "../../../common/layouts/AdminPageHeader.vue";
 import AddLead from "./AddLead.vue";
 import CampaignMembers from "./CampaignMembers.vue";
@@ -315,6 +340,7 @@ export default {
     components: {
         PlusOutlined,
         EditOutlined,
+        FileAddOutlined,
         DeleteOutlined,
         PlayCircleOutlined,
         StopOutlined,
@@ -324,6 +350,7 @@ export default {
         SwapOutlined,
         RecycleLead,
         AddEdit,
+        AddBase,
         AdminPageHeader,
         AddLead,
         CampaignMembers,
@@ -427,7 +454,42 @@ export default {
             visible.value = false;
         };
 
+        const addBaseVisible    = ref(false)
+        const selectedCampaign  = ref(null)
+        const baseFormData      = ref({})
+        const baseUrl           = ref('')
+        const basePageTitle     = ref('')
+        const baseSuccessMsg    = ref('')
+
+        function showAddBase(record) {
+            selectedCampaign.value = record
+            baseFormData.value     = { ...record }            // o el initData que necesites
+            baseUrl.value          = `${addEditUrl}/${record.xid}/bases`
+            basePageTitle.value    = `${t('common.add')} ${t('bases.base')}`
+            baseSuccessMsg.value   = t('bases.base_added_success')
+            addBaseVisible.value   = true
+        }
+
+        function closeAddBase() {
+            addBaseVisible.value = false
+        }
+
+        function onBaseSuccess() {
+            addBaseVisible.value = false
+            // refresca tabla si lo necesitas:
+            fetch()
+        }
+
         return {
+            addBaseVisible,
+            selectedCampaign,
+            baseFormData,
+            baseUrl,
+            basePageTitle,
+            baseSuccessMsg,
+            showAddBase,
+            closeAddBase,
+            onBaseSuccess,
             permsArray,
             formatDateTime,
             appSetting,

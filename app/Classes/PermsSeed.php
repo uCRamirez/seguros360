@@ -88,6 +88,10 @@ class PermsSeed
             'name' => 'campaigns_delete',
             'display_name' => 'Campaigns Delete'
         ],
+        'bases_view' => [
+            'name' => 'bases_view',
+            'display_name' => 'Bases View'
+        ],
         'campaigns_recycle' => [
             'name' => 'campaigns_recycle',
             'display_name' => 'Campaigns Recycle Delete'

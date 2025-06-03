@@ -122,6 +122,7 @@ return new class extends Migration
 
             // Assignment
             $table->unsignedBigInteger('assign_to')->nullable();
+            $table->string('agente', 191)->nullable();
             $table->foreign('assign_to')
                   ->references('id')
                   ->on('users')

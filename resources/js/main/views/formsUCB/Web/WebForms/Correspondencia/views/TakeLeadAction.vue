@@ -1148,7 +1148,10 @@
                                                     @change="handleClientSerchTableChange" bordered size="middle">
                                                     <template #bodyCell="{ column, record }">
                                                         <template v-if="column.dataIndex === 'assign_to'">
-                                                            {{ record.assign_to.name }}
+                                                                {{ record.assign_to && record.assign_to.name
+                                                                    ? record.assign_to.name
+                                                                    : ''
+                                                                }}
                                                         </template>
                                                     </template>
                                                 </a-table>

@@ -100,7 +100,7 @@ class CampaignController extends ApiBaseController
 
     public function stored(Campaign $campaign)
     {
-        \Log::info('stored - campaign', ['campaign' => $campaign]);
+        //\Log::info('stored - campaign', ['campaign' => $campaign]);
         $request = request();
         $allUsers = json_decode($request->user_id);
 

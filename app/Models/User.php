@@ -30,7 +30,7 @@ class User extends BaseModel implements AuthenticatableContract, JWTSubject, Aud
 
     protected $appends = ['xid', 'x_company_id', 'x_role_id', 'profile_image_url'];
 
-    protected $filterable = ['name', 'user_type', 'email', 'status', 'phone'];
+    protected $filterable = ['name', 'user_type', 'email','user', 'status', 'phone'];
 
     protected $hashableGetterFunctions = [
         'getXCompanyIdAttribute' => 'company_id',

@@ -10,6 +10,7 @@ const fields = () => {
     const initData = {
         name: "",
         email: "",
+        user: "",
         password: "",
         profile_image: undefined,
         profile_image_url: undefined,

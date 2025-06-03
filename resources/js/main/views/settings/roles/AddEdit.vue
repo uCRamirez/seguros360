@@ -257,6 +257,14 @@
                                                         </label>
                                                         <label class="form-check form-check-custom me-5 me-lg-20">
                                                             <a-checkbox :value="permissions[
+                                                                'bases_view'
+                                                                ]
+                                                                ">
+                                                                {{ $t("common.view") + ' ' + $t("bases.base") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox :value="permissions[
                                                                 'campaigns_delete'
                                                                 ]
                                                                 ">

@@ -190,6 +190,7 @@
                                                     record.children.length == 0)
                                             "
                                             type="primary"
+                                            danger
                                             @click="
                                                 showDeleteConfirm(record.xid)
                                             "

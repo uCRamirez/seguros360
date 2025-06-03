@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -129,6 +129,9 @@ return new class extends Migration
                   ->onUpdate('cascade');
 
             $table->timestamps();
+
+            $table->unique(['cedula', 'campaign_id'], 'UX_cedula_campaign');
+
         });
     }
 

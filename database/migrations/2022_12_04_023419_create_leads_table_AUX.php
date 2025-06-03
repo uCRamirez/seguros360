@@ -63,7 +63,8 @@ return new class extends Migration
             $table->string('lead_hash', 191)->nullable();
             $table->integer('notes_count')->default(0);
             $table->unsignedBigInteger('lead_status_id')->nullable();
-            $table->unsignedBigInteger('assign_to')->nullable();
+            $table->string('agente', 191)->nullable();
+
 
             $table->timestamps();
         });

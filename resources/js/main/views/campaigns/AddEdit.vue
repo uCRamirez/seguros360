@@ -114,8 +114,52 @@
             </template>
 
             <template v-if="currentStep == 2">
-                <ImportLeads acceptFormat=".csv" :allFields="selectedFormFields" @fileUploaded="leadFileUploaded"
+                <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                    <a-form-item
+                        :label="$t('bases.base') + ' ' + $t('bases.stage')"
+                        name="stage"
+                        :help="
+                            rules.stage
+                                ? rules.stage.message
+                                : null
+                        "
+                        :validateStatus="
+                            rules.stage ? 'error' : null
+                        "
+                        class="required"
+                    >
+                        <a-select
+                            v-model:value="formData.etapa"
+                            :placeholder="$t(
+                            'common.select_default_text',
+                            [ $t('bases.base') + ' ' + $t('bases.stage') ]
+                            )" 
+                        >
+                            <a-select-option
+                                key="nueva"
+                                value="nueva"
+                            >
+                                {{ $t("bases.new") }}
+                            </a-select-option>
+                            <a-select-option
+                                key="reproceso"
+                                value="reproceso"
+                            >
+                                {{ $t("bases.reprocessing") }}
+                            </a-select-option>
+                            <a-select-option
+                                key="na"
+                                value="na"
+                            >
+                                {{ $t("bases.na") }}
+                            </a-select-option>
+                        </a-select>
+                    </a-form-item>
+                </a-col>
+                <ImportLeads v-if="permsArray.includes('bases_view') || permsArray.includes('admin')" 
+                    acceptFormat=".csv" :allFields="selectedFormFields" @fileUploaded="leadFileUploaded"
                     @leadColumnChanged="leadColumnChanged" />
+                <h4 class="text-center" v-else>{{ $t('bases.not_permission') }}</h4>
             </template>
         </a-form>
         <template #footer>
@@ -163,6 +207,7 @@ import ImportLeads from "./ImportLeads.vue";
 
 export default defineComponent({
     props: [
+        "permsArray",
         "formData",
         "data",
         "visible",
@@ -206,21 +251,20 @@ export default defineComponent({
         const importLeadColumns = ref(undefined);
         const selectedFormFields = ref([]);
         const isChecked = ref(false);
-        const none_uc_campaigns = ref({}); // Las que no se deben usar
-        var aux_none_uc_campaigns = false;
-
+        const none_uc_campaigns = ref({}); 
 
         onMounted(() => {
+            props.formData.etapa = 'nueva';
             const staffMemberPromise = axiosAdmin.get(staffMembersUrl);
             const all_uc_campaignsPromise = axiosAdmin.post('campaigns/uc-campaigns');
             const all_use_uc_campaignsPromise = axiosAdmin.post('campaigns/use-uc-campaigns');
-            const formsPromise = axiosAdmin.get(formUrl);
+            // const formsPromise = axiosAdmin.get(formUrl);
             const emailTemplatesPromise = axiosAdmin.get(emailTemplateUrl);
 
-            Promise.all([staffMemberPromise, all_uc_campaignsPromise, all_use_uc_campaignsPromise, formsPromise, emailTemplatesPromise]).then(
-                ([staffMemberResponse, all_uc_campaignsResponse, all_use_uc_campaignsResponse, formsResponse, emailTemplatesResponse]) => {
+            Promise.all([staffMemberPromise, all_uc_campaignsPromise, all_use_uc_campaignsPromise, emailTemplatesPromise]).then(//formsPromise
+                ([staffMemberResponse, all_uc_campaignsResponse, all_use_uc_campaignsResponse, emailTemplatesResponse]) => {//formsResponse
                     allStaffMembers.value = staffMemberResponse.data;
-                    allForms.value = formsResponse.data;
+                    // allForms.value = formsResponse.data;
                     allEmailTemplates.value = emailTemplatesResponse.data.email_templates;
                     all_uc_campaigns.value = all_uc_campaignsResponse.message.campaigns;
                     all_use_uc_campaigns.value = all_use_uc_campaignsResponse.message.campaigns;
@@ -338,7 +382,15 @@ export default defineComponent({
 
             newFormData.import_lead_fields = importLeadColumns.value;
 
-            let isCSV = newFormData.import_lead_fields ? { data: newFormData.import_lead_fields, file: newFormData.file.name } : false;
+            let isCSV = newFormData.import_lead_fields ? { 
+                data: newFormData.import_lead_fields, 
+                file: newFormData.file.name,
+                campaign_id: props.data.id,
+                company_id: JSON.parse(localStorage.getItem('global_settings') || '{}').xid || '',
+                myId:  JSON.parse(localStorage.getItem("auth_user") || "{}").id,
+                etapa: newFormData.etapa,
+                } 
+                : false;
 
             addEditFileRequestAdmin({
                 url: props.url,
@@ -357,7 +409,7 @@ export default defineComponent({
                 addEditRequestAdmin({
                     url: 'leadcsv/push',
                     data: isCSV,
-                    successMessage: props.successMessage,
+                    successMessage: "Imported Data",
                     success: (res) => {
                         console.log(res);
                     },
@@ -423,7 +475,7 @@ export default defineComponent({
         };
 
         const formSelected = () => {
-            axiosAdmin.get('columns/leads')
+            axiosAdmin.get('columns/leads_aux')
                 .then(response => {
                 // AxiosAdmin parece devolverte el body ya parseado en `response`
                 const payload = response.message ?? response.data ?? response;
@@ -459,6 +511,7 @@ export default defineComponent({
 
                 // For Form Fields
                 formSelected();
+                props.formData.etapa = 'nueva';
 
                 isChecked.value = uc_campaignsArray.value.length !== 0 ? true : false;
 

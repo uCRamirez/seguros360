@@ -134,6 +134,7 @@
                                         ) || permsArray.includes('admin')
                                     "
                                     type="primary"
+                                    danger
                                     @click="showDeleteConfirm(record.xid)"
                                     style="margin-left: 4px"
                                 >

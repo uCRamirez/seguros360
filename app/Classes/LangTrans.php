@@ -114,8 +114,20 @@ class LangTrans
             'campaigns_recycle' => 'Campaigns Recycle',
             'uphone_calls' => "Uphone Calls",
             'email_history' => 'Email History',
-            'information' => 'Information'
-            
+            'information' => 'Information',            
+        ],
+        //nuevo
+        'bases' => [
+            'base' => 'Base',
+            'bases' => 'Bases',
+            'not_permission' => "You don't have permission to upload databases.",
+            'bases_history' => 'Bases History',
+            'stage' => 'Stage',
+            'new' => 'New',
+            'reprocessing' => 'Reprocessing',
+            'na' => "Doesn't apply",
+            'base_added_success' => 'Base added success',
+            'required_fields' => 'Required fields',
         ],
         'menu' => [
             'dashboard' => 'Dashboard',
@@ -386,7 +398,10 @@ class LangTrans
             'lead_type' => 'Lead Type',
             'date_time' => 'Date Time',
             'is_schedule' => 'Is Schedule',
-            'select_all_leads' => 'Select All Leads'
+            'select_all_leads' => 'Select All Leads',
+            'records' => 'Records',
+            'created_at' => 'Created at',
+            'updated_at' => 'Updated at',
         ],
         'email_template' => [
             'add' => 'Add New Email Template',

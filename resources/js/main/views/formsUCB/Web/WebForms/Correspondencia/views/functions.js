@@ -5,6 +5,7 @@ import { reactive, nextTick, watch, ref } from "vue";
 import { notification } from "ant-design-vue";
 import { useI18n } from "vue-i18n";
 import dataForm from "../../../../../../../common/composable/dataForm";
+import common from "../../../../../../../common/composable/common";
 import dayjs from 'dayjs';
 import { useStopwatch } from "vue-timer-hook";
 // ** END DO NOT DELETE
@@ -116,6 +117,7 @@ const { UCB_executeQuery, UCB_audit, UCB_uploadFile } = ucb_framework();
 const functionsCRM = () => {
     // Translations to use
     const { t } = useI18n();
+    const { permsArray } = common();
     const timer = useStopwatch(0, false); // para parar el reloj timer.pause() para iniciar el reloj timer.start() 
     // From the dataForms.js, we get the campaings and the tipifications levels to the form
     const {
@@ -194,8 +196,10 @@ const functionsCRM = () => {
             filters.push(`lead_status_id eq "${leadStatus}"`);
         }
 
+
         // Filtro para que cada agente vea solo lo asignado a el
-        filters.push(`assign_to eq "${myId.value}"`);
+        !permsArray.value?.includes('admin') && filters.push(`assign_to eq "${myId.value}"`);
+
 
         const filtersString = filters.join(' and ');
 

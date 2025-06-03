@@ -27,8 +27,16 @@ const fields = () => {
 
     const filterableColumns = [
         {
-            key: "reference_number",
-            value: t("lead.reference_number"),
+            key: "cedula",
+            value: t("lead.cedula"),
+        },
+        {
+            key: "nombre",
+            value: t("lead.name"),
+        },
+        {
+            key: "tel1",
+            value: t("lead.phone"),
         },
     ];
 

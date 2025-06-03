@@ -165,6 +165,7 @@
                                         record.xid != user.xid
                                     "
                                     type="primary"
+                                    danger
                                     @click="showDeleteConfirm(record.xid)"
                                     style="margin-left: 4px"
                                 >

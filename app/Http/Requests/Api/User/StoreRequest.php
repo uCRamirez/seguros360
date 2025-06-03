@@ -42,7 +42,7 @@ class StoreRequest extends BaseRequest
                 })
             ],
             'status' => 'required',
-            
+            'user' => 'required',
         ];
 
         if ($loggedUser->hasRole('admin')) {

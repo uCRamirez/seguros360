@@ -52,6 +52,7 @@ return array(
     'App\\Http\\Controllers\\Api\\AuthController' => $baseDir . '/app/Http/Controllers/Api/AuthController.php',
     'App\\Http\\Controllers\\Api\\CallManagerController' => $baseDir . '/app/Http/Controllers/Api/CallManagerController.php',
     'App\\Http\\Controllers\\Api\\CampaignController' => $baseDir . '/app/Http/Controllers/Api/CampaignController.php',
+    'App\\Http\\Controllers\\Api\\BaseHistoricoController' => $baseDir . '/app/Http/Controllers/Api/BaseHistoricoController.php',
     'App\\Http\\Controllers\\Api\\CategoryController' => $baseDir . '/app/Http/Controllers/Api/CategoryController.php',
     'App\\Http\\Controllers\\Api\\Common\\CurrencyController' => $baseDir . '/app/Http/Controllers/Api/Common/CurrencyController.php',
     'App\\Http\\Controllers\\Api\\Common\\DatabaseBackupController' => $baseDir . '/app/Http/Controllers/Api/Common/DatabaseBackupController.php',

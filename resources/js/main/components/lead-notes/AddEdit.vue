@@ -330,9 +330,13 @@
         </a-form>
 
         <template #footer>
-            <a-button v-if="permsArray.includes('admin')" key="submit" type="primary" :loading="loading" @click="onSubmit">
+            <a-button v-if="addEditType == 'add' && (permsArray.includes('admin') || permsArray.includes('forms_view'))" key="submit" type="primary" :loading="loading" @click="onSubmit">
                 <SaveOutlined />
-                {{ addEditType == "add" ? $t("common.create") : $t("common.update") }}
+                {{ $t("common.create") }}
+            </a-button>
+            <a-button v-if="addEditType == 'edit' && permsArray.includes('admin')" key="submit" type="primary" :loading="loading" @click="onSubmit">
+                <SaveOutlined />
+                {{ $t("common.update") }}
             </a-button>
             <a-button key="back" @click="onClose">
                 {{ $t("common.cancel") }}

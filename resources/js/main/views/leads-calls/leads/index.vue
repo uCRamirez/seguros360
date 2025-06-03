@@ -220,7 +220,7 @@
                                     </template>
                                 </a-tab-pane>
 
-                                <a-tab-pane key="not_started">
+                                <a-tab-pane v-if="permsArray.includes('leads_view_all') || permsArray.includes('admin')" key="not_started">
                                     <template #tab>
                                         <span>
                                             <HistoryOutlined />
@@ -235,7 +235,7 @@
                     <a-row :gutter="16">
                         <a-col :xs="24" :sm="24" :md="4" :lg="4" :xl="4">
                             <a-input-search style="width: 100%" v-model:value="table.searchString" :placeholder="$t('common.select_default_text', [
-                                $t('lead.reference_number'),
+                                $t('common.information'),
                             ])
                                 " show-search @change="onTableSearch" @search="onTableSearch"
                                 :loading="table.filterLoading" />
@@ -365,6 +365,7 @@
                                                         </template>
                                                     </a-button>
                                                 </a-tooltip>
+
                                                 <a-tooltip v-if="
                                                     record.campaign &&
                                                     record.x_assign_to == user.xid &&
@@ -395,15 +396,15 @@
                                                         </template>
                                                     </a-button>
                                                 </a-tooltip>
-                                                <!-- <a-tooltip :title="$t('lead.lead_details')">
-                                                    <a-button type="primary" @click="
-                                                        viewLeadUphoneData(record)
-                                                        ">
+
+                                                <a-tooltip v-if="!record.x_assign_to" :title="$t('lead.assign_to')">
+                                                    <a-button type="primary" @click="assignUserOption(record)">
                                                         <template #icon>
-                                                            <EyeOutlined />
+                                                            <UserAddOutlined />
                                                         </template>
                                                     </a-button>
-                                                </a-tooltip> -->
+                                                </a-tooltip>
+
                                             </a-space>
                                             <span v-else>-</span>
                                         </template>
@@ -437,6 +438,7 @@ import {
     PlusOutlined,
     EditOutlined,
     DeleteOutlined,
+    UserAddOutlined,
     SearchOutlined,
     LineChartOutlined,
     EyeOutlined,
@@ -473,6 +475,7 @@ export default {
         PlusOutlined,
         EditOutlined,
         DeleteOutlined,
+        UserAddOutlined,
         SearchOutlined,
         LineChartOutlined,
         EyeOutlined,

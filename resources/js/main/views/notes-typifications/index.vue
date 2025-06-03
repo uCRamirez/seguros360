@@ -127,6 +127,7 @@
                                         (!record.children || record.children.length == 0)
                                     "
                                     type="primary"
+                                    danger
                                     @click="showDeleteConfirm(record.xid)"
                                     style="margin-left: 4px"
                                 >

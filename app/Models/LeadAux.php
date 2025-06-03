@@ -20,9 +20,9 @@ class LeadAux extends BaseModel implements Auditable
 
     protected $guarded = [];
 
-    protected $hidden = [];
+    protected $hidden = ['company_id'];
 
-    protected $appends = [];
+    protected $appends = ['x_company_id'];
 
     protected $filterable = [
         'campaign_id',
@@ -50,15 +50,16 @@ class LeadAux extends BaseModel implements Auditable
         'nombreBase',
         'tarjeta',
         'assign_to',
+        'created_by',
     ];
     
 
     protected $hashableGetterFunctions = [
-    
+        'getXCompanyIdAttribute' => 'company_id',
     ];
 
     protected $casts = [
-    
+        'company_id' => Hash::class . ':hash',
     ];
 
     protected static function boot()

@@ -1,2 +1,2 @@
-name,product_type,category,price,tax_rate,internal_code,tax_label
-charger,electronic,accessories,250,20,rt45,2345r
+name;coverage;category;price;tax_rate;internal_code;tax_label;campaign
+charger;coverage;accessories;250;20;rt45;2345r;nombreCamp

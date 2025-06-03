@@ -33,6 +33,7 @@
                         </a-button>
                         <ImportProducts
                             :pageTitle="$t('product.import_products')"
+                            :camposRequerido="$t('bases.required_fields')"
                             :sampleFileUrl="sampleFileUrl"
                             importUrl="products/import"
                             @onUploadSuccess="setUrlData"
@@ -214,6 +215,7 @@
                                             record.children.length == 0)
                                     "
                                     type="primary"
+                                    danger
                                     @click="showDeleteConfirm(record.xid)"
                                     style="margin-left: 4px"
                                 >

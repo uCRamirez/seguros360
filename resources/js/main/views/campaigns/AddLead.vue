@@ -255,7 +255,7 @@ export default defineComponent({
                     });
                 });
             }
-
+            users.value = [];
             campaignUser.value = props.campaign.campaign_users;
             forEach(campaignUser.value, (campaign) => {
                 if (campaign.user) {
@@ -266,7 +266,7 @@ export default defineComponent({
             formData.value = {
                 campaign_id: props.campaign.xid,
                 lead_data: newLeadDataArray,
-                assign_to: undefined,
+                assign_to: null,
             };
         };
 
@@ -274,7 +274,7 @@ export default defineComponent({
             visible.value = true;
         };
 
-        const onSubmit = () => {
+        const onSubmit = async () => {
             addEditRequestAdmin({
                 url: "leads/create-lead",
                 data: formData.value,

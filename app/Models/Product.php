@@ -14,7 +14,7 @@ class Product extends BaseModel implements Auditable
     
     protected $table = 'products';
 
-    protected $default = ['xid', 'name','coverage','description', 'product_type', 'image_url', 'price', 'tax_rate', 'tax_label'];
+    protected $default = ['xid', 'name','coverage','description','nombreBase', 'product_type', 'image_url', 'price', 'tax_rate', 'tax_label'];
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
@@ -22,7 +22,7 @@ class Product extends BaseModel implements Auditable
 
     protected $appends = ['xid', 'image_url','x_category_id','x_campaign_id'];
 
-    protected $filterable = ['name','coverage', 'internal_code','category_id','campaign_id'];
+    protected $filterable = ['name','coverage', 'internal_code','category_id','campaign_id','nombreBase'];
 
     protected $hashableGetterFunctions = [
         'getXCategoryIdAttribute' => 'category_id',

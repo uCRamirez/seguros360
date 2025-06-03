@@ -815,6 +815,7 @@ class ComposerStaticInit8bb40aceb2f9a567968abfbb06df5242
         'App\\Http\\Controllers\\Api\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/AuthController.php',
         'App\\Http\\Controllers\\Api\\CallManagerController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/CallManagerController.php',
         'App\\Http\\Controllers\\Api\\CampaignController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/CampaignController.php',
+        'App\\Http\\Controllers\\Api\\BaseHistoricoController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/BaseHistoricoController.php',
         'App\\Http\\Controllers\\Api\\CategoryController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/CategoryController.php',
         'App\\Http\\Controllers\\Api\\Common\\CurrencyController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/Common/CurrencyController.php',
         'App\\Http\\Controllers\\Api\\Common\\DatabaseBackupController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/Common/DatabaseBackupController.php',

@@ -25,7 +25,11 @@ class ProductController extends ApiBaseController
 	public function import(ImportRequest $request)
     {
         if ($request->hasFile('file')) {
-            Excel::import(new ProductImport, request()->file('file'));
+            // Excel::import(new ProductImport, request()->file('file'));
+            Excel::import(
+                new ProductImport(pathinfo(request()->file('file')->getClientOriginalName(), PATHINFO_FILENAME)),
+                request()->file('file')
+            );
         }
 
         return ApiResponse::make('Imported Successfully', []);

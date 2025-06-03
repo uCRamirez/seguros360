@@ -63,7 +63,12 @@
                             "
                             class="p-0"
                         >
-                            <a-avatar size="small" :src="user.profile_image_url" />
+                            <template v-if="user">
+                                <a-avatar size="small" :src="user.profile_image_url || undefined" />
+                            </template>
+                            <template v-else>
+                                <a-avatar size="small" icon="user" />
+                            </template>
                         </a-button>
                     </a-space>
                 </HeaderRightIcons>

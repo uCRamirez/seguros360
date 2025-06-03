@@ -102,10 +102,7 @@ class LeadController extends ApiBaseController
 
     public function createLead(CreateLeadRequest $request)
     {
-
         $user = user();
-        // \Log::info('createLead', ['data' => $request]);
-
 
         if (!$user->ability('admin', 'leads_create')) {
             throw new ApiException("Not Allowed");
@@ -116,55 +113,79 @@ class LeadController extends ApiBaseController
         $loggedUser = user();
         $campaign = Campaign::find($campaignId);
 
-        // Calculating Lead Data Hash
+        if (!$campaign) {
+            throw new ApiException("Campaign not found");
+        }
+
+        $cedula = $request->input('cedula');
+
+        // 1. Validar si la cédula y campaign_id ya existen
+        $lead = Lead::where('cedula', $cedula)
+                    ->where('campaign_id', $campaignId)
+                    ->first();
+
         $leadHashString = "";
         $leadDatas = $request->lead_data;
-        foreach ($leadDatas as $leadData) {
-            $leadHashString .= strtolower($leadData['field_value']);
+        if (is_array($leadDatas)) {
+            foreach ($leadDatas as $leadData) {
+                if (isset($leadData['field_value'])) {
+                    $leadHashString .= strtolower($leadData['field_value']);
+                }
+            }
+        }
+        $calculatedLeadHash = md5($leadHashString . $campaignId);
+
+        $isNewLead = false;
+        if (!$lead) {
+            $lead = new Lead();
+            $lead->campaign_id = $campaignId;
+            $lead->created_by = $loggedUser->id; 
+            $isNewLead = true;
+
+            if ($campaign->allow_reference_prefix) {
+                $lead->reference_number = $campaign->reference_prefix . \Carbon\Carbon::now()->timestamp;
+            }
         }
 
-        $userId = $this->getIdFromHash($request->assign_to);
-        $lead = new Lead();
-        $lead->campaign_id = $campaignId;
-
-        if ($request->has('assign_to') && $request->assign_to != '') {
-            $userId = $this->getIdFromHash($request->assign_to);
-
-            // TODO - check if this is the user of that campaign
+        if ($request->has('assign_to') && $request->input('assign_to') != '') {
+            $userId = $this->getIdFromHash($request->input('assign_to'));
             $lead->assign_to = $userId;
-        }
-
-        // Reference Prefix
-        if ($campaign->allow_reference_prefix) {
-            $lead->reference_number = $campaign->reference_prefix . Carbon::now()->timestamp;
+        } elseif ($isNewLead && !$request->has('assign_to')) {
+            $lead->assign_to = null;
         }
 
         $lead->lead_data = $request->lead_data;
-        $lead->created_by = $loggedUser->id;
-        $lead->lead_hash = md5($leadHashString . $campaignId);
+        $lead->lead_hash = $calculatedLeadHash;
+        $lead->cedula    = $cedula; // La cédula del request es la que se usa/asigna.
 
-        // 5) Mapear campos personales
-        $lead->cedula          = $request['cedula']              ?? $lead->cedula;
-        $lead->nombre          = $request['nombre']              ?? $lead->nombre;
-        $lead->apellido1       = $request['apellido1']           ?? $lead->apellido1;
-        $lead->apellido2       = $request['apellido2']           ?? $lead->apellido2;
-        $lead->tel1            = $request['tel1']                ?? $lead->tel1;
-        $lead->tel2            = $request['tel2']                ?? $lead->tel2;
-        $lead->tel3            = $request['tel3']                ?? $lead->tel3;
-        $lead->tel4            = $request['tel4']                ?? $lead->tel4;
-        $lead->tel5            = $request['tel5']                ?? $lead->tel5;
-        $lead->tel6            = $request['tel6']                ?? $lead->tel6;
-        $lead->email           = $request['email']               ?? $lead->email;
+        $personalFieldsFromForm = [
+            'nombre',       
+            'apellido1',   
+            'apellido2',    
+            'tel1',          
+            'tel2',          
+            'tel3',          
+            'tel4',          
+            'tel5',          
+            'tel6',          
+            'email'        
+        ];
+
+        foreach ($personalFieldsFromForm as $fieldKey) {
+            // No actualiza si el campo está vacío en el request, conservando el valor existente en $lead.
+            if ($request->filled($fieldKey)) {
+                $lead->{$fieldKey} = $request->input($fieldKey);
+            }
+        }
 
         $lead->save();
-
-        // Saving Lead Data JSON
-        //Common::generateAndSaveLeadData($lead->id);
 
         // Calculating Lead Counts
         Common::recalculateCampaignLeads($campaignId);
 
-        return ApiResponse::make('Success', []);
+        $message = $isNewLead ? 'Lead created successfully' : 'Lead updated successfully';
+        //\Log::info('createLead', ['message' => $message]);
+        return ApiResponse::make($message, ['lead_id' => $this->getHashFromId($lead->id)]);
     }
 
     public function createLeadCallLog($leadXId)

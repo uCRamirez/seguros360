@@ -24,6 +24,9 @@
                         </ul>
                     </a-typography-paragraph>
                 </a-col>
+                <a-col v-if="camposRequerido" :xs="24" :sm="24" :md="24" :lg="24">
+                    <strong>{{ camposRequerido }} : Name - Internal Code - Price - Campaign</strong>
+                </a-col>
             </a-row>
             <a-row :gutter="16">
                 <a-col :xs="24" :sm="24" :md="24" :lg="24">
@@ -75,7 +78,7 @@ import apiAdmin from "../../composable/apiAdmin";
 import UploadFile from "./file/UploadFile.vue";
 
 export default defineComponent({
-    props: ["pageTitle", "sampleFileUrl", "importUrl"],
+    props: ["pageTitle", "sampleFileUrl", "importUrl","camposRequerido"],
     emits: ["onUploadSuccess"],
     components: {
         CloudDownloadOutlined,

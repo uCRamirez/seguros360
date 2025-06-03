@@ -94,6 +94,8 @@ ApiRoute::group(['namespace' => 'App\Http\Controllers\Api'], function () {
         ApiRoute::get('columns/{table}', ['as' => 'api.leads.columns', 'uses' => 'ColumnController@allColumns']);
         // csv leads aux
         ApiRoute::post('leadcsv/push', ['as' => 'api.leadcsv.push', 'uses' => 'LeadAuxController@pushData']);
+        // bases
+        ApiRoute::get('bases/{xid}', ['as' => 'api.campaigns.bases', 'uses' => 'BaseHistoricoController@getBases']);
 
 
         ApiRoute::post('campaigns/uc-campaigns', ['as' => 'api.campaigns.uc-campaigns', 'uses' => 'CampaignController@getUContactCampaigns']);

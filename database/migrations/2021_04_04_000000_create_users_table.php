@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->boolean('login_enabled')->default(true);
             $table->string('name')->nullable()->default(null);
             $table->boolean('ucontact')->nullable()->default(false);
+            $table->string('user')->nullable()->default(null);
             $table->string('email')->nullable()->default(null);
             $table->string('password')->nullable();
             $table->string('phone')->nullable()->default(null);
@@ -55,6 +56,7 @@ class CreateUsersTable extends Migration
             $adminId = DB::table('users')->insertGetId([
                 'company_id' => $company->id,
                 'name' => 'Admin',
+                'user' => 'Admin',
                 'email' => 'admin@example.com',
                 'password' => Hash::make('12345678'),
                 'user_type' => 'staff_members',
