@@ -55,10 +55,10 @@ const fields = () => {
                 //     title: t("campaign.last_actioner"),
                 //     dataIndex: "last_actioner",
                 // },
-                {
-                    title: t("campaign.distribution_method"),
-                    dataIndex: "lead_distribution_method",
-                },
+                // {
+                //     title: t("campaign.distribution_method"),
+                //     dataIndex: "lead_distribution_method",
+                // },
                 {
                     title: t("common.action"),
                     dataIndex: "action",

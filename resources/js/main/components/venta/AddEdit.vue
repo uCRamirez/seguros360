@@ -8,7 +8,7 @@
                     <a-row :gutter="[16, 16]">
                         <!-- Nivel 1 -->
                         <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                            <a-form-item class="required" :label="$t('lead_notes.notes_typification_1')"
+                            <a-form-item class="required" :label="$t('lead_notes.notes_typification_1ss')"
                                 name="notes_typification_id_1"
                                 :help="rules.notes_typification_id_1 ? rules.notes_typification_id_1.message : null"
                                 :validateStatus="rules.notes_typification_id_1 ? 'error' : null">
@@ -123,8 +123,34 @@
 
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- ID -->
-                                <a-form-item :label="$t('lead.id')">
+                                <a-form-item v-if="soloVer" :label="$t('lead.id')">
                                     <a-input :value="datos.venta.idLead" />
+                                </a-form-item>
+                                <!-- o estado ventas-->
+                                <a-form-item v-else :label="$t('common.status')">
+                                    <a-select
+                                        v-model:value="datos.venta.estadoVenta"
+                                        :placeholder="
+                                            $t('common.select_default_text', [
+                                                $t('common.statu'),
+                                            ])
+                                        "
+                                        :allowClear="true"
+                                        show-search
+                                    >
+                                        <a-select-option
+                                            key="Efectiva"
+                                            value="Efectiva"
+                                        >
+                                            {{ $t("lead_notes.effective") }}
+                                        </a-select-option>
+                                        <a-select-option
+                                            key="Cancelada"
+                                            value="Cancelada"
+                                        >
+                                            {{ $t("lead_notes.canceled") }}
+                                        </a-select-option>
+                                    </a-select>
                                 </a-form-item>
                             </a-col>
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
@@ -148,7 +174,20 @@
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- Agente -->
                                 <a-form-item :label="$t('lead.agent')">
-                                    <a-input :value="datos.venta.agente" />
+
+                                    <a-input v-if="soloVer" :value="datos.venta.agente" />
+
+                                    <a-select v-else v-model:value="datos.venta.user_id"
+                                        show-search
+                                        option-filter-prop="title" :allowClear="true"
+                                        :placeholder="$t('common.select_default_text', [$t('lead.agent'),])"
+                                        style="width: 100%;">
+                                        <a-select-option v-for="agente in agenteCampana" :title="agente.name" :key="agente"
+                                            :value="agente.id">
+                                            {{ agente.name }}
+                                        </a-select-option>
+                                    </a-select>
+
                                 </a-form-item>
                             </a-col>
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
@@ -189,7 +228,7 @@
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- tarjeta -->
                                 <a-form-item name="tarjeta" :label="$t('lead.card')">
-                                    <a-input v-model:value="datos.venta.tarjeta" />
+                                    <a-input :value="datos.venta.tarjeta" />
                                 </a-form-item>
                             </a-col>
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
@@ -335,11 +374,7 @@
         </a-form>
 
         <template #footer>
-            <a-button v-if="addEditType == 'add' && (permsArray.includes('admin') || permsArray.includes('forms_view'))" key="submit" type="primary" :loading="loading" @click="onSubmit">
-                <SaveOutlined />
-                {{ $t("common.create") }}
-            </a-button>
-            <a-button v-if="addEditType == 'edit' && (permsArray.includes('admin') || permsArray.includes('notes_edit'))" key="submit" type="primary" :loading="loading" @click="onSubmit">
+            <a-button v-if="(permsArray.includes('admin') || permsArray.includes('sales_edit')) && !soloVer" key="submit" type="primary" :loading="loading" @click="onSubmit">
                 <SaveOutlined />
                 {{ $t("common.update") }}
             </a-button>
@@ -412,7 +447,7 @@ export default defineComponent({
         const { addEditRequestAdmin, loading, rules } = apiAdmin();
         const { permsArray, formatAmountCurrency } = common();
         const { t } = useI18n();
-        const soloVer = ref(props.soloVer);
+        const agenteCampana = ref([]);
 
         // Typifications
         const notesTypifications = ref([]);
@@ -458,6 +493,7 @@ export default defineComponent({
         }
 
         // Flags sale/beneficiarios
+        const soloVer = ref();
         const isSale = ref(false);
         const esBeneficiario = ref(false);
 
@@ -565,6 +601,7 @@ export default defineComponent({
 
         // Mostrar/editar
         watch(() => props.visible, async newVal => {
+            soloVer.value = props.soloVer;
             datos.venta = getEmptyVenta();
             isSale.value = false;
             getParentTypification();
@@ -609,6 +646,11 @@ export default defineComponent({
                     esBeneficiario.value = false;
                     datos.venta.beneficiarios = [];
                 }
+
+                // let url = `campaigns?fields=name,campaignUsers:{id,xid,user_id}&id=${props.data.lead.campaign.id}`;
+                axiosAdmin.get(`campaigns/${props.data.lead.campaign.xid}/users`).then(res => {
+                    agenteCampana.value = res;
+                });     
 
             }
             Object.assign(
@@ -706,9 +748,9 @@ export default defineComponent({
         const onSubmit = async () => {
             try {
                 props.formData.isSale = isSale.value ? 1 : 0;
-                props.formData.campaign_id = props.leadInfo.campaign.id;
+                props.formData.campaign_id = props.data.lead.campaign.id;
 
-                props.formData.lead_id ||= props.leadInfo.xid;
+                props.formData.lead_id ||= props.data.lead.xi;
 
                 if (isSale.value) {
                     await formRef.value.validate();
@@ -758,6 +800,7 @@ export default defineComponent({
         };
 
         return {
+            agenteCampana,
             soloVer,
             datos,
             isSale,

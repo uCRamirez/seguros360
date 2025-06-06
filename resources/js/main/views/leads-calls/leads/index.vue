@@ -220,7 +220,7 @@
                                     </template>
                                 </a-tab-pane>
 
-                                <a-tab-pane v-if="permsArray.includes('leads_view_all') || permsArray.includes('admin')" key="not_started">
+                                <a-tab-pane key="not_started">
                                     <template #tab>
                                         <span>
                                             <HistoryOutlined />

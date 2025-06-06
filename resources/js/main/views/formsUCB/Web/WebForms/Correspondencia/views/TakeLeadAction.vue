@@ -1000,7 +1000,7 @@
                                     </template>
                                     <a-row :gutter="16">
 
-                                    <a-col :xs="24" :sm="24" :md="8" :lg="8">
+                                    <a-col :xs="24" :sm="24" :md="10" :lg="10">
 
                                         <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                             <a-form-item :label="$t('lead.document')" name="txtInfoClient_document"
@@ -1055,7 +1055,7 @@
 
                                     </a-col>
 
-                                    <a-col :xs="24" :sm="24" :md="8" :lg="8">
+                                    <a-col :xs="24" :sm="24" :md="10" :lg="10">
 
                                         <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                             <a-form-item :label="$t('lead.email')" name="txtInfoClient_email"
@@ -1110,7 +1110,7 @@
 
                                     </a-col>
                                     <!-- acciones de busqueda y gestion -->
-                                    <a-col :xs="24" :sm="24" :md="8" :lg="8">
+                                    <a-col :xs="24" :sm="24" :md="4" :lg="4">
                                         <div
                                             style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%;">
                                             <a-button @click="serchInformationClient" :disabled="crmState.client.managing === true" type="primary" style="min-width: 130px;">{{ $t('common.search')}}</a-button>
@@ -1248,7 +1248,7 @@ import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import apiAdmin from "../../../../../../../common/composable/apiAdmin";
 import common from "../../../../../../../common/composable/common";
-import crud from "../../../../../../../common/composable/crud";
+// import crud from "../../../../../../../common/composable/crud";
 import BookingModal from "../../../../../bookings/BookingModal.vue";
 import LeadLogTable from "../../../../../../components/lead-logs/index.vue";
 import LogTimeline from "../../../../../../components/lead-logs/LogTimeline.vue";
@@ -1262,9 +1262,6 @@ import SearchLead from "./SearchLead.vue";
 import UphoneCallTable from "./UphoneCallsHistory.vue";
 import fields from "../fields";
 import functions from "./functions.js";
-
-
-
 
 export default {
     components: {

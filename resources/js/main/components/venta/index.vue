@@ -1,6 +1,6 @@
 <template>
     <AddEdit
-        :soloVer="true"
+        :soloVer="soloVer"
         :addEditType="addEditType"
         :visible="addEditVisible"
         :url="addEditUrl"
@@ -10,7 +10,9 @@
         :leadInfo="leadInfo"
         :allProductos="allProductos"
         :data="viewData"
-        :pageTitle="pageTitle"
+        :pageTitle="!soloVer 
+            ? $t('common.edit') + ' ' + $t('lead_notes.sale') 
+            : $t('common.details') + ' ' +$t('lead_notes.sale')"
         :successMessage="successMessage"
     />
 
@@ -233,10 +235,12 @@
                                     </a-button>
                                 </a-typography-link>
                                 <a-button type="primary" @click="editItem(record)">
-                                    <template #icon><EditOutlined v-if="(permsArray.includes('admin') || permsArray.includes('notes_edit')) && !soloVer"/>  <EyeOutlined v-else/> </template>
+                                    <template #icon><EditOutlined v-if="(permsArray.includes('admin') || permsArray.includes('sales_edit')) && !soloVer"/>  <EyeOutlined v-else/> </template>
                                 </a-button>
                                 <a-button
-                                    v-if="permsArray.includes('admin') || permsArray.includes('notes_delete')"
+                                    v-if="
+                                        permsArray.includes('admin') || permsArray.includes('sales_delete')
+                                    "
                                     type="primary"
                                     @click="showDeleteConfirm(record.xid)"
                                 >
@@ -253,7 +257,7 @@
     <!-- Global Compaonent -->
     <view-lead-details
         :visible="isViewDrawerVisible"
-        :soloVer="true"
+        :soloVer="soloVer"
         tipo="lead_note"
         :lead="viewDrawerData"
         @close="hideViewDrawer"
@@ -283,6 +287,10 @@ export default {
     props: {
         pageName: {
             default: "index",
+        },
+        soloVer: {
+            type: Boolean,
+            default: true
         },
         leadId: {
             default: undefined,
@@ -372,6 +380,7 @@ export default {
         });
         const filters = ref({
             log_type: props.logType,
+            ...(props.soloVer ? {} : { isSale: 1 }),
             user_id: undefined,
         });
 

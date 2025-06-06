@@ -334,6 +334,98 @@
                                                     </div>
                                                 </td>
                                             </tr>
+                                            <!-- gestiones -->
+                                            <tr>
+                                                <td class="text-gray-800">
+                                                    {{ $t("common.notes") }}
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex">
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox :value="permissions[
+                                                                'notes_edit'
+                                                                ]
+                                                                ">
+                                                                {{ $t("notes.edit") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox :value="permissions[
+                                                                'notes_delete'
+                                                                ]
+                                                                ">
+                                                                {{ $t("notes.delete") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <!-- ventas -->
+                                            <tr>
+                                                <td class="text-gray-800">
+                                                    {{ $t("menu.sales") }}
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex">
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox
+                                                                :value="permissions[ 'sales_view' ]">
+                                                                {{ $t("common.view") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox :value="permissions['sales_add']">
+                                                                {{ $t("common.add") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox
+                                                                :value="permissions['sales_edit']">
+                                                                {{ $t("common.edit") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox
+                                                                :value="permissions['sales_delete']">
+                                                                {{ $t("common.delete") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <!-- calidad -->
+                                            <tr>
+                                                <td class="text-gray-800">
+                                                    {{ $t("menu.quality") }}
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex">
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox
+                                                                :value="permissions[ 'quality_view' ]">
+                                                                {{ $t("common.view") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox :value="permissions['quality_add']">
+                                                                {{ $t("common.add") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox
+                                                                :value="permissions['quality_edit']">
+                                                                {{ $t("common.edit") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox
+                                                                :value="permissions['quality_delete']">
+                                                                {{ $t("common.delete") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                             <!-- notes typifications -->
                                             <tr>
                                                 <td class="text-gray-800">
@@ -1314,7 +1406,7 @@ export default defineComponent({
             roles,
             permissions,
 
-            drawerWidth: window.innerWidth <= 991 ? "90%" : "45%",
+            drawerWidth: window.innerWidth <= 991 ? "90%" : "60%",
             checkedPermissions,
             slugify,
         };

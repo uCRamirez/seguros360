@@ -6,7 +6,7 @@ import common from "../../../common/composable/common";
 const fields = (props) => {
     const { convertStringToKey, getCampaignUrl, user } = common();
     const leadUrl =
-        "lead{id,xid,reference_number,lead_data,started,campaign_id,x_campaign_id,time_taken,first_action_by,x_first_action_by,last_action_by,x_last_action_by},lead:campaign{id,xid,name,status},lead:firstActioner{id,xid,name},lead:lastActioner{id,xid,name}";
+        "lead{id,xid,reference_number,cedula,nombre,apellido1,apellido2,fechaNacimiento,edad,nacionalidad,nombreBase,tel1,email,lead_data,started,campaign_id,x_campaign_id,time_taken,first_action_by,x_first_action_by,last_action_by,x_last_action_by},lead:campaign{id,xid,name,status},lead:firstActioner{id,xid,name},lead:lastActioner{id,xid,name}";
     const formFieldNamesUrl = "form-field-names/all";
     const url = `lead-logs?fields=id,xid,log_type,time_taken,date_time,started_on,notes,phone,message,email,user_id,x_user_id,user{id,xid,name,profile_image,profile_image_url},lead_id,x_lead_id,${leadUrl}`;
     const allFormFieldNames = ref([]);

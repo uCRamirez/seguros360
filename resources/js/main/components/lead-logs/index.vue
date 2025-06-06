@@ -196,7 +196,7 @@
                         <template v-if="column.dataIndex === 'date_time'">
                             {{ formatDateTime(record.date_time) }}
                         </template>
-                        <template v-if="column.dataIndex === 'reference_number'">
+                        <template v-if="column.dataIndex === 'cedula'">
                             <a-button
                                 v-if="showLeadDetails"
                                 type="link"
@@ -204,9 +204,9 @@
                                 @click="showViewDrawer(record.lead)"
                             >
                                 {{
-                                    record.lead.reference_number != "" &&
-                                    record.lead.reference_number != undefined
-                                        ? record.lead.reference_number
+                                    record.lead.cedula != "" &&
+                                    record.lead.cedula != undefined
+                                        ? record.lead.cedula
                                         : "---"
                                 }}
                             </a-button>
@@ -236,6 +236,7 @@
     <!-- Global Compaonent -->
     <view-lead-details
         :visible="isViewDrawerVisible"
+        tipo="lead_log"
         :lead="viewDrawerData"
         @close="hideViewDrawer"
         @featch=""

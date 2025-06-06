@@ -49,6 +49,7 @@ class VentasController extends ApiBaseController
 
     protected function updateVenta(array $data)
     {
+        // \Log::info('updateVenta - edit', ['data' => $data]);
         try {
             $idNota = $this->getIdFromHash($data['idNota']);
             $venta  = Venta::where('idNota', $idNota)->firstOrFail();

@@ -194,6 +194,13 @@ class LangTrans
             'total_follow_up' => 'Total Follow Up',
             'total_duration' => 'Total Duration',
             'active_actioned_campaigns' => 'Active Actioned Campaigns',
+            'sales_quantity' => 'Sales Quantity',
+            'sales_amount' => 'Sales Amount',
+            'sales_user' => 'Sales by User',
+            'user' => 'User',
+            'quantity' => 'Quantity',
+            'amount' => 'Amount',
+            'total_contacts' => 'Total contacts',
 
         ],
         'user' => [

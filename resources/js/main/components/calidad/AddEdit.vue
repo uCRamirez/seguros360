@@ -159,7 +159,7 @@
                             </a-col>
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- Telefonos -->
-                                <a-form-item v-if="leadInfo" name="telVenta" :label="$t('lead.phone')">
+                                <a-form-item name="telVenta" :label="$t('lead.phone')">
                                     <a-select v-model:value="datos.venta.telVenta"
                                         :placeholder="$t('common.select_default_text', [$t('lead.phone'),])"
                                         style="width: 100%;">
@@ -174,12 +174,6 @@
                                             {{ tel }}
                                         </a-select-option>
                                     </a-select>
-                                </a-form-item>
-                                <a-form-item v-else name="telVenta" :label="$t('lead.phone')">
-                                    <!-- Nombre base -->
-                                    <a-form-item >
-                                        <a-input :value="datos.venta.telVenta" />
-                                    </a-form-item>
                                 </a-form-item>
                             </a-col>
                         </a-col>
@@ -339,12 +333,12 @@
                 <SaveOutlined />
                 {{ $t("common.create") }}
             </a-button>
-            <a-button v-if="addEditType == 'edit' && (permsArray.includes('admin') || permsArray.includes('notes_edit'))" key="submit" type="primary" :loading="loading" @click="onSubmit">
+            <a-button v-if="addEditType == 'edit' && permsArray.includes('admin')" key="submit" type="primary" :loading="loading" @click="onSubmit">
                 <SaveOutlined />
                 {{ $t("common.update") }}
             </a-button>
             <a-button key="back" @click="onClose">
-                {{  $t("common.cancel") }}
+                {{ $t("common.cancel") }}
             </a-button>
         </template>
     </a-modal>
@@ -390,7 +384,6 @@ export const datos = reactive({
 
 export default defineComponent({
     props: [
-        "soloVer",
         "formData",
         "leadInfo",
         "allProductos",
@@ -412,7 +405,6 @@ export default defineComponent({
         const { addEditRequestAdmin, loading, rules } = apiAdmin();
         const { permsArray, formatAmountCurrency } = common();
         const { t } = useI18n();
-        const soloVer = ref(props.soloVer);
 
         // Typifications
         const notesTypifications = ref([]);
@@ -421,7 +413,7 @@ export default defineComponent({
         const childrenTypificationData = ref([]);
         const childrenChildData = ref([]);
         const lastChildrenChildData = ref([]);
-        const isInitializing = ref(true);
+        const isInitializing = ref(false);
         onMounted(() => {
             axiosAdmin.get(notesTypificationUrl).then(res => {
                 notesTypifications.value = res.data;
@@ -595,19 +587,19 @@ export default defineComponent({
                 }
 
                 if (props.formData.is_sale.aplicaBeneficiarios) {
-                    esBeneficiario.value = true;
+                    esBeneficiario.value = true
 
-                    let raw = props.formData.is_sale.beneficiarios || '[]';
-                    let list;
+                    let raw = props.formData.is_sale.beneficiarios || '[]'
+                    let list
                 try {
-                    list = JSON.parse(raw);
+                    list = JSON.parse(raw)
                 } catch {
-                    list = [];
+                    list = []
                 }
-                    datos.venta.beneficiarios = list;
+                    datos.venta.beneficiarios = list
                 } else {
-                    esBeneficiario.value = false;
-                    datos.venta.beneficiarios = [];
+                    esBeneficiario.value = false
+                    datos.venta.beneficiarios = []
                 }
 
             }
@@ -615,18 +607,16 @@ export default defineComponent({
                 datos.venta,
                 props.addEditType === "add" ? getEmptyVenta() : {},
                 {
-                    idLead: props.leadInfo ? props.leadInfo.id : props.data.lead.id,
-                    cedula: props.leadInfo ? props.leadInfo.cedula : props.data.lead.cedula,
-                    nombre: props.leadInfo ? `${props.leadInfo.nombre} ${props.leadInfo.apellido1} ${props.leadInfo.apellido2}`:`${props.data.lead.nombre} ${props.data.lead.apellido1} ${props.data.lead.apellido2}`,
-                    email: props.leadInfo ? props.leadInfo.email : props.data.lead.email,
-
+                    idLead: props.leadInfo.id,
+                    cedula: props.leadInfo.cedula,
+                    nombre: `${props.leadInfo.nombre} ${props.leadInfo.apellido1} ${props.leadInfo.apellido2}`,
+                    email: props.leadInfo.email,
                     agente: props.addEditType === "edit"
                         ? (props.data.user?.name ?? "")
                         : props.leadInfo.assign_to.name,
+                    user_id: props.leadInfo.assign_to.id,
 
-                    user_id: props.leadInfo ? props.leadInfo.assign_to.id : datos.venta.user_id,
-
-                    nombreBase: props.leadInfo ? props.leadInfo.nombreBase : props.data.lead.nombreBase,
+                    nombreBase: props.leadInfo.nombreBase,
 
                     tarjeta: props.addEditType === "edit"
                         ? (props.formData.is_sale?.tarjeta ?? "")
@@ -758,7 +748,6 @@ export default defineComponent({
         };
 
         return {
-            soloVer,
             datos,
             isSale,
             esBeneficiario,

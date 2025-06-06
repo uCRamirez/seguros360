@@ -11,6 +11,7 @@ use App\Models\LeadLog;
 use App\Models\Lead;
 use Carbon\Carbon;
 use Examyou\RestAPI\Exceptions\ApiException;
+use App\Models\CampaignUser;
 
 class LeadLogController extends ApiBaseController
 {
@@ -25,16 +26,24 @@ class LeadLogController extends ApiBaseController
     {
         $user = user();
         $request = request();
-        // \Log::info('modifyIndexLeadLogController', ['data' => $query]);
+        //  \Log::info('modifyIndex', ['$user' => $user]);
 
+
+        $usersIds = CampaignUser::where('user_id', $user->id)
+            ->pluck('user_id');
+
+         \Log::info('modifyIndex', ['$usersIds' => $usersIds]);
 
         $query = $query->join('leads', 'leads.id', '=', 'lead_logs.lead_id')
             ->join('campaigns', 'campaigns.id', 'leads.campaign_id');
+
         if (!$user->ability('admin', 'leads_view_all')) {
             if ($request->has('log_type') && $request->log_type == 'salesman_bookings') {
                 $query = $query->where('lead_logs.created_by_id', $user->id);
+                // \Log::info('modifyIndex', ['data' => 1]);
             }
             else if ($request->has('log_type') && $request->log_type == 'message') {
+                // \Log::info('modifyIndex', ['data' => 2]);
                 $query = $query->where('lead_logs.log_type', 'message');
             }
             else if (
@@ -43,10 +52,22 @@ class LeadLogController extends ApiBaseController
                 $request->has('lead_id') && $request->lead_id != "" &&
                 ($request->log_type == 'call_log' || $request->log_type == 'notes' || $request->log_type == 'all')
             ) {
+                // \Log::info('modifyIndex', ['data' => 3]);
                 // When request comes from TakeLeadActionPage
             } else {
-
+                // \Log::info('modifyIndex', ['data' => 4]);
                 $query = $query->where('lead_logs.user_id', $user->id);
+            }
+        }else{
+            if ($user->ability($user->role->name, 'leads_view_all')) {
+                $campaignIds = CampaignUser::where('user_id', $user->id)
+                                    ->pluck('campaign_id');
+                $teammateIds = CampaignUser::whereIn('campaign_id', $campaignIds)
+                                    ->distinct()
+                                    ->pluck('user_id');
+                $allUserIds = $teammateIds->push($user->id)->unique();
+                \Log::info('modifyIndex', ['allUserIds' => $allUserIds]);
+                $query = $query->whereIn('lead_logs.user_id', $allUserIds);
             }
         }
 
@@ -92,6 +113,8 @@ class LeadLogController extends ApiBaseController
             $query = $query->whereRaw('lead_logs.date_time >= ?', [$startDate])
                 ->whereRaw('lead_logs.date_time <= ?', [$endDate]);
         }
+
+        \Log::info('modifyIndex SQL', ['sql' => $query->toSql(), 'bindings' => $query->getBindings()]);
 
         return $query;
     }

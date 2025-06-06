@@ -136,8 +136,8 @@ esp;menu;form_field_names;Campos de la tabla de leads;
 esp;menu;leads;Leads;
 esp;menu;leads_calls;Leads y llamadas;
 esp;menu;lead_details;Detalles del lead;
-esp;menu;call_details;Detalles de la llamada;
-esp;menu;call_logs;Registros de llamadas;
+esp;menu;call_details;Detalles del contacto;
+esp;menu;call_logs;Registros de contactos;
 esp;menu;lead_notes;Gestiones del lead;
 esp;menu;bookings;Reservas;
 esp;menu;lead_management;Gestión de leads;
@@ -165,13 +165,14 @@ esp;menu;email_providers;Proveedores de correo;
 esp;menu;you_agree;¿Estás de acuerdo?;
 esp;menu;formsUCB;Correspondencia;
 esp;menu;correspondence;Correspondencia;
+esp;menu;quality;Calidad;
 esp;menu;search_lead;Buscar lead;
 esp;dashboard;dashboard;Panel de control;
 esp;dashboard;active_campaigns;Campañas activas;
-esp;dashboard;call_made;Llamada realizada;
+esp;dashboard;call_made;Contactos realizados;
 esp;dashboard;total_follow_up;Total de seguimientos;
 esp;dashboard;total_duration;Duración total;
-esp;dashboard;active_actioned_campaigns;Campañas activas gestionadas;
+esp;dashboard;active_actioned_campaigns;Gestiones por campaña activa;
 esp;user;add;Agregar nuevo miembro del personal;
 esp;user;edit;Editar miembro del personal;
 esp;user;created;Miembro del personal creado correctamente;
@@ -322,8 +323,8 @@ esp;campaign;stop;Detener;
 esp;campaign;start_and_new_lead;Iniciar y nuevo lead;
 esp;campaign;new_lead;Nuevo lead;
 esp;campaign;stop_campaign;Detener campaña;
-esp;campaign;campaign_stopped_successfully;Campaña detenida correctamente;
-esp;campaign;are_you_want_to_stop_campaign;¿Estás seguro de que deseas detener la campaña? Al detenerla; todos los leads pendientes serán eliminados.
+esp;campaign;campaign_stopped_successfully;Campaña detenida correctamente; todos los leads pendientes serán eliminados.
+esp;campaign;are_you_want_to_stop_campaign;¿Estás seguro de que deseas detener la campaña? Al detenerla;
 esp;campaign;are_you_want_to_create_new_lead;¿Estás seguro de que deseas crear un nuevo lead para esta campaña?;
 esp;campaign;new_lead_added;Nuevo lead agregado correctamente;
 esp;campaign;save_exit;Guardar y salir;
@@ -331,7 +332,7 @@ esp;campaign;next_lead;Siguiente lead;
 esp;campaign;previous_lead;Lead anterior;
 esp;campaign;skip_lead;Omitir lead;
 esp;campaign;resume;Reanudar;
-esp;campaign;call_made;Llamada realizada;
+esp;campaign;call_made;Contacto+C637 realizados;
 esp;campaign;total_duration;Duración total;
 esp;campaign;email_template;Plantilla de correo;
 esp;campaign;all_columns;Todas las columnas;
@@ -633,7 +634,7 @@ esp;lead;user_assign_success;Usuario actualizado correctamente;
 esp;lead;assign_to;Asignar a;
 esp;lead;send_message;Enviar mensaje;
 esp;lead;make_call;Realizar llamada;
-esp;lead;call_made_successfully;Llamada realizada correctamente;
+esp;lead;call_made_successfully;Contacto realizado correctamente;
 esp;lead;campaign_name;Nombre de la campaña;
 esp;lead;name;Nombre;
 esp;lead;email;Correo electrónico;
@@ -877,10 +878,10 @@ esp;database_backup;backup_locaion_is;Todos los archivos generados de respaldo d
 esp;database_backup;settings;Configurar comandos;
 esp;database_backup;backup_command_setting;Configuración de comando de respaldo;
 esp;database_backup;mysqldump_command_path;Ruta del comando mysqldump;
-esp;database_backup;command_updated;Comando actualizado correctamente;
-esp;database_backup;window_command_path;Si usas XAMPP; la ruta será => C:\xampp\mysql\bin\mysqldump.exe
-esp;database_backup;laragon_command_path;Si usas Laragon; la ruta será => C:\laragon\bin\mysql\mysql-5.7.24-winx64\bin\mysqldump.exe
-esp;database_backup;linux_command_path;Si estás en Ubuntu o Mac; ejecuta el siguiente comando e ingresa el resultado => which mysqldump
+esp;database_backup;command_updated;Comando actualizado correctamente; la ruta será => C:\xampp\mysql\bin\mysqldump.exe
+esp;database_backup;window_command_path;Si usas XAMPP; la ruta será => C:\laragon\bin\mysql\mysql-5.7.24-winx64\bin\mysqldump.exe
+esp;database_backup;laragon_command_path;Si usas Laragon; ejecuta el siguiente comando e ingresa el resultado => which mysqldump
+esp;database_backup;linux_command_path;Si estás en Ubuntu o Mac;
 esp;database_backup;put_dump_path_command_on_env_file;Encuentra la ruta de tu mysqldump y agrégala en DUMP_PATH dentro del archivo .env;
 esp;update_app;app_details;Detalles de la aplicación;
 esp;update_app;name;Nombre;
@@ -894,9 +895,9 @@ esp;update_app;update_app;Actualizar aplicación;
 esp;update_app;update_now;Actualizar ahora;
 esp;update_app;update_available;Actualización disponible;
 esp;update_app;verify_again;Verificar de nuevo;
-esp;update_app;verify_failed;Verificación fallida;
-esp;update_app;verify_failed_message;Tu aplicación no está registrada con nosotros. Por favor; verifícala
-esp;update_app;verified_with_other_domain;Tu código de compra está registrado con otro dominio. Por favor; verifica tu código de compra
+esp;update_app;verify_failed;Verificación fallida; verifícala
+esp;update_app;verify_failed_message;Tu aplicación no está registrada con nosotros. Por favor; verifica tu código de compra
+esp;update_app;verified_with_other_domain;Tu código de compra está registrado con otro dominio. Por favor;
 esp;messages;leave_blank_to_create_notes_typification;Dejar en blanco para crear una tipificación;
 esp;messages;something_went_wrong;Algo salió mal. Por favor contacta al administrador.;
 esp;messages;verify_success;Verificación exitosa. Redirigiendo a la aplicación...;
@@ -905,8 +906,8 @@ esp;messages;login_success_dashboard;Iniciaste sesión exitosamente en la aplica
 esp;messages;click_here_to_find_purchase_code;Haz clic aquí para encontrar tu código de compra;
 esp;messages;verification_successfull;Verificación completada exitosamente;
 esp;messages;other_domain_linked;Otro dominio vinculado;
-esp;messages;other_domain_linked_with_purchase_code;Ya hay otro dominio vinculado con tu código de compra. Ingresa tu código para más detalles...;
-esp;messages;first_verify_module_message;Para habilitar; verifica este módulo
+esp;messages;other_domain_linked_with_purchase_code;Ya hay otro dominio vinculado con tu código de compra. Ingresa tu código para más detalles...; verifica este módulo
+esp;messages;first_verify_module_message;Para habilitar;
 esp;messages;are_you_sure_install_message;¿Estás seguro de que deseas instalar?;
 esp;messages;downloading_started_message;Descarga iniciada. Por favor espera...;
 esp;messages;file_extracting_message;Extrayendo archivo. Por favor espera...;
@@ -946,3 +947,10 @@ esp;setup_company;save_finish_setup;Guardar y Finalizar Configuración;
 esp;setup_company;go_to_dashboard;Ir al Panel Principal;
 esp;setup_company;setup_running_message;Por favor espera... estamos configurando los ajustes iniciales de la empresa.;
 esp;setup_company;setup_complete_message;Configuración completada... Haz clic en el enlace a continuación para ver tu aplicación...;
+esp;dashboard;sales_quantity;Cantidad de ventas;
+esp;dashboard;sales_amount;Monto de ventas;
+esp;dashboard;sales_user;Ventas por teleoperador;
+esp;dashboard;user;Teleoperador;
+esp;dashboard;quantity;Cantidad;
+esp;dashboard;amount;Monto Total;
+esp;dashboard;total_calls;Total de contactos;

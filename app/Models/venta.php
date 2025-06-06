@@ -138,10 +138,9 @@ class Venta extends BaseModel implements Auditable
 
     // }
 
-    // public function userVenta() 
-    // { 
-    //     return $this->hasOne(User::class, 'user_id', 'id')->withoutGlobalScopes();
-
-    // }
+    public function userVenta() 
+    { 
+        return $this->hasOne(User::class, 'user_id', 'id')->withoutGlobalScopes();
+    }
 
 }

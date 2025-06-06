@@ -196,10 +196,10 @@ const functionsCRM = () => {
             filters.push(`lead_status_id eq "${leadStatus}"`);
         }
 
-
-        // Filtro para que cada agente vea solo lo asignado a el
-        !permsArray.value?.includes('admin') && filters.push(`assign_to eq "${myId.value}"`);
-
+        // Filtro para que cada agente vea solo lo asignado a el, solo el admin ve todo
+        if (!permsArray.value.includes('admin')) {
+            filters.push(`assign_to eq "${myId.value}"`);
+        }
 
         const filtersString = filters.join(' and ');
 
@@ -218,7 +218,12 @@ const functionsCRM = () => {
 
         const leadsURL =
             `leads?fields=${encodeURIComponent(fields)}` +
-            `&filters=${encodeURIComponent(filtersString)}`;
+            `&started[]=${encodeURIComponent("started")}` +
+            `&started[]=${encodeURIComponent("not_started")}` +
+            `&filters=${encodeURIComponent(filtersString)}` +
+            `&limit=1000`;
+
+
 
         try {
             const { data } = await axiosAdmin.get(leadsURL);

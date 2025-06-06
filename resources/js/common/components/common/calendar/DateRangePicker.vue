@@ -42,7 +42,7 @@ export default defineComponent({
 						.format("YYYY-MM-DD HH:mm:ss"),
 					newValue[1]
 						.tz(appSetting.value.timezone)
-						.endOf("day")
+						// .endOf("day") // si se habilita toma un dia mas del seleccionado
 						.utc()
 						.format("YYYY-MM-DD HH:mm:ss"),
 				]);

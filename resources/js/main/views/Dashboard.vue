@@ -16,9 +16,26 @@
             </a-col>
         </a-row>
 
+        <a-row :gutter="[18, 18]" class="mt-30 mb-20">
+            <!-- Campañas activas gestionadas -->   
+            <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="12">
+                <a-card :title="$t('dashboard.active_actioned_campaigns')">
+                    <ActionedCampaigns :data="responseData" />
+                </a-card>
+            </a-col>
+            <!-- ventas y monto total por usuario -->   
+            <a-col style="max-height: fit-content;" :xs="24" :sm="24" :md="24" :lg="24" :xl="12">
+                <a-card :title="$t('dashboard.sales_user')">
+                     <graficoVentas :data="responseData.ventasMontos"/>
+                </a-card>
+            </a-col>
+            
+        </a-row>
+
         <div class="mt-30 mb-20">
             <a-row :gutter="[15, 15]">
-                <a-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
+                <!-- campañas activas -->
+                <a-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
                     <StateWidget bgColor="#08979c">
                         <template #image>
                             <CopyrightCircleOutlined
@@ -33,7 +50,7 @@
                         </template>
                     </StateWidget>
                 </a-col>
-
+                <!-- total de seguimientos
                 <a-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
                     <StateWidget bgColor="#389e0d">
                         <template #image>
@@ -48,9 +65,9 @@
                             <p>{{ $t("dashboard.total_follow_up") }}</p>
                         </template>
                     </StateWidget>
-                </a-col>
-
-                <a-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
+                </a-col> -->
+                <!-- total de contactos o llamadas -->
+                <a-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
                     <StateWidget bgColor="#d46b08">
                         <template #image>
                             <MobileOutlined
@@ -65,8 +82,8 @@
                         </template>
                     </StateWidget>
                 </a-col>
-
-                <a-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
+                <!-- total de duracion -->
+                <a-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
                     <StateWidget bgColor="#ffa39e">
                         <template #image>
                             <ClockCircleOutlined
@@ -90,13 +107,9 @@
             </a-row>
         </div>
 
-        <a-row :gutter="[18, 18]" class="mt-30 mb-20">
-            <a-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
-                <a-card :title="$t('dashboard.active_actioned_campaigns')">
-                    <ActionedCampaigns :data="responseData" />
-                </a-card>
-            </a-col>
-            <a-col :xs="24" :sm="24" :md="12" :lg="18" :xl="18">
+        <!-- Contactos o llamadas realizadas -->
+        <a-row v-if="permsArray.includes('users_view') || permsArray.includes('admin')" :gutter="[18, 18]" class="mt-30 mb-20">
+            <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
                 <a-card :title="$t('dashboard.call_made')">
                     <CallMade :data="responseData" />
                     <template #extra>
@@ -106,55 +119,6 @@
                             @click="
                                 $router.push({
                                     name: 'admin.leads.index',
-                                })
-                            "
-                        >
-                            {{ $t("common.view_all") }}
-                            <DoubleRightOutlined />
-                        </a-button>
-                    </template>
-                </a-card>
-            </a-col>
-        </a-row>
-
-        <a-row :gutter="[18, 18]" class="mt-30 mb-20">
-            <a-col :xs="24" :sm="24" :md="12" :lg="16" :xl="16">
-                <a-card
-                    :title="$t('salesman_booking.salesman_booking')"
-                    :bodyStyle="{ padding: '0px' }"
-                    v-if="responseData && responseData.allAppointments"
-                >
-                    <SalesmanBooking :responseData="responseData" />
-                    <template #extra>
-                        <a-button
-                            class="mt-10"
-                            type="link"
-                            @click="
-                                $router.push({
-                                    name: 'admin.bookings.salesman_bookings.index',
-                                })
-                            "
-                        >
-                            {{ $t("common.view_all") }}
-                            <DoubleRightOutlined />
-                        </a-button>
-                    </template>
-                </a-card>
-            </a-col>
-            <a-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8">
-                <a-card
-                    :title="$t('lead_follow_up.follow_up')"
-                    :bodyStyle="{ padding: '0px' }"
-                    v-if="responseData && responseData.allFollowUps"
-                >
-                    <Followups :responseData="responseData" />
-                    <template #extra>
-                        <a-button
-                            class="mt-10"
-                            type="link"
-                            @click="
-                                $router.push({
-                                    name: 'admin.bookings.lead_follow_up.index',
                                 })
                             "
                         >
@@ -182,6 +146,7 @@ import common from "../../common/composable/common";
 import AdminPageHeader from "../../common/layouts/AdminPageHeader.vue";
 import StateWidget from "../../common/components/common/card/StateWidget.vue";
 import ActionedCampaigns from "../components/charts/dashboard/ActionedCampaigns.vue";
+import graficoVentas from "../components/charts/dashboard/ventasCantidadMonto.vue";
 import CallMade from "../components/charts/dashboard/CallMade.vue";
 import SalesmanBooking from "./dashboard/SalesmanBookings.vue";
 import Followups from "./dashboard/Followups.vue";
@@ -192,6 +157,7 @@ export default {
         AdminPageHeader,
         StateWidget,
         ActionedCampaigns,
+        graficoVentas,
         CallMade,
         SalesmanBooking,
         Followups,
@@ -204,11 +170,12 @@ export default {
         DoubleRightOutlined,
     },
     setup() {
-        const { formatTimeDuration } = common();
+        const { formatTimeDuration,permsArray } = common();
         const { t } = useI18n();
         const responseData = ref([]);
         const filters = reactive({
             dates: [],
+            usuarioPermitido: permsArray.value.includes('leads_view_all') || permsArray.value.includes('admin') ? true : false,
         });
 
         onMounted(() => {
@@ -231,6 +198,7 @@ export default {
             formatTimeDuration,
             filters,
             responseData,
+            permsArray,
         };
     },
 };

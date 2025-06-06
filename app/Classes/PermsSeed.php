@@ -445,9 +445,51 @@ class PermsSeed
             'name'         => 'lead_status_delete',
             'display_name' => 'Lead status Delete',
         ],
+        // calidad
+        'quality_view' => [
+            'name'         => 'quality_view',
+            'display_name' => 'Quality View',
+        ],
+        'quality_add' => [
+            'name'         => 'quality_add',
+            'display_name' => 'Quality Add',
+        ],
+        'quality_edit' => [
+            'name'         => 'quality_edit',
+            'display_name' => 'Quality Edit',
+        ],
+        'quality_delete' => [
+            'name'         => 'quality_delete',
+            'display_name' => 'Quality Delete',
+        ],
 
+        // ventas
+        'sales_view' => [
+            'name'         => 'sales_view',
+            'display_name' => 'Sales View',
+        ],
+        'sales_add' => [
+            'name'         => 'sales_add',
+            'display_name' => 'Sales Add',
+        ],
+        'sales_edit' => [
+            'name'         => 'sales_edit',
+            'display_name' => 'Sales Edit',
+        ],
+        'sales_delete' => [
+            'name'         => 'sales_delete',
+            'display_name' => 'Sales Delete',
+        ],
 
-        
+        // gestiones
+        'notes_edit' => [
+            'name'         => 'notes_edit',
+            'display_name' => 'Notes Edit',
+        ],
+        'notes_delete' => [
+            'name'         => 'notes_delete',
+            'display_name' => 'Notes Delete',
+        ],
 
     ];
 

@@ -1,6 +1,5 @@
 <template>
     <AddEdit
-        :soloVer="true"
         :addEditType="addEditType"
         :visible="addEditVisible"
         :url="addEditUrl"
@@ -135,7 +134,7 @@
                     :scroll="scrollStyle"
                 >
                     <template #bodyCell="{ column, record }">
-                        <template v-if="column.dataIndex === 'cedula'">
+                        <!-- <template v-if="column.dataIndex === 'document'">
                             <a-button
                                 v-if="showLeadDetails"
                                 type="link"
@@ -144,15 +143,15 @@
                             >
                                 {{
                                     record.lead &&
-                                    record.lead.cedula != "" &&
-                                    record.lead.cedula != undefined
-                                        ? record.lead.cedula
+                                    record.lead.document != "" &&
+                                    record.lead.document != undefined
+                                        ? record.lead.document
                                         : "---"
                                 }}
                             </a-button>
                             <span v-else>{{ record.lead.document }}</span>
-                        </template>
-                        <template v-if="column.dataIndex === 'campaign'">
+                        </template> -->
+                        <!-- <template v-if="column.dataIndex === 'campaign'">
                             {{
                                 record.lead &&
                                 record.lead.campaign &&
@@ -181,7 +180,7 @@
                                     )
                                 }}
                             </template>
-                        </template>
+                        </template> -->
                         <template v-if="column.dataIndex === 'notes'">
                             <a-comment>
                                 <template #author>{{ record.user.name }}</template>
@@ -233,10 +232,12 @@
                                     </a-button>
                                 </a-typography-link>
                                 <a-button type="primary" @click="editItem(record)">
-                                    <template #icon><EditOutlined v-if="(permsArray.includes('admin') || permsArray.includes('notes_edit')) && !soloVer"/>  <EyeOutlined v-else/> </template>
+                                    <template #icon><EditOutlined v-if="permsArray.includes('admin')"/>  <EyeOutlined v-else/> </template>
                                 </a-button>
                                 <a-button
-                                    v-if="permsArray.includes('admin') || permsArray.includes('notes_delete')"
+                                    v-if="
+                                        permsArray.includes('admin')
+                                    "
                                     type="primary"
                                     @click="showDeleteConfirm(record.xid)"
                                 >
@@ -253,8 +254,6 @@
     <!-- Global Compaonent -->
     <view-lead-details
         :visible="isViewDrawerVisible"
-        :soloVer="true"
-        tipo="lead_note"
         :lead="viewDrawerData"
         @close="hideViewDrawer"
     />

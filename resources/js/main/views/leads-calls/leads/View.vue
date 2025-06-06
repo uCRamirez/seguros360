@@ -9,9 +9,6 @@
         :destroyOnClose="true"
     >
         <a-descriptions :title="$t('common.basic_details')">
-            <a-descriptions-item :label="$t('lead.reference_number')">
-                {{ lead && lead.reference_number ? lead.reference_number : "-" }}
-            </a-descriptions-item>
             <a-descriptions-item :label="$t('lead.campaign')">
                 {{ lead && lead.campaign ? lead.campaign.name : "-" }}
             </a-descriptions-item>
@@ -44,33 +41,73 @@
                 </template>
                 <a-descriptions
                     class="mt-10"
-                    v-if="lead && lead.lead_data && lead.lead_data.length > 0"
                 >
-                    <a-descriptions-item
-                        v-for="leadData in lead.lead_data"
-                        :key="leadData.id"
-                    >
-                        <template #label>{{ leadData.field_name }}</template>
-                        {{ leadData.field_value ? leadData.field_value : "-" }}
+                    <a-descriptions-item :label="$t('lead.document')">
+                        {{ lead && lead.cedula ? lead.cedula : "-" }}
+                    </a-descriptions-item>
+                </a-descriptions>
+                <a-descriptions
+                    class="mt-10"
+                >
+                    <a-descriptions-item :label="$t('lead.name')">
+                        {{
+                            lead && lead.nombre && lead.nombre
+                                ? lead.nombre
+                                : "-"
+                        }}
+                        {{
+                            lead && lead.apellido1 && lead.apellido1
+                                ? lead.apellido1
+                                : "-"
+                        }}
+                        {{
+                            lead && lead.apellido2 && lead.apellido2
+                                ? lead.apellido2
+                                : "-"
+                        }}
+                    </a-descriptions-item>
+                    <a-descriptions-item :label="$t('lead.date_birth')">
+                        {{
+                            lead && lead.fechaNacimiento && lead.fechaNacimiento
+                                ? lead.fechaNacimiento
+                                : "-"
+                        }}
+                    </a-descriptions-item>
+                    <a-descriptions-item :label="$t('lead.age')">
+                        {{
+                            lead && lead.edad && lead.edad
+                                ? lead.edad
+                                : "-"
+                        }}
+                    </a-descriptions-item>
+                </a-descriptions>
+                <a-descriptions
+                    class="mt-10"
+                >
+                    <a-descriptions-item :label="$t('lead.base_name')">
+                        {{
+                            lead && lead.nombreBase && lead.nombreBase
+                                ? lead.nombreBase
+                                : "-"
+                        }}
+                    </a-descriptions-item>
+                    <a-descriptions-item :label="$t('lead.nationality')">
+                        {{
+                            lead && lead.nacionalidad && lead.nacionalidad
+                                ? lead.nacionalidad
+                                : "-"
+                        }}
+                    </a-descriptions-item>
+                    <a-descriptions-item :label="$t('lead.phone') + ' ' + '1'">
+                        {{
+                            lead && lead.tel1 && lead.tel1
+                                ? lead.tel1
+                                : "-"
+                        }}
                     </a-descriptions-item>
                 </a-descriptions>
             </a-tab-pane>
-            <a-tab-pane key="call_logs">
-                <template #tab>
-                    <span>
-                        <PhoneOutlined />
-                        {{ $t("menu.call_logs") }}
-                    </span>
-                </template>
-
-                <LeadLogTable
-                    :leadId="lead.x_lead_id"
-                    :showLeadDetails="false"
-                    :showTableSearch="false"
-                    :showAction="false"
-                />
-            </a-tab-pane>
-            <a-tab-pane key="notes">
+            <a-tab-pane v-if="tipo === 'lead_note'" key="notes">
                 <template #tab>
                     <span>
                         <FileTextOutlined />
@@ -78,91 +115,18 @@
                     </span>
                 </template>
                 <LeadNotesTable
+                    :soloVer="soloVer"
                     :leadId="lead.xid"
-                    :showAddButton="
-                        lead && lead.campaign && lead.campaign.status != 'completed'
-                            ? true
-                            : false
-                    "
+                    :showAddButton="false"
                     @success="setNotesUrl"
                 />
             </a-tab-pane>
-            <a-tab-pane key="uphone_calls" @change="fetchUphoneCallData()">
-                <template #tab>
-                    <span>
-                        <FileTextOutlined />
-                        {{ $t("menu.uphone_calls") }}
-                    </span>
-                </template>
-                <admin-page-filters>
-                    <a-row :gutter="[16, 16]">
-                        <a-col :xs="24" :sm="24" :md="12" :lg="10" :xl="10"> </a-col>
-                        <a-col :xs="24" :sm="24" :md="12" :lg="14" :xl="14">
-                            <a-row :gutter="[16, 16]" justify="end">
-                                <a-col :xs="24" :sm="24" :md="14" :lg="16" :xl="16">
-                                    <a-input-group compact>
-                                        <a-select
-                                            style="width: 25%"
-                                            v-model:value="table.searchColumn"
-                                            :placeholder="
-                                                $t('common.select_default_text', [''])
-                                            "
-                                        >
-                                            <a-select-option
-                                                v-for="filterableColumn in uphoneFilterableColumns"
-                                                :key="filterableColumn.key"
-                                            >
-                                                {{ filterableColumn.value }}
-                                            </a-select-option>
-                                        </a-select>
-                                        <a-input-search
-                                            style="width: 75%"
-                                            v-model:value="table.searchString"
-                                            show-search
-                                            @change="onTableSearch"
-                                            @search="onTableSearch"
-                                            :loading="table.filterLoading"
-                                            :placeholder="
-                                                $t('common.placeholder_search_text', [
-                                                    $t('uphone_calls.uphone_calls'),
-                                                ])
-                                            "
-                                        />
-                                    </a-input-group>
-                                </a-col>
-                            </a-row>
-                        </a-col>
-                    </a-row>
-                </admin-page-filters>
-                <a-row>
-                    <a-col :span="24">
-                        <div class="table-responsive">
-                            <a-table
-                                :columns="uphoneColumn"
-                                :row-key="(record) => record.xid"
-                                :data-source="table.data"
-                                :pagination="table.pagination"
-                                :loading="table.loading"
-                                @change="handleTableChange"
-                            >
-                                <template #bodyCell="{ column, record }">
-                                    <template v-if="column.dataIndex === 'date'">
-                                        {{ formatDateTime(record.date) }}
-                                    </template>
-                                    <!-- <template v-if="column.dataIndex === 'campaign_id'">
-                                        {{ record.campaigns.name }}
-                                    </template> -->
-                                </template>
-                            </a-table>
-                        </div>
-                    </a-col>
-                </a-row>
-            </a-tab-pane>
+            
         </a-tabs>
     </a-drawer>
 </template>
 <script>
-import { defineComponent, ref, onMounted, watch, computed } from "vue";
+import { defineComponent,computed, ref, onMounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import {
     UnorderedListOutlined,
@@ -171,7 +135,7 @@ import {
 } from "@ant-design/icons-vue";
 import common from "../../../../common/composable/common";
 import LeadLogTable from "../../../components/lead-logs/index.vue";
-import LeadNotesTable from "../../../components/lead-notes/index.vue";
+import LeadNotesTable from "../../../components/venta/index.vue";
 import VueLeadUphone from "./ViewLeadUphone.vue";
 import { forEach } from "lodash-es";
 import crud from "../../../../common/composable/crud";
@@ -181,6 +145,13 @@ export default defineComponent({
     props: {
         visible: {
             default: false,
+        },
+        soloVer: {
+            type: Boolean,
+            default: true
+        },
+        tipo: {
+            default: "",
         },
         title: {
             default: "",
@@ -205,12 +176,14 @@ export default defineComponent({
         const { t } = useI18n();
         const drawerTitle = ref(t("lead.lead_details"));
         const activeTabKey = ref("lead_data");
+        const tipo = ref("");
 
         const extraFilters = ref({
             lead_id: "",
         });
 
         onMounted(() => {
+            tipo.value = props.tipo;
             // fetchUphoneCallData();
         });
 
@@ -240,12 +213,14 @@ export default defineComponent({
             (newVal) => {
                 if (newVal && props.lead.xid) {
                     extraFilters.value.lead_id = props.lead.xid;
-                    fetchUphoneCallData();
+                    //fetchUphoneCallData();
                 }
+
             }
         );
 
         return {
+            tipo,
             ...crudVariables,
             drawerTitle,
             formatTimeDuration,

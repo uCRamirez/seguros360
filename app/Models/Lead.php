@@ -51,6 +51,7 @@ class Lead extends BaseModel implements Auditable
         'nombreBase',
         'tarjeta',
         'assign_to',
+        'started'
     ];
     
 

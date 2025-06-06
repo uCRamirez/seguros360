@@ -1,5 +1,9 @@
 <template>
-    <BarChart ref="chartRef" :chartData="testData" :options="options" />
+  <BarChart 
+    ref="chartRef" 
+    :chartData="chartData" 
+    :options="options" 
+  />
 </template>
 
 <script>
@@ -11,51 +15,115 @@ import { useI18n } from "vue-i18n";
 Chart.register(...registerables);
 
 export default {
-    props: ["data"],
-    components: {
-        BarChart,
-    },
-    setup(props) {
-        const chartRef = ref();
-        const { t } = useI18n();
+  props: ["data"],
+  components: {
+    BarChart,
+  },
+  setup(props) {
+    const { t } = useI18n();
+    const chartRef = ref();
 
-        const options = ref({
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: "bottom",
-                },
-                title: {
-                    display: false,
-                    text: "Chart.js Doughnut Chart",
-                },
+    const options = ref({
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false,
+        },
+        title: {
+          display: false,
+        },
+      },
+      scales: {
+        x: {
+          ticks: {
+            maxRotation: 45,
+            minRotation: 45,
+            autoSkip: false, 
+            font: {
+              size: 10,
             },
+          },
+        },
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: t("dashboard.total_calls"),
+          },
+        },
+      },
+    });
+
+    const chartData = ref({
+      labels: [],    
+      datasets: [
+        {
+          label: t("dashboard.total_calls"), 
+          data: [],                          
+          backgroundColor: [],             
+        },
+      ],
+    });
+
+    watch(
+      () => props.data.callMade,
+      (newVal) => {
+        if (
+          !newVal ||
+          !Array.isArray(newVal.dates) ||
+          !Array.isArray(newVal.series)
+        ) {
+          chartData.value = {
+            labels: [],
+            datasets: [
+              {
+                label: t("dashboard.total_calls"),
+                data: [],
+                backgroundColor: [],
+              },
+            ],
+          };
+          return;
+        }
+
+        const dates = newVal.dates;      
+        const series = newVal.series;   
+
+        const labelsPlano = [];
+        const dataPlano = [];
+        const colorPlano = [];
+
+        dates.forEach((fecha) => {
+          series.forEach((serie) => {
+            labelsPlano.push(`${fecha} – ${serie.user}`);
+
+            const idxFecha = dates.indexOf(fecha);
+            const valor = serie.counts[idxFecha] || 0;
+            dataPlano.push(valor);
+
+            colorPlano.push(serie.color || "#333333");
+          });
         });
 
-        const testData = ref({});
-
-        watch(props, (newVal, oldVal) => {
-            testData.value = {
-                labels: newVal.data.callMade.dates ? newVal.data.callMade.dates : [],
-                datasets: [
-                    {
-                        label: t("dashboard.call_made"),
-                        data: newVal.data.callMade.calls
-                            ? newVal.data.callMade.calls
-                            : [],
-                        backgroundColor: "#20C997",
-                    },
-                ],
-            };
-        });
-
-        return {
-            chartRef,
-            testData,
-            options,
+        chartData.value = {
+          labels: labelsPlano,
+          datasets: [
+            {
+              label: t("dashboard.total_calls"),
+              data: dataPlano,
+              backgroundColor: colorPlano,
+            },
+          ],
         };
-    },
+      },
+      { immediate: true }
+    );
+
+    return {
+      chartRef,
+      chartData,
+      options,
+    };
+  },
 };
 </script>
-
-<style></style>

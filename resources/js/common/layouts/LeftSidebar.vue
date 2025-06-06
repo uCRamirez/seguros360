@@ -93,16 +93,14 @@
                         permsArray.includes('categories_view') ||
                         permsArray.includes('admin') ||
                         ((permsArray.includes('products_view') ||
-                                permsArray.includes('admin')) &&
-                                willSubscriptionModuleVisible('salesman'))
+                            permsArray.includes('admin')))
                         " 
                         :title="$t('menu.products')" :visible="menuCollapsed" 
                     />
 
                     <a-menu-item v-if="
                         (permsArray.includes('categories_view') ||
-                            permsArray.includes('admin')) &&
-                        willSubscriptionModuleVisible('category')
+                            permsArray.includes('admin'))
                     " @click="
                         () => {
                             menuSelected();
@@ -117,8 +115,7 @@
 
                     <a-menu-item v-if="
                         (permsArray.includes('products_view') ||
-                            permsArray.includes('admin')) &&
-                        willSubscriptionModuleVisible('product')
+                            permsArray.includes('admin'))
                     " @click="
                         () => {
                             menuSelected();
@@ -172,8 +169,7 @@
                         permsArray.includes('users_view') ||
                         permsArray.includes('admin') ||
                         ((permsArray.includes('salesmans_view') ||
-                            permsArray.includes('admin')) &&
-                            willSubscriptionModuleVisible('salesman'))
+                            permsArray.includes('admin')))
                     " :title="$t('menu.user_management')" :visible="menuCollapsed" />
 
                     <a-menu-item v-if="
@@ -268,7 +264,7 @@
                             <SoundOutlined />
                             <span>{{ $t("menu.leads") }}</span>
                         </a-menu-item>
-                        <a-menu-item v-if="willSubscriptionModuleVisible('lead_call_log')" @click="
+                        <a-menu-item @click="
                             () => {
                                 menuSelected();
                                 $router.push({
@@ -279,7 +275,7 @@
                             <PhoneOutlined />
                             <span>{{ $t("menu.call_logs") }}</span>
                         </a-menu-item>
-                        <a-menu-item v-if="willSubscriptionModuleVisible('lead_notes')" @click="
+                        <a-menu-item @click="
                             () => {
                                 menuSelected();
                                 $router.push({
@@ -291,32 +287,40 @@
                             <span>{{ $t("menu.lead_notes") }}</span>
                         </a-menu-item>
                     </a-sub-menu>
-                   <!-- <a-menu-item v-if="willSubscriptionModuleVisible('lead_follow_up')" @click="
+                    <!-- ventas -->
+                    <LeftSideBarMainHeading v-if="(permsArray.includes('sales_view') || permsArray.includes('admin'))" :title="$t('menu.sales')" :visible="menuCollapsed" />
+                    <a-menu-item @click="
                         () => {
                             menuSelected();
                             $router.push({
-                                name: 'admin.bookings.lead_follow_up.index',
+                                name: 'admin.lead_notes_ventas.index',
                             });
                         }
-                    " key="lead_follow_up">
-                        <ScheduleOutlined />
-                        <span>{{ $t("menu.lead_follow_up") }}</span>
+                        " key="lead_notes_ventas">
+                        <ShopOutlined />
+                        <span>{{ $t("menu.sales") }}</span>
                     </a-menu-item>
-                     <a-menu-item v-if="
-                        permsArray.includes('uphone_calls_view') ||
-                        permsArray.includes('admin')
-                    " @click="
-                        () => {
-                            menuSelected();
-                            $router.push({
-                                name: 'admin.uphone_calls.index',
-                            });
-                        }
-                    " key="uphone_calls">
-                        <UnderlineOutlined />
-                        <span>{{ $t("menu.uphone_calls") }}</span>
-                    </a-menu-item> -->
+
+                    <!-- calidad -->
+                    <LeftSideBarMainHeading v-if="(permsArray.includes('quality_view') || permsArray.includes('admin'))" :title="$t('menu.quality')" :visible="menuCollapsed" />
+                    <a-menu-item  @click="
+                            () => {
+                                menuSelected();
+                                $router.push({
+                                    name: 'admin.lead_notes_calidad.index',
+                                });
+                            }
+                        " key="lead_notes_calidad"
+                        v-if="(permsArray.includes('quality_view') ||
+                            permsArray.includes('admin'))"
+                    >
+                            <FileTextOutlined />
+                            <span>{{ $t("menu.quality") }}</span>
+                    </a-menu-item>
                     
+
+                    <LeftSideBarMainHeading :title="$t('menu.settings')" :visible="menuCollapsed" />
+
                     <a-menu-item v-if="
                         permsArray.includes('notes_typifications_view') ||
                         permsArray.includes('admin')
@@ -331,78 +335,6 @@
                         <LineHeightOutlined />
                         <span>{{ $t("menu.notes_typifications") }}</span>
                     </a-menu-item>
-
-                    <LeftSideBarMainHeading :title="$t('menu.settings')" :visible="menuCollapsed" />
-
-                    <!-- <a-menu-item v-if="
-                        permsArray.includes('form_field_names_view') ||
-                        permsArray.includes('admin')
-                    " @click="
-                        () => {
-                            menuSelected();
-                            $router.push({
-                                name: 'admin.form_field_names.index',
-                            });
-                        }
-                    " key="form_field_names">
-                        <InsertRowBelowOutlined />
-                        <span>{{ $t("menu.form_field_names") }}</span>
-                    </a-menu-item>
-
-
-                    <a-sub-menu key="messaging" v-if="
-                        permsArray.includes('email_templates_view') ||
-                        permsArray.includes('admin')
-                    ">
-                        <template #title>
-                            <span>
-                                <MailOutlined />
-                                <span>{{ $t("menu.messaging") }}</span>
-                            </span>
-                        </template>
-                        <a-menu-item v-if="
-                            permsArray.includes('email_templates_view') ||
-                            permsArray.includes('admin')
-                        " @click="
-                            () => {
-                                menuSelected();
-                                $router.push({
-                                    name: 'admin.email_templates.index',
-                                });
-                            }
-                        " key="email_templates">
-                            <MailOutlined />
-                            <span>{{ $t("menu.email_templates") }}</span>
-                        </a-menu-item>
-
-                        <a-menu-item v-if="
-                            permsArray.includes('message_templates_view') ||
-                            permsArray.includes('admin')
-                        " @click="
-                            () => {
-                                menuSelected();
-                                $router.push({
-                                    name: 'admin.message_templates.index',
-                                });
-                            }
-                        " key="message_templates">
-                            <CommentOutlined />
-                            <span>{{ $t("menu.message_templates") }}</span>
-                        </a-menu-item>
-                    </a-sub-menu>
-
-                    <a-menu-item v-if="
-                        permsArray.includes('forms_view') ||
-                        permsArray.includes('admin')
-                    " @click="
-                        () => {
-                            menuSelected();
-                            $router.push({ name: 'admin.forms.index' });
-                        }
-                    " key="forms">
-                        <FolderOpenOutlined />
-                        <span>{{ $t("menu.forms") }}</span>
-                    </a-menu-item> -->
 
                     
                     <component v-for="(appModule, index) in appModules" :key="index" v-bind:is="appModule + 'Menu'"

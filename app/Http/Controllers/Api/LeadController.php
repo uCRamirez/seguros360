@@ -82,8 +82,27 @@ class LeadController extends ApiBaseController
 
 
         // Started Filter
-        $started = $request->has('started') && $request->started == 'not_started' ? 0 : 1;
-        $query = $query->where('leads.started', $started);
+        // $started = $request->has('started') && $request->started == 'not_started' ? 0 : 1;
+        // $query = $query->where('leads.started', $started);
+        // Started Filter
+        if ($request->has('started')) {
+            $startedParam = $request->started; // debe venir como arreglo ["started","not_started"]
+
+            if (is_array($startedParam)) {
+                // Convertimos cada string a su valor booleano/numérico
+                $map = array_map(function($s){
+                    return $s === 'not_started' ? 0 : 1;
+                }, $startedParam);
+
+                // Ahora filtramos usando whereIn() con [0,1]
+                $query = $query->whereIn('leads.started', $map);
+            } else {
+                // Si sólo viene uno, lo convertimos a 0 o 1
+                $started = $startedParam === 'not_started' ? 0 : 1;
+                $query = $query->where('leads.started', $started);
+            }
+        }
+
 
         // If user either not admin or have leads_view_all permissions
         // then lead last_action_by must be logged in user

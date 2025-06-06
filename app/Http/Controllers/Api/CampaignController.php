@@ -20,6 +20,7 @@ use App\Models\Campaign;
 use App\Models\CampaignUser;
 use App\Models\EmailTemplate;
 use App\Models\Form;
+use App\Models\User;
 use App\Models\Lead;
 use App\Models\LeadAux;
 use App\Models\LeadLog;
@@ -29,6 +30,7 @@ use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB; 
 
 class CampaignController extends ApiBaseController
 {
@@ -43,6 +45,8 @@ class CampaignController extends ApiBaseController
     {
         $user = user();
         $request = request();
+        // \Log::info('modifyIndex - campaign', ['request' => $request]);
+
 
         // Checking use is user of camaign
         if (!$user->ability('admin', 'campaigns_view_all')) {
@@ -482,5 +486,27 @@ class CampaignController extends ApiBaseController
             return ApiResponse::make('No campaigns found', [], 404);
         }
     }
+
+    public function getUsersCamps($xid)
+    {
+        $campaignId = $this->getIdFromHash($xid);
+        $users = User::join('campaign_users as cu', 'cu.user_id', '=', 'users.id')
+            ->where('cu.campaign_id', $campaignId)
+            ->orderBy('users.name')
+            ->select('users.id', 'users.name', 'users.user')
+            ->get();
+
+        $result = $users->map(function(User $u) {
+            return [
+                'xid'  => $u->xid,  
+                'id'   => $u->id,
+                'name' => $u->name,
+                'user' => $u->user,
+            ];
+        });
+
+        return response()->json($result);
+    }
+
 
 }
