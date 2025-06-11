@@ -115,6 +115,9 @@ class LangTrans
             'uphone_calls' => "Uphone Calls",
             'email_history' => 'Email History',
             'information' => 'Information',            
+            'updated' => 'Successfully updated',            
+            'deleted' => 'Eliminado correctamente',           
+            'created' => 'Successfully created ',         
         ],
         //nuevo
         'bases' => [
@@ -185,7 +188,9 @@ class LangTrans
             'you_agree' => 'Are you agree',
             'formsUCB' => 'Correspondence',
             'correspondence' => 'Correspondence',
-            'search_lead' => 'Search lead'
+            'search_lead' => 'Search lead',
+            'actions' => 'Actions',
+            'reasons_cancellation' => 'Reasons for cancellation',
         ],
         'dashboard' => [
             'dashboard' => 'Dashboard',
@@ -409,6 +414,7 @@ class LangTrans
             'records' => 'Records',
             'created_at' => 'Created at',
             'updated_at' => 'Updated at',
+            'imported_leads' => 'Imported Data',
         ],
         'email_template' => [
             'add' => 'Add New Email Template',
@@ -457,7 +463,13 @@ class LangTrans
             'code' => 'Code',
             'message_provider' => 'Message Provider',
             'variables' => 'Variables',
-            'enter_subvalues' => 'Enter Subvalues'
+            'enter_subvalues' => 'Enter Subvalues',
+            'critical_not_variable' => 'Non-critical variable',
+            'critical_variable' => 'Critical variable',
+            'maximum_grade_exceded' => 'The sum of the weight must be 100',
+            'actions' => 'Actions',
+            'reason' => 'Reason',
+            'delete_message' => 'Are you sure you want to delete?',
         ],
         'email_provider' => [
             'add' => 'Add New Email Provider',

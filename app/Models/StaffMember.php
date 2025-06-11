@@ -28,7 +28,7 @@ class StaffMember extends BaseModel implements AuthenticatableContract, JWTSubje
 
     protected $dates = ['last_active_on'];
 
-    protected $hidden = ['id', 'role_id', 'password', 'remember_token'];
+    protected $hidden = ['role_id', 'password', 'remember_token'];
 
     protected $appends = ['xid', 'x_company_id', 'x_role_id', 'profile_image_url'];
 

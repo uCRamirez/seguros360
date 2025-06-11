@@ -8,7 +8,7 @@
                     <a-row :gutter="[16, 16]">
                         <!-- Nivel 1 -->
                         <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                            <a-form-item class="required" :label="$t('lead_notes.notes_typification_1ss')"
+                            <a-form-item class="required" :label="$t('lead_notes.notes_typification_1')"
                                 name="notes_typification_id_1"
                                 :help="rules.notes_typification_id_1 ? rules.notes_typification_id_1.message : null"
                                 :validateStatus="rules.notes_typification_id_1 ? 'error' : null">

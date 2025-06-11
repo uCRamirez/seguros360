@@ -62,7 +62,7 @@
             </a-row>
 
             <a-row :gutter="[24, 24]">
-                <a-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6" style="border-right: 1px solid #f0f0f0">
+                <a-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6" style="border-right: 1px solid #f0f0f0;">
                     <div class="left-lead-campaigns">
                         <perfect-scrollbar :options="{
                             wheelSpeed: 1,

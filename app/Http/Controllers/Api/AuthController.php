@@ -109,7 +109,6 @@ class AuthController extends ApiBaseController
         } else {
             $users = StaffMember::select('id', 'name', 'profile_image')->get();
         }
-
         return ApiResponse::make('Success', [
             'users' => $users
         ]);

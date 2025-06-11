@@ -2,14 +2,11 @@
     <AddEdit
         :addEditType="addEditType"
         :visible="addEditVisible"
-        :url="addEditUrl"
         @addEditSuccess="onAddEditSuccess"
         @closed="onCloseAddEdit"
         :formData="formData"
-        :leadInfo="leadInfo"
         :allProductos="allProductos"
         :data="viewData"
-        :pageTitle="pageTitle"
         :successMessage="successMessage"
     />
 
@@ -45,7 +42,7 @@
             </a-tabs>
         </a-col>
     </a-row>
-
+    <!-- FILTROS -->
     <a-row
         v-if="
             showAddButton ||
@@ -58,12 +55,13 @@
         :gutter="[15, 15]"
         class="mb-20"
     >
-        <!-- El btn de agregar tipificaciones -->
-        <a-col v-if="showAddButton" :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
-            <a-button type="primary" :disabled="managing === false" @click="addItem" block>
-                <PlusOutlined />
-                {{ $t("notes.add") }}
-            </a-button>
+        <!-- Filtro campo de busqueda -->
+        <a-col :xs="24" :sm="24" :md="4" :lg="4" :xl="4">
+            <a-input-search style="width: 100%" v-model:value="table.searchString" :placeholder="$t('common.select_default_text', [$t('common.information'),])" 
+            show-search 
+            @change="onTableSearch" 
+            @search="onTableSearch"
+            :loading="table.filterLoading" />
         </a-col>
         <!-- El select de los usuarios -->
         <a-col
@@ -72,14 +70,10 @@
                 permsArray.includes('leads_view_all') ||
                 permsArray.includes('admin')
             "
-            :xs="24"
-            :sm="24"
-            :md="12"
-            :lg="6"
-            :xl="6"
+            :xs="24" :sm="24" :md="4" :lg="4" :xl="4"
         >
             <a-select
-                v-model:value="filters.user_id"
+                v-model:value="filters['isSale.user_id']"
                 :placeholder="$t('common.select_default_text', [$t('user.user')])"
                 :allowClear="true"
                 style="width: 100%"
@@ -91,12 +85,65 @@
                     v-for="allUsers in allUsers"
                     :key="allUsers.xid"
                     :title="allUsers.name"
-                    :value="allUsers.xid"
+                    :value="allUsers.id"
                 >
                     {{ allUsers.name }}
                 </a-select-option>
             </a-select>
         </a-col>
+        <!-- Filtro de estado de venta-->
+        <a-col :xs="24" :sm="24" :md="12" :lg="4" :xl="4">
+            <a-form-item >
+                <a-select
+                    v-model:value="filters['isSale.estadoVenta']"
+                    :placeholder="
+                    $t('common.select_default_text', [ $t('common.status'),])"
+                    :allowClear="true"
+                    show-search
+                    @change="setUrlData"
+                >
+                    <a-select-option
+                        key="Efectiva"
+                        value="Efectiva"
+                    >
+                        {{ $t("lead_notes.effective") }}
+                    </a-select-option>
+                    <a-select-option
+                        key="Cancelada"
+                        value="Cancelada"
+                    >
+                        {{ $t("lead_notes.canceled") }}
+                    </a-select-option>
+                </a-select>
+            </a-form-item>
+        </a-col>
+        <!-- Filtro de calidad-->
+        <a-col :xs="24" :sm="24" :md="12" :lg="4" :xl="4">
+            <a-form-item >
+                <a-select
+                    v-model:value="filters['isSale.calidad']"
+                    :placeholder="
+                    $t('common.select_default_text', [ $t('menu.quality'),])"
+                    :allowClear="true"
+                    show-search
+                    @change="setUrlData"
+                >
+                    <a-select-option
+                        :key="1"
+                        :value="1"
+                    >
+                        {{ $t("common.yes") }}
+                    </a-select-option>
+                    <a-select-option
+                        :key="'0'"
+                        :value="'0'"
+                    >
+                        {{ $t("common.no") }}
+                    </a-select-option>
+                </a-select>
+            </a-form-item>
+        </a-col>
+                                
         <!-- El dateTime de filtro en tipificaciones -->
         <a-col
             v-if="
@@ -120,7 +167,7 @@
             />
         </a-col>
     </a-row>
-
+    <!-- TABLA CON DATA -->
     <a-row class="mt-20">
         <a-col :span="24">
             <div class="table-responsive lead-notes-table">
@@ -134,24 +181,41 @@
                     :scroll="scrollStyle"
                 >
                     <template #bodyCell="{ column, record }">
-                        <!-- <template v-if="column.dataIndex === 'document'">
+                        <template v-if="column.dataIndex === 'is_sale.idVenta'">
+                            {{
+                                record.is_sale &&
+                                record.is_sale.idVenta
+                                    ? record.is_sale.idVenta
+                                    : "-"
+                            }}
+                        </template>
+                        <template v-if="column.dataIndex === 'cedula'">
                             <a-button
                                 v-if="showLeadDetails"
                                 type="link"
                                 class="p-0"
-                                @click="showViewDrawer(record.lead)"
+                                @click="editItem(record)"
                             >
                                 {{
                                     record.lead &&
-                                    record.lead.document != "" &&
-                                    record.lead.document != undefined
-                                        ? record.lead.document
+                                    record.lead.cedula != "" &&
+                                    record.lead.cedula != undefined
+                                        ? record.lead.cedula
                                         : "---"
                                 }}
                             </a-button>
                             <span v-else>{{ record.lead.document }}</span>
-                        </template> -->
-                        <!-- <template v-if="column.dataIndex === 'campaign'">
+                        </template>
+                        <template v-if="column.dataIndex === 'nombre'">
+                            {{
+                                record.lead &&
+                                record.lead.nombre &&
+                                record.lead.nombre != undefined
+                                    ? `${record.lead.nombre} ${record.lead.apellido1} ${record.lead.apellido2}`
+                                    : "-"
+                            }}
+                        </template>
+                        <template v-if="column.dataIndex === 'campaign'">
                             {{
                                 record.lead &&
                                 record.lead.campaign &&
@@ -159,6 +223,22 @@
                                     ? record.lead.campaign.name
                                     : "-"
                             }}
+                        </template>
+                        <template v-if="column.dataIndex === 'is_sale.estadoVenta'">
+                            <a-tag v-if="record.is_sale.estadoVenta === 'Efectiva'" color="#4cb050">
+                                {{ $t('lead_notes.effective') }}
+                            </a-tag>
+                            <a-tag v-else color="#f5b041">
+                                {{ $t('lead_notes.canceled') }}
+                            </a-tag>
+                        </template>
+                        <template v-if="column.dataIndex === 'is_sale.calidad'">
+                            <a-tag v-if="record.is_sale.calidad === 1" color="#4cb050">
+                                {{ $t('common.yes') }}
+                            </a-tag>
+                            <a-tag v-else color="#f5b041">
+                                {{ $t('common.no') }}
+                            </a-tag>
                         </template>
                         <template
                             v-for="allFormFieldName in allFormFieldNames"
@@ -180,14 +260,14 @@
                                     )
                                 }}
                             </template>
-                        </template> -->
+                        </template>
                         <template v-if="column.dataIndex === 'notes'">
                             <a-comment>
-                                <template #author>{{ record.user.name }}</template>
+                                <template #author>{{ record.is_sale.user.name }}</template>
                                 <template #avatar>
                                     <a-avatar
-                                        :src="record.user.profile_image_url"
-                                        :alt="record.user.name"
+                                        :src="record.is_sale.user.profile_image_url"
+                                        :alt="record.is_sale.user.name"
                                     />
                                 </template>
                                 <template #content>
@@ -232,11 +312,11 @@
                                     </a-button>
                                 </a-typography-link>
                                 <a-button type="primary" @click="editItem(record)">
-                                    <template #icon><EditOutlined v-if="permsArray.includes('admin')"/>  <EyeOutlined v-else/> </template>
+                                    <template #icon><EditOutlined v-if="(permsArray.includes('admin') || permsArray.includes('sales_edit')) && !soloVer"/>  <EyeOutlined v-else/> </template>
                                 </a-button>
                                 <a-button
                                     v-if="
-                                        permsArray.includes('admin')
+                                        permsArray.includes('admin') || permsArray.includes('sales_delete')
                                     "
                                     type="primary"
                                     @click="showDeleteConfirm(record.xid)"
@@ -251,12 +331,6 @@
         </a-col>
     </a-row>
 
-    <!-- Global Compaonent -->
-    <view-lead-details
-        :visible="isViewDrawerVisible"
-        :lead="viewDrawerData"
-        @close="hideViewDrawer"
-    />
 </template>
 
 <script>
@@ -282,6 +356,10 @@ export default {
     props: {
         pageName: {
             default: "index",
+        },
+        soloVer: {
+            type: Boolean,
+            default: true
         },
         leadId: {
             default: undefined,
@@ -370,21 +448,19 @@ export default {
             dates: [],
         });
         const filters = ref({
+            'isSale.estadoVenta': undefined,
+            'isSale.calidad': undefined,
             log_type: props.logType,
-            user_id: undefined,
+            isSale: 1,
+            // user_id: undefined,
         });
 
         onMounted(() => {
             getPrefetchData().then((response) => {
-                if (
-                    props.logType != "salesman_bookings" &&
-                    props.pageName != "lead_action"
-                ) {
                     filters.value = {
                         ...filters.value,
-                        user_id: user.value.xid,
                     };
-                }
+                
                     leadInfo.value = props.leadInfo;
                     crudVariables.crudUrl.value = addEditUrl;
                     crudVariables.langKey.value = "notes";
@@ -392,9 +468,9 @@ export default {
                     crudVariables.formData.value = { ...initData, lead_id: props.leadId };
                     crudVariables.hashableColumns.value = [...hashableColumns];
                     crudVariables.hashable.value = [...hashableColumns];
-                if (props.leadId !== undefined && props.leadId !== null) {
                     setUrlData();
-                };
+                    let test = allUsers.value;
+
             });
         });
 

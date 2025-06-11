@@ -302,7 +302,7 @@
                     </a-menu-item>
 
                     <!-- calidad -->
-                    <LeftSideBarMainHeading v-if="(permsArray.includes('quality_view') || permsArray.includes('admin'))" :title="$t('menu.quality')" :visible="menuCollapsed" />
+                    <LeftSideBarMainHeading v-if="(permsArray.includes('quality_view') || permsArray.includes('templates_view') || permsArray.includes('admin'))" :title="$t('menu.quality')" :visible="menuCollapsed" />
                     <a-menu-item  @click="
                             () => {
                                 menuSelected();
@@ -316,6 +316,53 @@
                     >
                             <FileTextOutlined />
                             <span>{{ $t("menu.quality") }}</span>
+                    </a-menu-item>
+                    <!-- templates -->
+                    <a-menu-item v-if="
+                        permsArray.includes('plantillas_calidad_view') ||
+                        permsArray.includes('admin')
+                    " @click="
+                        () => {
+                            menuSelected();
+                            $router.push({
+                                name: 'admin.templates.index',
+                            });
+                        }
+                    " key="quality_templates">
+                        <LineHeightOutlined />
+                        <span>{{ $t("menu.templates") }}</span>
+                    </a-menu-item>
+
+                    <!-- acciones -->
+                    <a-menu-item v-if="
+                        permsArray.includes('acciones_calidad_view') ||
+                        permsArray.includes('admin')
+                    " @click="
+                        () => {
+                            menuSelected();
+                            $router.push({
+                                name: 'admin.templates_acciones.index',
+                            });
+                        }
+                    " key="templates_acciones">
+                        <AppstoreOutlined />
+                        <span>{{ $t("menu.actions") }}</span>
+                    </a-menu-item>
+
+                    <!-- motivos -->
+                    <a-menu-item v-if="
+                        permsArray.includes('motivos_calidad_view') ||
+                        permsArray.includes('admin')
+                    " @click="
+                        () => {
+                            menuSelected();
+                            $router.push({
+                                name: 'admin.templates_motivos.index',
+                            });
+                        }
+                    " key="templates_motivos">
+                        <AppstoreAddOutlined />
+                        <span>{{ $t("menu.reasons_cancellation") }}</span>
                     </a-menu-item>
                     
 
@@ -395,6 +442,7 @@ import {
     ShoppingOutlined,
     ShoppingCartOutlined,
     AppstoreOutlined,
+    AppstoreAddOutlined,
     ShopOutlined,
     BarChartOutlined,
     CalculatorOutlined,
@@ -444,6 +492,7 @@ export default defineComponent({
         ShoppingOutlined,
         ShoppingCartOutlined,
         AppstoreOutlined,
+        AppstoreAddOutlined,
         ShopOutlined,
         BarChartOutlined,
         CalculatorOutlined,

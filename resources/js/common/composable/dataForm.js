@@ -8,6 +8,7 @@ const locations = ref([]);
 const provinceOptions = ref([]);
 const cantonOptions = ref([]);
 const districtOptions = ref([]);
+const agenteCampanas = ref([]);
 
 
 // This js return general information for al the forms
@@ -57,6 +58,17 @@ const dataForm = () => {
         }
     };
 
+    // obtener las campanas a las que pertenece el user
+    const fetchAgenteCampanas = async () => {
+        try {
+            axiosAdmin.get(`campaigns/${myId.value}/users`).then(res => {
+                agenteCampanas.value = res;
+            });     
+        } catch (e) {
+            console.error("Error fetching agente campanas:", e);
+        }
+    };
+
 
 
     /////////////////////////
@@ -69,10 +81,12 @@ const dataForm = () => {
         fetchLeadStatus, // Estatus registrado
         fetchUserCampaigns, // Campanas del usuario logueado
         fetchLocalidades, // Localidades de Provincia, Canton y Distrito
+        fetchAgenteCampanas, // Campanas del agente
         locations,
         provinceOptions,
         cantonOptions,
         districtOptions,
+        agenteCampanas, // Campanas del usuario
         ////////
     };
 };

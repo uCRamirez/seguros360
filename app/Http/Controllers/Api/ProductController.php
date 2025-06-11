@@ -9,6 +9,7 @@ use App\Http\Requests\Api\Product\UpdateRequest;
 use App\Http\Requests\Api\Product\DeleteRequest;
 use App\Http\Requests\Api\Product\ImportRequest;
 use App\Models\Product;
+use App\Models\CampaignUser;
 use App\Imports\ProductImport;
 use Examyou\RestAPI\ApiResponse;
 use Maatwebsite\Excel\Facades\Excel;
@@ -39,18 +40,31 @@ class ProductController extends ApiBaseController
     {
         $user    = user();
         $request = request();
+        // \Log::info('modifyIndex', ['$user' => $user]);
+        
+        if ($user->role->name != 'admin') {
+            if(!$user->role->perms->contains('name', 'leads_view_all')){
+                // \Log::info('modifyIndex - dentro IF');
 
-        // Si no tiene permiso o pide 'self' (o no viene view_type), restringir
-        if (
-            ! $user->ability('admin', 'campaigns_view_all')
-            || ! $request->has('view_type')
-            || $request->get('view_type') === 'self'
-        ) {
-            $query->whereIn('campaign_id', function($q) use ($user) {
-                $q->select('campaign_id')
-                ->from('campaign_users')
-                ->where('user_id', $user->id);
-            });
+                $query->whereIn('campaign_id', function($q) use ($user) {
+                    $q->select('campaign_id')
+                    ->from('campaign_users')
+                    ->where('user_id', $user->id);
+                });
+            }else{
+
+                // \Log::info('modifyIndex - dentro ELSE');
+
+                $campaignIds = CampaignUser::where('user_id', $user->id)
+                ->orderBy('campaign_id')
+                ->pluck('campaign_id');
+
+                // \Log::info('modifyIndex - campaignIds', ['$campaignIds' => $campaignIds]);
+
+
+                $query->whereIn('campaign_id', $campaignIds);
+
+            }
         }
 
         return $query;

@@ -127,6 +127,8 @@ const functionsCRM = () => {
         fetchUserCampaigns,
         fetchLeadStatus,
         fetchLocalidades,
+        fetchAgenteCampanas,
+        agenteCampanas,
         locations,
         provinceOptions,
         cantonOptions,
@@ -196,9 +198,17 @@ const functionsCRM = () => {
             filters.push(`lead_status_id eq "${leadStatus}"`);
         }
 
-        // Filtro para que cada agente vea solo lo asignado a el, solo el admin ve todo
+        // Filtro para que cada agente vea solo lo asignado a el, solo el admin o un usuario con permisos vea todo
         if (!permsArray.value.includes('admin')) {
-            filters.push(`assign_to eq "${myId.value}"`);
+            
+            if (!permsArray.value.includes('leads_view_all')) {
+                filters.push(`assign_to eq "${myId.value}"`);
+            }
+
+            const orClauses = agenteCampanas.value
+                .map(id => `campaign_id eq "${id}"`)
+                .join(" or ");
+            filters.push(`(${orClauses})`);
         }
 
         const filtersString = filters.join(' and ');
@@ -388,6 +398,7 @@ const functionsCRM = () => {
         onClientSelected,// cuando se selecciona un cliente de la tabla de busqueda
         calcularEdad, // funcion para calcular la edad con base en la fecha seleccionada
         fetchLocalidades, // Obtener las localides actuales Provincia Canton Distrito
+        fetchAgenteCampanas, // Obtener las campanas del agente
         clearClientSelection, // limpiar la informacion del cliente cuando se deselecciona en la tb busqueda
         provinceOptions,
         cantonOptions,

@@ -9,7 +9,7 @@ const fields = (props) => {
         "lead{id,xid,reference_number,cedula,nombre,apellido1,apellido2,fechaNacimiento,edad,nacionalidad,nombreBase,tel1,email,lead_data,started,campaign_id,x_campaign_id,time_taken,first_action_by,x_first_action_by,last_action_by,x_last_action_by},lead:campaign{id,xid,name,status},lead:firstActioner{id,xid,name},lead:lastActioner{id,xid,name}";
     const formFieldNamesUrl = "form-field-names/all";
     const url = 
-        `lead-logs?fields=id,xid,log_type,time_taken,date_time,user_id,x_user_id,notes,phone,message,user{id,xid,name,profile_image,profile_image_url},lead_id,x_lead_id,notes_file,notes_file_url,${leadUrl},campaign_id,notes_typification_id_1,x_notes_typification_id_1,notes_typification_id_2,x_notes_typification_id_2,notes_typification_id_3,x_notes_typification_id_3,notes_typification_id_4,x_notes_typification_id_4,isSale{idVenta,idNota,idLead,user_id,telVenta,estadoVenta,tarjeta,idProducto,cantidadProducto,aplicaBeneficiarios,cantidadBeneficiarios,beneficiarios,montoTotal,calidad}}`;
+        `lead-logs?fields=id,xid,log_type,time_taken,date_time,user_id,x_user_id,notes,phone,message,user{id,xid,name,profile_image,profile_image_url},lead_id,x_lead_id,notes_file,notes_file_url,${leadUrl},campaign_id,notes_typification_id_1,x_notes_typification_id_1,notes_typification_id_2,x_notes_typification_id_2,notes_typification_id_3,x_notes_typification_id_3,notes_typification_id_4,x_notes_typification_id_4,isSale{idVenta,idNota,idLead,user_id,telVenta,estadoVenta,tarjeta,idProducto,cantidadProducto,aplicaBeneficiarios,cantidadBeneficiarios,beneficiarios,montoTotal,calidad},isSale:user{id,xid,name}`;
     const allFormFieldNames = ref([]);
     const addEditUrl = "lead-logs";
     const hashableColumns = ["lead_id", "campaign_id", "user_id", "notes_typification_id_1", "notes_typification_id_2", "notes_typification_id_3","notes_typification_id_4"];
@@ -68,8 +68,8 @@ const fields = (props) => {
                 if (props.showLeadDetails) {
                     var newColumnsArray = [
                         {
-                            title: t("lead.id"),
-                            dataIndex: "id",
+                            title: `${t("lead.id")} ${t("lead_notes.sale")}`,
+                            dataIndex: "is_sale.idVenta",
                         },
                         {
                             title: t("lead.document"),

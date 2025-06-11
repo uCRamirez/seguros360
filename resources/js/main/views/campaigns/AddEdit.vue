@@ -204,6 +204,7 @@ import StaffMemberAddButton from "../users/StaffAddButton.vue";
 import FormAddButton from "../forms/forms/AddButton.vue";
 import EmailTemplateAddButton from "../messaging/email-templates/AddButton.vue";
 import ImportLeads from "./ImportLeads.vue";
+import { useI18n } from "vue-i18n";
 
 export default defineComponent({
     props: [
@@ -232,6 +233,7 @@ export default defineComponent({
         EmailTemplateAddButton,
     },
     setup(props, { emit }) {
+        const { t } = useI18n();
         const currentStep = ref(0);
         const {
             addEditFileRequestAdmin,
@@ -383,12 +385,12 @@ export default defineComponent({
             newFormData.import_lead_fields = importLeadColumns.value;
 
             let isCSV = newFormData.import_lead_fields ? { 
-                data: newFormData.import_lead_fields, 
-                file: newFormData.file.name,
-                campaign_id: props.data.id,
-                company_id: JSON.parse(localStorage.getItem('global_settings') || '{}').xid || '',
-                myId:  JSON.parse(localStorage.getItem("auth_user") || "{}").id,
-                etapa: newFormData.etapa,
+                    data: newFormData.import_lead_fields, 
+                    file: newFormData.file.name,
+                    campaign_id: props.data.id,
+                    company_id: JSON.parse(localStorage.getItem('global_settings') || '{}').xid || '',
+                    myId:  JSON.parse(localStorage.getItem("auth_user") || "{}").id,
+                    etapa: newFormData.etapa ? newFormData.etapa : 'nueva',
                 } 
                 : false;
 
@@ -409,7 +411,7 @@ export default defineComponent({
                 addEditRequestAdmin({
                     url: 'leadcsv/push',
                     data: isCSV,
-                    successMessage: "Imported Data",
+                    successMessage: t('campaign.imported_leads'),
                     success: (res) => {
                         console.log(res);
                     },

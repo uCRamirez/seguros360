@@ -1,0 +1,116 @@
+<template>
+	<a-modal
+		:open="visible"
+		:closable="false"
+		:centered="true"
+		:title="pageTitle"
+		@ok="onSubmit"
+	>
+		<a-form layout="vertical">
+			<a-row :gutter="16">
+				<a-col :xs="24" :sm="24" :md="24" :lg="24">
+					<a-form-item
+						:label="$t('category.name')"
+						name="nombre"
+						:help="rules.nombre ? rules.nombre.message : null"
+						:validateStatus="rules.nombre ? 'error' : null"
+						class="required"
+					>
+						<a-input
+							v-model:value="formData.nombre"
+							:placeholder="
+								$t('common.placeholder_default_text', [
+									$t('category.name'),
+								])
+							"
+						/>
+					</a-form-item>
+                    <a-form-item
+						:label="$t('common.description')"
+						name="descripcion"
+						:help="rules.descripcion ? rules.descripcion.message : null"
+						:validateStatus="rules.descripcion ? 'error' : null"
+					>
+						<a-input
+							v-model:value="formData.descripcion"
+							:placeholder="
+								$t('common.placeholder_default_text', [
+									$t('category.name'),
+								])
+							"
+						/>
+					</a-form-item>
+                    <a-form-item
+						:label="$t('common.active')"
+						name="activo"
+						:help="rules.activo ? rules.activo.message : null"
+						:validateStatus="rules.activo ? 'error' : null"
+					>
+						<a-checkbox v-model:checked="formData.activo"></a-checkbox>
+					</a-form-item>
+				</a-col>
+			</a-row>
+		</a-form>
+		<template #footer>
+			<a-button key="submit" type="primary" :loading="loading" @click="onSubmit">
+				<template #icon>
+					<SaveOutlined />
+				</template>
+				{{ addEditType == "add" ? $t("common.create") : $t("common.update") }}
+			</a-button>
+			<a-button key="back" @click="onClose">
+				{{ $t("common.cancel") }}
+			</a-button>
+		</template>
+	</a-modal>
+</template>
+<script>
+import { defineComponent } from "vue";
+import { PlusOutlined, LoadingOutlined, SaveOutlined } from "@ant-design/icons-vue";
+import apiAdmin from "../../../common/composable/apiAdmin";
+
+export default defineComponent({
+	props: [
+		"formData",
+		"data",
+		"visible",
+		"url",
+		"addEditType",
+		"pageTitle",
+		"successMessage",
+	],
+	components: {
+		PlusOutlined,
+		LoadingOutlined,
+		SaveOutlined,
+	},
+	setup(props, { emit }) {
+		const { addEditRequestAdmin, loading, rules } = apiAdmin();
+
+		const onSubmit = () => {
+			addEditRequestAdmin({
+				url: props.url,
+				data: props.formData,
+				successMessage: props.successMessage,
+				success: (res) => {
+					emit("addEditSuccess", res.xid);
+				},
+			});
+		};
+
+		const onClose = () => {
+			rules.value = {};
+			emit("closed");
+		};
+
+		return {
+			loading,
+			rules,
+			onClose,
+			onSubmit,
+
+			drawerWidth: window.innerWidth <= 991 ? "90%" : "45%",
+		};
+	},
+});
+</script>

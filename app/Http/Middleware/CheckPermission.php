@@ -20,6 +20,7 @@ class CheckPermission
         // api.users.index.v1
         if (auth('api')->check()) {
             $user = auth('api')->user();
+            // \Log::info('request', [$request]);
 
             $resourceRequests = ['index', 'store', 'update', 'show', 'destroy'];
             $urlArray = explode('.', $request->route()->action['as']);
@@ -54,6 +55,7 @@ class CheckPermission
                 } else if ($resourceRequestString == 'destroy') {
                     $permission = $routePathString . '_delete';
                 }
+                // \Log::info('permission', [$permission]);
 
                 if ($permission != "" && !$user->ability('admin', $permission)) {
                     throw new UnauthorizedException("Don't have valid permission");

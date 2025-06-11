@@ -260,7 +260,7 @@
                                                                 'bases_view'
                                                                 ]
                                                                 ">
-                                                                {{ $t("common.view") + ' ' + $t("bases.base") }}
+                                                                {{ $t("common.add") + ' ' + $t("bases.bases") }}
                                                             </a-checkbox>
                                                         </label>
                                                         <label class="form-check form-check-custom me-5 me-lg-20">
@@ -420,6 +420,105 @@
                                                         <label class="form-check form-check-custom me-5 me-lg-20">
                                                             <a-checkbox
                                                                 :value="permissions['quality_delete']">
+                                                                {{ $t("common.delete") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                             <!-- templates de calidad -->
+                                            <tr>
+                                                <td class="text-gray-800">
+                                                    {{ $t("menu.templates") }} 
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex">
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox
+                                                                :value="permissions[ 'plantillas_calidad_view']">
+                                                                {{ $t("common.view") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox :value="permissions['plantillas_calidad_create']">
+                                                                {{ $t("common.add") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox
+                                                                :value="permissions['plantillas_calidad_edit']">
+                                                                {{ $t("common.edit") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox
+                                                                :value="permissions['plantillas_calidad_delete']">
+                                                                {{ $t("common.delete") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <!-- acciones -->
+                                            <tr>
+                                                <td class="text-gray-800">
+                                                    {{ $t("menu.actions") }}
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex">
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox
+                                                                :value="permissions[ 'acciones_calidad_view' ]">
+                                                                {{ $t("common.view") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox :value="permissions['acciones_calidad_create']">
+                                                                {{ $t("common.add") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox
+                                                                :value="permissions['acciones_calidad_edit']">
+                                                                {{ $t("common.edit") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox
+                                                                :value="permissions['acciones_calidad_delete']">
+                                                                {{ $t("common.delete") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <!-- motivos -->
+                                            <tr>
+                                                <td class="text-gray-800">
+                                                    {{ $t("menu.reasons_cancellation") }}
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex">
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox
+                                                                :value="permissions[ 'motivos_calidad_view' ]">
+                                                                {{ $t("common.view") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox :value="permissions['motivos_calidad_create']">
+                                                                {{ $t("common.add") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox
+                                                                :value="permissions['motivos_calidad_edit']">
+                                                                {{ $t("common.edit") }}
+                                                            </a-checkbox>
+                                                        </label>
+                                                        <label class="form-check form-check-custom me-5 me-lg-20">
+                                                            <a-checkbox
+                                                                :value="permissions['motivos_calidad_delete']">
                                                                 {{ $t("common.delete") }}
                                                             </a-checkbox>
                                                         </label>

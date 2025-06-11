@@ -18,6 +18,7 @@ if (localStorage.getItem('auth_token')) {
 axiosAdmin.interceptors.response.use(function (response) {
 	return response.data;
 }, function (error) {
+	console.error(error);
 	const errorCode = error.response.status;
 
 	if (errorCode === 401) {

@@ -96,6 +96,8 @@ ApiRoute::group(['namespace' => 'App\Http\Controllers\Api'], function () {
         ApiRoute::resource('localidades', 'LocalidadesController', ['as' => 'api', 'only' => ['index']]);
         // ventas
         ApiRoute::post('ventas/save', ['as' => 'api.ventas.save', 'uses' => 'VentasController@save']);
+        ApiRoute::resource('ventas', 'VentasController', ['as' => 'api', 'only' => ['index']]);
+
         // columnas
         ApiRoute::get('columns/{table}', ['as' => 'api.leads.columns', 'uses' => 'ColumnController@allColumns']);
         // csv leads aux
@@ -159,6 +161,15 @@ ApiRoute::group(['namespace' => 'App\Http\Controllers\Api'], function () {
         ApiRoute::post('message-templates/update-status', ['as' => 'api.message-templates.update-status', 'uses' => 'MessageTemplateController@updateStatus']);
         ApiRoute::post('notes-typifications/import', ['as' => 'api.notes-typifications.import', 'uses' => 'NotesTypificationController@import']);
         ApiRoute::resource('email-providers', 'EmailProviderController', $options);
+
+        // templates de calidad
+        ApiRoute::resource('plantillas-calidad', 'PlantillaCalidadController', $options);
+        // acciones de calidad
+        ApiRoute::resource('acciones-calidad', 'AccionCalidadController', $options);
+        // motivos cancelacion
+        ApiRoute::resource('motivos-calidad', 'MotivoCancelacionController', $options);
+        // variables de los templates de calidad
+        ApiRoute::post('variables/save', ['as' => 'api.variables.save', 'uses' => 'VariableCalidadController@save']);
 
         // Routes data form uCB
         ApiRoute::get('dataForm/user-campaigns', ['as' => 'api.dataForm.user-campaigns', 'uses' => 'DataFormController@userCampaigns']);

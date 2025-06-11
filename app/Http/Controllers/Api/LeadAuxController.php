@@ -46,7 +46,7 @@ class LeadAuxController extends ApiBaseController
         // \Log::info('pushData', ['company_id' => $company_id]);
 
         $etapa = $request->input('etapa');
-        //\Log::info('pushData', ['etapa' => $etapa]);
+        // \Log::info('pushData', ['etapa' => $etapa]);
 
         if (is_string($leadsArrayJson)) {
             $leadsArray = json_decode($leadsArrayJson, true);

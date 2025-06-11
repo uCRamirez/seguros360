@@ -137,6 +137,14 @@
                     :scroll="scrollStyle"
                 >
                     <template #bodyCell="{ column, record }">
+                        <template v-if="column.dataIndex === 'is_sale.idVenta'">
+                            {{
+                                record.is_sale &&
+                                record.is_sale.idVenta
+                                    ? record.is_sale.idVenta
+                                    : "-"
+                            }}
+                        </template>
                         <template v-if="column.dataIndex === 'cedula'">
                             <a-button
                                 v-if="showLeadDetails"
@@ -186,7 +194,7 @@
                         </template>
                         <template v-if="column.dataIndex === 'notes'">
                             <a-comment>
-                                <template #author>{{ record.user.name }}</template>
+                                <template #author>{{ record.is_sale.user.name }}</template>
                                 <template #avatar>
                                     <a-avatar
                                         :src="record.user.profile_image_url"
@@ -386,15 +394,7 @@ export default {
 
         onMounted(() => {
             getPrefetchData().then((response) => {
-                if (
-                    props.logType != "salesman_bookings" &&
-                    props.pageName != "lead_action"
-                ) {
-                    filters.value = {
-                        ...filters.value,
-                        user_id: user.value.xid,
-                    };
-                }
+                
                     leadInfo.value = props.leadInfo;
                     crudVariables.crudUrl.value = addEditUrl;
                     crudVariables.langKey.value = "notes";
@@ -402,10 +402,8 @@ export default {
                     crudVariables.formData.value = { ...initData, lead_id: props.leadId };
                     crudVariables.hashableColumns.value = [...hashableColumns];
                     crudVariables.hashable.value = [...hashableColumns];
-                if (props.leadId !== undefined && props.leadId !== null) {
                     setUrlData();
-                };
-            });
+            })
         });
 
         const setUrlData = () => {

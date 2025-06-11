@@ -55,7 +55,7 @@ class Venta extends BaseModel implements Auditable
         'idVenta',
         'idNota',
         'idLead',
-        // 'user_id',
+        'user_id',
         'telVenta',
         'estadoVenta',
         'tarjeta',
@@ -69,7 +69,7 @@ class Venta extends BaseModel implements Auditable
         'xid',
         'x_id_nota',
         'x_id_producto',
-        // 'x_user_id',
+        'x_user_id',
     ];
 
     /**
@@ -84,21 +84,21 @@ class Venta extends BaseModel implements Auditable
      *
      * @var array
      */
-    protected $hidden = ['idVenta', 'idNota'];
+    protected $hidden = [];
 
     /**
      * Appended attributes for arrays/JSON.
      *
      * @var array
      */
-    protected $appends = ['xid', 'x_id_nota','x_id_producto'];//,'x_user_id'
+    protected $appends = ['xid', 'x_id_nota','x_id_producto','x_user_id'];//,''
 
     /**
      * Attributes available for filtering.
      *
      * @var array
      */
-    protected $filterable = ['idVenta', 'idNota', 'idProducto'];//,'user_id'
+    protected $filterable = ['idVenta', 'idNota', 'idProducto','calidad','estadoVenta','user_id'];//,''
 
     /**
      * Map accessor methods to fields for hashing.
@@ -108,7 +108,7 @@ class Venta extends BaseModel implements Auditable
     protected $hashableGetterFunctions = [
         'getXIdNotaAttribute' => 'idNota',
         'getXIdProductoAttribute' => 'idProducto',
-        // 'getXUserIdAttribute' => 'user_id',
+        'getXUserIdAttribute' => 'user_id',
 
     ];
 
@@ -120,7 +120,7 @@ class Venta extends BaseModel implements Auditable
     protected $casts = [
         'idNota' => Hash::class . ':hash',
         'idProducto' => Hash::class . ':hash',
-        // 'user_id' => Hash::class . ':hash',
+        'user_id' => Hash::class . ':hash',
     ];
 
     /**
@@ -138,9 +138,14 @@ class Venta extends BaseModel implements Auditable
 
     // }
 
-    public function userVenta() 
+    public function user() 
     { 
-        return $this->hasOne(User::class, 'user_id', 'id')->withoutGlobalScopes();
+        return $this->belongsTo(User::class, 'user_id', 'id')->withoutGlobalScopes();
+    }
+
+    public function product() 
+    { 
+        return $this->belongsTo(Product::class, 'idProducto', 'id')->withoutGlobalScopes();
     }
 
 }

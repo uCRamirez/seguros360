@@ -445,7 +445,7 @@ class PermsSeed
             'name'         => 'lead_status_delete',
             'display_name' => 'Lead status Delete',
         ],
-        // calidad
+        // calidad vistas
         'quality_view' => [
             'name'         => 'quality_view',
             'display_name' => 'Quality View',
@@ -489,6 +489,60 @@ class PermsSeed
         'notes_delete' => [
             'name'         => 'notes_delete',
             'display_name' => 'Notes Delete',
+        ],
+
+        // plantillas calidad
+        'plantillas_calidad_view' => [
+            'name' => 'plantillas_calidad_view',
+            'display_name' => 'Quality Templates View'
+        ],
+        'plantillas_calidad_create' => [
+            'name' => 'plantillas_calidad_create',
+            'display_name' => 'Quality Templates Create'
+        ],
+        'plantillas_calidad_edit' => [
+            'name' => 'plantillas_calidad_edit',
+            'display_name' => 'Quality Templates Edit'
+        ],
+        'plantillas_calidad_delete' => [
+            'name' => 'plantillas_calidad_delete',
+            'display_name' => 'Quality Templates Delete'
+        ],
+
+        // motivos calidad
+        'motivos_calidad_view' => [
+            'name' => 'motivos_calidad_view',
+            'display_name' => 'Quality Reasons View'
+        ],
+        'motivos_calidad_create' => [
+            'name' => 'motivos_calidad_create',
+            'display_name' => 'Quality Reasons Create'
+        ],
+        'motivos_calidad_edit' => [
+            'name' => 'motivos_calidad_edit',
+            'display_name' => 'Quality Reasons Edit'
+        ],
+        'motivos_calidad_delete' => [
+            'name' => 'motivos_calidad_delete',
+            'display_name' => 'Quality Reasons Delete'
+        ],
+
+        // accciones calidad
+        'acciones_calidad_view' => [
+            'name' => 'acciones_calidad_view',
+            'display_name' => 'Quality Actions View'
+        ],
+        'acciones_calidad_create' => [
+            'name' => 'acciones_calidad_create',
+            'display_name' => 'Quality Actions Create'
+        ],
+        'acciones_calidad_edit' => [
+            'name' => 'acciones_calidad_edit',
+            'display_name' => 'Quality Actions Edit'
+        ],
+        'acciones_calidad_delete' => [
+            'name' => 'acciones_calidad_delete',
+            'display_name' => 'Quality Actions Delete'
         ],
 
     ];

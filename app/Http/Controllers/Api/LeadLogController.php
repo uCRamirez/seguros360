@@ -12,6 +12,7 @@ use App\Models\Lead;
 use Carbon\Carbon;
 use Examyou\RestAPI\Exceptions\ApiException;
 use App\Models\CampaignUser;
+use Illuminate\Support\Str; 
 
 class LeadLogController extends ApiBaseController
 {
@@ -24,18 +25,18 @@ class LeadLogController extends ApiBaseController
 
     protected function modifyIndex($query)
     {
+        // \Log::info('modifyIndex SQL', ['sql' => $query->toSql(), 'bindings' => $query->getBindings()]);
+
+        $query->select('lead_logs.*');
+
         $user = user();
         $request = request();
-        //  \Log::info('modifyIndex', ['$user' => $user]);
-
 
         $usersIds = CampaignUser::where('user_id', $user->id)
             ->pluck('user_id');
 
-         \Log::info('modifyIndex', ['$usersIds' => $usersIds]);
-
         $query = $query->join('leads', 'leads.id', '=', 'lead_logs.lead_id')
-            ->join('campaigns', 'campaigns.id', 'leads.campaign_id');
+            ->join('campaigns', 'campaigns.id', '=', 'leads.campaign_id');
 
         if (!$user->ability('admin', 'leads_view_all')) {
             if ($request->has('log_type') && $request->log_type == 'salesman_bookings') {
@@ -53,59 +54,64 @@ class LeadLogController extends ApiBaseController
                 ($request->log_type == 'call_log' || $request->log_type == 'notes' || $request->log_type == 'all')
             ) {
                 // \Log::info('modifyIndex', ['data' => 3]);
-                // When request comes from TakeLeadActionPage
             } else {
                 // \Log::info('modifyIndex', ['data' => 4]);
                 $query = $query->where('lead_logs.user_id', $user->id);
+                // \Log::info(['$user->id' => $user->id]);
+
             }
-        }else{
+        }
+        else{
             if ($user->ability($user->role->name, 'leads_view_all')) {
+                // \Log::info('modifyIndex', ['data' => 5]);
                 $campaignIds = CampaignUser::where('user_id', $user->id)
                                     ->pluck('campaign_id');
                 $teammateIds = CampaignUser::whereIn('campaign_id', $campaignIds)
                                     ->distinct()
                                     ->pluck('user_id');
                 $allUserIds = $teammateIds->push($user->id)->unique();
-                \Log::info('modifyIndex', ['allUserIds' => $allUserIds]);
                 $query = $query->whereIn('lead_logs.user_id', $allUserIds);
             }
         }
 
-        // For Lead Follow Up showing
-        // only not actioned leads
         if ($request->has('log_type') && $request->log_type == 'lead_follow_up') {
+            // \Log::info('modifyIndex', ['data' => 6]);
             $query = $query->where('booking_status', '!=', 'actioned');
         }
 
-        // Extra Filters
         if ($user->ability('admin', 'view_completed_campaigns')) {
+            // \Log::info('modifyIndex', ['data' => 7]);
             if ($request->has('campaign_status') && $request->campaign_status == "completed") {
+                // \Log::info('modifyIndex', ['data' => 8]);
                 $query = $query->where('campaigns.status', '=', 'completed');
             } else {
+                // \Log::info('modifyIndex', ['data' => 9]);
                 $query = $query->where('campaigns.status', '!=', 'completed');
             }
         } else {
+            // \Log::info('modifyIndex', ['data' => 10]);
             $query = $query->where('campaigns.status', '!=', 'completed');
         }
 
         if ($request->has('lead_id') && $request->lead_id != "") {
+            // \Log::info('modifyIndex', ['data' => 11]);
             $leadId = $this->getIdFromHash($request->lead_id);
-
             $query = $query->where('lead_logs.lead_id', $leadId);
         }
 
         if ($request->has('campaign_id') && $request->campaign_id != "") {
+            // \Log::info('modifyIndex', ['data' => 12]);
             $campaignId = $this->getIdFromHash($request->campaign_id);
-
             $query = $query->where('leads.campaign_id', $campaignId);
         }
 
         if ($request->has('log_type') && $request->log_type == 'call_log') {
+            // \Log::info('modifyIndex', ['data' => 13]);
             $query = $query->where('lead_logs.time_taken', '>', 0);
         }
 
-        // Dates Filters
         if ($request->has('dates') && $request->dates != "") {
+            // \Log::info('modifyIndex', ['data' => 14]);
             $dates = explode(',', $request->dates);
             $startDate = $dates[0];
             $endDate = $dates[1];
@@ -113,8 +119,11 @@ class LeadLogController extends ApiBaseController
             $query = $query->whereRaw('lead_logs.date_time >= ?', [$startDate])
                 ->whereRaw('lead_logs.date_time <= ?', [$endDate]);
         }
-
-        \Log::info('modifyIndex SQL', ['sql' => $query->toSql(), 'bindings' => $query->getBindings()]);
+        
+        $filtersParam = $request->query('filters', '');
+        if (Str::contains($filtersParam, 'isSale.estadoVenta') || Str::contains($filtersParam, 'isSale.calidad') || Str::contains($filtersParam, 'isSale.user_id')) {
+            $query->leftJoin('ventas as isSale', 'isSale.idNota', '=', 'lead_logs.id');
+        } 
 
         return $query;
     }

@@ -84,14 +84,14 @@ const fields = () => {
             title: t("product.price"),
             dataIndex: "price",
         },
-        {
-            title: t("product.tax_label"),
-            dataIndex: "tax_label",
-        },
-        {
-            title: t("product.tax_rate"),
-            dataIndex: "tax_rate",
-        },
+        // {
+        //     title: t("product.tax_label"),
+        //     dataIndex: "tax_label",
+        // },
+        // {
+        //     title: t("product.tax_rate"),
+        //     dataIndex: "tax_rate",
+        // },
         {
             title: t("common.action"),
             dataIndex: "action",

@@ -489,16 +489,26 @@ class CampaignController extends ApiBaseController
 
     public function getUsersCamps($xid)
     {
+        if (ctype_digit($xid)) {
+            $userId = (int) $xid;
+            $campaignIds = CampaignUser::where('user_id', $userId)
+                ->orderBy('campaign_id')
+                ->pluck('campaign_id');
+            return response()->json($campaignIds->toArray());
+        }
+        
+        // \Log::info('takeLeadAction', ['idx' => $xid]);
         $campaignId = $this->getIdFromHash($xid);
+        // \Log::info('takeLeadAction', ['id' => $campaignId]);
         $users = User::join('campaign_users as cu', 'cu.user_id', '=', 'users.id')
             ->where('cu.campaign_id', $campaignId)
             ->orderBy('users.name')
             ->select('users.id', 'users.name', 'users.user')
             ->get();
 
-        $result = $users->map(function(User $u) {
+        $result = $users->map(function($u) {
             return [
-                'xid'  => $u->xid,  
+                'xid'  => $u->xid,
                 'id'   => $u->id,
                 'name' => $u->name,
                 'user' => $u->user,
@@ -507,6 +517,7 @@ class CampaignController extends ApiBaseController
 
         return response()->json($result);
     }
+
 
 
 }

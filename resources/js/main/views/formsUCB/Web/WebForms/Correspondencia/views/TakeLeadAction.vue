@@ -1338,6 +1338,7 @@ export default {
             onClientSelected,
             calcularEdad,
             fetchLocalidades,
+            fetchAgenteCampanas,
             clearClientSelection,
             provinceOptions,
             cantonOptions,
@@ -1399,6 +1400,7 @@ export default {
             allLeadStatus.value = await fetchLeadStatus() || [];
             
             fetchLocalidades();
+            fetchAgenteCampanas();
             if(route.params.id){
                 fetchInitData(route.params.id)
             }
@@ -1512,7 +1514,8 @@ export default {
                     if (saveType == "save_exit") {
                         saveExitLoading.value = false;
                         router.push({
-                            name: "admin.call_manager.index",
+                            name: "admin.leads.index",
+                            //name: "admin.call_manager.index",
                         });
                         // store.dispatch("auth/showNotificaiton", {});
                     }else{

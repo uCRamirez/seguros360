@@ -322,6 +322,7 @@ export default defineComponent({
                 campaign_id: props.campaign ? props.campaign.id : null,
                 company_id: JSON.parse(localStorage.getItem('global_settings') || '{}').xid || '',
                 myId:  JSON.parse(localStorage.getItem("auth_user") || "{}").id,
+                etapa: newFormData.etapa ? newFormData.etapa : 'nueva',
                 } 
                 : false;
 
