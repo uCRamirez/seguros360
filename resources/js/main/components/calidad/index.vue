@@ -5,7 +5,9 @@
         @addEditSuccess="onAddEditSuccess"
         @closed="onCloseAddEdit"
         :formData="formData"
-        :allProductos="allProductos"
+        :allCalidadTemplates="allCalidadTemplates"
+        :allAccionesCalidad="allAccionesCalidad"
+        :allMotivosCalidad="allMotivosCalidad"
         :data="viewData"
         :successMessage="successMessage"
     />
@@ -53,16 +55,39 @@
             permsArray.includes('admin')
         "
         :gutter="[15, 15]"
-        class="mb-20"
+        class="mb-20" 
     >
         <!-- Filtro campo de busqueda -->
-        <a-col :xs="24" :sm="24" :md="4" :lg="4" :xl="4">
-            <a-input-search style="width: 100%" v-model:value="table.searchString" :placeholder="$t('common.select_default_text', [$t('common.information'),])" 
-            show-search 
-            @change="onTableSearch" 
-            @search="onTableSearch"
-            :loading="table.filterLoading" />
+        <a-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
+            <a-input-group class="d-flex" compact>
+                <a-select
+                    v-model:value="table.searchColumn"
+                    :placeholder="$t('common.select_default_text', [''])"
+                    class="flex-none"
+                    style="width: 45%;"
+                    :allowClear="true"
+                >
+                    <a-select-option
+                        v-for="filterableColumn in filterableColumns"
+                        :key="filterableColumn.key"
+                    >
+                        {{ filterableColumn.value }}
+                    </a-select-option>
+                </a-select>
+
+                <a-input-search
+                    v-model:value="table.searchString"
+                    :placeholder="$t('common.select_default_text', [$t('common.information')])"
+                    show-search
+                    @change="onTableSearch"
+                    @search="onTableSearch"
+                    :loading="table.filterLoading"
+                    class="flex-1"
+                    style="min-width: 0;"  
+                />
+            </a-input-group>
         </a-col>
+
         <!-- El select de los usuarios -->
         <a-col
             v-if="
@@ -91,6 +116,7 @@
                 </a-select-option>
             </a-select>
         </a-col>
+
         <!-- Filtro de estado de venta-->
         <a-col :xs="24" :sm="24" :md="12" :lg="4" :xl="4">
             <a-form-item >
@@ -117,6 +143,7 @@
                 </a-select>
             </a-form-item>
         </a-col>
+        
         <!-- Filtro de calidad-->
         <a-col :xs="24" :sm="24" :md="12" :lg="4" :xl="4">
             <a-form-item >
@@ -143,7 +170,7 @@
                 </a-select>
             </a-form-item>
         </a-col>
-                                
+                               
         <!-- El dateTime de filtro en tipificaciones -->
         <a-col
             v-if="
@@ -153,9 +180,9 @@
             "
             :xs="24"
             :sm="24"
-            :md="8"
-            :lg="8"
-            :xl="8"
+            :md="6"
+            :lg="6"
+            :xl="6"
         >
             <DateRangePicker
                 @dateTimeChanged="
@@ -187,6 +214,15 @@
                                 record.is_sale.idVenta
                                     ? record.is_sale.idVenta
                                     : "-"
+                            }}
+                        </template>
+                        <template v-if="column.dataIndex === 'id'">
+                            {{
+                                record.lead &&
+                                record.lead.id != "" &&
+                                record.lead.id != undefined
+                                    ? record.lead.id
+                                    : "---"
                             }}
                         </template>
                         <template v-if="column.dataIndex === 'cedula'">
@@ -240,27 +276,7 @@
                                 {{ $t('common.no') }}
                             </a-tag>
                         </template>
-                        <template
-                            v-for="allFormFieldName in allFormFieldNames"
-                            :key="allFormFieldName.xid"
-                        >
-                            <template
-                                v-if="
-                                    record &&
-                                    record.lead &&
-                                    record.lead.lead_data &&
-                                    column.dataIndex ===
-                                        convertStringToKey(allFormFieldName.field_name)
-                                "
-                            >
-                                {{
-                                    findFieldValue(
-                                        allFormFieldName.similar_field_names,
-                                        record.lead.lead_data
-                                    )
-                                }}
-                            </template>
-                        </template>
+
                         <template v-if="column.dataIndex === 'notes'">
                             <a-comment>
                                 <template #author>{{ record.is_sale.user.name }}</template>
@@ -428,12 +444,13 @@ export default {
             initData,
             columns,
             filterableColumns,
-            allFormFieldNames,
+            allCalidadTemplates,
+            allAccionesCalidad,
+            allMotivosCalidad,
             hashableColumns,
             allCampaigns,
             allUsers,
             getPrefetchData,
-            allProductos,
         } = fields(props);
         const crudVariables = crud();
         const leadInfo = ref({});
@@ -457,20 +474,18 @@ export default {
 
         onMounted(() => {
             getPrefetchData().then((response) => {
-                    filters.value = {
-                        ...filters.value,
-                    };
-                
-                    leadInfo.value = props.leadInfo;
-                    crudVariables.crudUrl.value = addEditUrl;
-                    crudVariables.langKey.value = "notes";
-                    crudVariables.initData.value = { ...initData, lead_id: props.leadId };
-                    crudVariables.formData.value = { ...initData, lead_id: props.leadId };
-                    crudVariables.hashableColumns.value = [...hashableColumns];
-                    crudVariables.hashable.value = [...hashableColumns];
-                    setUrlData();
-                    let test = allUsers.value;
-
+                filters.value = {
+                    ...filters.value,
+                };
+            
+                leadInfo.value = props.leadInfo;
+                crudVariables.crudUrl.value = addEditUrl;
+                crudVariables.langKey.value = "notes";
+                crudVariables.initData.value = { ...initData, lead_id: props.leadId };
+                crudVariables.formData.value = { ...initData, lead_id: props.leadId };
+                crudVariables.hashableColumns.value = [...hashableColumns];
+                crudVariables.hashable.value = [...hashableColumns];
+                setUrlData();
             });
         });
 
@@ -555,13 +570,14 @@ export default {
             filterableColumns,
             user,
             formatDateTime,
-            allFormFieldNames,
+            allCalidadTemplates,
+            allAccionesCalidad,
+            allMotivosCalidad,
             findFieldValue,
             convertStringToKey,
             onAddEditSuccess,
 
             allCampaigns,
-            allProductos,
             allUsers,
             filters,
             extraFilters,

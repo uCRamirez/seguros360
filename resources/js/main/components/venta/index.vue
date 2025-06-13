@@ -145,6 +145,15 @@
                                     : "-"
                             }}
                         </template>
+                        <template v-if="column.dataIndex === 'id'">
+                            {{
+                                record.lead &&
+                                record.lead.id != "" &&
+                                record.lead.id != undefined
+                                    ? record.lead.id
+                                    : "---"
+                            }}
+                        </template>
                         <template v-if="column.dataIndex === 'cedula'">
                             <a-button
                                 v-if="showLeadDetails"

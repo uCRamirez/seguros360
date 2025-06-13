@@ -48,7 +48,7 @@
                                     
                                 </a-row>
 
-                                <a-row class="mt-10">
+                                <!-- <a-row class="mt-10">
                                     <a-col :span="24" style="margin-top: 1em;">
                                         <a-space>
                                             <a-button
@@ -79,7 +79,7 @@
                                         </a-space>
                                     </a-col>
                                     
-                                </a-row>
+                                </a-row> -->
 
                                 <a-divider />
                             </a-card>
@@ -1345,6 +1345,7 @@ export default {
             districtOptions,
             activeKey,
             clientToManage,
+            handleClientSerchTableChange,
             //////////
         } = functions();
 
@@ -1409,6 +1410,9 @@ export default {
 
         onUnmounted(() => {
             activeKey.value = 'lead_details';
+            if(crmState.client.managing){
+                saveLead('save');
+            }
             clearSerchInformation();
         });
 
@@ -1701,6 +1705,7 @@ export default {
             maritalStatusModel,
             addNote,
             handleClientToManage,
+            handleClientSerchTableChange,
             ///////////////////
 
             themeMode,

@@ -72,6 +72,10 @@ const fields = (props) => {
                             dataIndex: "is_sale.idVenta",
                         },
                         {
+                            title: t("uphone_calls.client_id"),
+                            dataIndex: "id",
+                        },
+                        {
                             title: t("lead.document"),
                             dataIndex: "cedula",
                         },

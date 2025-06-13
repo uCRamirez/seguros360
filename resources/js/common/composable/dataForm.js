@@ -46,7 +46,7 @@ const dataForm = () => {
     const fetchLocalidades = async () => {
         try {
             const resp = await axiosAdmin.get(
-                "localidades?fields=provincia,canton,distrito&limit=500"
+                "localidades?fields=provincia,canton,distrito&limit=1000"
             );
             locations.value = resp.data;
             // llenamos provincias únicas

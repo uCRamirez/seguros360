@@ -4,17 +4,18 @@ import { forEach } from "lodash-es";
 import common from "../../../common/composable/common";
 
 const fields = (props) => {
-    const { convertStringToKey, getCampaignUrl, user } = common();
+    const { getCampaignUrl, user } = common();
     const leadUrl =
         "lead{id,xid,reference_number,cedula,nombre,apellido1,apellido2,fechaNacimiento,edad,nacionalidad,nombreBase,tel1,email,lead_data,started,campaign_id,x_campaign_id,time_taken,first_action_by,x_first_action_by,last_action_by,x_last_action_by,assign_to},lead:campaign{id,xid,name,status},lead:firstActioner{id,xid,name},lead:lastActioner{id,xid,name}";
-    const formFieldNamesUrl = "form-field-names/all";
     const url = 
-        `lead-logs?fields=id,xid,log_type,time_taken,date_time,user_id,x_user_id,notes,phone,message,user{id,xid,name,profile_image,profile_image_url},lead_id,x_lead_id,notes_file,notes_file_url,${leadUrl},campaign_id,notes_typification_id_1,x_notes_typification_id_1,notes_typification_id_2,x_notes_typification_id_2,notes_typification_id_3,x_notes_typification_id_3,notes_typification_id_4,x_notes_typification_id_4,isSale{idVenta,idNota,idLead,user_id,telVenta,estadoVenta,tarjeta,idProducto,cantidadProducto,aplicaBeneficiarios,cantidadBeneficiarios,beneficiarios,montoTotal,calidad}}`;
+        `lead-logs?fields=id,xid,log_type,time_taken,date_time,user_id,x_user_id,notes,phone,message,user{id,xid,name,profile_image,profile_image_url},lead_id,x_lead_id,notes_file,notes_file_url,${leadUrl},campaign_id,notes_typification_id_1,x_notes_typification_id_1,notes_typification_id_2,x_notes_typification_id_2,notes_typification_id_3,x_notes_typification_id_3,notes_typification_id_4,x_notes_typification_id_4,isSale{idVenta,idNota,idLead,user_id,telVenta,estadoVenta,tarjeta,idProducto,cantidadProducto,aplicaBeneficiarios,cantidadBeneficiarios,beneficiarios,montoTotal,calidad}}&limit=300`;
+        
     const allFormFieldNames = ref([]);
     const addEditUrl = "lead-logs";
     const hashableColumns = ["lead_id", "campaign_id", "user_id", "notes_typification_id_1", "notes_typification_id_2", "notes_typification_id_3","notes_typification_id_4"];
+    // const formFieldNamesUrl = "form-field-names/all";
     const urlProductos =
-    "products?fields=id,xid,name,coverage,price,campaign_id,x_campaign_id,product_type,tax_rate,tax_label,image,image_url,internal_code,category_id,x_category_id,categories{id,xid,name},campaigns{id,xid,name}";
+    "products?fields=id,xid,name,coverage,price,campaign_id,x_campaign_id,product_type,tax_rate,tax_label,image,image_url,internal_code,category_id,x_category_id,categories{id,xid,name},campaigns{id,xid,name}&limit=1000";
 
     const { t } = useI18n();
     const initData = {
@@ -40,25 +41,25 @@ const fields = (props) => {
     const getPrefetchData = () => {
         const campaignsUrl = getCampaignUrl();
         const campaignsPromise = axiosAdmin.get(campaignsUrl);
-        const formFieldNamesPromise = axiosAdmin.get(formFieldNamesUrl);
+        // const formFieldNamesPromise = axiosAdmin.get(formFieldNamesUrl);
         const staffMembersPromise = axiosAdmin.get(
             `all-users?log_type=${props.logType}`
         );
         const productosPromise = axiosAdmin.get(urlProductos);
 
         return Promise.all([
-            formFieldNamesPromise,
+            // formFieldNamesPromise,
             campaignsPromise,
             staffMembersPromise,
             productosPromise,
         ]).then(
             ([
-                formFieldNamesResponse,
+                // formFieldNamesResponse,
                 campaignsResponse,
                 staffMembersResponse,
                 productosResponse,
             ]) => {
-                allFormFieldNames.value = formFieldNamesResponse.data.data;
+                // allFormFieldNames.value = formFieldNamesResponse.data.data;
                 allCampaigns.value = campaignsResponse.data;
                 allUsers.value = staffMembersResponse.data.users;
                 allProductos.value = productosResponse.data;
@@ -83,19 +84,19 @@ const fields = (props) => {
 
                     // Showing form fields if props.showFormFields
                     // sets to true
-                    if (props.showFormFields) {
-                        forEach(
-                            formFieldNamesResponse.data.data,
-                            (formFieldName) => {
-                                newColumnsArray.push({
-                                    title: formFieldName.field_name,
-                                    dataIndex: convertStringToKey(
-                                        formFieldName.field_name
-                                    ),
-                                });
-                            }
-                        );
-                    }
+                    // if (props.showFormFields) {
+                    //     forEach(
+                    //         formFieldNamesResponse.data.data,
+                    //         (formFieldName) => {
+                    //             newColumnsArray.push({
+                    //                 title: formFieldName.field_name,
+                    //                 dataIndex: convertStringToKey(
+                    //                     formFieldName.field_name
+                    //                 ),
+                    //             });
+                    //         }
+                    //     );
+                    // }
                 }
 
                 newColumnsArray.push({

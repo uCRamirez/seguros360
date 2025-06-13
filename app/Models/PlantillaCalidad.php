@@ -13,7 +13,7 @@ class PlantillaCalidad extends BaseModel implements Auditable
 
     protected $table = 'plantillas_calidad';
 
-    protected $default = ['xid', 'nombre'];
+    protected $default = ['xid', 'nombre','descripcion','activo'];
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 

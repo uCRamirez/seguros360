@@ -28,6 +28,7 @@ class Common
             'langImagePath' => 'langs',
             'expenseBillPath' => 'expenses',
             'productImagePath' => 'products',
+            'campaignImagePath' => 'campaigns',
             'audioFilesPath' => 'audio',
             'websiteImagePath' => 'website',
             'offlineRequestDocumentPath' => 'offline-requests',
@@ -40,6 +41,7 @@ class Common
     public static function uploadFile($request)
     {
         $folder = $request->folder;
+
         $folderString = "";
 
         if ($folder == "user") {
@@ -58,10 +60,12 @@ class Common
             $folderString = "offlineRequestDocumentPath";
         } else if ($folder == "leadNotes") {
             $folderString = "notesFilePath";
+        }else if ($folder == "campaign") {
+            $folderString = "campaignImagePath";
         }
 
         $folderPath = self::getFolderPath($folderString);
-
+        
         if ($request->hasFile('image') || $request->hasFile('file')) {
             $largeLogo  = $request->hasFile('image') ? $request->file('image') : $request->file('file');
 

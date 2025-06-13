@@ -1,6 +1,6 @@
 <template>
     <div v-if="appEnv != 'envato'">
-        <a-divider>
+        <a-divider style="font-size: inherit;">
             {{ $t("common.demo_account_credentials") }}
         </a-divider>
         <a-table

@@ -21,6 +21,26 @@
             <template v-if="currentStep == 0">
                 <a-row :gutter="16" class="mt-20">
                     <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                        <a-form-item
+                            :label="$t('product.image')"
+                            name="image"
+                            :help="rules.image ? rules.image.message : null"
+                            :validateStatus="rules.image ? 'error' : null"
+                        >
+                            <Upload
+                                :formData="formData"
+                                folder="campaign"
+                                imageField="image"
+                                @onFileUploaded="
+                                    (file) => {
+                                        formData.image = file.file;
+                                        formData.image_url = file.file_url;
+                                    }
+                                "
+                            />
+                        </a-form-item>
+                    </a-col>
+                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
                         <a-form-item :label="$t('campaign.name')" name="name"
                             :help="rules.name ? rules.name.message : null" :validateStatus="rules.name ? 'error' : null"
                             class="required">
@@ -48,6 +68,28 @@
                                     </a-select-option>
                                 </a-select>
                                 <StaffMemberAddButton @onAddSuccess="staffMemberAdded" />
+                            </span>
+                        </a-form-item>
+                    </a-col>
+                </a-row>
+
+                <a-row :gutter="16">
+                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                        <a-form-item :label="$t('menu.quality')" 
+                            name="plantilla_calidad_id"
+                            :help="rules.plantilla_calidad_id ? rules.plantilla_calidad_id.message : null"
+                            :validateStatus="rules.plantilla_calidad_id ? 'error' : null">
+                            <span style="display: flex">
+                                <a-select v-model:value="formData.plantilla_calidad_id" :placeholder="$t('common.select_default_text', [
+                                    $t('common.template'),
+                                ])
+                                    " :allowClear="true">
+                                    <a-select-option v-for="calidadTemplate in allCalidadTemplates" 
+                                        :key="calidadTemplate.xid"
+                                        :value="calidadTemplate.xid">
+                                        {{ calidadTemplate.nombre }} - <small>{{ calidadTemplate.descripcion }}</small>
+                                    </a-select-option>
+                                </a-select>
                             </span>
                         </a-form-item>
                     </a-col>
@@ -198,13 +240,15 @@ import {
     DoubleLeftOutlined,
     MinusCircleOutlined,
 } from "@ant-design/icons-vue";
-import { some, forEach } from "lodash-es";
+import { some } from "lodash-es";
 import apiAdmin from "../../../common/composable/apiAdmin";
 import StaffMemberAddButton from "../users/StaffAddButton.vue";
 import FormAddButton from "../forms/forms/AddButton.vue";
 import EmailTemplateAddButton from "../messaging/email-templates/AddButton.vue";
 import ImportLeads from "./ImportLeads.vue";
 import { useI18n } from "vue-i18n";
+import Upload from "../../../common/core/ui/file/Upload.vue";
+
 
 export default defineComponent({
     props: [
@@ -226,6 +270,7 @@ export default defineComponent({
         DoubleRightOutlined,
         DoubleLeftOutlined,
         MinusCircleOutlined,
+        Upload,
 
         ImportLeads,
         StaffMemberAddButton,
@@ -245,10 +290,12 @@ export default defineComponent({
         const emailTemplateUrl = "email-templates/all";
         const allForms = ref([]);
         const allStaffMembers = ref([]);
+        const allCalidadTemplates = ref([]);
         const all_uc_campaigns = ref([]); // Todas las de uC
         const all_use_uc_campaigns = ref([]); // Todas las que estan en uso en leadProd
         const allEmailTemplates = ref([]);
         const staffMembersUrl = "users?limit=10000";
+        const urlCalidadTemplates = "plantillas-calidad?filters=activo eq 1&limit=1000";
         const leadFile = ref(undefined);
         const importLeadColumns = ref(undefined);
         const selectedFormFields = ref([]);
@@ -258,18 +305,20 @@ export default defineComponent({
         onMounted(() => {
             props.formData.etapa = 'nueva';
             const staffMemberPromise = axiosAdmin.get(staffMembersUrl);
-            const all_uc_campaignsPromise = axiosAdmin.post('campaigns/uc-campaigns');
-            const all_use_uc_campaignsPromise = axiosAdmin.post('campaigns/use-uc-campaigns');
+            const calidadTemplatesPromise = axiosAdmin.get(urlCalidadTemplates);
+            // const all_uc_campaignsPromise = axiosAdmin.post('campaigns/uc-campaigns');
+            // const all_use_uc_campaignsPromise = axiosAdmin.post('campaigns/use-uc-campaigns');
             // const formsPromise = axiosAdmin.get(formUrl);
-            const emailTemplatesPromise = axiosAdmin.get(emailTemplateUrl);
+            // const emailTemplatesPromise = axiosAdmin.get(emailTemplateUrl);
 
-            Promise.all([staffMemberPromise, all_uc_campaignsPromise, all_use_uc_campaignsPromise, emailTemplatesPromise]).then(//formsPromise
-                ([staffMemberResponse, all_uc_campaignsResponse, all_use_uc_campaignsResponse, emailTemplatesResponse]) => {//formsResponse
+            Promise.all([staffMemberPromise, calidadTemplatesPromise]).then(//formsPromise, all_uc_campaignsPromise, all_use_uc_campaignsPromise, emailTemplatesPromise
+                ([staffMemberResponse, calidadTemplatesResponse]) => {//formsResponse, all_uc_campaignsResponse, all_use_uc_campaignsResponse, emailTemplatesResponse
                     allStaffMembers.value = staffMemberResponse.data;
+                    allCalidadTemplates.value = calidadTemplatesResponse.data;
                     // allForms.value = formsResponse.data;
-                    allEmailTemplates.value = emailTemplatesResponse.data.email_templates;
-                    all_uc_campaigns.value = all_uc_campaignsResponse.message.campaigns;
-                    all_use_uc_campaigns.value = all_use_uc_campaignsResponse.message.campaigns;
+                    // allEmailTemplates.value = emailTemplatesResponse.data.email_templates;
+                    // all_uc_campaigns.value = all_uc_campaignsResponse.message.campaigns;
+                    // all_use_uc_campaigns.value = all_use_uc_campaignsResponse.message.campaigns;
                 }
             );
         });
@@ -507,8 +556,11 @@ export default defineComponent({
                     props.formData.user_id = props.data.campaign_users.map(function (el) {
                         return el.x_user_id;
                     });
+                    props.formData.plantilla_calidad_id = props.data.plantilla_calidad ? props.data.plantilla_calidad.xid : null;
+
                 } else {
                     props.formData.user_id = undefined;
+                    props.formData.plantilla_calidad_id = null;
                 }
 
                 // For Form Fields
@@ -518,10 +570,10 @@ export default defineComponent({
                 isChecked.value = uc_campaignsArray.value.length !== 0 ? true : false;
 
                 // se consulta nuevamente las campanas en uso para poder actualizar el front del addEdit
-                axiosAdmin.post('campaigns/use-uc-campaigns').then((response) => {
-                    all_use_uc_campaigns.value = response.message.campaigns;
-                    isCampaignInUse();
-                });
+                // axiosAdmin.post('campaigns/use-uc-campaigns').then((response) => {
+                //     all_use_uc_campaigns.value = response.message.campaigns;
+                //     isCampaignInUse();
+                // });
 
                 // se consulta nuevamente las campanas en uso para poder actualizar el front del addEdit
                
@@ -539,6 +591,7 @@ export default defineComponent({
             loading,
             rules,
             allStaffMembers,
+            allCalidadTemplates,
             all_uc_campaigns,
             allForms,
             allEmailTemplates,

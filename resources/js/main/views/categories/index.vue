@@ -54,9 +54,7 @@
                             <a-select
                                 style="width: 35%"
                                 v-model:value="table.searchColumn"
-                                :placeholder="
-                                    $t('common.select_default_text', [''])
-                                "
+                                :placeholder="$t('common.select_default_text')"
                             >
                                 <a-select-option
                                     v-for="filterableColumn in filterableColumns"
@@ -72,6 +70,9 @@
                                 @change="onTableSearch"
                                 @search="onTableSearch"
                                 :loading="table.filterLoading"
+                                :placeholder="
+                                    $t('common.information')
+                                "
                             />
                         </a-input-group>
                     </a-col>

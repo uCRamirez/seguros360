@@ -406,6 +406,7 @@ const functionsCRM = () => {
         activeKey,
         clientToManage,
         clearSerchInformation,
+        handleClientSerchTableChange,
         ////////
     };
 };

@@ -24,7 +24,7 @@ export default [
                 component: TemplatesCalidad,
                 name: 'admin.templates.index',
                 meta: {
-                    requireAuth: true,
+                    requireAuth: false,
                     menuParent: "quality_templates",
                     menuKey: route => "quality_templates",
                     permission: "quality_view",
@@ -35,7 +35,7 @@ export default [
                 component: TemplatesAcciones,
                 name: 'admin.templates_acciones.index',
                 meta: {
-                    requireAuth: true,
+                    requireAuth: false,
                     menuParent: "templates_acciones",
                     menuKey: route => "templates_acciones",
                     permission: "acciones_calidad_view",
@@ -46,7 +46,7 @@ export default [
                 component: TemplatesMotivos,
                 name: 'admin.templates_motivos.index',
                 meta: {
-                    requireAuth: true,
+                    requireAuth: false,
                     menuParent: "templates_motivos",
                     menuKey: route => "templates_motivos",
                     permission: "motivos_calidad_view",

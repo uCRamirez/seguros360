@@ -8,7 +8,7 @@
                     <a-row :gutter="[16, 16]">
                         <!-- Nivel 1 -->
                         <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                            <a-form-item class="required" :label="$t('lead_notes.notes_typification_1')"
+                            <a-form-item class="required label-bold" :label="$t('lead_notes.notes_typification_1')"
                                 name="notes_typification_id_1"
                                 :help="rules.notes_typification_id_1 ? rules.notes_typification_id_1.message : null"
                                 :validateStatus="rules.notes_typification_id_1 ? 'error' : null">
@@ -30,7 +30,7 @@
                         </a-col>
 
                         <!-- Nivel 2 -->
-                        <a-col v-if="childrenTypificationData.length > 0" :xs="24" :sm="24" :md="24" :lg="24">
+                        <a-col class="label-bold" v-if="childrenTypificationData.length > 0" :xs="24" :sm="24" :md="24" :lg="24">
                             <a-form-item :label="$t('lead_notes.notes_typification_2')" name="notes_typification_id_2"
                                 :help="rules.notes_typification_id_2 ? rules.notes_typification_id_2.message : null"
                                 :validateStatus="rules.notes_typification_id_2 ? 'error' : null">
@@ -51,7 +51,7 @@
                         </a-col>
 
                         <!-- Nivel 3 -->
-                        <a-col v-if="childrenChildData.length > 0" :xs="24" :sm="24" :md="24" :lg="24">
+                        <a-col class="label-bold" v-if="childrenChildData.length > 0" :xs="24" :sm="24" :md="24" :lg="24">
                             <a-form-item :label="$t('lead_notes.notes_typification_3')" name="notes_typification_id_3"
                                 :help="rules.notes_typification_id_3 ? rules.notes_typification_id_3.message : null"
                                 :validateStatus="rules.notes_typification_id_3 ? 'error' : null">
@@ -70,7 +70,7 @@
                         </a-col>
 
                         <!-- Nivel 4 -->
-                        <a-col v-if="lastChildrenChildData.length > 0" :xs="24" :sm="24" :md="24" :lg="24">
+                        <a-col class="label-bold" v-if="lastChildrenChildData.length > 0" :xs="24" :sm="24" :md="24" :lg="24">
                             <a-form-item :label="$t('lead_notes.notes_typification_4')" name="notes_typification_id_4"
                                 :help="rules.notes_typification_id_4 ? rules.notes_typification_id_4.message : null"
                                 :validateStatus="rules.notes_typification_id_4 ? 'error' : null">
@@ -90,7 +90,7 @@
                         <a-col :xs="24" :sm="24" :md="24" :lg="24">
                             <a-form-item :label="$t('common.notes')" name="notes"
                                 :help="rules.notes ? rules.notes.message : null"
-                                :validateStatus="rules.notes ? 'error' : null" class="required">
+                                :validateStatus="rules.notes ? 'error' : null" class="required label-bold">
                                 <a-textarea v-model:value="formData.notes"
                                     :placeholder="$t('common.placeholder_default_text', [$t('common.notes')])"
                                     :rows="4" />
@@ -99,15 +99,19 @@
 
                         <!-- Adjunto + checkbox -->
                         <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                            <a-form-item :label="$t('lead_notes.notes_file')">
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    <UploadFile :acceptFormat="'image/*,.pdf'" :formData="formData" folder="leadNotes"
-                                        uploadField="notes_file" @onFileUploaded="file => {
+                            <a-form-item class="label-bold" :label="$t('lead_notes.notes_file')">
+                                <div class="label-bold" style="display: flex; align-items: center; gap: 12px;">
+                                    <UploadFile 
+                                        :acceptFormat="'image/*,.pdf'" 
+                                        :formData="formData" 
+                                        folder="leadNotes"
+                                        uploadField="notes_file" 
+                                        @onFileUploaded="file => {
                                             formData.notes_file = file.file;
                                             formData.notes_file_url = file.file_url;
                                         }" />
                                     <a-checkbox :disabled="addEditType == 'edit'" v-model:checked="isSale">
-                                        {{ $t('lead_notes.sale') }}
+                                        <strong>{{ $t('lead_notes.sale') }}</strong>
                                     </a-checkbox>
                                 </div>
                             </a-form-item>
@@ -123,43 +127,43 @@
 
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- ID -->
-                                <a-form-item :label="$t('lead.id')">
+                                <a-form-item class="label-bold" :label="$t('lead.id')">
                                     <a-input :value="datos.venta.idLead" />
                                 </a-form-item>
                             </a-col>
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- Cedula -->
-                                <a-form-item :label="$t('lead.document')">
+                                <a-form-item class="label-bold" :label="$t('lead.document')">
                                     <a-input :value="datos.venta.cedula" />
                                 </a-form-item>
                             </a-col>
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- Nombre cliente completo -->
-                                <a-form-item :label="$t('lead.name')">
+                                <a-form-item class="label-bold" :label="$t('lead.name')">
                                     <a-input :value="datos.venta.nombre" />
                                 </a-form-item>
                             </a-col>
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- Email -->
-                                <a-form-item :label="$t('lead.email')">
+                                <a-form-item class="label-bold" :label="$t('lead.email')">
                                     <a-input :value="datos.venta.email" />
                                 </a-form-item>
                             </a-col>
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- Agente -->
-                                <a-form-item :label="$t('lead.agent')">
+                                <a-form-item class="label-bold" :label="$t('lead.agent')">
                                     <a-input :value="datos.venta.agente" />
                                 </a-form-item>
                             </a-col>
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- Nombre base -->
-                                <a-form-item :label="$t('lead.base_name')">
+                                <a-form-item class="label-bold" :label="$t('lead.base_name')">
                                     <a-input :value="datos.venta.nombreBase" />
                                 </a-form-item>
                             </a-col>
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- Telefonos -->
-                                <a-form-item v-if="leadInfo" name="telVenta" :label="$t('lead.phone')">
+                                <a-form-item class="label-bold" v-if="leadInfo" name="telVenta" :label="$t('lead.phone')">
                                     <a-select v-model:value="datos.venta.telVenta"
                                         :placeholder="$t('common.select_default_text', [$t('lead.phone'),])"
                                         style="width: 100%;">
@@ -175,7 +179,7 @@
                                         </a-select-option>
                                     </a-select>
                                 </a-form-item>
-                                <a-form-item v-else name="telVenta" :label="$t('lead.phone')">
+                                <a-form-item class="label-bold" v-else name="telVenta" :label="$t('lead.phone')">
                                     <!-- Nombre base -->
                                     <a-form-item >
                                         <a-input :value="datos.venta.telVenta" />
@@ -188,13 +192,13 @@
 
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- tarjeta -->
-                                <a-form-item name="tarjeta" :label="$t('lead.card')">
+                                <a-form-item class="label-bold" name="tarjeta" :label="$t('lead.card')">
                                     <a-input v-model:value="datos.venta.tarjeta" />
                                 </a-form-item>
                             </a-col>
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- Code -->
-                                <a-form-item name="internal_code" :label="$t('lead.internal_code')">
+                                <a-form-item class="label-bold" name="internal_code" :label="$t('lead.internal_code')">
                                     <a-select v-model:value="datos.venta.internal_code"
                                         :placeholder="$t('common.select_default_text', [$t('lead.internal_code')])"
                                         style="width: 100%;" show-search option-filter-prop="title" :allowClear="true">
@@ -207,7 +211,7 @@
                             </a-col>
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- Producto -->
-                                <a-form-item name="producto" :label="$t('lead.product')">
+                                <a-form-item class="label-bold" name="producto" :label="$t('lead.product')">
                                     <a-select v-model:value="datos.venta.producto"
                                         :placeholder="$t('common.select_default_text', [$t('lead.product')])"
                                         style="width: 100%;" show-search option-filter-prop="title" :allowClear="true">
@@ -220,7 +224,7 @@
                             </a-col>
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- Cobertura (aparece solo cuando code + product están definidos) -->
-                                <a-form-item name="coverage" :label="$t('lead.coverage')">
+                                <a-form-item class="label-bold" name="coverage" :label="$t('lead.coverage')">
                                     <a-select v-model:value="datos.venta.coverage"
                                         :placeholder="$t('common.select_default_text', [$t('lead.coverage')])"
                                         style="width: 100%;"
@@ -238,7 +242,7 @@
                                 <a-row gutter="12">
                                     <!-- Precio -->
                                     <a-col :span="12">
-                                        <a-form-item name="precio" :label="$t('lead.price')">
+                                        <a-form-item class="label-bold" name="precio" :label="$t('lead.price')">
                                             <!-- 1) Si hay más de un producto candidato: select de precios -->
                                             <a-select v-if="matchingProducts.length > 1"
                                                 v-model:value="datos.venta.precio"
@@ -263,7 +267,7 @@
 
                                     <!-- Cantidad -->
                                     <a-col :span="12" style="text-align: right;">
-                                        <a-form-item name="product_quantity" :label="$t('lead.product_quantity')">
+                                        <a-form-item class="label-bold" name="product_quantity" :label="$t('lead.product_quantity')">
                                             <a-input-number :min="1" v-model:value="datos.venta.cantidadProducto"
                                                 :disabled="!datos.venta.montoTotal" style="width:120px" />
                                         </a-form-item>
@@ -273,7 +277,7 @@
 
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- Monto total -->
-                                <a-form-item name="total_amount" :label="$t('lead.total_amount')">
+                                <a-form-item class="label-bold" name="total_amount" :label="$t('lead.total_amount')">
                                     <a-input-number style="width:100%" disabled
                                         :value="formatAmountCurrency(datos.venta.montoTotal)" />
                                 </a-form-item>
@@ -282,13 +286,13 @@
                                 <!-- Beneficiarios y % -->
                                 <a-row gutter="12" style="width:100%">
                                     <a-col :span="12">
-                                        <a-form-item :label="$t('lead.beneficiaries')">
+                                        <a-form-item class="label-bold" :label="$t('lead.beneficiaries')">
                                             <a-checkbox v-model:checked="esBeneficiario"></a-checkbox>
                                         </a-form-item>
                                     </a-col>
 
                                     <a-col :span="12" style="text-align: right">
-                                        <a-form-item :label="$t('lead.number_beneficiaries')">
+                                        <a-form-item class="label-bold" :label="$t('lead.number_beneficiaries')">
                                             <a-input-number style="width:120px" :disabled="esBeneficiario === false"
                                                 :min="0" :max="10" v-model:value="datos.venta.cantidadBeneficiarios" />
                                         </a-form-item>
@@ -299,7 +303,7 @@
 
                         <a-col v-if="esBeneficiario" style="border-left: 1px solid #f0f0f0;" :xs="16" :sm="16" :md="8"
                             :lg="8">
-                            <a-form-item style="justify-content: center;" :label="$t('lead.beneficiary_information')">
+                            <a-form-item class="label-bold" style="justify-content: center;" :label="$t('lead.beneficiary_information')">
 
                                 <a-space v-for="(benef, i) in datos.venta.beneficiarios" :key="i"
                                     style="display: flex; align-items: center;">
@@ -310,22 +314,30 @@
                                     <a-form-item  :name="['beneficiarios', i, 'porcentaje']"
                                         :rules="[{ required: true, type: 'number', message: $t('uphone_calls.number') }]"
                                     >
-                                        <a-input-number v-model:value="benef.porcentaje" :min="0" :precision="0"
+                                        <a-input-number @change="value => validarSumaMaxima(i, value)" v-model:value="benef.porcentaje" :min="0" :max="100" :precision="0"
                                             :step="1" :placeholder="$t('lead.percentage')" />
                                      </a-form-item>
                                     <a-form-item>
                                         <MinusCircleOutlined @click="removeUser(i)" />
                                     </a-form-item>
                                 </a-space>
+                                <a-form-item class="text-center">
+                                    <h4 :style="{ color: suma > 100 ? 'red' : 'inherit', fontWeight: 'bold' }">
+                                        <a-tooltip :style="{ color: suma > 100 ? 'red' : 'inherit' }" :title="$t('message_template.maximum_percentage_exceded')">
+                                            <InfoCircleOutlined/>
+                                        </a-tooltip>
+                                        {{ $t('common.total') }}: {{ suma }}
+                                    </h4>
+                                </a-form-item>
                                 <a-form-item>
-                                    <a-button :disabled="datos.venta.cantidadBeneficiarios === 10" type="dashed" block
+                                    <a-button :disabled="datos.venta.cantidadBeneficiarios === 10 || suma >= 100" type="dashed" block
                                         @click="addUser">
                                         <PlusOutlined />
                                         {{ $t('common.add') }}
                                     </a-button>
                                 </a-form-item>
-
                             </a-form-item>
+                            
                         </a-col>
 
 
@@ -352,7 +364,7 @@
 
 <script>
 import { defineComponent, ref, reactive, onMounted, nextTick, watch, computed, toRef } from "vue";
-import { PlusOutlined, MinusCircleOutlined, LoadingOutlined, SaveOutlined } from "@ant-design/icons-vue";
+import { PlusOutlined,InfoCircleOutlined, MinusCircleOutlined, LoadingOutlined, SaveOutlined } from "@ant-design/icons-vue";
 import apiAdmin from "../../../common/composable/apiAdmin";
 import common from "../../../common/composable/common";
 import UploadFile from "../../../common/core/ui/file/UploadFile.vue";
@@ -404,6 +416,7 @@ export default defineComponent({
     components: {
         PlusOutlined,
         MinusCircleOutlined,
+        InfoCircleOutlined,
         LoadingOutlined,
         SaveOutlined,
         UploadFile,
@@ -422,6 +435,9 @@ export default defineComponent({
         const childrenChildData = ref([]);
         const lastChildrenChildData = ref([]);
         const isInitializing = ref(true);
+        const suma = ref(0);
+
+
         onMounted(() => {
             axiosAdmin.get(notesTypificationUrl).then(res => {
                 notesTypifications.value = res.data;
@@ -599,17 +615,22 @@ export default defineComponent({
 
                     let raw = props.formData.is_sale.beneficiarios || '[]';
                     let list;
-                try {
-                    list = JSON.parse(raw);
-                } catch {
-                    list = [];
-                }
-                    datos.venta.beneficiarios = list;
+                    try {
+                        list = JSON.parse(raw);
+                    } catch {
+                        list = [];
+                    }
+                        datos.venta.beneficiarios = list;
+                        suma.value = datos.venta.beneficiarios
+                            .reduce((acc, b) => acc + Number(b.porcentaje || 0), 0);
                 } else {
+                    suma.value = 0;
                     esBeneficiario.value = false;
                     datos.venta.beneficiarios = [];
                 }
 
+            }else{
+                suma.value = 0;
             }
             Object.assign(
                 datos.venta,
@@ -684,6 +705,7 @@ export default defineComponent({
             datos.venta.cantidadBeneficiarios++;
         };
         const removeUser = (index) => {
+            suma.value = Math.max(0, suma.value - (Number(datos.venta.beneficiarios[index].porcentaje) || 0));
             datos.venta.beneficiarios.splice(index, 1);
             datos.venta.cantidadBeneficiarios = datos.venta.beneficiarios.length;
             if (props.addEditType === 'edit' || props.formData.is_sale) {
@@ -757,7 +779,30 @@ export default defineComponent({
             emit("closed");
         };
 
+        const validarSumaMaxima = (index, valorNuevo) => {
+            // 1) suma de todos menos el que estoy editando
+            const totalExcluido = datos.venta.beneficiarios
+                .reduce((acc, item, idx) => 
+                idx !== index 
+                    ? acc + Number(item.porcentaje || 0) 
+                    : acc
+                , 0);
+
+            // 2) cuánto queda hasta 100
+            const maxPermitido = 100 - totalExcluido;
+
+            // 3) si el valor ingresado supera el máximo, lo recorto
+            if (valorNuevo > maxPermitido) {
+                datos.venta.beneficiarios[index].porcentaje = maxPermitido;
+                suma.value = 100;
+            } else {
+                suma.value = totalExcluido + valorNuevo;
+            }
+        };
+
         return {
+            validarSumaMaxima,
+            suma,
             soloVer,
             datos,
             isSale,
@@ -791,7 +836,11 @@ export default defineComponent({
 
 
 
-<style scoped>
+<style>
+.label-bold .ant-form-item-label > label {
+  font-weight: bold;
+}
+
 .side-panel {
     display: flex;
     align-items: flex-start;

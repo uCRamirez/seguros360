@@ -38,6 +38,7 @@
 									$t('category.name'),
 								])
 							"
+							:max="1200"
 						/>
 					</a-form-item>
                     <a-form-item

@@ -1,7 +1,7 @@
 <template>
     <AdminPageHeader>
         <template #header>
-            <a-page-header :title="$t(`menu.lead_notes`)" class="p-0" />
+            <a-page-header :title="$t(`menu.sales`)" class="p-0" />
         </template>
         <template #breadcrumb>
             <a-breadcrumb separator="-" style="font-size: 12px">
@@ -11,7 +11,7 @@
                     </router-link>
                 </a-breadcrumb-item>
                 <a-breadcrumb-item>
-                    {{ $t(`menu.quality`) }}
+                    {{ $t(`menu.sales`) }}
                 </a-breadcrumb-item>
             </a-breadcrumb>
         </template>

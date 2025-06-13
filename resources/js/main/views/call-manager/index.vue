@@ -55,24 +55,16 @@
                     <a-card :title="allCampaign.name" hoverable>
                         <a-card-meta>
                             <template #description>
-                                <a-row :gutter="16" class="mt-10">
-                                    <a-col :span="8">{{ $t("campaign.members") }}</a-col>
-                                    <a-col :span="16">
-                                        <CampaignMembers
-                                            :members="allCampaign.campaign_users"
-                                        />
+                                <a-row :gutter="16" class="mt-10" justify="space-between" align="middle">
+                                    <a-col :span="12">
+                                        <div class="mb-2">{{ $t("campaign.members") }}</div>
+                                        <CampaignMembers :members="allCampaign.campaign_users" />
+                                    </a-col>
+                                    <a-col :span="12" class="text-center">
+                                        <a-image :width="100" :src="allCampaign.image_url" />
                                     </a-col>
                                 </a-row>
 
-                                <!-- <a-row :gutter="16" class="mt-10">
-                                    <a-col :span="8">{{ $t("campaign.progress") }}</a-col>
-                                    <a-col :span="16">
-                                        <CampaignProgress
-                                            :campaign="allCampaign"
-                                            @success="fetchCampaigns"
-                                        />
-                                    </a-col>
-                                </a-row> -->
 
                                 <a-row :gutter="16" class="mt-25">
                                     <a-col :span="8">
@@ -224,7 +216,7 @@ export default {
         const allCampaigns = ref(undefined);
         const { t } = useI18n();
         const campaignsUrl =
-            "call-managers?fields=id,xid,name,reference_prefix,allow_reference_prefix,remaining_leads,total_leads,campaignUsers{id,xid,user_id,x_user_id,campaign_id,x_campaign_id},campaignUsers:user{id,xid,name,profile_image,profile_image_url},form_id,x_form_id,form{id,xid,name,form_fields},detail_fields,last_action_by,x_last_action_by,lastActioner{id,xid,name},completed_by,x_completed_by,completedBy{id,xid,name},started_on,completed_on,upcoming_lead_action,managed_data";
+            "call-managers?fields=id,xid,name,image,image_url,reference_prefix,allow_reference_prefix,remaining_leads,total_leads,campaignUsers{id,xid,user_id,x_user_id,campaign_id,x_campaign_id},campaignUsers:user{id,xid,name,profile_image,profile_image_url},form_id,x_form_id,form{id,xid,name,form_fields},detail_fields,last_action_by,x_last_action_by,lastActioner{id,xid,name},completed_by,x_completed_by,completedBy{id,xid,name},started_on,completed_on,upcoming_lead_action,managed_data";
         const router = useRouter();
 
         onMounted(() => {

@@ -158,6 +158,9 @@
                         size="middle"
                     >
                         <template #bodyCell="{ column, record }">
+                            <template v-if="column.dataIndex === 'image'">
+                                <a-image :width="32" :src="record.image_url" />
+                            </template>
                             <template v-if="column.dataIndex === 'progress'">
                                 <CampaignProgress :campaign="record" @success="fetch" />
                             </template>

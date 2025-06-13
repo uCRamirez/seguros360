@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Casts\Hash;
 use App\Models\BaseModel;
+use App\Classes\common;
 use App\Scopes\CompanyScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -16,18 +17,19 @@ class Campaign extends BaseModel  implements Auditable
 
     protected $table = 'campaigns';
 
-    protected $default = ['xid', 'name'];
+    protected $default = ['xid', 'name','image_url'];
 
     protected $guarded = ['id', 'status', 'started_on', 'completed_on', 'completed_by', 'created_by', 'updated_by', 'last_action_by', 'created_at', 'updated_at'];
 
-    protected $hidden = ['company_id', 'form_id', 'email_template_id', 'created_by', 'updated_by', 'last_actioner', 'completed_by'];
+    protected $hidden = ['company_id','plantilla_calidad_id', 'form_id', 'email_template_id', 'created_by', 'updated_by', 'last_actioner', 'completed_by'];
 
-    protected $appends = ['xid', 'x_company_id', 'x_form_id', 'x_email_template_id', 'x_created_by', 'x_updated_by', 'x_last_action_by', 'x_completed_by', 'upcoming_lead_action', 'managed_data'];
+    protected $appends = ['xid', 'x_company_id', 'image_url', 'x_plantilla_calidad_id','x_form_id', 'x_email_template_id', 'x_created_by', 'x_updated_by', 'x_last_action_by', 'x_completed_by', 'upcoming_lead_action', 'managed_data'];
 
     protected $filterable = ['name'];
 
     protected $hashableGetterFunctions = [
         'getXCompanyIdAttribute' => 'company_id',
+        'getXPlantillaCalidadIdAttribute' => 'plantilla_calidad_id',
         'getXFormIdAttribute' => 'form_id',
         'getXEmailTemplateIdAttribute' => 'email_template_id',
         'getXCreatedByAttribute' => 'created_by',
@@ -38,6 +40,7 @@ class Campaign extends BaseModel  implements Auditable
 
     protected $casts = [
         'company_id' => Hash::class . ':hash',
+        'plantilla_calidad_id' => Hash::class . ':hash',
         'form_id' => Hash::class . ':hash',
         'email_template_id' => Hash::class . ':hash',
         'created_by' => Hash::class . ':hash',
@@ -118,6 +121,11 @@ class Campaign extends BaseModel  implements Auditable
         return $this->belongsTo(Form::class);
     }
 
+    public function plantilla_calidad()
+    {
+        return $this->belongsTo(PlantillaCalidad::class);
+    }
+
     public function emailTemplate()
     {
         return $this->belongsTo(EmailTemplate::class);
@@ -132,4 +140,12 @@ class Campaign extends BaseModel  implements Auditable
     {
         return $this->belongsTo(User::class, 'completed_by', 'id');
     }
+
+    public function getImageUrlAttribute()
+    {
+        $campaignImagePath = Common::getFolderPath('campaignImagePath');
+
+        return $this->image == null ? asset('images/product.png') : Common::getFileUrl($campaignImagePath, $this->image);
+    }
+    
 }

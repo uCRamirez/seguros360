@@ -205,8 +205,9 @@
                                     required: true,
                                     message: $t('message_template.maximum_grade'),
                                 }">
-                                    <a-input-number style="width: auto;" @change="validarSumaMaxima" :min="0" :max="100" v-model:value="variable.nota_maxima"
+                                    <a-input-number v-if="variable.tipo != 'critica'" style="width: auto;" @change="validarSumaMaxima" :min="0" :max="100" v-model:value="variable.nota_maxima"
                                         :placeholder="$t('message_template.maximum_grade')" />
+                                    <a-input v-else style="width: auto;" placeholder="N/A" disabled/>
                                 </a-form-item>
 
                                 <a-form-item>
@@ -358,7 +359,7 @@ export default {
         const addUser = () => {
             dynamicValidateForm.variables.push({
                 plantilla_id: templateSeleccionado.value.id,
-                tipo: 'critica',
+                tipo: 'no_critica',
                 nombre: '',
                 descripcion: '',
                 nota_maxima: 0,

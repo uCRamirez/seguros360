@@ -32,7 +32,7 @@ class CheckPermission
 
             // Those route for which we don't want to check permission
             // We will check permission for those on controller level
-            $skipResourcePath = ['call_managers', 'leads', 'lead_logs', 'lead_follow_ups', 'salesman_bookings', 'permissions','localidades','products'];
+            $skipResourcePath = ['call_managers', 'leads', 'lead_logs', 'lead_follow_ups', 'salesman_bookings', 'permissions','localidades','products','plantillas_calidad','motivos_calidad','acciones_calidad'];
 
             if (in_array($resourceRequestString, $resourceRequests) && in_array($routePathString, $skipResourcePath) === false) {
 
