@@ -93,7 +93,9 @@
                                 :validateStatus="rules.notes ? 'error' : null" class="required label-bold">
                                 <a-textarea v-model:value="formData.notes"
                                     :placeholder="$t('common.placeholder_default_text', [$t('common.notes')])"
-                                    :rows="4" />
+                                    :rows="4" 
+                                    :maxlength="2000"
+                                />
                             </a-form-item>
                         </a-col>
 

@@ -30,12 +30,14 @@ class EstadoCalidadVenta extends BaseModel implements Auditable
     ];
 
     protected $hashableGetterFunctions = [
+        'getXVentaIdAttribute'         => 'idVenta',
         'getXEvaluacionIdAttribute'     => 'evaluacion_id',
         'getXMotivoCancelacionIdAttribute' => 'motivo_cancelacion_id',
         'getXReasignadoAAttribute'      => 'reasignado_a',
     ];
 
     protected $casts = [
+        'idVenta'           => Hash::class . ':hash',
         'evaluacion_id'         => Hash::class . ':hash',
         'motivo_cancelacion_id' => Hash::class . ':hash',
         'reasignado_a'          => Hash::class . ':hash',
@@ -57,5 +59,10 @@ class EstadoCalidadVenta extends BaseModel implements Auditable
     public function reasignadoA()
     {
         return $this->belongsTo(User::class, 'reasignado_a', 'id');
+    }
+
+    public function venta()
+    {
+        return $this->belongsTo(Venta::class, 'idVenta', 'id');
     }
 }

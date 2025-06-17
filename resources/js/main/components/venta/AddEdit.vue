@@ -132,7 +132,7 @@
                                         v-model:value="datos.venta.estadoVenta"
                                         :placeholder="
                                             $t('common.select_default_text', [
-                                                $t('common.statu'),
+                                                $t('common.status'),
                                             ])
                                         "
                                         :allowClear="true"

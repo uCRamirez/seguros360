@@ -206,8 +206,8 @@
                                 <template #author>{{ record.is_sale.user.name }}</template>
                                 <template #avatar>
                                     <a-avatar
-                                        :src="record.user.profile_image_url"
-                                        :alt="record.user.name"
+                                        :src="record.is_sale.user.profile_image_url"
+                                        :alt="record.is_sale.user.name"
                                     />
                                 </template>
                                 <template #content>

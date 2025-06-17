@@ -13,7 +13,7 @@ class VariableCalidad extends BaseModel implements Auditable
 
     protected $table = 'variables_calidad';
 
-    protected $default = ['xid', 'nombre'];
+    protected $default = ['xid', 'nombre','activo'];
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
@@ -25,6 +25,7 @@ class VariableCalidad extends BaseModel implements Auditable
         'nombre',
         'tipo',
         'nota_maxima',
+        'activo',
     ];
 
     protected $hashableGetterFunctions = [

@@ -115,33 +115,37 @@
                     >
                         <template #bodyCell="{ column, record }">
                             <template v-if="column.dataIndex === 'action'">
-                                <a-button
-                                    v-if="
-                                        permsArray.includes(
-                                            'acciones_calidad_edit'
-                                        ) || permsArray.includes('admin')
-                                    "
-                                    type="primary"
-                                    @click="editItem(record)"
-                                    style="margin-left: 4px"
-                                >
-                                    <template #icon><EditOutlined /></template>
-                                </a-button>
-                                <a-button
-                                    v-if="
-                                        permsArray.includes(
-                                            'acciones_calidad_delete'
-                                        ) || permsArray.includes('admin')
-                                    "
-                                    type="primary"
-                                    danger
-                                    @click="showDeleteConfirm(record.xid)"
-                                    style="margin-left: 4px"
-                                >
-                                    <template #icon
-                                        ><DeleteOutlined
-                                    /></template>
-                                </a-button>
+                                <a-tooltip :title="$t('common.edit')">
+                                    <a-button
+                                        v-if="
+                                            permsArray.includes(
+                                                'acciones_calidad_edit'
+                                            ) || permsArray.includes('admin')
+                                        "
+                                        type="primary"
+                                        @click="editItem(record)"
+                                        style="margin-left: 4px"
+                                    >
+                                        <template #icon><EditOutlined /></template>
+                                    </a-button>
+                                </a-tooltip>
+                                <a-tooltip :title="$t('common.delete')">
+                                    <a-button
+                                        v-if="
+                                            permsArray.includes(
+                                                'acciones_calidad_delete'
+                                            ) || permsArray.includes('admin')
+                                        "
+                                        type="primary"
+                                        danger
+                                        @click="showDeleteConfirm(record.xid)"
+                                        style="margin-left: 4px"
+                                    >
+                                        <template #icon
+                                            ><DeleteOutlined
+                                        /></template>
+                                    </a-button>
+                                </a-tooltip>
                             </template>
                         </template>
                     </a-table>

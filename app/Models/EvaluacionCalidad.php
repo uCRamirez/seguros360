@@ -18,7 +18,7 @@ class EvaluacionCalidad extends BaseModel implements Auditable
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $hidden = [
-        'venta_id', 'plantilla_id', 'cerrado_por', 'accion_calidad_id', 'creado_por',
+        'plantilla_id', 'cerrado_por', 'accion_calidad_id', 'creado_por',
     ];
 
     protected $appends = [
@@ -33,7 +33,7 @@ class EvaluacionCalidad extends BaseModel implements Auditable
     ];
 
     protected $hashableGetterFunctions = [
-        'getXVentaIdAttribute'         => 'venta_id',
+        'getXVentaIdAttribute'         => 'idVenta',
         'getXPlantillaIdAttribute'     => 'plantilla_id',
         'getXCerradoPorAttribute'      => 'cerrado_por',
         'getXAccionCalidadIdAttribute' => 'accion_calidad_id',
@@ -41,7 +41,7 @@ class EvaluacionCalidad extends BaseModel implements Auditable
     ];
 
     protected $casts = [
-        'venta_id'           => Hash::class . ':hash',
+        'idVenta'           => Hash::class . ':hash',
         'plantilla_id'       => Hash::class . ':hash',
         'cerrado_por'        => Hash::class . ':hash',
         'accion_calidad_id'  => Hash::class . ':hash',
@@ -50,12 +50,13 @@ class EvaluacionCalidad extends BaseModel implements Auditable
         'duracion'           => 'integer',
         'minuto_precio'      => 'integer',
         'cierre_venta'       => 'boolean',
+        'variables' => 'array',
         'oportunidades'      => 'array',
     ];
 
     public function venta()
     {
-        return $this->belongsTo(Venta::class, 'venta_id', 'id');
+        return $this->belongsTo(Venta::class, 'idVenta', 'id');
     }
 
     public function plantilla()

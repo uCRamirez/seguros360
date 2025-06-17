@@ -101,34 +101,40 @@
                                     {{ formatDateTime(record.created_at) }}
                                 </template>
                                 <template v-if="column.dataIndex === 'action'">
-                                    <a-button v-if="
-                                        permsArray.includes(
-                                            'plantillas_calidad_edit'
-                                        ) || permsArray.includes('admin')
-                                    " type="primary" @click="editItem(record)" style="margin-left: 4px">
-                                        <template #icon>
-                                            <EditOutlined />
-                                        </template>
-                                    </a-button>
-                                    <a-button v-if="
-                                        permsArray.includes(
-                                            'plantillas_calidad_create'
-                                        ) || permsArray.includes('admin')
-                                    " type="primary" @click="eddEdditVariables(record)" style="margin-left: 4px">
-                                        <template #icon>
-                                            <ClusterOutlined />
-                                        </template>
-                                    </a-button>
-                                    <a-button v-if="
-                                        permsArray.includes(
-                                            'plantillas_calidad_delete'
-                                        ) || permsArray.includes('admin')
-                                    " type="primary" danger @click="showDeleteConfirm(record.xid)"
-                                        style="margin-left: 4px">
-                                        <template #icon>
-                                            <DeleteOutlined />
-                                        </template>
-                                    </a-button>
+                                    <a-tooltip :title="$t('common.edit')">
+                                        <a-button v-if="
+                                            permsArray.includes(
+                                                'plantillas_calidad_edit'
+                                            ) || permsArray.includes('admin')
+                                        " type="primary" @click="editItem(record)" style="margin-left: 4px">
+                                            <template #icon>
+                                                <EditOutlined />
+                                            </template>
+                                        </a-button>
+                                    </a-tooltip>
+                                    <a-tooltip :title="`${$t('common.add')} ${$t('message_template.variables')}`">
+                                        <a-button v-if="
+                                            permsArray.includes(
+                                                'plantillas_calidad_create'
+                                            ) || permsArray.includes('admin')
+                                        " type="primary" @click="eddEdditVariables(record)" style="margin-left: 4px">
+                                            <template #icon>
+                                                <ClusterOutlined />
+                                            </template>
+                                        </a-button>
+                                    </a-tooltip>
+                                    <a-tooltip :title="$t('common.delete')">
+                                        <a-button v-if="
+                                            permsArray.includes(
+                                                'plantillas_calidad_delete'
+                                            ) || permsArray.includes('admin')
+                                        " type="primary" danger @click="showDeleteConfirm(record.xid)"
+                                            style="margin-left: 4px">
+                                            <template #icon>
+                                                <DeleteOutlined />
+                                            </template>
+                                        </a-button>
+                                    </a-tooltip>
                                 </template>
                             </template>
                         </a-table>
@@ -161,8 +167,7 @@
 
                     </a-col>
                 </a-row>
-                <a-form layout="vertical" ref="formRef" name="dynamic_form_nest_item" :model="dynamicValidateForm"
-                    @finish="onSubmit">
+                <a-form layout="vertical" ref="formRef" name="dynamic_form_nest_item" :model="dynamicValidateForm" @finish="onSubmit" >
                     <a-row :gutter="16">
                         <a-col :xs="24" :sm="24" :md="12" :lg="12">
                             <a-space v-for="(variable, index) in dynamicValidateForm.variables"

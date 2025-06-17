@@ -23,6 +23,10 @@
 
                             <span v-else><StepForwardOutlined /></span>
                         </a-button> -->
+
+                        <a-button type="link" @click="openNotifications" style="border: none">
+                            <BellOutlined />
+                        </a-button>
                         <ThemeModeChanger />
                         <a-divider type="vertical" />
                         <a-dropdown
@@ -86,6 +90,7 @@ import {
     ScheduleOutlined,
     StepBackwardOutlined,
     StepForwardOutlined,
+    BellOutlined,
 } from "@ant-design/icons-vue";
 import { useI18n } from "vue-i18n";
 import { loadLocaleMessages } from "../i18n";
@@ -106,6 +111,7 @@ export default {
         ThemeModeChanger,
         StepBackwardOutlined,
         StepForwardOutlined,
+        BellOutlined,
     },
     setup(props, { emit }) {
         const {
@@ -140,7 +146,12 @@ export default {
             store.dispatch("auth/logout");
         };
 
+        const openNotifications = () => {
+            alert("Abrir notificaciones");
+        };
+
         return {
+            openNotifications,
             permsArray,
             appSetting,
             logout,

@@ -109,7 +109,12 @@ class CreateSincronizarSpProcedure extends Migration
             -- 6) Limpiar los datos de Aux
             TRUNCATE TABLE crm_seguros.leads_aux;
 
-            -- 7) Restauramos el modo SQL original
+            -- 7) Actualizar el total de leads de la campana
+            UPDATE crm_seguros.campaigns
+                SET total_leads = total_leads + p_cantidadRegistros
+            WHERE id = p_campaign_id; 
+
+            -- 8) Restauramos el modo SQL original
             SET SESSION sql_mode = v_old_mode;
         END
         SQL

@@ -3,6 +3,7 @@
         :addEditType="addEditType"
         :visible="addEditVisible"
         @addEditSuccess="onAddEditSuccess"
+        @addEditDelete="onAddEditSuccess"
         @closed="onCloseAddEdit"
         :formData="formData"
         :allCalidadTemplates="allCalidadTemplates"
@@ -315,31 +316,6 @@
                                     {{ $t("common.download") }}
                                 </a-tag>
                             </a-typography-link>
-                        </template>
-                        <template v-if="column.dataIndex === 'action'">
-                            <a-space>
-                                <a-typography-link
-                                    v-if="record && record.notes_file_url"
-                                    :href="record.notes_file_url"
-                                    target="_blank"
-                                >
-                                    <a-button type="primary">
-                                        <template #icon><DownloadOutlined /></template>
-                                    </a-button>
-                                </a-typography-link>
-                                <a-button type="primary" @click="editItem(record)">
-                                    <template #icon><EditOutlined v-if="(permsArray.includes('admin') || permsArray.includes('sales_edit')) && !soloVer"/>  <EyeOutlined v-else/> </template>
-                                </a-button>
-                                <a-button
-                                    v-if="
-                                        permsArray.includes('admin') || permsArray.includes('sales_delete')
-                                    "
-                                    type="primary"
-                                    @click="showDeleteConfirm(record.xid)"
-                                >
-                                    <template #icon><DeleteOutlined /></template>
-                                </a-button>
-                            </a-space>
                         </template>
                     </template>
                 </a-table>

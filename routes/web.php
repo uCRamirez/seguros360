@@ -170,6 +170,11 @@ ApiRoute::group(['namespace' => 'App\Http\Controllers\Api'], function () {
         ApiRoute::resource('motivos-calidad', 'MotivoCancelacionController', $options);
         // variables de los templates de calidad
         ApiRoute::post('variables/save', ['as' => 'api.variables.save', 'uses' => 'VariableCalidadController@save']);
+        // guardar calidad
+        ApiRoute::post('calidad/save', ['as' => 'api.calidad.save', 'uses' => 'EvaluacionCalidadController@save']);
+        // obtener las 
+        ApiRoute::get('evaluaciones-calidad/{xid}', ['as' => 'api.calidad.bases', 'uses' => 'EvaluacionCalidadController@getEvaluacionEstado']);
+        ApiRoute::get('delete-calidad/{xid}', ['as' => 'api.calidad.bases', 'uses' => 'EvaluacionCalidadController@deleteCalidad']);
 
         // Routes data form uCB
         ApiRoute::get('dataForm/user-campaigns', ['as' => 'api.dataForm.user-campaigns', 'uses' => 'DataFormController@userCampaigns']);

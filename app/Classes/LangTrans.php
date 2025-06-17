@@ -127,7 +127,10 @@ class LangTrans
             'recall' => 'Recall',         
             'cancelled_quality' => 'Cancelled for quality',         
             'cancelled_supervision' => 'Cancelled for supervision',         
-            'reassigned' => 'Reassigned',      
+            'reassigned' => 'Reassigned',     
+            'policy' => 'Policy',     
+            'saved_correctly' => 'Saved correctly',     
+            'call_certificate' => 'Call certificate',     
         ],
         //nuevo
         'bases' => [

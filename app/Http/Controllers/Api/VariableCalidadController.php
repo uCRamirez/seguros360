@@ -68,11 +68,6 @@ class VariableCalidadController extends ApiBaseController
      */
     protected function updateVariables(array $items, array $items_eliminar)
     {
-        // \Log::info('updateVariables', [
-        //     'items'            => $items,
-        //     'items_eliminar'   => $items_eliminar,
-        // ]);
-
         $results = [];
 
         DB::transaction(function() use ($items, $items_eliminar, &$results) {

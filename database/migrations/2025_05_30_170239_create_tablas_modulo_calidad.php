@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->longText('descripcion')->nullable();
             $table->integer('nota_maxima')->nullable()->default(null);
+            $table->boolean('activo')->default(true);
             $table->timestamps();
         });
 
@@ -52,7 +53,8 @@ return new class extends Migration
                   ->constrained('plantillas_calidad')
                   ->onUpdate('cascade')
                   ->onDelete('cascade');
-            $table->dateTime('fecha_calidad');
+            $table->json('variables')->nullable();
+            $table->dateTime('fecha_calidad')->useCurrent();
             $table->integer('duracion');
             $table->integer('minuto_precio');
             $table->boolean('cierre_venta')->default(false);
@@ -83,6 +85,7 @@ return new class extends Migration
 
         Schema::create('estados_calidad_venta', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('idVenta');
             $table->foreignId('evaluacion_id')
                   ->constrained('evaluaciones_calidad')
                   ->onUpdate('cascade')
@@ -95,7 +98,7 @@ return new class extends Migration
                 'CANCELADA_SUPERVISION',
                 'REASIGNADA'
             ]);
-            $table->dateTime('fecha_estado');
+            $table->dateTime('fecha_estado')->useCurrent();
             $table->integer('nota_estado')->nullable();
             $table->string('numero_certificado', 100)->nullable();
             $table->foreignId('motivo_cancelacion_id')->nullable()
@@ -108,6 +111,12 @@ return new class extends Migration
                   ->onUpdate('cascade')
                   ->onDelete('set null');
             $table->timestamps();
+
+            $table->foreign('idVenta')
+                ->references('idVenta')  
+                ->on('ventas')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
 
     }
