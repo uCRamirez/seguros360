@@ -46,7 +46,7 @@
             </a-col>
             <a-col :xs="24" :sm="24" :md="12" :lg="14" :xl="14">
                 <a-row :gutter="[16, 16]" justify="end">
-                    <a-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
+                    <a-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                         <a-input-group compact>
                             <a-select style="width: 35%" v-model:value="table.searchColumn" :placeholder="$t('common.select_default_text', [''])
                                 ">
@@ -150,101 +150,128 @@
                         {{ $t("message_template.variables") }} {{ $t('menu.quality') }}
                     </span>
                 </template>
-
-                <!-- informacion del template al que se le va agregar la informacio de variables -->
-                <a-row :gutter="16" class="text-center">
-                    <a-col :xs="24" :sm="24" :md="12" :lg="12">
-                        <h2>{{ $t('common.name') }}: {{ templateSeleccionado.nombre }}</h2>
-                        <h4>{{ $t('common.description') }}: {{ templateSeleccionado.descripcion }}</h4>
-                        <a-form-item>
-                            <a-tag v-if="templateSeleccionado.activo === true" color="#4cb050">
-                                {{ $t('common.active') }}
-                            </a-tag>
-                            <a-tag v-else color="#f5b041">
-                                {{ $t('common.inactive') }}
-                            </a-tag>
-                        </a-form-item>
-
-                    </a-col>
-                </a-row>
-                <a-form layout="vertical" ref="formRef" name="dynamic_form_nest_item" :model="dynamicValidateForm" @finish="onSubmit" >
-                    <a-row :gutter="16">
-                        <a-col :xs="24" :sm="24" :md="12" :lg="12">
-                            <a-space v-for="(variable, index) in dynamicValidateForm.variables"
-                                :key="variable.identificador"
-                                style="display: flex;align-items: center; margin-bottom: 8px;">
-
-                                <a-form-item :name="['variables', index, 'tipo']" :rules="{
-                                    required: true,
-                                    message: $t('lead_status.type'),
-                                }">
-                                    <a-select v-model:value="variable.tipo" :placeholder="$t('common.select_default_text', [
-                                        $t('lead_status.type'),
-                                    ])
-                                        " :allowClear="true" show-search>
-                                        <a-select-option key="critica" value="critica">
-                                            {{ $t("message_template.critical_variable") }}
-                                        </a-select-option>
-                                        <a-select-option key="no_critica" value="no_critica">
-                                            {{ $t("message_template.critical_not_variable") }}
-                                        </a-select-option>
-                                    </a-select>
-                                </a-form-item>
-
-                                <a-form-item :name="['variables', index, 'nombre']" :rules="{
-                                    required: true,
-                                    message: $t('common.name'),
-                                }">
-                                    <a-input v-model:value="variable.nombre" :placeholder="$t('common.name')" />
-                                </a-form-item>
-
-                                <a-form-item :name="['variables', index, 'descripcion']" :rules="{
-                                    required: true,
-                                    message: $t('common.description'),
-                                }">
-                                    <a-input v-model:value="variable.descripcion"
-                                        :placeholder="$t('common.description')" />
-                                </a-form-item>
-
-                                <a-form-item :name="['variables', index, 'nota_maxima']" :rules="{
-                                    required: true,
-                                    message: $t('message_template.maximum_grade'),
-                                }">
-                                    <a-input-number v-if="variable.tipo != 'critica'" style="width: auto;" @change="validarSumaMaxima" :min="0" :max="100" v-model:value="variable.nota_maxima"
-                                        :placeholder="$t('message_template.maximum_grade')" />
-                                    <a-input v-else style="width: auto;" placeholder="N/A" disabled/>
-                                </a-form-item>
-
-                                <a-form-item>
-                                    <MinusCircleOutlined @click="removeUser(variable)" />
-                                </a-form-item>
-
-                            </a-space>
-                            <a-form-item class="text-right">
-                                <h4 :style="{ color: suma > 100 ? 'red' : 'inherit' }">
-                                    <a-tooltip :style="{ color: suma > 100 ? 'red' : 'inherit' }" :title="$t('message_template.maximum_grade_exceded')">
-                                        <InfoCircleOutlined/>
-                                    </a-tooltip>
-                                    {{ $t('common.total') }}: {{ suma }}
-                                </h4>
-                            </a-form-item>
+                <a-card>
+                    <!-- informacion del template al que se le va agregar la informacio de variables -->
+                    <a-row :gutter="16" justify="center">
+                        <a-col class="text-center" :xs="24" :sm="24" :md="24" :lg="24">
+                            <h2><strong>{{ $t('common.name') }}: {{ templateSeleccionado.nombre }}</strong></h2>
+                            <h4><strong>{{ $t('common.description') }}: {{ templateSeleccionado.descripcion }}</strong></h4>
                             <a-form-item>
-                                <a-button :disabled="suma >= 100" type="dashed" block @click="addUser">
-                                    <PlusOutlined />
-                                    {{ $t('common.add') }}
-                                </a-button>
+                                <a-tag v-if="templateSeleccionado.activo === true" color="#4cb050">
+                                    {{ $t('common.active') }}
+                                </a-tag>
+                                <a-tag v-else color="#f5b041">
+                                    {{ $t('common.inactive') }}
+                                </a-tag>
                             </a-form-item>
-                            <a-form-item style="display: flex;text-align: center;">
-                                <a-button :disabled="(suma > 100 || suma < 100)" type="primary" html-type="submit">
-                                    <template #icon>
-                                        <SaveOutlined />
-                                    </template>
-                                    {{ templateSeleccionado.accion == "add" ? $t("common.save") : $t("common.update") }}
-                                </a-button>
-                            </a-form-item>
+
                         </a-col>
                     </a-row>
-                </a-form>
+                    <a-form ref="formRef" name="dynamic_form_nest_item" :model="dynamicValidateForm" @finish="onSubmit" >
+                        <a-row :gutter="16" justify="center">
+                            <a-col class="text-center" :xs="24" :sm="24" :md="24" :lg="24">
+                                <a-space 
+                                    v-for="(variable, index) in dynamicValidateForm.variables"
+                                    :key="variable.identificador"
+                                >
+                                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                        <a-form-item 
+                                            :name="['variables', index, 'tipo']" :rules="{
+                                            required: true,
+                                            message: $t('lead_status.type'),
+                                        }">
+                                            <a-select 
+                                                v-model:value="variable.tipo" 
+                                                :bordered="false"
+                                                :placeholder="$t('common.select_default_text', [
+                                                    $t('lead_status.type'),
+                                                ])
+                                                " :allowClear="true" show-search>
+                                                <a-select-option key="critica" value="critica">
+                                                    <a-tag color="#f5b041" style="width: 100%;height: max-content;">
+                                                        {{ $t('message_template.critical_variable') }}
+                                                    </a-tag>
+                                                </a-select-option>
+                                                <a-select-option key="no_critica" value="no_critica">
+                                                    <a-tag color="#4cb050">
+                                                        {{ $t('message_template.critical_not_variable') }}
+                                                    </a-tag>
+                                                </a-select-option>
+                                            </a-select>
+                                        </a-form-item>
+                                    </a-col>
+                                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                        <a-form-item :name="['variables', index, 'nombre']" :rules="{
+                                            required: true,
+                                            message: $t('common.name'),
+                                        }">
+                                            <a-input v-model:value="variable.nombre" :placeholder="$t('common.name')" />
+                                        </a-form-item>
+                                    </a-col>
+                                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                        <a-form-item :name="['variables', index, 'descripcion']" :rules="{
+                                            required: true,
+                                            message: $t('common.description'),
+                                        }">
+                                            <a-input v-model:value="variable.descripcion"
+                                                :placeholder="$t('common.description')" />
+                                        </a-form-item>
+                                    </a-col>
+                                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                        <a-form-item :name="['variables', index, 'nota_maxima']" :rules="{
+                                            required: true,
+                                            message: $t('message_template.maximum_grade'),
+                                        }">
+                                            <a-input-number v-if="variable.tipo != 'critica'" style="width: auto;" @change="validarSumaMaxima" :min="0" :max="100" v-model:value="variable.nota_maxima"
+                                                :placeholder="$t('message_template.maximum_grade')" />
+                                            <a-input v-else  placeholder="N/A" disabled/>
+                                        </a-form-item>
+                                    </a-col>
+                                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                        <a-form-item>
+                                            <MinusCircleOutlined @click="removeUser(variable)" />
+                                        </a-form-item> 
+                                    </a-col>
+                                    
+
+                                </a-space>
+                            </a-col>
+                            <a-col :xs="24" :sm="24" :md="12" :lg="12">
+                                <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                    <a-form-item class="text-right">
+                                        <h4 :style="{ color: suma > 100 ? 'red' : 'inherit' }">
+                                            <a-tooltip :style="{ color: suma > 100 ? 'red' : 'inherit' }" :title="$t('message_template.maximum_grade_exceded')">
+                                                <InfoCircleOutlined/>
+                                            </a-tooltip>
+                                            {{ $t('common.total') }}: {{ suma }}
+                                        </h4>
+                                    </a-form-item>
+                                </a-col>
+                                <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                    <a-form-item>
+                                        <a-button :disabled="suma >= 100" type="dashed" block @click="addUser">
+                                            <PlusOutlined />
+                                            {{ $t('common.add') }}
+                                        </a-button>
+                                    </a-form-item>
+                                </a-col>
+                                
+                                <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                    <a-form-item style="display: flex;text-align: center;">
+                                        <a-button :disabled="(suma > 100 || suma < 100)" type="primary" html-type="submit">
+                                            <template #icon>
+                                                <SaveOutlined />
+                                            </template>
+                                            {{ templateSeleccionado.accion == "add" ? $t("common.save") : $t("common.update") }}
+                                        </a-button>
+                                    </a-form-item>
+                                </a-col>
+                            </a-col>
+                        </a-row>
+                    </a-form>
+                </a-card>
+
+                
             </a-tab-pane>
 
         </a-tabs>

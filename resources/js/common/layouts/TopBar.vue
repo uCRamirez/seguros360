@@ -15,7 +15,7 @@
             <a-col :span="20">
                 <HeaderRightIcons>
                     <a-space>
-                        <!-- activar sofphone de uC -->
+                        <!-- activar sofphone de uC - no borrar -->
                         <!-- <a-button @click="openRightSidebar" style="border: none"
                             ><span v-if="rightSidebarValue == false"
                                 ><StepBackwardOutlined />
@@ -23,10 +23,13 @@
 
                             <span v-else><StepForwardOutlined /></span>
                         </a-button> -->
-
-                        <a-button type="link" @click="openNotifications" style="border: none">
+                        <!-- <a-button type="link" @click="openNotifications" style="border: none">
                             <BellOutlined />
-                        </a-button>
+                        </a-button> -->
+
+                        <NotificationBell />
+
+
                         <ThemeModeChanger />
                         <a-divider type="vertical" />
                         <a-dropdown
@@ -99,7 +102,7 @@ import common from "../../common/composable/common";
 import MenuMode from "./MenuMode.vue";
 import AffixButton from "./AffixButton.vue";
 import ThemeModeChanger from "./ThemeModeChanger.vue";
-
+import NotificationBell from './NotificationBell.vue';
 export default {
     components: {
         MenuOutlined,
@@ -112,6 +115,7 @@ export default {
         StepBackwardOutlined,
         StepForwardOutlined,
         BellOutlined,
+        NotificationBell,
     },
     setup(props, { emit }) {
         const {

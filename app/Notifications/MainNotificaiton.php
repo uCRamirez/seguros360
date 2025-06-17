@@ -68,4 +68,15 @@ class MainNotificaiton extends Notification implements ShouldQueue
 	{
 		return $this->notficationData;
 	}
+
+	// ✸ Método que emite el evento de broadcast
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'id'   => $this->id,
+            'type' => static::class,
+            'data' => $this->notficationData,
+            'read_at' => null,
+        ]);
+    }
 }

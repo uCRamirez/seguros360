@@ -581,7 +581,6 @@ export default defineComponent({
                     successMessage: t("common.created"),
                     success: (res) => { 
                         emit("addEditDelete");
-                        // emit("closed");
                     },
                 });
 
@@ -595,7 +594,6 @@ export default defineComponent({
                 const resp = await axiosAdmin.get(`delete-calidad/{${props.data.is_sale.idVenta}}`);
                 if(resp.success){
                     notification.success({ message: t(`common.success`), description: t(`common.deleted`) });
-                    // emit("closed");
                     emit("addEditDelete");
                 }
             } catch (e) {
