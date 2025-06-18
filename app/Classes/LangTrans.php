@@ -130,7 +130,9 @@ class LangTrans
             'reassigned' => 'Reassigned',     
             'policy' => 'Policy',     
             'saved_correctly' => 'Saved correctly',     
-            'call_certificate' => 'Call certificate',     
+            'call_certificate' => 'Call certificate', 
+            'not_notifications' =>	'No notifications',   
+            'mark_read' =>	'Mark all as read',
         ],
         //nuevo
         'bases' => [

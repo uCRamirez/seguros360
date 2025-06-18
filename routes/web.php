@@ -182,5 +182,11 @@ ApiRoute::group(['namespace' => 'App\Http\Controllers\Api'], function () {
         // ApiRoute::get('dataForm/tipification-campaign', ['as' => 'api.dataForm.tipification-campaign', 'uses' => 'DataFormController@tipificationCampaign']);
 
 
+        // Notificaciones
+        ApiRoute::get('notifications', ['as' => 'api.notifications.user', 'uses' => 'NotificationController@index']);
+        ApiRoute::post('notifications/mark-read', ['as' => 'api.notifications-market.user', 'uses' => 'NotificationController@markAllRead']);
+
+        ApiRoute::post('notifications/send',['as' => 'api.notifications-make.user', 'uses' => 'NotificationController@makeNotification']);
+
     });
 });
