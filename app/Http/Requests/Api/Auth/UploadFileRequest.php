@@ -29,7 +29,7 @@ class UploadFileRequest extends BaseRequest
         ];
 
         if ($this->has('image')) {
-            \Log::info('UploadFileRequest  - image'); 
+            // \Log::info('UploadFileRequest  - image'); 
             $rules['image'] = 'required|image|max:20000';
         }
 

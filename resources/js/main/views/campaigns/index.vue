@@ -104,6 +104,15 @@
             @closed="closeAddBase"
         />
 
+        <AddNotification
+            :addEditType="'add'"  
+            :visible="addNotificationVisible"
+            :campaign="selectedCampaign"
+            :successMessage="baseSuccessMsg"
+            @addEditSuccess="onNotificationSuccess"
+            @closed="closeAddNotification"
+        />
+
         <a-row
             v-if="
                 permsArray.includes('view_completed_campaigns') ||
@@ -284,6 +293,17 @@
                                             <template #icon><SwapOutlined /></template>
                                         </a-button>
                                     </a-tooltip>
+                                    <!-- notificaciones -->
+                                    <a-tooltip :title="$t('common.add_notification')">
+                                        <a-button
+                                           v-if="permsArray.includes('campaigns_edit') || permsArray.includes('admin')"
+                                           type="primary"
+                                           @click="showAddNotification(record)"
+                                        >
+                                            <template #icon><NotificationOutlined /></template>
+                                        </a-button>
+                                    </a-tooltip>
+                                    <!-- -------------- -->
                                     <a-tooltip :title="$t('common.delete')">
                                         <a-button
                                             v-if="
@@ -318,6 +338,7 @@ import {
     PlusOutlined,
     EditOutlined,
     FileAddOutlined,
+    NotificationOutlined,
     DeleteOutlined,
     PlayCircleOutlined,
     StopOutlined,
@@ -332,6 +353,7 @@ import common from "../../../common/composable/common";
 import fields from "./fields";
 import AddEdit from "./AddEdit.vue";
 import AddBase from "./AddBase.vue";
+import AddNotification from "./AddNotification.vue";
 import AdminPageHeader from "../../../common/layouts/AdminPageHeader.vue";
 import AddLead from "./AddLead.vue";
 import CampaignMembers from "./CampaignMembers.vue";
@@ -344,6 +366,7 @@ export default {
         PlusOutlined,
         EditOutlined,
         FileAddOutlined,
+        NotificationOutlined,
         DeleteOutlined,
         PlayCircleOutlined,
         StopOutlined,
@@ -354,6 +377,7 @@ export default {
         RecycleLead,
         AddEdit,
         AddBase,
+        AddNotification,
         AdminPageHeader,
         AddLead,
         CampaignMembers,
@@ -456,8 +480,9 @@ export default {
         const closeCampaign = () => {
             visible.value = false;
         };
-
+        
         const addBaseVisible    = ref(false)
+        const addNotificationVisible = ref(false)
         const selectedCampaign  = ref(null)
         const baseFormData      = ref({})
         const baseUrl           = ref('')
@@ -466,31 +491,48 @@ export default {
 
         function showAddBase(record) {
             selectedCampaign.value = record
-            baseFormData.value     = { ...record }            // o el initData que necesites
+            baseFormData.value     = { ...record }            
             baseUrl.value          = `${addEditUrl}/${record.xid}/bases`
             basePageTitle.value    = `${t('common.add')} ${t('bases.base')}`
             baseSuccessMsg.value   = t('bases.base_added_success')
             addBaseVisible.value   = true
         }
 
+        function showAddNotification(record) {
+            selectedCampaign.value = record           
+            baseSuccessMsg.value   = t('common.created')
+            addNotificationVisible.value   = true
+        }
+
         function closeAddBase() {
             addBaseVisible.value = false
         }
 
+        function closeAddNotification() {
+            addNotificationVisible.value = false
+        }
+
         function onBaseSuccess() {
             addBaseVisible.value = false
-            // refresca tabla si lo necesitas:
             fetch()
         }
 
+        function onBaseSuccess() {
+            addNotificationVisible.value = false
+            // fetch()
+        }
+
         return {
+            closeAddNotification,
             addBaseVisible,
+            addNotificationVisible,
             selectedCampaign,
             baseFormData,
             baseUrl,
             basePageTitle,
             baseSuccessMsg,
             showAddBase,
+            showAddNotification,
             closeAddBase,
             onBaseSuccess,
             permsArray,

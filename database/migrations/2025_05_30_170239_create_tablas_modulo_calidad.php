@@ -37,6 +37,8 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->longText('descripcion')->nullable();
+            $table->enum('tipo', ['accion','cierre','mejora']);
+            $table->json('users_ids')->nullable();
             $table->timestamps();
         });
 
@@ -59,7 +61,7 @@ return new class extends Migration
             $table->integer('minuto_precio');
             $table->boolean('cierre_venta')->default(false);
             $table->foreignId('cerrado_por')->nullable()
-                  ->constrained('users')
+                  ->constrained('acciones_calidad')
                   ->onUpdate('cascade')
                   ->onDelete('set null');
             $table->foreignId('accion_calidad_id')->nullable()

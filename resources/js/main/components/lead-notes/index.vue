@@ -59,9 +59,9 @@
         :gutter="[15, 15]"
         class="mb-20"
     >
-        <!-- El btn de agregar tipificaciones -->
+        <!-- El btn de agregar tipificaciones :disabled="managing === false" -->
         <a-col v-if="showAddButton" :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
-            <a-button type="primary" :disabled="managing === false" @click="addItem" block>
+            <a-button type="primary"  @click="addItem" block>
                 <PlusOutlined />
                 {{ $t("notes.add") }}
             </a-button>
@@ -161,27 +161,7 @@
                                     : "-"
                             }}
                         </template>
-                        <template
-                            v-for="allFormFieldName in allFormFieldNames"
-                            :key="allFormFieldName.xid"
-                        >
-                            <template
-                                v-if="
-                                    record &&
-                                    record.lead &&
-                                    record.lead.lead_data &&
-                                    column.dataIndex ===
-                                        convertStringToKey(allFormFieldName.field_name)
-                                "
-                            >
-                                {{
-                                    findFieldValue(
-                                        allFormFieldName.similar_field_names,
-                                        record.lead.lead_data
-                                    )
-                                }}
-                            </template>
-                        </template>
+
                         <template v-if="column.dataIndex === 'notes'">
                             <a-comment>
                                 <template #author>{{ record.user.name }}</template>
@@ -199,7 +179,13 @@
                                                 expandable: true,
                                                 symbol: $t('common.more'),
                                             }"
-                                            :content="record.notes"
+                                            :content=" [
+                                                record.notes_typification_name_1,
+                                                record.notes_typification_name_2,
+                                                record.notes_typification_name_3,
+                                                record.notes_typification_name_4
+                                            ].filter(Boolean).join(' - ')
+                                            "
                                         />
                                     </p>
                                 </template>
@@ -351,7 +337,7 @@ export default {
             initData,
             columns,
             filterableColumns,
-            allFormFieldNames,
+            // allFormFieldNames,
             hashableColumns,
             allCampaigns,
             allUsers,
@@ -480,7 +466,7 @@ export default {
             filterableColumns,
             user,
             formatDateTime,
-            allFormFieldNames,
+            // allFormFieldNames,
             findFieldValue,
             convertStringToKey,
             onAddEditSuccess,

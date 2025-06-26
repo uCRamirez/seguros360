@@ -125,45 +125,6 @@
                         <CopyrightCircleOutlined />
                         <span>{{ $t("menu.products") }}</span>
                     </a-menu-item>
-                    <!-- <a-sub-menu key="expense_manager" v-if="
-                        (permsArray.includes('expense_categories_view') ||
-                            permsArray.includes('expenses_view') ||
-                            permsArray.includes('admin')) &&
-                        willSubscriptionModuleVisible('expense')
-                    ">
-                        <template #title>
-                            <span>
-                                <WalletOutlined />
-                                <span>{{ $t("menu.expense_manager") }}</span>
-                            </span>
-                        </template>
-                        <a-menu-item @click="
-                            () => {
-                                menuSelected();
-                                $router.push({
-                                    name: 'admin.expense_categories.index',
-                                });
-                            }
-                        " key="expense_categories" v-if="
-                            permsArray.includes('expense_categories_view') ||
-                            permsArray.includes('admin')
-                        ">
-                            {{ $t("menu.expense_categories") }}
-                        </a-menu-item>
-                        <a-menu-item @click="
-                            () => {
-                                menuSelected();
-                                $router.push({
-                                    name: 'admin.expenses.index',
-                                });
-                            }
-                        " key="expenses" v-if="
-                            permsArray.includes('expenses_view') ||
-                            permsArray.includes('admin')
-                        ">
-                            {{ $t("menu.expenses") }}
-                        </a-menu-item>
-                    </a-sub-menu> -->
 
                     <LeftSideBarMainHeading v-if="
                         permsArray.includes('users_view') ||
@@ -184,41 +145,6 @@
                         <SolutionOutlined />
                         <span>{{ $t("menu.staff_members") }}</span>
                     </a-menu-item>
-
-                    <!-- <a-sub-menu v-if="
-                        (permsArray.includes('salesmans_view') ||
-                            permsArray.includes('admin')) &&
-                        willSubscriptionModuleVisible('salesman')
-                    " key="salesmans">
-                        <template #title>
-                            <span>
-                                <ApartmentOutlined />
-                                <span>{{ $t("menu.salesmans") }}</span>
-                            </span>
-                        </template>
-                        <a-menu-item @click="
-                            () => {
-                                menuSelected();
-                                $router.push({
-                                    name: 'admin.salesman.index',
-                                });
-                            }
-                        " key="salesmans">
-                            <TeamOutlined />
-                            <span>{{ $t("menu.salesmans") }}</span>
-                        </a-menu-item>
-                        <a-menu-item @click="
-                            () => {
-                                menuSelected();
-                                $router.push({
-                                    name: 'admin.bookings.salesman_bookings.index',
-                                });
-                            }
-                        " key="salesman_bookings">
-                            <ShoppingCartOutlined />
-                            <span>{{ $t("menu.salesman_bookings") }}</span>
-                        </a-menu-item>
-                    </a-sub-menu> -->
 
                     <LeftSideBarMainHeading :title="$t('menu.lead_management')" :visible="menuCollapsed" />
 
@@ -346,7 +272,7 @@
                         }
                     " key="templates_acciones">
                         <AppstoreOutlined />
-                        <span>{{ $t("menu.actions") }}</span>
+                        <span>{{ `${$t("menu.actions")}, ${$t("common.closures")} & ${$t("common.improvement_options")}` }}</span>
                     </a-menu-item>
 
                     <!-- motivos -->

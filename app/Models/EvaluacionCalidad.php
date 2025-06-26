@@ -66,7 +66,7 @@ class EvaluacionCalidad extends BaseModel implements Auditable
 
     public function cerradoPor()
     {
-        return $this->belongsTo(User::class, 'cerrado_por', 'id');
+        return $this->belongsTo(AccionCalidad::class, 'cerrado_por', 'id');
     }
 
     public function accionCalidad()

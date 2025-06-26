@@ -159,7 +159,10 @@
                                 v-if="showLeadDetails"
                                 type="link"
                                 class="p-0"
-                                @click="showViewDrawer(record.lead)"
+                                @click="showViewDrawer({ 
+                                    ...record.lead, 
+                                    idNota: record.id
+                                })"
                             >
                                 {{
                                     record.lead &&
@@ -180,27 +183,6 @@
                                     : "-"
                             }}
                         </template>
-                        <template
-                            v-for="allFormFieldName in allFormFieldNames"
-                            :key="allFormFieldName.xid"
-                        >
-                            <template
-                                v-if="
-                                    record &&
-                                    record.lead &&
-                                    record.lead.lead_data &&
-                                    column.dataIndex ===
-                                        convertStringToKey(allFormFieldName.field_name)
-                                "
-                            >
-                                {{
-                                    findFieldValue(
-                                        allFormFieldName.similar_field_names,
-                                        record.lead.lead_data
-                                    )
-                                }}
-                            </template>
-                        </template>
                         <template v-if="column.dataIndex === 'notes'">
                             <a-comment>
                                 <template #author>{{ record.is_sale.user.name }}</template>
@@ -218,7 +200,13 @@
                                                 expandable: true,
                                                 symbol: $t('common.more'),
                                             }"
-                                            :content="record.notes"
+                                            :content=" [
+                                                record.notes_typification_name_1,
+                                                record.notes_typification_name_2,
+                                                record.notes_typification_name_3,
+                                                record.notes_typification_name_4
+                                            ].filter(Boolean).join(' - ')
+                                            "
                                         />
                                     </p>
                                 </template>
@@ -311,6 +299,12 @@ export default {
         },
         leadId: {
             default: undefined,
+        },
+        idNota: {
+            default: undefined,
+        },
+        soloUna: {
+            default: false,
         },
         managing: {
             default: undefined,
@@ -417,7 +411,6 @@ export default {
 
         const setUrlData = () => {
             crudVariables.hashableColumns.value = [...hashableColumns];
-
             crudVariables.tableUrl.value = {
                 url,
                 filters,
@@ -470,10 +463,21 @@ export default {
             });
         };
 
+        watch(() => props.idNota, newIdNota => {
+            if(props.soloUna){
+                filters.value['lead_logs.id'] = newIdNota;
+            }else{
+                filters.value['lead_logs.id'] = undefined;
+            }
+        }, { immediate: true })
+
+
+
         watch(() => props.leadId, (newLeadId) => {
             if (newLeadId) {
                 leadInfo.value = props.leadInfo;
-                extraFilters.value.lead_id = newLeadId
+                extraFilters.value.lead_id = newLeadId;
+                extraFilters.value.id = props.idNota;
                 crudVariables.formData.value = { ...initData, lead_id: props.leadId };
                 getPrefetchData();
                 setUrlData();

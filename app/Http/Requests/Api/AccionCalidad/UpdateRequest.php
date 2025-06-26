@@ -25,7 +25,9 @@ class UpdateRequest extends BaseRequest
     public function rules()
     {
         return [
-			'nombre' => 'required'
-		];
+            'nombre'   => 'required',
+            'tipo'     => 'required',
+            'users_ids' => 'required_if:tipo,accion',
+        ];
     }
 }

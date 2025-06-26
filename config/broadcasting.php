@@ -31,21 +31,25 @@ return [
     'connections' => [
 
         'pusher' => [
-            'driver' => 'pusher',
-            'key' => env('PUSHER_APP_KEY'),
-            'secret' => env('PUSHER_APP_SECRET'),
-            'app_id' => env('PUSHER_APP_ID'),
+            'driver'  => 'pusher',
+            'key'     => env('PUSHER_APP_KEY'),
+            'secret'  => env('PUSHER_APP_SECRET'),
+            'app_id'  => env('PUSHER_APP_ID'),
             'options' => [
-                'host' => env('PUSHER_HOST') ?: 'api-'.env('PUSHER_APP_CLUSTER', 'mt1').'.pusher.com',
-                'port' => env('PUSHER_PORT', 443),
-                'scheme' => env('PUSHER_SCHEME', 'https'),
-                'encrypted' => true,
-                'useTLS' => env('PUSHER_SCHEME', 'https') === 'https',
+                // usa las vars de .env o conserva el default hacia Pusher.com
+                'host'       => env('PUSHER_HOST', 'api-'.env('PUSHER_APP_CLUSTER','mt1').'.pusher.com'),
+                'port'       => env('PUSHER_PORT', 443),
+                'scheme'     => env('PUSHER_SCHEME', 'https'),
+                'encrypted'  => env('PUSHER_USE_TLS', true),
+                'useTLS'     => env('PUSHER_USE_TLS', true),
             ],
+            // aquí puedes desactivar verificación SSL en Guzzle (útil en local)
             'client_options' => [
-                // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
+                // desactiva validación de certificado
+                'verify' => env('PUSHER_USE_TLS', true) ? true : false,
             ],
         ],
+
 
         'ably' => [
             'driver' => 'ably',

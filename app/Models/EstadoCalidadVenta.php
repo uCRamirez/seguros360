@@ -18,7 +18,7 @@ class EstadoCalidadVenta extends BaseModel implements Auditable
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $hidden = [
-        'evaluacion_id', 'motivo_cancelacion_id', 'reasignado_a',
+        'evaluacion_id', 'motivo_cancelacion_id',
     ];
 
     protected $appends = ['xid', 'xEvaluacionId', 'xMotivoCancelacionId', 'xReasignadoA'];

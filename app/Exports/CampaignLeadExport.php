@@ -19,31 +19,21 @@ class CampaignLeadExport implements FromArray
 
     public function array(): array
     {
-        $headerFields = ['Reference No', 'Campaign Name', 'Lead Status'];
-        $otherHeaderFieldsKeys = [];
+        $headerFields = ['Cedula','Nombre','Primer Apellido', 'Segundo Apellido','Tel1','Tel2','Tel3','Tel4','Tel5','Tel6','Email', 'Campaign', 'Lead Status'];
         $allExcelData = [];
-
-        if ($this->campaign->form_id && $this->campaign->form && $this->campaign->form->form_fields) {
-            foreach ($this->campaign->form->form_fields as $allFormFields) {
-                $headerFields[] = $allFormFields['name'];
-                $otherHeaderFieldsKeys[] = Common::getFieldKeyByName($allFormFields['name']);
-            }
-        }
 
         $allExcelData[] = $headerFields;
 
-        $allLeads = Lead::select('reference_number', 'lead_status_id', 'lead_data_json')
+        $allLeads = Lead::select('cedula','nombre','apellido1','apellido2','tel1','tel2','tel3','tel4','tel5','tel6','email', 'lead_status_id', 'lead_data_json')
             ->with(['leadStatus'])
             ->where('campaign_id', $this->campaign->id)
             ->get();
 
         foreach ($allLeads as $allLead) {
             $leadStatus = $allLead->leadStatus && $allLead->leadStatus->name ? $allLead->leadStatus->name : '';
-            $dataResult = [$allLead->reference_number, $this->campaign->name, $leadStatus];
+            $dataResult = [$allLead->cedula,$allLead->nombre,$allLead->apellido1,$allLead->apellido2,$allLead->tel1,$allLead->tel2,$allLead->tel3,$allLead->tel4,$allLead->tel5,$allLead->tel6,$allLead->email, $this->campaign->name, $leadStatus];
 
-            foreach ($otherHeaderFieldsKeys as $otherHeaderFieldsKey) {
-                $dataResult[] = isset($allLead->lead_data_json[$otherHeaderFieldsKey]) ? $allLead->lead_data_json[$otherHeaderFieldsKey] : '';
-            }
+
 
             $allExcelData[] = $dataResult;
         }

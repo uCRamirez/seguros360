@@ -77,6 +77,7 @@ class LeadAuxController extends ApiBaseController
                 'campaign_id'      => $campaign_id,
                 'company_id'       => $company_id,
                 'created_by'       => $myId, 
+                'started'          => 0,
             ]);
         }
 

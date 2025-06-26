@@ -1,5 +1,9 @@
 <template>
-    <a-dropdown v-model:open="isOpen" placement="bottomRight" :trigger="['click']">
+    <a-dropdown
+        v-model:open="isOpen"
+        placement="bottomRight"
+        :trigger="['click']"
+    >
         <a @click.prevent="toggleDropdown" class="cursor-pointer">
             <a-badge :dot="unreadCount > 0">
                 <BellOutlined class="text-2xl text-gray-700" />
@@ -12,15 +16,39 @@
                     {{ error }}
                 </div>
                 <a-menu v-else>
-                    <a-menu-item v-if="notifications.length === 0" disabled class="text-center">
+                    <a-menu-item
+                        v-if="notifications.length === 0"
+                        disabled
+                        class="text-center"
+                    >
                         <strong>{{ $t('common.not_notifications') }}</strong>
                     </a-menu-item>
 
-                    <a-menu-item v-for="note in notifications" :key="note.id" @click="handleClickNotification(note)" class="flex flex-col py-2">
-                        <strong><span class="font-semibold">{{ note.data.title }}</span></strong><br>
-                        <span class="text-sm">{{ note.data.message }}</span><br>
+                    <a-menu-item
+                        v-for="note in notifications"
+                        :key="note.id"
+                        @click="handleClickNotification(note)"
+                        class="flex flex-col py-2"
+                    >
+                        <strong>
+                            <span class="font-semibold">
+                                {{ note.data.title }}
+                            </span>
+                        </strong>
+                        <br />
+                        <span class="text-sm">{{ note.data.message }}</span>
+                        <br />
 
-                        <span v-if="note.data.url" class="text-sm"><a>{{ $t('common.view') }} {{ $t('common.link') }}</a></span><br v-if="note.data.url">
+                        <span
+                            v-if="note.data.url"
+                            class="text-sm"
+                        >
+                            <a>
+                                {{ $t('common.view') }}
+                                {{ $t('common.link') }}
+                            </a>
+                        </span>
+                        <br v-if="note.data.url" />
 
                         <span class="text-xs text-gray-500 mt-1">
                             {{ formatDateTime(note.created_at) }}
@@ -28,8 +56,13 @@
                     </a-menu-item>
 
                     <a-menu-divider v-if="notifications.length != 0" />
-                    
-                    <a-menu-item v-if="notifications.length != 0" key="mark-all" @click="markAllAsRead" class="text-center">
+
+                    <a-menu-item
+                        v-if="notifications.length != 0"
+                        key="mark-all"
+                        @click="markAllAsRead"
+                        class="text-center"
+                    >
                         <strong>{{ $t('common.mark_read') }}</strong>
                     </a-menu-item>
                 </a-menu>
@@ -56,6 +89,7 @@ export default {
         const { formatDateTime } = common()
         const store = useStore()
         const unreadCount = computed(() => notifications.value.length)
+        const poller = ref(null)
 
         function toggleDropdown() {
             isOpen.value = !isOpen.value
@@ -65,20 +99,19 @@ export default {
         }
 
         async function fetchNotifications() {
-            isLoading.value = true
+            // isLoading.value = true
             error.value = null
             try {
-                const res = await axiosAdmin.get('notifications')
+                const res = await axiosAdmin.get('notifications?limit=10')
                 notifications.value = res.unread
             } catch (err) {
                 console.error(err)
                 error.value = 'No se pudieron cargar las notificaciones.'
             } finally {
-                isLoading.value = false
+                // isLoading.value = false
             }
         }
 
-        // 3. Cierro manualmente desde aquí
         async function markAllAsRead() {
             try {
                 await axiosAdmin.post('notifications/mark-read')
@@ -86,43 +119,34 @@ export default {
                 isOpen.value = false
             } catch (err) {
                 console.error(err)
-                // opcional: mostrar toast de error
             }
         }
 
         function handleClickNotification(note) {
-            isOpen.value = false;
-            if (!note.data.url) return;
+            isOpen.value = false
+            if (!note.data.url) return
 
-            let url = note.data.url.trim();
-
+            let url = note.data.url.trim()
             if (!/^https?:\/\//i.test(url)) {
-                url = 'https://' + url;
+                url = 'https://' + url
             }
-
-            window.open(url, '_blank', 'noopener,noreferrer');
+            window.open(url, '_blank', 'noopener,noreferrer')
         }
 
 
-        function handleClickOutside(event) {
-            if (
-                dropdownContainer.value &&
-                !dropdownContainer.value.contains(event.target)
-            ) {
-                isOpen.value = false
-            }
-        }
 
         onMounted(() => {
             fetchNotifications()
-            // document.addEventListener('mousedown', handleClickOutside)
+            poller.value = setInterval(fetchNotifications, 5000)
             const userId = store.state.user?.id
             if (window.Echo && userId) {
                 window.Echo
                     .private(`App.Models.User.${userId}`)
-                    .notification((payload) => {
+                    // escucha tu evento broadcast con el nombre que definiste
+                    .listen('.MainNotification', (payload) => {
                         notifications.value.unshift({
-                            ...payload,
+                            id: payload.id,
+                            data: payload.data,
                             created_at: new Date().toISOString(),
                         })
                     })
@@ -130,7 +154,7 @@ export default {
         })
 
         onUnmounted(() => {
-            // document.removeEventListener('mousedown', handleClickOutside)
+            clearInterval(poller.value)
         })
 
         return {

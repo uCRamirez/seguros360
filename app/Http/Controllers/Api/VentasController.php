@@ -9,11 +9,12 @@ use App\Http\Requests\Api\Venta\StoreRequest;
 use App\Http\Requests\Api\Venta\UpdateRequest;
 use App\Http\Requests\Api\Venta\DeleteRequest;
 use App\Models\Venta;
+use App\Models\ProductosVenta;
 use App\Models\LeadLog;
 use App\Models\Lead;
 use Carbon\Carbon;
 use Examyou\RestAPI\Exceptions\ApiException;
-
+use Illuminate\Support\Facades\DB;
 
 class VentasController extends ApiBaseController
 {
@@ -29,11 +30,30 @@ class VentasController extends ApiBaseController
         $data = $request->validated();
 
         if ($data['accion'] === 'add') {
-            //\Log::info('saveVenta - add', ['data' => $data]);
+            // \Log::info('saveVenta - add', ['data' => $data]);
 
+            DB::beginTransaction();
             try {
-                $venta = Venta::create($data);
+                $ventaData = Arr::except($data, ['productos', 'accion']);
+                $venta = Venta::create($ventaData);
+
+                $productos = json_decode($data['productos'], true);
+
+                foreach ($productos as $item) {
+
+                    ProductosVenta::create([
+                        'idVenta'           => $venta->idVenta,
+                        'idProducto'        => $this->getIdFromHash($item['xid']) ?: null,
+                        'cantidadProducto'  => $item['product_quantity'],
+                        'precio'            => $item['price'],
+                    ]);
+
+                }
+
+                DB::commit();
             } catch (\Throwable $e) {
+                DB::rollBack();
+                // \Log::error('Error al guardar venta y productos:', ['error' => $e->getMessage()]);
                 throw new ApiException('Sale not saved');
             }
 
@@ -41,26 +61,46 @@ class VentasController extends ApiBaseController
                 'success' => true,
                 'data'    => $venta,
             ], 201);
-        } else {
-            return $this->updateVenta($data);
         }
+
+        return $this->updateVenta($data);
     }
 
 
     protected function updateVenta(array $data)
     {
-        // \Log::info('updateVenta - edit', ['data' => $data]);
+        DB::beginTransaction();
         try {
             $idNota = $this->getIdFromHash($data['idNota']);
             $venta  = Venta::where('idNota', $idNota)->firstOrFail();
-            $venta->update(Arr::except($data, ['accion', 'idNota']));
+
+            $venta->update(Arr::except($data, ['productos', 'accion', 'idNota']));
+
+            if (! empty($data['productos'])) {
+                ProductosVenta::where('idVenta', $venta->idVenta)->delete();
+
+                $productos = json_decode($data['productos'], true);
+                foreach ($productos as $item) {
+                    ProductosVenta::create([
+                        'idVenta'           => $venta->idVenta,
+                        'idProducto'        => $this->getIdFromHash($item['xid']) ?: null,
+                        'cantidadProducto'  => $item['product_quantity'],
+                        'precio'            => $item['price'],
+                    ]);
+                }
+            }
+
+            DB::commit();
         } catch (\Throwable $e) {
+            DB::rollBack();
+            // \Log::error('Error al actualizar venta y productos:', ['error' => $e->getMessage()]);
             throw new ApiException('Sale not updated');
         }
 
         return response()->json([
             'success' => true,
-            'data'    => $venta,
+            'data'    => $venta->load('productos'),
         ], 200);
     }
+
 }

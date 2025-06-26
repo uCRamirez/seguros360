@@ -59,7 +59,7 @@ export default defineComponent({
                     makeCallFunction(e);
                     break;
                 case "finishedCall":
-                    console.log('finishedCall');
+                    // console.log('finishedCall');
                     break;
                 default:
                     break;
@@ -247,7 +247,7 @@ export default defineComponent({
         });
 
         onUnmounted(() => {
-            console.log("unmounted");
+            // console.log("unmounted");
             // Remove the event listener to prevent memory leaks
             window.removeEventListener("message", handleMessageEvent);
         });

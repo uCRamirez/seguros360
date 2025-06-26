@@ -42,8 +42,15 @@ class SmtpSettingsProvider extends ServiceProvider
             $lightLogo = $company->light_logo == null ? asset('images/light.png') : Common::getFileUrl($companyLogoPath, $company->light_logo);
             $darkLogo = $company->dark_logo == null ? asset('images/dark.png') : Common::getFileUrl($companyLogoPath, $company->dark_logo);
 
+            $selectedLogo = $company->dark_logo ? $darkLogo : $lightLogo;
+
+            $baseUrl  = rtrim(env('APP_URL'), '/');
+            $pathLogo = ltrim($selectedLogo, '/');
+            $logoUrl  = "{$baseUrl}/{$pathLogo}";
+
             config([
-                'app.name' => $company->short_name,
+                'app.url' => $logoUrl,
+                'app.name' => $company->name,
                 'app.dark_logo' => $darkLogo,
                 'app.light_logo' => $lightLogo,
                 'app.debug' => $company->app_debug,

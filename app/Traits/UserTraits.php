@@ -63,9 +63,10 @@ trait UserTraits
                 ->where('roles.name', '=', 'admin')
                 ->count('role_user.user_id');
 
-            if ($adminRoleUserCount <= 1 && $user->isDirty('role_id')) {
-                throw new ApiException("Can not change role because you are only admin of app");
-            }
+            // if ($adminRoleUserCount <= 1 && $user->isDirty('role_id')) {
+            //     // \Log::info('adminRoleUserCount - SISIIS', [$adminRoleUserCount]);
+            //     throw new ApiException("Can not change role because you are only admin of app");
+            // }
         }
 
         if ($user->user_type != $this->userType) {

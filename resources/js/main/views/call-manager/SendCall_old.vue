@@ -71,7 +71,7 @@ export default defineComponent({
         const { t } = useI18n();
 
         const onSubmit = () => {
-            console.log("yes");
+            // console.log("yes");
 
             var windowProxy;
 

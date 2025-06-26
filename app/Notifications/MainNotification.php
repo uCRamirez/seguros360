@@ -1,66 +1,57 @@
 <?php
-
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
 class MainNotification extends Notification implements ShouldBroadcast
 {
-    use Queueable;
+    protected array $payload;
+    protected $notifiable;
 
-    public $notficationData;
-
-    public function __construct(array $notficationData)
+    public function __construct(array $payload)//$notifiable
     {
-        $this->notficationData = $notficationData;
+        $this->payload     = $payload;
+        // $this->notifiable  = $notifiable;
     }
 
     public function via($notifiable)
     {
-        // Añadimos 'broadcast' además de database y mail
-        $via = ['database', 'broadcast'];
-
-        if (! empty($this->notficationData['mail']['isAbleToSend'])) {
-            $via[] = 'mail';
-        }
-
-        return $via;
-    }
-
-    public function toMail($notifiable)
-    {
-        return (new MailMessage)
-            ->subject($this->notficationData['mail']['title'])
-            ->greeting('Hello!')
-            ->line($this->notficationData['mail']['content']);
+        return ['broadcast', 'database'];
     }
 
     public function toArray($notifiable)
     {
-        return $this->notficationData;
+        // \Log::info('notifiable -- HERE', [$notifiable]);
+
+        if (empty($this->payload['title'])) {
+            return $this->payload;
+        }
+        
+        return [
+            'title'   => $this->payload['title'],
+            'message' => $this->payload['message'],
+            'url'     => $this->payload['url'],
+        ];
     }
 
-    /**
-     * Canal en el que se va a emitir el evento de broadcast.
-     */
-    public function broadcastOn()
-    {
-        return new PrivateChannel("App.Models.User.{$notifiable->id}");
-    }
-
-    /**
-     * Payload que recibe el frontend via Echo.
-     */
+    // Si quieres customizar el mensaje...
     public function toBroadcast($notifiable)
     {
+        // \Log::info('notifiable -- HERE', [$notifiable]);
+
+        // Si no hay título, devuelvo un BroadcastMessage vacío
+        if (empty($this->payload['title'])) {
+            return new BroadcastMessage([]);
+        }
+
+        // Sólo los que sí tienen title llegan aquí
         return new BroadcastMessage([
-            'id'   => $this->id,
-            'data' => $this->notficationData,
+            'title'   => $this->payload['title'],
+            'message' => $this->payload['message'] ?? '',
+            'url'     => $this->payload['url']     ?? '',
         ]);
-    }
+        }
 }

@@ -29,7 +29,7 @@
                     >
                         <a-button type="primary" @click="addItem">
                             <PlusOutlined />
-                            {{ $t("common.add") }} {{ $t("common.action") }}
+                            {{ $t("common.add") }}
                         </a-button>
                     </template>
                     <a-button
@@ -54,9 +54,7 @@
                             <a-select
                                 style="width: 35%"
                                 v-model:value="table.searchColumn"
-                                :placeholder="
-                                    $t('common.select_default_text', [''])
-                                "
+                                :placeholder="$t('common.select_default_text')"
                             >
                                 <a-select-option
                                     v-for="filterableColumn in filterableColumns"
@@ -91,6 +89,7 @@
             :data="viewData"
             :pageTitle="pageTitle"
             :successMessage="successMessage"
+            :allUsers="allUsers"
         />
         <a-row>
             <a-col :span="24">
@@ -114,6 +113,17 @@
                         size="middle"
                     >
                         <template #bodyCell="{ column, record }">
+                            <template v-if="column.dataIndex === 'tipo'">
+                                <a-tag style="width:100%;text-align: center;" v-if="record.tipo === 'accion'" :color="appSetting.primary_color">
+                                    {{ $t('menu.actions') }}
+                                </a-tag>
+                                <a-tag style="width:100%;text-align: center;" v-else-if="record.tipo === 'cierre'" color="#f5b041">
+                                    {{ $t('common.closures') }}
+                                </a-tag>
+                                <a-tag style="width:100%;text-align: center;" v-else color="#4cb050">
+                                    {{ $t('common.improvement_options') }}
+                                </a-tag>
+                            </template>
                             <template v-if="column.dataIndex === 'action'">
                                 <a-tooltip :title="$t('common.edit')">
                                     <a-button
@@ -155,7 +165,7 @@
     </admin-page-table-content>
 </template>
 <script>
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import {
     PlusOutlined,
     EditOutlined,
@@ -178,11 +188,12 @@ export default {
     setup() {
         const { addEditUrl, initData, columns, filterableColumns } = fields();
         const crudVariables = crud();
-        const { permsArray } = common();
+        const { permsArray, appSetting } = common();
+        const allUsers = ref([]);   
 
-        onMounted(() => {
+        onMounted(async ()  => {
             crudVariables.tableUrl.value = {
-                url: "acciones-calidad?fields=id,xid,nombre,descripcion",
+                url: "acciones-calidad?fields=id,xid,nombre,descripcion,tipo,users_ids",
             };
             crudVariables.table.filterableColumns = filterableColumns;
 
@@ -194,13 +205,19 @@ export default {
             crudVariables.langKey.value = "common";
             crudVariables.initData.value = { ...initData };
             crudVariables.formData.value = { ...initData };
+            allUsers.value = [];
+            const resp = await axiosAdmin.get('all-users');
+            allUsers.value = resp.data.users;
+
         });
 
         return {
+            allUsers,
             columns,
             ...crudVariables,
             filterableColumns,
             permsArray,
+            appSetting,
         };
     },
 };

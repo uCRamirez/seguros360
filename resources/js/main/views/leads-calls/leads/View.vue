@@ -116,6 +116,8 @@
                 </template>
                 <LeadNotesTable
                     :soloVer="soloVer"
+                    :idNota="lead.idNota"
+                    :soloUna="true"
                     :leadId="lead.xid"
                     :showAddButton="false"
                     @success="setNotesUrl"

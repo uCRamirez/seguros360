@@ -3,10 +3,12 @@ import { useI18n } from "vue-i18n";
 const fields = () => {
     const addEditUrl = "acciones-calidad";
     const { t } = useI18n();
-
+    
     const initData = {
         nombre: "",
         descripcion: "",
+        tipo: "accion",
+        users_ids: [],
     };
 
     const columns = [
@@ -23,6 +25,10 @@ const fields = () => {
             dataIndex: "descripcion",
         },
         {
+            title: t("lead_status.type"),
+            dataIndex: "tipo",
+        },
+        {
             title: t("common.action"),
             dataIndex: "action",
         },
@@ -30,8 +36,12 @@ const fields = () => {
 
     const filterableColumns = [
         {
-            key: "name",
+            key: "nombre",
             value: t("common.name"),
+        },
+        {
+            key: "tipo",
+            value: t("lead_status.type"),
         },
     ];
 

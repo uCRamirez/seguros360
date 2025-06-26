@@ -237,8 +237,8 @@ export default defineComponent({
                 parsedHeader.value = parsedResult.meta.fields;
                 currentUploadedFile.value = info.file;
 
-                console.log(parsedResult, "parsedHeader.value");
-                console.log(parsedFileData.value, "parsedFileData.value");
+                // console.log(parsedResult, "parsedHeader.value");
+                // console.log(parsedFileData.value, "parsedFileData.value");
 
                 var newValues = {};
                 forEach(parsedHeader.value, (filterValue, filterKey) => {

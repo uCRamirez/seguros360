@@ -4,7 +4,7 @@ namespace App\Classes;
 
 use App\Models\Company;
 use App\Models\Settings;
-use App\Notifications\MainNotificaiton;
+use App\Notifications\MainNotification;
 use Examyou\RestAPI\Exceptions\ApiException;
 use Illuminate\Support\Facades\DB;
 
@@ -106,17 +106,18 @@ class Notify
 
     public static function send($sendFor, $sendData)
     {
-        $data = self::getData($sendFor, $sendData);
-        $dataArray = self::getDataArray($data);
-        $sender = $data['to'];
+        $data       = self::getData($sendFor, $sendData);
+        $dataArray  = self::getDataArray($data);
+        $sender     = $data['to'];
 
-        $notficationData = [
+        $notificationData = [
             'send_for' => $sendFor,
-            'to' => $data['to'],
-            'mail' => self::isAbleToSendMail($sendFor, $dataArray),
-            'data' => $data,
+            'data'     => $data,
         ];
 
-        $sender->notify(new MainNotificaiton($notficationData));
+
+
+        $sender->notify(new MainNotification($notificationData, $sender));
     }
+
 }

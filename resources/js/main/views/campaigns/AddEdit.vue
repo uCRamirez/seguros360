@@ -462,7 +462,7 @@ export default defineComponent({
                     data: isCSV,
                     successMessage: t('campaign.imported_leads'),
                     success: (res) => {
-                        console.log(res);
+                        // console.log(res);
                     },
                 });
             }

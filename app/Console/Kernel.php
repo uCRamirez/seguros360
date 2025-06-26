@@ -5,6 +5,8 @@ namespace App\Console;
 use App\Console\Commands\ScheduleMessaging;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Notifications\DatabaseNotification;
+use Carbon\Carbon;
 
 class Kernel extends ConsoleKernel
 {
@@ -22,6 +24,23 @@ class Kernel extends ConsoleKernel
         }
 
         $schedule->command(ScheduleMessaging::class)->everyTwoMinutes();
+        
+        $schedule->call(function () {
+            $deleted = DatabaseNotification::where(function($q) {
+                    // notificaciones leídas hace más de 1 hora (para test)
+                    $q->whereNotNull('read_at')
+                    ->where('read_at', '<', Carbon::now()->subHour());
+                })
+                ->orWhere(function($q) {
+                    // notificaciones NO leídas con created_at > 7 días
+                    $q->whereNull('read_at')
+                    ->where('created_at', '<', Carbon::now()->subDays(7));
+                })
+                ->delete();
+        })
+        ->hourly()
+        ->appendOutputTo(storage_path('logs/cron-scheduler.log'));
+
     }
 
     /**

@@ -200,6 +200,7 @@
                                                     >
                                                         <a-input-group compact>
                                                             <a-input
+                                                                :disabled="!permsArray.includes('admin')"
                                                                 v-model:value="
                                                                     crmState.client.cedula
                                                                 "
@@ -284,6 +285,7 @@
                                                         "
                                                     >
                                                         <a-input
+                                                            :disabled="!permsArray.includes('admin')"
                                                             v-model:value="
                                                                 crmState.client.nombre
                                                             "
@@ -325,6 +327,7 @@
                                                         "
                                                     >
                                                         <a-input
+                                                            :disabled="!permsArray.includes('admin')"
                                                             v-model:value="
                                                                 crmState.client.apellido1
                                                             "
@@ -366,6 +369,7 @@
                                                         "
                                                     >
                                                         <a-input
+                                                            :disabled="!permsArray.includes('admin')"
                                                             v-model:value="
                                                                 crmState.client.apellido2
                                                             "
@@ -589,6 +593,7 @@
                                                         class="required"
                                                     >
                                                         <a-input
+                                                            :disabled="!permsArray.includes('admin')"
                                                             v-model:value="
                                                                 crmState.client.tel1
                                                             "
@@ -628,6 +633,7 @@
                                                         "
                                                     >
                                                         <a-input
+                                                            :disabled="!permsArray.includes('admin')"
                                                             v-model:value="
                                                                 crmState.client.tel2
                                                             "
@@ -667,6 +673,7 @@
                                                         "
                                                     >
                                                         <a-input
+                                                            :disabled="!permsArray.includes('admin')"
                                                             v-model:value="
                                                                 crmState.client.tel3
                                                             "
@@ -706,6 +713,7 @@
                                                         "
                                                     >
                                                         <a-input
+                                                            :disabled="!permsArray.includes('admin')"
                                                             v-model:value="
                                                                 crmState.client.tel4
                                                             "
@@ -745,6 +753,7 @@
                                                         "
                                                     >
                                                         <a-input
+                                                            :disabled="!permsArray.includes('admin')"
                                                             v-model:value="
                                                                 crmState.client.tel5
                                                             "
@@ -784,6 +793,7 @@
                                                         "
                                                     >
                                                         <a-input
+                                                            :disabled="!permsArray.includes('admin')"
                                                             v-model:value="
                                                                 crmState.client.tel6
                                                             "
@@ -1259,7 +1269,7 @@ import SendMessage from "./SendMessage.vue";
 import Sidebar from "../../../../../../../common/layouts/Sidebar.vue";
 import SendCall from "./SendCall.vue";
 import SearchLead from "./SearchLead.vue";
-import UphoneCallTable from "./UphoneCallsHistory.vue";
+// import UphoneCallTable from "./UphoneCallsHistory.vue";
 import fields from "../fields";
 import functions from "./functions.js";
 
@@ -1294,12 +1304,12 @@ export default {
         Sidebar,
         SendCall,
         SearchLead,
-        UphoneCallTable,
+        // UphoneCallTable,
         PlusOutlined,
     },
     setup() {
         const { columns } = fields();
-        const { formatDateTime, rightSidebarValue, themeMode } = common();
+        const { formatDateTime, rightSidebarValue, themeMode, permsArray } = common();
         const { addEditRequestAdmin, loading, rules } = apiAdmin();
         const route = useRoute();
         const router = useRouter();
@@ -1706,6 +1716,7 @@ export default {
             addNote,
             handleClientToManage,
             handleClientSerchTableChange,
+            permsArray,
             ///////////////////
 
             themeMode,

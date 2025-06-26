@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Classes\Common;
 use App\Exports\CampaignLeadExport;
+use App\Exports\CampaignLeadExportBase;
 use App\Http\Controllers\ApiBaseController;
 use App\Http\Requests\Api\Campaign\IndexRequest;
 use App\Http\Requests\Api\Campaign\StoreRequest;
@@ -365,6 +366,17 @@ class CampaignController extends ApiBaseController
         $campaign = Campaign::find($campaignId);
 
         return Excel::download(new CampaignLeadExport($campaignId), 'invoices.xlsx');
+    }
+
+    public function campaignExportLeadBase($id,$base,$state)
+    {
+        // \Log::info('campaignExportLeadBase', ['base' => $base]);
+        config(['api.cors' => false]);
+
+        $campaignId = $this->getIdFromHash($id);
+        $campaign = Campaign::find($campaignId);
+
+        return Excel::download(new CampaignLeadExportBase($campaignId,$base,$state), 'invoices.xlsx');
     }
 
     public function getAllCampaignExcept()

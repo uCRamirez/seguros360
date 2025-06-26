@@ -19,16 +19,19 @@ return new class extends Migration
             $table->unsignedBigInteger('idNota');
             $table->unsignedBigInteger('idLead');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('idProducto');
+            // $table->unsignedBigInteger('idProducto');
 
             // Other columns
             $table->string('telVenta', 191);
             $table->string('estadoVenta', 191);
             $table->string('tarjeta', 191);
-            $table->integer('cantidadProducto')->default(0);
+            // $table->integer('cantidadProducto')->default(0);
             $table->bigInteger('aplicaBeneficiarios');
             $table->integer('cantidadBeneficiarios')->default(0);
             $table->json('beneficiarios');
+            $table->bigInteger('aplicaBeneficiariosAsist');
+            $table->integer('cantidadBeneficiariosAsist')->default(0);
+            $table->json('beneficiariosAsist');
             $table->decimal('montoTotal', 8, 2);
             $table->boolean('calidad')->default(false);
 
@@ -36,7 +39,7 @@ return new class extends Migration
             $table->index('idNota', 'ventas_lead_logs_FK');
             $table->index('idLead', 'ventas_leads_FK');
             $table->index('user_id', 'ventas_users_FK');
-            $table->index('idProducto', 'ventas_products_FK');
+            // $table->index('idProducto', 'ventas_products_FK');
 
             // Foreign key constraints
             $table->foreign('idNota', 'ventas_lead_logs_FK')
@@ -54,10 +57,10 @@ return new class extends Migration
                   ->onDelete('cascade')
                   ->onUpdate('cascade');
 
-            $table->foreign('idProducto', 'ventas_products_FK')
-                  ->references('id')->on('products')
-                  ->onDelete('cascade')
-                  ->onUpdate('cascade');
+            // $table->foreign('idProducto', 'ventas_products_FK')
+            //       ->references('id')->on('products')
+            //       ->onDelete('cascade')
+            //       ->onUpdate('cascade');
         });
     }
 

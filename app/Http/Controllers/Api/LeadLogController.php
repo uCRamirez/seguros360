@@ -121,9 +121,14 @@ class LeadLogController extends ApiBaseController
         }
         
         $filtersParam = $request->query('filters', '');
-        if (Str::contains($filtersParam, 'isSale.estadoVenta') || Str::contains($filtersParam, 'isSale.calidad') || Str::contains($filtersParam, 'isSale.user_id')) {
+        if (Str::contains($filtersParam, 'isSale.estadoVenta') || Str::contains($filtersParam, 'isSale.calidad') || Str::contains($filtersParam, 'isSale.user_id') || Str::contains($filtersParam, 'isSale_calidad.estado')) {
+            // \Log::info('ENTRA IF');
+            
             $query->leftJoin('ventas as isSale', 'isSale.idNota', '=', 'lead_logs.id');
+            $query->leftJoin('estados_calidad_venta as isSale_calidad', 'isSale_calidad.idVenta', '=', 'isSale.idVenta');
         } 
+
+        // \Log::info('modifyIndex SQL', ['sql' => $query->toSql(), 'bindings' => $query->getBindings()]);
 
         return $query;
     }

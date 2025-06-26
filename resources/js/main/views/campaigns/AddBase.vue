@@ -19,23 +19,6 @@
                         <div class="table-responsive">
                             <a-table 
                                 :row-key="record => record.id" 
-                                :row-selection="{
-                                    selectedRowKeys: tableClienteSerch.selectedRowKeys,
-                                    onSelect: (record) => {
-                                    if (tableClienteSerch.selectedRowKeys.includes(record.id)) {
-                                        tableClienteSerch.selectedRowKeys = [];
-                                        //clearClientSelection();
-                                    } else {
-                                        tableClienteSerch.selectedRowKeys = [record.id];
-                                        //onClientSelected(record);
-                                    }
-                                },
-                                    hideSelectAll: true,
-                                    getCheckboxProps: (record) => ({
-                                    disabled: false,
-                                    name: String(record.id),
-                                }),
-                                }" 
                                 :columns="columns" 
                                 :data-source="tableClienteSerch.data"
                                 :pagination="tableClienteSerch.pagination" 
@@ -73,13 +56,54 @@
                                                 : "-"
                                         }}
                                     </template>
-                                    <!-- <template v-if="column.dataIndex === 'updated_at'">
-                                        {{
-                                            record.updated_at && record.updated_at != ""
-                                                ? formatDateTime(record.updated_at)
-                                                : "-"
-                                        }}
-                                    </template> -->
+                                    <template v-if="column.dataIndex === 'action'">
+                                        <a-tooltip :title="$t('common.export_leads_active')">
+                                            <a-button
+                                                v-if="
+                                                    permsArray.includes('export_leads') ||
+                                                    permsArray.includes('admin')
+                                                "
+                                                type="primary"
+                                                @click="
+                                                    showExportLeadsConfirm(
+                                                        record.x_campaign_id,
+                                                        record.nombreBase,
+                                                        1
+                                                    )
+                                                "
+                                                style="width: 60px;margin-right: 5px;"
+                                            >
+                                                <template #icon>
+                                                    <UserAddOutlined />
+                                                    <CloudDownloadOutlined />
+                                                </template>
+                                            </a-button>
+                                        </a-tooltip>
+                                        <a-tooltip :title="$t('common.export_leads_inactive')">
+                                            <a-button
+                                                v-if="
+                                                    permsArray.includes('export_leads') ||
+                                                    permsArray.includes('admin')
+                                                "
+                                                type="primary"
+                                                @click="
+                                                    showExportLeadsConfirm(
+                                                        record.x_campaign_id,
+                                                        record.nombreBase,
+                                                        0
+                                                    )
+                                                "
+                                                style="width: 60px;"
+                                            >
+                                                <template #icon>
+                                                    <UserDeleteOutlined />
+                                                    <CloudDownloadOutlined />
+                                                </template>
+                                            </a-button>
+                                        </a-tooltip>
+                                    </template>
+
+                                    
                                     
                                 </template>
                             </a-table>
@@ -141,6 +165,7 @@
         </a-form>
         <template #footer>
             <a-space>
+
                 <a-button v-if="currentStep === 1" key="previous" type="primary" :loading="loading" @click="goBack">
                     <DoubleLeftOutlined />
                     {{ $t("campaign.previous_step") }}
@@ -167,13 +192,17 @@
     </a-drawer>
 </template>
 <script>
-import { defineComponent, ref, onMounted, watch } from "vue";
+import { defineComponent, ref, onMounted, watch, createVNode } from "vue";
 import {
     LoadingOutlined,
     SaveOutlined,
     FileTextOutlined,
     DoubleRightOutlined,
     DoubleLeftOutlined,
+    CloudDownloadOutlined,
+    ExclamationCircleOutlined,
+    UserAddOutlined,
+    UserDeleteOutlined,
 } from "@ant-design/icons-vue";
 import apiAdmin from "../../../common/composable/apiAdmin";
 import StaffMemberAddButton from "../users/StaffAddButton.vue";
@@ -181,6 +210,8 @@ import ImportLeads from "./ImportLeads.vue";
 import { useI18n } from "vue-i18n";
 import { reactive } from "vue";
 import common from "../../../common/composable/common";
+import { Modal } from "ant-design-vue";
+
 
 const tableClienteSerch = reactive({
     data: [],
@@ -209,8 +240,12 @@ export default defineComponent({
         FileTextOutlined,
         DoubleRightOutlined,
         DoubleLeftOutlined,
+        CloudDownloadOutlined,
         ImportLeads,
         StaffMemberAddButton,
+        ExclamationCircleOutlined,
+        UserAddOutlined,
+        UserDeleteOutlined,
     },
     setup(props, { emit }) {
         const currentStep = ref(0);
@@ -259,6 +294,10 @@ export default defineComponent({
                     title: t("campaign.created_at"),
                     dataIndex: "created_at",
                     key: "created_at",
+                },
+                {
+                    title: t("common.action"),
+                    dataIndex: "action",
                 },
                 // {
                 //     title: t("campaign.updated_at"),
@@ -332,23 +371,12 @@ export default defineComponent({
                     data: isCSV,
                     successMessage: t("messages.imported_successfully"), 
                     success: (res) => {
-                        console.log(res);
+                        // console.log(res);
                         emit("success");
                         onClose(); 
                     },
                 });
             } 
-            // else {
-            //     addEditRequestAdmin({
-            //         url: props.url, // Asegúrate que props.url esté definida
-            //         data: newFormData, // Los datos del formulario general
-            //         successMessage: props.successMessage || (props.addEditType === "add" ? t("messages.created_successfully") : t("messages.updated_successfully")),
-            //         success: (res) => {
-            //             emit("success", res);
-            //             onClose();
-            //         }
-            //     });
-            // }
         };
 
         const goBack = () => {
@@ -428,7 +456,61 @@ export default defineComponent({
             }
         );
 
+        const showExportLeadsConfirm = (campaignId, nombreBase,state) => {
+            Modal.confirm({
+                title: t("common.export_leads") + "?",
+                icon: createVNode(ExclamationCircleOutlined),
+                content: t(`campaign.export_leads`),
+                centered: true,
+                okText: t("common.yes"),
+                okType: "danger",
+                cancelText: t("common.no"),
+                onOk() {
+                    return axiosAdmin
+                        .post(
+                            `campaigns/export-leads/base/${campaignId}/${nombreBase}/${state}`,
+                            {},
+                            {
+                                responseType: "blob",
+                            }
+                        )
+                        .then((response) => {
+                            // Response is a blob type object
+
+                            // Create a temporary URL for the blob
+                            const url = window.URL.createObjectURL(response);
+
+                            // Create a temporary link element
+                            const link = document.createElement("a");
+                            link.href = url;
+
+                            // Set the link attributes to trigger download
+                            let estado = state === 1 ? 'Worked' : 'Not_Worked';
+                            link.setAttribute("download", `${nombreBase}_${estado}.xlsx`);
+                            document.body.appendChild(link);
+
+                            // Simulate click on the link to start the download
+                            link.click();
+
+                            // Clean up by removing the temporary link and URL object
+                            document.body.removeChild(link);
+                            window.URL.revokeObjectURL(url);
+
+                            notification.success({
+                                message: t("common.success"),
+                                description: t(`campaign.exports`),
+                                placement: "bottomRight",
+                            });
+                        })
+                        .catch(() => {});
+                },
+                onCancel() {},
+            });
+        };
+
+
         return {
+            showExportLeadsConfirm,
             formatDateTime,
             tableClienteSerch,
             handleClientSerchTableChange,

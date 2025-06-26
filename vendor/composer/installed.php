@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '4132e90a59a0f3a45fec5b0158d9c3e645075c7c',
+        'reference' => 'd2146f218b85c571d9aaff9fc1445e28a59088ea',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -490,7 +490,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '4132e90a59a0f3a45fec5b0158d9c3e645075c7c',
+            'reference' => 'd2146f218b85c571d9aaff9fc1445e28a59088ea',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1111,6 +1111,15 @@
             'replaced' => array(
                 0 => '4.7.6',
             ),
+        ),
+        's-ichikawa/laravel-sendgrid-driver' => array(
+            'pretty_version' => '4.0.9',
+            'version' => '4.0.9.0',
+            'reference' => '8ef615a27acadf63cc4bdb4e78c6cd7f9f0260a1',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../s-ichikawa/laravel-sendgrid-driver',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'sabberworm/php-css-parser' => array(
             'pretty_version' => 'v8.8.0',

@@ -79,6 +79,7 @@ ApiRoute::group(['namespace' => 'App\Http\Controllers\Api'], function () {
         ApiRoute::get('campaigns/user-campaigns', ['as' => 'api.campaigns.user-campaigns', 'uses' => 'CampaignController@userCampaigns']);
         ApiRoute::post('campaigns/skip-delete-lead', ['as' => 'api.campaigns.skip-delete-lead', 'uses' => 'CampaignController@skipAndDeleteLead']);
         ApiRoute::post('campaigns/export-leads/{id}', ['as' => 'api.campaigns.export-leads', 'uses' => 'CampaignController@campaignExportLead']);
+        ApiRoute::post('campaigns/export-leads/base/{id}/{base}/{state}', ['as' => 'api.campaigns.export-leads-base', 'uses' => 'CampaignController@campaignExportLeadBase']);
         ApiRoute::post('campaigns/update-actioned-lead', ['as' => 'api.campaigns.update-actioned-lead', 'uses' => 'CampaignController@updateActionedLead']);
         ApiRoute::post('campaigns/take-lead-action', ['as' => 'api.campaigns.take-lead-action', 'uses' => 'CampaignController@takeLeadAction']);
         ApiRoute::post('campaigns/take-action', ['as' => 'api.campaigns.take-action', 'uses' => 'CampaignController@takeAction']);
@@ -185,6 +186,7 @@ ApiRoute::group(['namespace' => 'App\Http\Controllers\Api'], function () {
         // Notificaciones
         ApiRoute::get('notifications', ['as' => 'api.notifications.user', 'uses' => 'NotificationController@index']);
         ApiRoute::post('notifications/mark-read', ['as' => 'api.notifications-market.user', 'uses' => 'NotificationController@markAllRead']);
+        ApiRoute::post('notifications/send-to-users', ['as' => 'api.notifications-send.user', 'uses' => 'NotificationController@sendToUsers']);
 
         ApiRoute::post('notifications/send',['as' => 'api.notifications-make.user', 'uses' => 'NotificationController@makeNotification']);
 

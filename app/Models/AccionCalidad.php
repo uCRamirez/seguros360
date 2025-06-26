@@ -12,7 +12,7 @@ class AccionCalidad extends BaseModel implements Auditable
 
     protected $table = 'acciones_calidad';
 
-    protected $default = ['xid', 'nombre'];
+    protected $default = ['xid', 'nombre','tipo','users_ids'];
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
@@ -22,6 +22,7 @@ class AccionCalidad extends BaseModel implements Auditable
 
     protected $filterable = [
         'nombre',
+        'tipo',
     ];
 
     public function evaluaciones()

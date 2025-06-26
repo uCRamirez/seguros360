@@ -37,7 +37,7 @@ class CreateSincronizarSpProcedure extends Migration
             INSERT INTO crm_seguros.leads_history
             (cedula, nombre, apellido1, apellido2,
             fechaNacimiento, tel1, tel2, email, edad,
-            nombreBase, agente, created_at, updated_at,campaign_id,company_id)
+            nombreBase, agente, created_at, updated_at,campaign_id,company_id,created_by,started)
             SELECT
             la.cedula,
             la.nombre,
@@ -57,14 +57,16 @@ class CreateSincronizarSpProcedure extends Migration
             la.created_at,
             la.updated_at,
             la.campaign_id,
-            la.company_id 
+            la.company_id,
+            la.created_by,
+            la.started
             FROM crm_seguros.leads_aux AS la;
 
             -- 4) Inserción en leads (producción), 
             INSERT INTO crm_seguros.leads
             (cedula, nombre, apellido1, apellido2,
             fechaNacimiento, tel1, tel2, email, edad,
-            nombreBase, assign_to, created_at, updated_at, campaign_id, company_id)
+            nombreBase, assign_to, created_at, updated_at, campaign_id, company_id,created_by,started)
             SELECT
             la.cedula,
             la.nombre,
@@ -84,7 +86,9 @@ class CreateSincronizarSpProcedure extends Migration
             la.created_at,
             la.updated_at, 
             la.campaign_id,
-            la.company_id
+            la.company_id,
+            la.created_by,
+            la.started
             FROM crm_seguros.leads_aux AS la
             LEFT JOIN crm_seguros.users AS u
             ON u.`user` = la.agente
@@ -99,7 +103,9 @@ class CreateSincronizarSpProcedure extends Migration
             edad = VALUES(edad),
             nombreBase = VALUES(nombreBase),
             assign_to = VALUES(assign_to),
-            updated_at = CURRENT_TIMESTAMP;
+            updated_at = CURRENT_TIMESTAMP,
+            created_by = COALESCE(created_by,VALUES(created_by),p_myId),
+            started = VALUES(started);
             
             -- 5) Registrar la base en el historico
             INSERT INTO crm_seguros.bases_historico

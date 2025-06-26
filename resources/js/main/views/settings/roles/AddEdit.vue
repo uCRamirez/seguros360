@@ -462,7 +462,7 @@
                                             <!-- acciones -->
                                             <tr>
                                                 <td class="text-gray-800">
-                                                    {{ $t("menu.actions") }}
+                                                    {{ `${$t("menu.actions")}, ${$t("common.closures")} & ${$t("common.improvement_options")}` }}
                                                 </td>
                                                 <td>
                                                     <div class="d-flex">

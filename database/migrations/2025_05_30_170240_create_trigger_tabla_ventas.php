@@ -17,11 +17,11 @@ class CreateUpdateUserIdLeadLogsTrigger extends Migration
         FOR EACH ROW
         BEGIN
             -- Si cambió el user_id, actualizamos lead_logs
-            IF OLD.user_id <> NEW.user_id THEN
-                UPDATE `lead_logs`
-                SET `user_id` = NEW.user_id
-                WHERE `id` = NEW.idNota;
-            END IF;
+            -- IF OLD.user_id <> NEW.user_id THEN
+                -- UPDATE `lead_logs`
+                -- SET `user_id` = NEW.user_id
+                -- WHERE `id` = NEW.idNota;
+            -- END IF;
         END;
         SQL
         );

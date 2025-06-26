@@ -1,6 +1,5 @@
 <template>
     <AddEdit
-        :addEditType="addEditType"
         :visible="addEditVisible"
         @addEditSuccess="onAddEditSuccess"
         @addEditDelete="onAddEditSuccess"
@@ -9,6 +8,7 @@
         :allCalidadTemplates="allCalidadTemplates"
         :allAccionesCalidad="allAccionesCalidad"
         :allMotivosCalidad="allMotivosCalidad"
+        :allProductos="allProductos"
         :data="viewData"
         :successMessage="successMessage"
     />
@@ -119,7 +119,7 @@
         </a-col>
 
         <!-- Filtro de estado de venta-->
-        <a-col :xs="24" :sm="24" :md="12" :lg="4" :xl="4">
+        <a-col :xs="24" :sm="24" :md="12" :lg="5" :xl="5">
             <a-form-item >
                 <a-select
                     v-model:value="filters['isSale.estadoVenta']"
@@ -140,6 +140,29 @@
                         value="Cancelada"
                     >
                         {{ $t("lead_notes.canceled") }}
+                    </a-select-option>
+                </a-select>
+            </a-form-item>
+        </a-col>
+
+        <!-- Filtro de estado de la calidad de la venta -->
+        <a-col :xs="24" :sm="24" :md="12" :lg="5" :xl="5">
+            <a-form-item >
+                <a-select
+                    v-model:value="filters['isSale_calidad.estado']"
+                    :placeholder="
+                    $t('common.select_default_text', [ $t('common.status'),])"
+                    :allowClear="true"
+                    show-search
+                    @change="setUrlData"
+                >
+                    <a-select-option
+                        v-for="opt in cierreVentaOptions"
+                        :key="opt.value"
+                        :value="opt.value"
+                        :title="opt.label"
+                    >
+                        {{ opt.label }}
                     </a-select-option>
                 </a-select>
             </a-form-item>
@@ -295,7 +318,13 @@
                                                 expandable: true,
                                                 symbol: $t('common.more'),
                                             }"
-                                            :content="record.notes"
+                                            :content=" [
+                                                record.notes_typification_name_1,
+                                                record.notes_typification_name_2,
+                                                record.notes_typification_name_3,
+                                                record.notes_typification_name_4
+                                            ].filter(Boolean).join(' - ')
+                                            "
                                         />
                                     </p>
                                 </template>
@@ -304,6 +333,7 @@
                                 </template>
                             </a-comment>
                         </template>
+
                         <template v-if="column.dataIndex === 'notes_file'">
                             <a-typography-link
                                 :href="record.notes_file_url"
@@ -343,6 +373,7 @@ import viewDrawer from "../../../common/composable/viewDrawer";
 import fields from "./fields";
 import AddEdit from "./AddEdit.vue";
 import DateRangePicker from "../../../common/components/common/calendar/DateRangePicker.vue";
+import { useI18n } from "vue-i18n";
 
 export default {
     props: {
@@ -406,6 +437,7 @@ export default {
         DateRangePicker,
     },
     setup(props, { emit }) {
+        const { t } = useI18n();
         const {
             permsArray,
             appSetting,
@@ -423,6 +455,7 @@ export default {
             allCalidadTemplates,
             allAccionesCalidad,
             allMotivosCalidad,
+            allProductos,
             hashableColumns,
             allCampaigns,
             allUsers,
@@ -441,6 +474,7 @@ export default {
             dates: [],
         });
         const filters = ref({
+            'isSale_calidad.estado': undefined,
             'isSale.estadoVenta': undefined,
             'isSale.calidad': undefined,
             log_type: props.logType,
@@ -537,7 +571,17 @@ export default {
         { immediate: true }
         );
 
+        const cierreVentaOptions = [
+            { value: 'CERTIFICADA', label: t('common.certified') },
+            { value: 'RELLAMADA_CERTIFICADA', label: t('common.certified_recall') },
+            { value: 'RELLAMADA', label: t('common.recall') },
+            { value: 'CANCELADA_CALIDAD', label: t('common.cancelled_quality') },
+            { value: 'CANCELADA_SUPERVISION', label: t('common.cancelled_supervision') },
+            { value: 'REASIGNADA', label: t('common.reassigned') },
+        ];
+
         return {
+            cierreVentaOptions,
             permsArray,
             appSetting,
             columns,
@@ -549,10 +593,10 @@ export default {
             allCalidadTemplates,
             allAccionesCalidad,
             allMotivosCalidad,
+            allProductos,
             findFieldValue,
             convertStringToKey,
             onAddEditSuccess,
-
             allCampaigns,
             allUsers,
             filters,

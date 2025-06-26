@@ -90,10 +90,10 @@
                             size="middle">
                             <template #bodyCell="{ column, record }">
                                 <template v-if="column.dataIndex === 'activo'">
-                                    <a-tag v-if="record.activo === true" color="#4cb050">
+                                    <a-tag style="width:100%;text-align: center;" v-if="record.activo === true" color="#4cb050">
                                         {{ $t('common.active') }}
                                     </a-tag>
-                                    <a-tag v-else color="#f5b041">
+                                    <a-tag style="width:100%;text-align: center;" v-else color="#f5b041">
                                         {{ $t('common.inactive') }}
                                     </a-tag>
                                 </template>

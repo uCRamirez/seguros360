@@ -48,6 +48,9 @@ return [
         'ses' => [
             'transport' => 'ses',
         ],
+        'sendgrid' => [
+            'transport' => 'sendgrid',
+        ],  
 
         'mailgun' => [
             'transport' => 'mailgun',
