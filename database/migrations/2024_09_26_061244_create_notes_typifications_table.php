@@ -17,6 +17,9 @@ return new class extends Migration
             $table->foreign('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('cascade');
             $table->string('name');
             $table->bigInteger('parent_id')->unsigned()->nullable()->default(null);
+            $table->boolean('sale')->default(false);
+            $table->boolean('schedule')->default(false);
+            $table->boolean('status')->default(true);
 			$table->foreign('parent_id')->references('id')->on('notes_typifications')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });

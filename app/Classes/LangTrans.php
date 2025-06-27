@@ -141,6 +141,8 @@ class LangTrans
             'closures' => 'Closures',
             'improvement_options' => 'Improvement options',
             'non_editable_quality' => 'This review is not yet available for editing.',
+            'scheduled' => 'Scheduled',
+            'next_contact' => 'Next contact'
         ],
         //nuevo
         'bases' => [

@@ -47,6 +47,7 @@ trait HasGlobalScopes
      */
     public static function addGlobalScope($scope, $implementation = null)
     {
+        
         if (is_string($scope) && ($implementation instanceof Closure || $implementation instanceof Scope)) {
             return static::$globalScopes[static::class][$scope] = $implementation;
         } elseif ($scope instanceof Closure) {
@@ -70,8 +71,10 @@ trait HasGlobalScopes
     {
         foreach ($scopes as $key => $scope) {
             if (is_string($key)) {
+                \Log::info('Entro if', [$key]);
                 static::addGlobalScope($key, $scope);
             } else {
+                \Log::info('Entro else', [$key]);
                 static::addGlobalScope($scope);
             }
         }

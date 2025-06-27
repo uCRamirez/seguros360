@@ -1,16 +1,24 @@
 <template>
-	<a-range-picker
-		v-model:value="dateRangeValue"
-		:format="appSetting.date_format"
-		:placeholder="[$t('common.start_date'), $t('common.end_date')]"
-		style="width: 100%"
-		@change="dateTimeChanged"
-	/>
+	<a-config-provider :locale="antdLocale">
+		<a-range-picker
+			v-model:value="dateRangeValue"
+			:format="appSetting.date_format"
+			:placeholder="[$t('common.start_date'), $t('common.end_date')]"
+			style="width: 100%"
+			@change="dateTimeChanged"
+		/>
+    </a-config-provider>
 </template>
 
 <script>
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, computed, watch } from "vue";
 import common from "../../../composable/common";
+import esES from 'ant-design-vue/es/locale/es_ES';
+import enUS from 'ant-design-vue/es/locale/en_US';
+import 'dayjs/locale/es';
+import 'dayjs/locale/en';
+import dayjs from 'dayjs';
+import { useI18n } from "vue-i18n";
 
 export default defineComponent({
 	props: {
@@ -20,6 +28,15 @@ export default defineComponent({
 	},
 	emits: ["dateTimeChanged"],
 	setup(props, { emit }) {
+		const { locale } = useI18n();
+
+		const antdLocale = computed(() =>
+            locale.value === 'en' ? enUS : esES
+        );
+        watch(locale, (newLang) => {
+            dayjs.locale(newLang);
+        });
+
 		const dateRangeValue = ref([]);
 		const { appSetting, dayjs } = common();
 
@@ -56,6 +73,7 @@ export default defineComponent({
 		};
 
 		return {
+			antdLocale,
 			appSetting,
 			dateRangeValue,
 			dateTimeChanged,

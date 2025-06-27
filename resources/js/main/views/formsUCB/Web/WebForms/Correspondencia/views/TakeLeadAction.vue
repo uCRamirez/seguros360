@@ -1178,7 +1178,7 @@
                                 </a-tab-pane>
                                 <!-- FIN Tab de busqueda de leads -->
 
-                                <a-tab-pane key="call_logs">
+                                <a-tab-pane key="call_logs" :disabled="crmState.client.toManage === false">
                                     <template #tab>
                                         <span>
                                             <PhoneOutlined />
@@ -1197,7 +1197,7 @@
                                     />
                                 </a-tab-pane>
 
-                                <a-tab-pane key="lead_notes">
+                                <a-tab-pane key="lead_notes" :disabled="crmState.client.toManage === false">
                                     <template #tab>
                                         <span>
                                             <FileTextOutlined />

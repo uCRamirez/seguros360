@@ -1004,3 +1004,5 @@ esp;common;closed_by;Cerrada por;
 esp;common;closures;Cierres;
 esp;common;improvement_options;Opciones de mejora;
 esp;common;non_editable_quality;Está evaluacion no se encuentra en el tiempo hábil para ser editada;
+esp;common;scheduled;Agenda;
+esp;common;next_contact;Próximo contacto;

@@ -107,7 +107,7 @@ const fields = (props) => {
                     dataIndex: "notes",
                     width:
                         props.showLeadDetails && props.showFormFields
-                            ? "20%"
+                            ? "40%"
                             : "40%",
                 });
 

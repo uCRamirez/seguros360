@@ -1,6 +1,6 @@
 <template>
     <a-modal
-        width="50%"
+        width="70%"
         :open="visible"
         :closable="false"
         :centered="true"
@@ -15,7 +15,7 @@
                     :key="data.id"
                     style="display: flex; align-items: center"
                 >
-                    <a-col :xs="24" :sm="24" :md="7" :lg="7">
+                    <a-col :xs="24" :sm="24" :md="5" :lg="5">
                         <a-form-item
                             :label="$t('lead_notes.typification_1')"
                             :name="['form_data', index, 'typification_1']"
@@ -39,8 +39,8 @@
                         v-show="data.typification_1 != ''"
                         :xs="24"
                         :sm="24"
-                        :md="7"
-                        :lg="7"
+                        :md="5"
+                        :lg="5"
                     >
                         <a-form-item
                             :label="$t('lead_notes.typification_2')"
@@ -65,8 +65,8 @@
                         v-show="data.typification_1 != '' && data.typification_2 != ''"
                         :xs="24"
                         :sm="24"
-                        :md="7"
-                        :lg="7"
+                        :md="5"
+                        :lg="5"
                     >
                         <a-form-item
                             :label="$t('lead_notes.typification_3')"
@@ -91,8 +91,8 @@
                         v-show="data.typification_1 != '' && data.typification_2 != '' && data.typification_3 != ''"
                         :xs="24"
                         :sm="24"
-                        :md="7"
-                        :lg="7"
+                        :md="5"
+                        :lg="5"
                     >
                         <a-form-item
                             :label="$t('lead_notes.typification_4')"
@@ -113,8 +113,16 @@
                         </a-form-item>
                     </a-col>
 
-                    <a-col :span="1" style="margin-top: 6px">
-                        <MinusSquareOutlined @click="removeFormField(data)" />
+                    <a-col :span="1" style="margin-top: 6px;display: inline-flex;">
+                        <MinusSquareOutlined @click="removeFormField(data)" danger/>
+
+                        <a-checkbox style="margin-left: 10px;" v-model:checked="data.sale">
+                            {{ $t('lead_notes.sale') }}
+                        </a-checkbox>
+
+                        <a-checkbox  v-model:checked="data.schedule">
+                            {{ $t('common.scheduled') }}
+                        </a-checkbox>
                     </a-col>
                 </a-row>
             </template>
@@ -122,6 +130,7 @@
                 <a-col :xs="24" :sm="24" :md="7" :lg="7">
                     <a-form-item>
                         <a-button
+                            style="width: fit-content;"
                             type="dashed"
                             block
                             @click="addMultipleTypification()"
@@ -179,6 +188,8 @@ export default defineComponent({
                 typification_2: "",
                 typification_3: "",
                 typification_4: "",
+                sale: false,
+                schedule: false,
             },
         ]);
 
@@ -195,20 +206,9 @@ export default defineComponent({
         };
 
         const onSubmit = () => {
-            // onlyValidateErrors.value = {};
-
-            // forEach(formData.value, (formField) => {
-            //     nameFields.value = {};
-            //     let index = formData.value.indexOf(formField);
-            //     nameFields.value = formField;
-
-            // var alltypification = filter(formData.value, (form) => {
-            //     return form.typification_1 != "" && form.typification_2 != "" && form.typification_3 != "";
-            // });
 
             var newFormData = {
                 notes: formData.value,
-                // removed_name: removedName.value,
             };
 
             addEditRequestAdmin({
@@ -216,27 +216,9 @@ export default defineComponent({
                 data: newFormData,
                 successMessage: t("notes_typification.typification_add"),
                 success: (response) => {
-                    // onlyValidateErrors.value = {};
                     setMultipleUrl();
                     emit("close");
                 },
-
-                //     error: (err) => {
-                //         var errorRules = {};
-                //         // console.log(err.error.details);
-                //         var keys = Object.keys(err.error.details);
-                //         for (var i = 0; i < keys.length; i++) {
-                //             // Escape dot that comes with error in array fields
-                //             var key = keys[i].replace(".", "\\.");
-
-                //             errorRules[key] = {
-                //                 required: true,
-                //                 message: err.error.details[keys[i]][0],
-                //             };
-                //         }
-                //         onlyValidateErrors.value[index] = errorRules;
-                //     },
-                // });
             });
         };
 

@@ -350,14 +350,14 @@ export default {
                 ) {
                     filters.value = {
                         ...filters.value,
-                        user_id: user.value.xid,
+                        // user_id: user.value.xid,
                     };
                 }
 
                 newTable.hashable.value = [...hashableColumns];
-                if (props.leadId !== undefined && props.leadId !== null) {
+                // if (props.leadId !== undefined && props.leadId !== null) {
                     setUrlData()
-                }
+                // }
                 
             });
         });

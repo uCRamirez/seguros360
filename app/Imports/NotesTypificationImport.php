@@ -25,28 +25,48 @@ class NotesTypificationImport implements ToArray, WithHeadingRow
                 if ($typification['typification_1']) {
                     $typification1 = new NotesTypification();
                     $typification1->name = $typification['typification_1'];
-                    $typification1->save();
+
+                    if(!$typification['typification_2']){
+                        $typification1->sale = $typification['sale'] ?? false;
+                        $typification1->schedule = $typification['schedule'] ?? false;
+                    }
+
+                    $typification1->name ? $typification1->save() : '';
                 }
 
                 if ($typification['typification_1'] || $typification['typification_2']) {
                     $typification2 = new NotesTypification();
                     $typification2->name = $typification['typification_2'];
                     $typification2->parent_id = $typification1->id;
-                    $typification2->save();
+
+                    if(!$typification['typification_3']){
+                        $typification2->sale = $typification['sale'] ?? false;
+                        $typification2->schedule = $typification['schedule'] ?? false;
+                    }
+                    
+                    $typification2->name ? $typification2->save() : '';
                 }
 
                 if ($typification['typification_1'] && $typification['typification_2'] && $typification['typification_3']) {
                     $typification3 = new NotesTypification();
                     $typification3->name = $typification['typification_3'];
                     $typification3->parent_id = $typification2->id;
-                    $typification3->save();
+
+                    if(!$typification['typification_4']){
+                        $typification3->sale = $typification['sale'] ?? false;
+                        $typification3->schedule = $typification['schedule'] ?? false;
+                    }
+
+                    $typification3->name ? $typification3->save() : '';
                 }
 
                 if ($typification['typification_1'] && $typification['typification_2'] && $typification['typification_3'] && $typification['typification_4']) {
                     $typification4 = new NotesTypification();
                     $typification4->name = $typification['typification_4'];
                     $typification4->parent_id = $typification3->id;
-                    $typification4->save();
+                    $typification4->sale = $typification['sale'];
+                    $typification4->schedule = $typification['schedule'];
+                    $typification4->name ? $typification4->save() : '';
                 }
 
             }

@@ -8,7 +8,7 @@
     >
         <a-form layout="vertical">
             <a-row :gutter="16">
-                <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                <a-col v-if="!formData.acciones || addEditType === 'add'" :xs="24" :sm="24" :md="24" :lg="24">
                     <a-form-item
                         :label="$t('notes_typification.parent_id')"
                         name="parent_id"
@@ -55,6 +55,24 @@
                     </a-form-item>
                 </a-col>
             </a-row>
+            <a-row :gutter="16">
+                <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                    <a-form-item
+                        :label="$t('menu.actions')"
+                        name="acciones"
+                        v-if="formData.acciones"
+                    >
+                        <a-checkbox style="margin-left: 10px;" v-model:checked="formData.sale">
+                            {{ $t('lead_notes.sale') }}
+                        </a-checkbox>
+
+                        <a-checkbox  v-model:checked="formData.schedule">
+                            {{ $t('common.scheduled') }}
+                        </a-checkbox>
+
+                    </a-form-item>
+                </a-col>
+            </a-row>
         </a-form>
         <template #footer>
             <a-button key="submit" type="primary" :loading="loading" @click="onSubmit">
@@ -92,7 +110,7 @@ export default defineComponent({
 
         const getTypifications = (xid = null) => {
             var url =
-                "notes-typifications?fields=id,xid,name,parent_id,x_parent_id&limit=10000";
+                "notes-typifications?fields=id,xid,name,parent_id,x_parent_id,sale,schedule,status&filters=status eq 1&limit=10000";
             if (xid != null) {
                 url += `&filters=id ne ${xid}&hashable=${xid}`;
             }
@@ -138,6 +156,7 @@ export default defineComponent({
 
         watch(props, (newVal, oldVal) => {
             if (newVal.addEditType == "add") {
+                props.formData.acciones = true;
                 getTypifications();
             } else {
                 getTypifications(newVal.data.xid);

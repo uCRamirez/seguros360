@@ -17,6 +17,9 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Models\NotesTypification;
+use Examyou\RestAPI\Exceptions\ApiException;
+use Examyou\RestAPI\ApiResponse;
 
 class ApiController extends \Illuminate\Routing\Controller
 {
@@ -267,7 +270,7 @@ class ApiController extends \Illuminate\Routing\Controller
 		return ApiResponse::make("Resource updated successfully", ["xid" => $object->xid], $meta);
 	}
 
-	public function destroy(...$args)
+	public function destroy(...$destroy)
 	{
 		\DB::beginTransaction();
 
@@ -293,6 +296,17 @@ class ApiController extends \Illuminate\Routing\Controller
 			$object = call_user_func([$this, 'destroying'], $object);
 		}
 
+		 if ($object instanceof NotesTypification) {
+			// Desactivamos en lugar de borrar que a como se encuentra originalmente
+			$object->status = 0;
+			$object->save();            
+			\DB::commit();              
+
+			$meta = $this->getMetaData(true);
+			return ApiResponse::make("Resource deleted successfully", null, $meta);
+		}
+
+        // \Log::info('object', [$object]);
 		$object->delete();
 
 		$meta = $this->getMetaData(true);

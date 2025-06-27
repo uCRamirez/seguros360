@@ -48,10 +48,12 @@ class NotesTypificationController extends ApiBaseController
         }
 
         // Category assigned to any product will not be deleted
-        $productCount = Product::where('category_id', $notesTypification->id)->count();
-        if ($productCount > 0) {
-            throw new ApiException('Cateogry assigned to any product is not deletable.');
-        }
+        // $productCount = Product::where('category_id', $notesTypification->id)->count();
+        // if ($productCount > 0) {
+        //     throw new ApiException('Cateogry assigned to any product is not deletable.');
+        // }
+
+        // \Log::info('notesTypification', [$notesTypification]);
 
         return $notesTypification;
     }
@@ -60,12 +62,19 @@ class NotesTypificationController extends ApiBaseController
     {
 
         $request = request();
+        // \Log::info('notes', [$request->notes]);
 
         foreach ($request->notes as $typfication) {
-
+            \Log::info('typfication', [$typfication]);
             if ($typfication['typification_1']) {
                 $typification1 = new NotesTypification();
                 $typification1->name = $typfication['typification_1'];
+
+                if(!$typfication['typification_2']){
+                    $typification1->sale = $typfication['sale'] ?? false;
+                    $typification1->schedule = $typfication['schedule'] ?? false;
+                }
+
                 $typification1->save();
             }
 
@@ -73,21 +82,35 @@ class NotesTypificationController extends ApiBaseController
                 $typification2 = new NotesTypification();
                 $typification2->name = $typfication['typification_2'];
                 $typification2->parent_id = $typification1->id;
-                $typification2->save();
+
+                if(!$typfication['typification_3']){
+                    $typification2->sale = $typfication['sale'] ?? false;
+                    $typification2->schedule = $typfication['schedule'] ?? false;
+                }
+
+                $typification2->name ? $typification2->save() : '';
             }
 
             if ($typfication['typification_1'] && $typfication['typification_2'] && $typfication['typification_3']) {
                 $typification3 = new NotesTypification();
                 $typification3->name = $typfication['typification_3'];
                 $typification3->parent_id = $typification2->id;
-                $typification3->save();
+
+                if(!$typfication['typification_4']){
+                    $typification3->sale = $typfication['sale'] ?? false;
+                    $typification3->schedule = $typfication['schedule'] ?? false;
+                }
+
+                $typification3->name? $typification3->save() : '';
             }
 
             if ($typfication['typification_1'] && $typfication['typification_2'] && $typfication['typification_3'] && $typfication['typification_4']) {
                 $typification4 = new NotesTypification();
                 $typification4->name = $typfication['typification_4'];
                 $typification4->parent_id = $typification3->id;
-                $typification4->save();
+                $typification4->sale = $typfication['sale'];
+                $typification4->schedule = $typfication['schedule'];
+                $typification4->name ? $typification4->save() : '';
             }
         }
 

@@ -9,6 +9,8 @@ const fields = () => {
 	const initData = {
 		name: "",
 		parent_id: null,
+		sale: false,
+		schedule: false,
 	};
 
 	const columns = [

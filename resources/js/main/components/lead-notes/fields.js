@@ -6,9 +6,9 @@ import common from "../../../common/composable/common";
 const fields = (props) => {
     const { getCampaignUrl, user } = common();
     const leadUrl =
-        "lead{id,xid,reference_number,cedula,nombre,apellido1,apellido2,fechaNacimiento,edad,nacionalidad,nombreBase,tel1,email,lead_data,started,campaign_id,x_campaign_id,time_taken,first_action_by,x_first_action_by,last_action_by,x_last_action_by,assign_to},lead:campaign{id,xid,name,status},lead:firstActioner{id,xid,name},lead:lastActioner{id,xid,name}";
+        "lead{id,xid,cedula,nombre,apellido1,apellido2,fechaNacimiento,edad,nacionalidad,nombreBase,tel1,email,lead_data,started,campaign_id,x_campaign_id,time_taken,first_action_by,x_first_action_by,last_action_by,x_last_action_by,assign_to},lead:campaign{id,xid,name,status},lead:firstActioner{id,xid,name},lead:lastActioner{id,xid,name}";
     const url = 
-        `lead-logs?fields=id,xid,log_type,time_taken,date_time,user_id,x_user_id,notes,phone,message,user{id,xid,name,profile_image,profile_image_url},lead_id,x_lead_id,notes_file,notes_file_url,${leadUrl},campaign_id,notes_typification_id_1,x_notes_typification_id_1,notes_typification_id_2,x_notes_typification_id_2,notes_typification_id_3,x_notes_typification_id_3,notes_typification_id_4,x_notes_typification_id_4,notes_typification_name_1,notes_typification_name_2,notes_typification_name_3,notes_typification_name_4,isSale{idVenta,idNota,idLead,user_id,telVenta,estadoVenta,tarjeta,aplicaBeneficiarios,cantidadBeneficiarios,beneficiarios,aplicaBeneficiariosAsist,cantidadBeneficiariosAsist,beneficiariosAsist,montoTotal,calidad},isSale:productos{x_id_producto,idProducto,cantidadProducto,precio}}&limit=300`;
+        `lead-logs?fields=id,xid,log_type,time_taken,next_contact,date_time,user_id,x_user_id,notes,phone,message,user{id,xid,name,profile_image,profile_image_url},lead_id,x_lead_id,notes_file,notes_file_url,${leadUrl},campaign_id,notes_typification_id_1,x_notes_typification_id_1,notes_typification_id_2,x_notes_typification_id_2,notes_typification_id_3,x_notes_typification_id_3,notes_typification_id_4,x_notes_typification_id_4,notes_typification_name_1,notes_typification_name_2,notes_typification_name_3,notes_typification_name_4,isSale{idVenta,idNota,idLead,user_id,telVenta,estadoVenta,tarjeta,aplicaBeneficiarios,cantidadBeneficiarios,beneficiarios,aplicaBeneficiariosAsist,cantidadBeneficiariosAsist,beneficiariosAsist,montoTotal,calidad},isSale:productos{x_id_producto,idProducto,cantidadProducto,precio},isSale:user{id,xid,name}}&limit=300`;
         
     const allFormFieldNames = ref([]);
     const addEditUrl = "lead-logs";
@@ -29,9 +29,35 @@ const fields = (props) => {
         notes_typification_id_4: undefined,
         is_sale: undefined,
         phone: "",
-        message: ""
+        message: "",
+        next_contact: ""
     };
-    const columns = ref([]);
+    const columns = [
+            {
+                title: t("lead.id"),
+                dataIndex: "id",
+            },
+            {
+                title: t("lead.document"),
+                dataIndex: "cedula",
+            },
+            {
+                title: t("lead.campaign"),
+                dataIndex: "campaign",
+            },
+            {
+                title: t("common.notes"),
+                dataIndex: "notes",
+                width:
+                    props.showLeadDetails && props.showFormFields
+                        ? "35%"
+                        : "40%",
+            },
+            {
+                title: t("common.action"),
+                dataIndex: "action",
+            }
+        ];
     const allCampaigns = ref([]);
     const allUsers = ref([]);
     const allProductos = ref([]);
@@ -63,60 +89,6 @@ const fields = (props) => {
                 allCampaigns.value = campaignsResponse.data;
                 allUsers.value = staffMembersResponse.data.users;
                 allProductos.value = productosResponse.data;
-
-                var newColumnsArray = [];
-
-                if (props.showLeadDetails) {
-                    var newColumnsArray = [
-                        {
-                            title: t("lead.id"),
-                            dataIndex: "id",
-                        },
-                        {
-                            title: t("lead.document"),
-                            dataIndex: "cedula",
-                        },
-                        {
-                            title: t("lead.campaign"),
-                            dataIndex: "campaign",
-                        },
-                    ];
-
-                    // Showing form fields if props.showFormFields
-                    // sets to true
-                    // if (props.showFormFields) {
-                    //     forEach(
-                    //         formFieldNamesResponse.data.data,
-                    //         (formFieldName) => {
-                    //             newColumnsArray.push({
-                    //                 title: formFieldName.field_name,
-                    //                 dataIndex: convertStringToKey(
-                    //                     formFieldName.field_name
-                    //                 ),
-                    //             });
-                    //         }
-                    //     );
-                    // }
-                }
-
-                newColumnsArray.push({
-                    title: t("common.notes"),
-                    dataIndex: "notes",
-                    width:
-                        props.showLeadDetails && props.showFormFields
-                            ? "20%"
-                            : "40%",
-                });
-
-
-                if (props.showActionButton) {
-                    newColumnsArray.push({
-                        title: t("common.action"),
-                        dataIndex: "action",
-                    });
-                }
-
-                columns.value = newColumnsArray;
             }
         );
     };

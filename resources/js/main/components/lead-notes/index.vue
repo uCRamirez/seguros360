@@ -59,9 +59,9 @@
         :gutter="[15, 15]"
         class="mb-20"
     >
-        <!-- El btn de agregar tipificaciones :disabled="managing === false" -->
+        <!-- El btn de agregar tipificaciones  -->
         <a-col v-if="showAddButton" :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
-            <a-button type="primary"  @click="addItem" block>
+            <a-button :disabled="managing === false" type="primary"  @click="addItem" block>
                 <PlusOutlined />
                 {{ $t("notes.add") }}
             </a-button>
@@ -150,7 +150,7 @@
                                         : "---"
                                 }}
                             </a-button>
-                            <span v-else>{{ record.lead.document }}</span>
+                            <span v-else>{{ record.lead.cedula }}</span>
                         </template>
                         <template v-if="column.dataIndex === 'campaign'">
                             {{
@@ -187,6 +187,7 @@
                                             ].filter(Boolean).join(' - ')
                                             "
                                         />
+                                        <strong><small v-if="record.next_contact">{{ `${$t("common.next_contact")} : ${record.next_contact}` }}</small></strong>
                                     </p>
                                 </template>
                                 <template #datetime>
@@ -240,7 +241,7 @@
     <view-lead-details
         :visible="isViewDrawerVisible"
         :soloVer="true"
-        tipo="lead_note"
+        tipo="no"
         :lead="viewDrawerData"
         @close="hideViewDrawer"
     />
@@ -263,7 +264,7 @@ import common from "../../../common/composable/common";
 import viewDrawer from "../../../common/composable/viewDrawer";
 import fields from "./fields";
 import AddEdit from "./AddEdit.vue";
-import DateRangePicker from "../../../common/components/common/calendar/DateRangePicker.vue";
+import DateRangePicker from "../../../common/components/common/calendar/DateRangePicker2.vue";
 
 export default {
     props: {
@@ -369,7 +370,7 @@ export default {
                 ) {
                     filters.value = {
                         ...filters.value,
-                        user_id: user.value.xid,
+                        // user_id: user.value.xid,
                     };
                 }
                     leadInfo.value = props.leadInfo;
@@ -379,9 +380,9 @@ export default {
                     crudVariables.formData.value = { ...initData, lead_id: props.leadId };
                     crudVariables.hashableColumns.value = [...hashableColumns];
                     crudVariables.hashable.value = [...hashableColumns];
-                if (props.leadId !== undefined && props.leadId !== null) {
+                // if (props.leadId !== undefined && props.leadId !== null) {
                     setUrlData();
-                };
+                // };
             });
         });
 

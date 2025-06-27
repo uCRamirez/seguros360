@@ -76,7 +76,8 @@
                                 :validateStatus="rules.notes_typification_id_4 ? 'error' : null">
                                 <a-select v-model:value="formData.notes_typification_id_4"
                                     :placeholder="$t('common.select_default_text', [$t('lead_notes.notes_typification_4')])"
-                                    optionFilterProp="title" show-search :allowClear="true">
+                                    optionFilterProp="title" show-search :allowClear="true"
+                                     @change="getAccion(formData.notes_typification_id_4)">
                                     <a-select-option v-for="lastChildrenChild in lastChildrenChildData"
                                         :key="lastChildrenChild.xid" :title="lastChildrenChild.name"
                                         :value="lastChildrenChild.xid">
@@ -99,6 +100,24 @@
                             </a-form-item>
                         </a-col>
 
+                        <!-- campo para proximo contacto -->
+                        <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                            <a-form-item :label="$t('common.next_contact')" name="next_contact"
+                                :help="rules.next_contact ? rules.next_contact.message : null"
+                                :validateStatus="rules.next_contact ? 'error' : null" class="label-bold"
+                            >
+                                <a-config-provider :locale="antdLocale">
+                                    <a-date-picker
+                                        :disabled="!schedule"
+                                        v-model:value="formData.next_contact"
+                                        show-time
+                                        :format="'YYYY-MM-DD HH:mm'"
+                                        value-format="YYYY-MM-DD HH:mm"
+                                    />
+                                </a-config-provider>
+                            </a-form-item>
+                        </a-col>
+
                         <!-- Adjunto + checkbox -->
                         <a-col :xs="24" :sm="24" :md="24" :lg="24">
                             <a-form-item class="label-bold" :label="$t('lead_notes.notes_file')">
@@ -112,7 +131,7 @@
                                             formData.notes_file = file.file;
                                             formData.notes_file_url = file.file_url;
                                         }" />
-                                    <a-checkbox :disabled="addEditType == 'edit'" v-model:checked="isSale">
+                                    <a-checkbox :disabled="addEditType == 'edit'" :checked="isSale">
                                         <strong>{{ $t('lead_notes.sale') }}</strong>
                                     </a-checkbox>
                                 </div>
@@ -469,6 +488,11 @@ import common from "../../../common/composable/common";
 import UploadFile from "../../../common/core/ui/file/UploadFile.vue";
 import { useI18n } from "vue-i18n";
 import { message } from 'ant-design-vue';
+import esES from 'ant-design-vue/es/locale/es_ES';
+import enUS from 'ant-design-vue/es/locale/en_US';
+import 'dayjs/locale/es';
+import 'dayjs/locale/en';
+import dayjs from 'dayjs';
 
 function getEmptyVenta() {
     return {
@@ -538,7 +562,7 @@ export default defineComponent({
     setup(props, { emit }) {
         const { addEditRequestAdmin, loading, rules } = apiAdmin();
         const { permsArray, formatAmountCurrency } = common();
-        const { t } = useI18n();
+        const { locale,t } = useI18n();
         const soloVer = ref(props.soloVer);
 
         var myId =  JSON.parse(localStorage.getItem("auth_user") || "{}").id;
@@ -553,6 +577,13 @@ export default defineComponent({
         const isInitializing = ref(true);
         const suma = ref(0);
         const sumaAsist = ref(0);
+
+        const antdLocale = computed(() =>
+            locale.value === 'en' ? enUS : esES
+        );
+        watch(locale, (newLang) => {
+            dayjs.locale(newLang);
+        });
 
         const columns = [
             {
@@ -641,6 +672,7 @@ export default defineComponent({
 
 
         onMounted(() => {
+            window.addEventListener('resize', onResize);
             axiosAdmin.get(notesTypificationUrl).then(res => {
                 notesTypifications.value = res.data;
                 getParentTypification();
@@ -650,33 +682,53 @@ export default defineComponent({
         function getParentTypification() {
             parentTypificationData.value = [];
             notesTypifications.value.forEach(p => {
-                if (p.x_parent_id == null) parentTypificationData.value.push(p);
+                if (p.x_parent_id == null && p.status === 1) parentTypificationData.value.push(p);
             });
+            // getAccion(xid);
         }
         function getChildTypification(xid) {
             childrenTypificationData.value = [];
             childrenChildData.value = [];
             lastChildrenChildData.value = [];
             notesTypifications.value.forEach(c => {
-                if (c.x_parent_id === xid) childrenTypificationData.value.push(c);
+                if (c.x_parent_id === xid && c.status === 1) childrenTypificationData.value.push(c);
             });
+            getAccion(xid);
         }
         function getChildrenChildTypification(xid) {
             childrenChildData.value = [];
             lastChildrenChildData.value = [];
             notesTypifications.value.forEach(c => {
-                if (c.x_parent_id === xid) childrenChildData.value.push(c);
+                if (c.x_parent_id === xid && c.status === 1) childrenChildData.value.push(c);
             });
+            getAccion(xid);
         }
         function getLastChildrenChildTypification(xid) {
             lastChildrenChildData.value = [];
             notesTypifications.value.forEach(c => {
-                if (c.x_parent_id === xid) lastChildrenChildData.value.push(c);
+                if (c.x_parent_id === xid && c.status === 1) lastChildrenChildData.value.push(c);
             });
+            getAccion(xid);
         }
+
+        const getAccion = (xid) => {
+            if(props.addEditType === 'add'){
+                if (xid) {
+                    let actionObject = notesTypifications.value.find(item => item.xid === xid);
+                    if (actionObject) {
+                        schedule.value = actionObject.schedule;
+                        isSale.value = actionObject.sale;
+                    }
+                }else{
+                    schedule.value = false; 
+                    isSale.value = false;
+                }
+            }
+        };
 
         // Flags sale/beneficiarios
         const isSale = ref(false);
+        const schedule = ref(false);
         const esBeneficiario = ref(false);
         const esBeneficiarioAsist = ref(false);
 
@@ -780,6 +832,7 @@ export default defineComponent({
         // Mostrar/editar
         watch(() => props.visible, async newVal => {
             datos.venta = getEmptyVenta();
+            getAccion(null);
             isSale.value = false;
             getParentTypification();
             childrenTypificationData.value = [];
@@ -790,12 +843,18 @@ export default defineComponent({
 
                 isInitializing.value = true;
 
-                if (props.formData.notes_typification_id_1 != null)
+                if (props.formData.notes_typification_id_1 != null){
                     getChildTypification(props.formData.notes_typification_id_1);
-                if (props.formData.notes_typification_id_2 != null)
+                    getAccion(props.formData.notes_typification_id_1);
+                }
+                if (props.formData.notes_typification_id_2 != null){
                     getChildrenChildTypification(props.formData.notes_typification_id_2);
-                if (props.formData.notes_typification_id_3 != null)
+                    getAccion(props.formData.notes_typification_id_2);
+                }
+                if (props.formData.notes_typification_id_3 != null){
                     getLastChildrenChildTypification(props.formData.notes_typification_id_3);
+                    getAccion(props.formData.notes_typification_id_3);
+                }
 
                 datos.venta = (isSale.value = !!props.formData.is_sale)
                     ? { ...props.formData.is_sale }
@@ -848,8 +907,10 @@ export default defineComponent({
                 }
 
             }else{
-                suma.value = 0;
-                sumaAsist.value = 0;
+                suma.value, sumaAsist.value = 0;
+                table.data = [];
+                table.pagination.total   = 0;
+                table.pagination.current = 1;
             }
             Object.assign(
                 datos.venta,
@@ -1097,7 +1158,6 @@ export default defineComponent({
             windowWidth.value = window.innerWidth
         }
 
-        onMounted(() => window.addEventListener('resize', onResize))
         onUnmounted(() => window.removeEventListener('resize', onResize))
 
         const drawerWidth = computed(() => {
@@ -1106,6 +1166,8 @@ export default defineComponent({
         })
 
         return {
+            antdLocale,
+            getAccion,
             handleTableChange,
             drawerWidth,
             removeProducto,
@@ -1120,6 +1182,7 @@ export default defineComponent({
             soloVer,
             datos,
             isSale,
+            schedule,
             esBeneficiario,
             esBeneficiarioAsist,
             loading,

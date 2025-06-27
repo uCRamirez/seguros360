@@ -16,7 +16,7 @@ class Lead extends BaseModel implements Auditable
 
     protected $table = 'leads';
 
-    protected $default = ['xid', 'reference_number'];
+    protected $default = ['xid', 'reference_number','cedula'];
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 

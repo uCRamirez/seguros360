@@ -264,7 +264,7 @@
                                         : "---"
                                 }}
                             </a-button>
-                            <span v-else>{{ record.lead.document }}</span>
+                            <span v-else>{{ record.lead.cedula }}</span>
                         </template>
                         <template v-if="column.dataIndex === 'nombre'">
                             {{

@@ -4,6 +4,7 @@ import 'ant-design-vue/dist/reset.css';
 
 import { createApp } from 'vue';
 import Antd from 'ant-design-vue';
+// import ConfigProvider from 'ant-design-vue';
 import PerfectScrollbar from 'vue3-perfect-scrollbar';
 import App from './main/views/App.vue';
 import routes from './main/router'
@@ -16,6 +17,10 @@ import print from 'vue3-print-nb';
 import ViewLeadDetails from "./main/views/leads-calls/leads/View.vue";
 import AdminPageFilter from "./common/layouts/AdminPageFilters.vue";
 import AdminPageTableContent from "./common/layouts/AdminPageTableContent.vue";
+
+
+import esES from 'ant-design-vue/es/locale/es_ES';      // <- locale español
+import 'dayjs/locale/es';
 
 // Importar el framework
 // import * as frameworkModule from "./main/views/formsUCB/framework/ucb_framework";
@@ -81,7 +86,7 @@ async function bootstrap() {
     window.i18n = i18n;
 
     routes.isReady().then(() => {
-
+        // app.use(ConfigProvider, { locale: esES });
         app.mount("#app");
     })
 }

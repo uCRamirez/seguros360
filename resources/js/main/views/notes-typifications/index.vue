@@ -229,7 +229,7 @@ export default {
         });
 
         const getTypifications = () => {
-            const notesTypificationUrl = `notes-typifications?fields=id,xid,name,parent_id,x_parent_id&order=id asc&limit=10000`;
+            const notesTypificationUrl = `notes-typifications?fields=id,xid,name,parent_id,x_parent_id,sale,schedule,status&filters=status eq 1&order=id asc&limit=10000`;
 
             axiosAdmin.get(notesTypificationUrl).then((response) => {
                 const allCategoriesArray = [];
@@ -305,6 +305,9 @@ export default {
                 formData.value = {
                     name: "",
                     parent_id: null,
+                    sale: false,
+		            schedule: false,
+                    acciones: true,
                 };
             }
 
@@ -322,9 +325,13 @@ export default {
         };
 
         const editItem = (item) => {
+            const { children = [] } = item;
             formData.value = {
                 name: item.name,
                 parent_id: item.x_parent_id,
+                sale: item.sale,
+                schedule: item.schedule,
+                acciones: children.length === 0,
                 _method: "PUT",
             };
 
