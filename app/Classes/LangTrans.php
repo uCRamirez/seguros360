@@ -142,7 +142,8 @@ class LangTrans
             'improvement_options' => 'Improvement options',
             'non_editable_quality' => 'This review is not yet available for editing.',
             'scheduled' => 'Scheduled',
-            'next_contact' => 'Next contact'
+            'next_contact' => 'Next contact',
+            'minimum_product' => 'Minimum one product',
         ],
         //nuevo
         'bases' => [
@@ -216,6 +217,9 @@ class LangTrans
             'search_lead' => 'Search lead',
             'actions' => 'Actions',
             'reasons_cancellation' => 'Reasons for cancellation',
+            'quality' => 'Quality',
+            'templates' => 'Templates',
+            'sales' => 'Sales',
         ],
         'dashboard' => [
             'dashboard' => 'Dashboard',
