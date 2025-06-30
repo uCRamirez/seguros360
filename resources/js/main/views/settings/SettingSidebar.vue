@@ -157,7 +157,7 @@
                         </template>
                         {{ $t("menu.modules") }}
                     </a-menu-item> -->
-                    <a-menu-item
+                    <!-- <a-menu-item
                         key="storage_settings"
                         v-if="
                             permsArray.includes('storage_edit') ||
@@ -173,7 +173,7 @@
                             <FolderOpenOutlined />
                         </template>
                         {{ $t("menu.storage_settings") }}
-                    </a-menu-item>
+                    </a-menu-item> -->
                     <!-- <a-menu-item
                         key="email_settings"
                         v-if="
@@ -221,7 +221,7 @@
                         </template>
                         {{ $t("menu.email_providers") }}
                     </a-menu-item> -->
-                    <a-menu-item
+                    <!-- <a-menu-item
                         key="database_backup"
                         v-if="
                             permsArray.includes('database_backup') ||
@@ -254,7 +254,7 @@
                             <HistoryOutlined />
                         </template>
                         {{ $t("menu.update_app") }}
-                    </a-menu-item>
+                    </a-menu-item> -->
                 </template>
             </a-menu>
         </perfect-scrollbar>
