@@ -44,7 +44,7 @@ class NotificationController extends ApiBaseController
     public function makeNotification(Request $request)
     {
         $user = user();
-        \Log::info('makeNotification', [$request]);
+        // \Log::info('makeNotification', [$request]);
 
         $payload = [
             'title'   => 'Notificación de Prueba',

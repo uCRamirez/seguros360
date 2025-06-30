@@ -36,7 +36,7 @@ class EvaluacionCalidadController extends ApiBaseController
     {
         $user = user();         
         $data = $request->all();
-        \Log::info('$data', $data);
+        // \Log::info('$data', $data);
 
         if ($data['accion'] === 'add') {
             DB::beginTransaction();

@@ -65,7 +65,7 @@ class NotesTypificationController extends ApiBaseController
         // \Log::info('notes', [$request->notes]);
 
         foreach ($request->notes as $typfication) {
-            \Log::info('typfication', [$typfication]);
+            // \Log::info('typfication', [$typfication]);
             if ($typfication['typification_1']) {
                 $typification1 = new NotesTypification();
                 $typification1->name = $typfication['typification_1'];

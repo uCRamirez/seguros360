@@ -71,10 +71,10 @@ trait HasGlobalScopes
     {
         foreach ($scopes as $key => $scope) {
             if (is_string($key)) {
-                \Log::info('Entro if', [$key]);
+                //\Log::info('Entro if', [$key]);
                 static::addGlobalScope($key, $scope);
             } else {
-                \Log::info('Entro else', [$key]);
+                //\Log::info('Entro else', [$key]);
                 static::addGlobalScope($scope);
             }
         }

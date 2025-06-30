@@ -38,7 +38,7 @@ class UploadFileRequest extends BaseRequest
             // $rules['file'] = 'required|mimes:pdf,jpg,jpeg,svg,png|max:20000';
 
             if ($folder == 'expenses') {
-                \Log::info('UploadFileRequest  - expenses'); 
+                // \Log::info('UploadFileRequest  - expenses'); 
                 $rules['file'] = 'required|mimes:csv,txt,xlx,xls,pdf,docx,txt,jpg,jpeg,svg,png|max:20000';
             }
         }
