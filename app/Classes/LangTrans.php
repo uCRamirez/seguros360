@@ -10,6 +10,7 @@ class LangTrans
 {
     public static $mainTranslations = [
         'common' => [
+            'comments' => 'Comments',
             'enabled' => 'Enabled',
             'disabled' => 'Disabled',
             'id' => 'Id',
@@ -503,6 +504,8 @@ class LangTrans
             'delete_message' => 'Are you sure you want to delete?',
             'not_made' => "Didn't perform",
             'minute' => "Minute",
+            'updated_variables' => 'Updated variables',
+            'maximum_grade' => 'Maximum grade',
         ],
         'email_provider' => [
             'add' => 'Add New Email Provider',
@@ -545,6 +548,8 @@ class LangTrans
             'date_time' => 'Date Time',
             'message_provider' => 'Message Provider',
             'sale' => 'Sale',
+            'effective' => 'Effective',
+            'canceled' => 'Canceled',
         ],
 
         'message_provider' => [
