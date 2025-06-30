@@ -209,6 +209,7 @@
                                             "
                                         />
                                     </p>
+                                    <strong><small v-if="record.next_contact">{{ `${$t("common.next_contact")} : ${ formatDateTime(record.next_contact)}` }}</small></strong>
                                 </template>
                                 <template #datetime>
                                     {{ formatDateTime(record.date_time) }}
