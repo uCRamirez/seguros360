@@ -1006,3 +1006,4 @@ esp;common;improvement_options;Opciones de mejora;
 esp;common;non_editable_quality;Está evaluacion no se encuentra en el tiempo hábil para ser editada;
 esp;common;scheduled;Agenda;
 esp;common;next_contact;Próximo contacto;
+esp;message_template;updated_variables;Variables actualizadas;
