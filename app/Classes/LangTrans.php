@@ -10,6 +10,7 @@ class LangTrans
 {
     public static $mainTranslations = [
         'common' => [
+            'comments' => 'Comments',
             'enabled' => 'Enabled',
             'disabled' => 'Disabled',
             'id' => 'Id',
@@ -142,7 +143,8 @@ class LangTrans
             'improvement_options' => 'Improvement options',
             'non_editable_quality' => 'This review is not yet available for editing.',
             'scheduled' => 'Scheduled',
-            'next_contact' => 'Next contact'
+            'next_contact' => 'Next contact',
+            'minimum_product' => 'Minimum one product',
         ],
         //nuevo
         'bases' => [
@@ -216,6 +218,9 @@ class LangTrans
             'search_lead' => 'Search lead',
             'actions' => 'Actions',
             'reasons_cancellation' => 'Reasons for cancellation',
+            'quality' => 'Quality',
+            'templates' => 'Templates',
+            'sales' => 'Sales',
         ],
         'dashboard' => [
             'dashboard' => 'Dashboard',
@@ -499,6 +504,8 @@ class LangTrans
             'delete_message' => 'Are you sure you want to delete?',
             'not_made' => "Didn't perform",
             'minute' => "Minute",
+            'updated_variables' => 'Updated variables',
+            'maximum_grade' => 'Maximum grade',
         ],
         'email_provider' => [
             'add' => 'Add New Email Provider',
@@ -541,6 +548,8 @@ class LangTrans
             'date_time' => 'Date Time',
             'message_provider' => 'Message Provider',
             'sale' => 'Sale',
+            'effective' => 'Effective',
+            'canceled' => 'Canceled',
         ],
 
         'message_provider' => [

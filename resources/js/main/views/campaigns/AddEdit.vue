@@ -171,6 +171,7 @@
                         class="required"
                     >
                         <a-select
+                        :disabled="addEditType === 'add'"
                             v-model:value="formData.etapa"
                             :placeholder="$t(
                             'common.select_default_text',
@@ -198,9 +199,14 @@
                         </a-select>
                     </a-form-item>
                 </a-col>
-                <ImportLeads v-if="permsArray.includes('bases_view') || permsArray.includes('admin')" 
-                    acceptFormat=".csv" :allFields="selectedFormFields" @fileUploaded="leadFileUploaded"
-                    @leadColumnChanged="leadColumnChanged" />
+                <ImportLeads 
+                    v-if="permsArray.includes('bases_view') || permsArray.includes('admin')"
+                    acceptFormat=".csv" 
+                    :allFields="selectedFormFields" 
+                    @fileUploaded="leadFileUploaded"
+                    @leadColumnChanged="leadColumnChanged"
+                    :addEditType="addEditType"
+                />
                 <h4 class="text-center" v-else>{{ $t('bases.not_permission') }}</h4>
             </template>
         </a-form>

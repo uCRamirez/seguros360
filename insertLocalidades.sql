@@ -1,4 +1,4 @@
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('San José','San José','Carmen'),
 	 ('San José','San José','Merced'),
 	 ('San José','San José','Hospital'),
@@ -9,7 +9,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('San José','San José','Mata Redonda'),
 	 ('San José','San José','Pavas'),
 	 ('San José','San José','Hatillo');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('San José','San José','San Sebastián'),
 	 ('San José','Escazú','Escazú'),
 	 ('San José','Escazú','San Antonio'),
@@ -20,7 +20,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('San José','Desamparados','San Rafael Arriba'),
 	 ('San José','Desamparados','San Antonio'),
 	 ('San José','Desamparados','Frailes');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('San José','Desamparados','Patarra'),
 	 ('San José','Desamparados','San Cristobal'),
 	 ('San José','Desamparados','Rosario'),
@@ -31,7 +31,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('San José','Puriscal','Santiago'),
 	 ('San José','Puriscal','Mercedes Sur'),
 	 ('San José','Puriscal','Barbacoas');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('San José','Puriscal','Grifo Alto'),
 	 ('San José','Puriscal','San Rafael'),
 	 ('San José','Puriscal','Candelarita'),
@@ -42,7 +42,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('San José','Tarrazú','San Lorenzo'),
 	 ('San José','Tarrazú','San Carlos'),
 	 ('San José','Aserrí','Aserrí');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('San José','Aserrí','Tarbaca'),
 	 ('San José','Aserrí','Vuelta de Jorco'),
 	 ('San José','Aserrí','San Gabriel'),
@@ -53,7 +53,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('San José','Mora','Guayabo'),
 	 ('San José','Mora','Tabarcia'),
 	 ('San José','Mora','Piedras Negras');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('San José','Mora','Picagres'),
 	 ('San José','Mora','Jaris'),
 	 ('San José','Mora','Quitirrisí'),
@@ -64,7 +64,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('San José','Goicoechea','Ipis'),
 	 ('San José','Goicoechea','Rancho Redondo'),
 	 ('San José','Goicoechea','Purral');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('San José','Santa Ana','Santa Ana'),
 	 ('San José','Santa Ana','Salitral'),
 	 ('San José','Santa Ana','Pozos'),
@@ -75,7 +75,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('San José','Alajuelita','San Josecito'),
 	 ('San José','Alajuelita','San Antonio'),
 	 ('San José','Alajuelita','Concepción');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('San José','Alajuelita','San Felipe'),
 	 ('San José','Vazquez de Coronado','San Isidro'),
 	 ('San José','Vazquez de Coronado','San Rafael'),
@@ -86,7 +86,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('San José','Acosta','Guaitil'),
 	 ('San José','Acosta','Palmichal'),
 	 ('San José','Acosta','Cangrejal');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('San José','Acosta','Sabanillas'),
 	 ('San José','Tibás','San Juan'),
 	 ('San José','Tibás','Cinco Esquinas'),
@@ -97,7 +97,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('San José','Moravia','San Jerónimo'),
 	 ('San José','Moravia','La Trinidad'),
 	 ('San José','Montes de Oca','San Pedro');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('San José','Montes de Oca','Sabanilla'),
 	 ('San José','Montes de Oca','Mercedes'),
 	 ('San José','Montes de Oca','San Rafael'),
@@ -108,7 +108,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('San José','Turrubares','Carara'),
 	 ('San José','Dota','Santa María'),
 	 ('San José','Dota','Jardín');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('San José','Dota','Copey'),
 	 ('San José','Curridabat','Curridabat'),
 	 ('San José','Curridabat','Granadilla'),
@@ -119,7 +119,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('San José','Pérez Zeledón','Daniel Flores'),
 	 ('San José','Pérez Zeledón','Rivas'),
 	 ('San José','Pérez Zeledón','San Pedro');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('San José','Pérez Zeledón','Platanares'),
 	 ('San José','Pérez Zeledón','Pejibaye'),
 	 ('San José','Pérez Zeledón','Cajón'),
@@ -130,7 +130,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('San José','León Cortés Castro','San Pablo'),
 	 ('San José','León Cortés Castro','San Andrés'),
 	 ('San José','León Cortés Castro','Llano Bonito');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('San José','León Cortés Castro','San Isidro'),
 	 ('San José','León Cortés Castro','Santa Cruz'),
 	 ('San José','León Cortés Castro','San Antonio'),
@@ -141,7 +141,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','Alajuela','Guácima'),
 	 ('Alajuela','Alajuela','San Isidro'),
 	 ('Alajuela','Alajuela','Sabanilla');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','Alajuela','San Rafael'),
 	 ('Alajuela','Alajuela','Río Segundo'),
 	 ('Alajuela','Alajuela','Desamparados'),
@@ -152,7 +152,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','San Ramón','San Ramón'),
 	 ('Alajuela','San Ramón','Santiago'),
 	 ('Alajuela','San Ramón','San Juan');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','San Ramón','Piedades Norte'),
 	 ('Alajuela','San Ramón','Piedades Sur'),
 	 ('Alajuela','San Ramón','San Rafael'),
@@ -163,7 +163,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','San Ramón','Concepción'),
 	 ('Alajuela','San Ramón','Zapotal'),
 	 ('Alajuela','San Ramón','Peñas Blancas');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','San Ramón','San Lorenzo'),
 	 ('Alajuela','Grecia','Grecia'),
 	 ('Alajuela','Grecia','San Isidro'),
@@ -174,7 +174,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','Grecia','Bolivar'),
 	 ('Alajuela','San Mateo','San Mateo'),
 	 ('Alajuela','San Mateo','Desmonte');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','San Mateo','Jesús María'),
 	 ('Alajuela','San Mateo','Labrador'),
 	 ('Alajuela','Atenas','Atenas'),
@@ -185,7 +185,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','Atenas','San José'),
 	 ('Alajuela','Atenas','Santa Eulalia'),
 	 ('Alajuela','Atenas','Escobal');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','Naranjo','Naranjo'),
 	 ('Alajuela','Naranjo','San Miguel'),
 	 ('Alajuela','Naranjo','San José'),
@@ -196,7 +196,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','Naranjo','Palmitos'),
 	 ('Alajuela','Palmares','Palmares'),
 	 ('Alajuela','Palmares','Zaragoza');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','Palmares','Buenos Aires'),
 	 ('Alajuela','Palmares','Santiago'),
 	 ('Alajuela','Palmares','Candelaria'),
@@ -207,7 +207,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','Poás','San Rafael'),
 	 ('Alajuela','Poás','Carrillos'),
 	 ('Alajuela','Poás','Sabana Redonda');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','Orotina','Orotina'),
 	 ('Alajuela','Orotina','El Mastate'),
 	 ('Alajuela','Orotina','Hacienda Vieja'),
@@ -218,7 +218,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','San Carlos','Buenavista'),
 	 ('Alajuela','San Carlos','Aguas Zarcas'),
 	 ('Alajuela','San Carlos','Venecia');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','San Carlos','Pital'),
 	 ('Alajuela','San Carlos','La Fortuna'),
 	 ('Alajuela','San Carlos','La Tigra'),
@@ -229,7 +229,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','San Carlos','Pocosol'),
 	 ('Alajuela','Zarcero','Zarcero'),
 	 ('Alajuela','Zarcero','Laguna');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','Zarcero','Tapesco'),
 	 ('Alajuela','Zarcero','Guadalupe'),
 	 ('Alajuela','Zarcero','Palmira'),
@@ -240,7 +240,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','Sarchí','Toro Amarillo'),
 	 ('Alajuela','Sarchí','San Pedro'),
 	 ('Alajuela','Sarchí','Rodríguez');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','Upala','Upala'),
 	 ('Alajuela','Upala','Aguas Claras'),
 	 ('Alajuela','Upala','San José O Pizote'),
@@ -251,7 +251,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','Upala','Canalete'),
 	 ('Alajuela','Los Chiles','Los Chiles'),
 	 ('Alajuela','Los Chiles','Caño Negro');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','Los Chiles','El Amparo'),
 	 ('Alajuela','Los Chiles','San Jorge'),
 	 ('Alajuela','Guatuso','San Rafael'),
@@ -262,7 +262,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Alajuela','Río Cuarto','Santa Rita'),
 	 ('Alajuela','Río Cuarto','Santa Isabel'),
 	 ('Cartago','Cartago','Oriental');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Cartago','Cartago','Occidental'),
 	 ('Cartago','Cartago','Carmen'),
 	 ('Cartago','Cartago','San Nicolás'),
@@ -273,7 +273,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Cartago','Cartago','Dulce Nombre'),
 	 ('Cartago','Cartago','Llano Grande'),
 	 ('Cartago','Cartago','Quebradilla');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Cartago','Paraíso','Paraíso'),
 	 ('Cartago','Paraíso','Santiago'),
 	 ('Cartago','Paraíso','Orosi'),
@@ -284,7 +284,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Cartago','La Unión','San Diego'),
 	 ('Cartago','La Unión','San Juan'),
 	 ('Cartago','La Unión','San Rafael');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Cartago','La Unión','Concepción'),
 	 ('Cartago','La Unión','Dulce Nombre'),
 	 ('Cartago','La Unión','San Ramón'),
@@ -295,7 +295,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Cartago','Turrialba','Turrialba'),
 	 ('Cartago','Turrialba','La Suiza'),
 	 ('Cartago','Turrialba','Peralta');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Cartago','Turrialba','Santa Cruz'),
 	 ('Cartago','Turrialba','Santa Teresita'),
 	 ('Cartago','Turrialba','Pavones'),
@@ -306,7 +306,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Cartago','Turrialba','La Isabel'),
 	 ('Cartago','Turrialba','Chirripó'),
 	 ('Cartago','Alvarado','Pacayas');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Cartago','Alvarado','Cervantes'),
 	 ('Cartago','Alvarado','Capellades'),
 	 ('Cartago','Oreamuno','San Rafael'),
@@ -317,7 +317,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Cartago','El Guarco','El Tejar'),
 	 ('Cartago','El Guarco','San Isidro'),
 	 ('Cartago','El Guarco','Tobosi');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Cartago','El Guarco','Patio de Agua'),
 	 ('Heredia','Heredia','Heredia'),
 	 ('Heredia','Heredia','Mercedes'),
@@ -328,7 +328,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Heredia','Barva','San Pedro'),
 	 ('Heredia','Barva','San Pablo'),
 	 ('Heredia','Barva','San Roque');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Heredia','Barva','Santa Lucía'),
 	 ('Heredia','Barva','San José de la Montaña'),
 	 ('Heredia','Santo Domingo','Santo Domingo'),
@@ -339,7 +339,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Heredia','Santo Domingo','Santa Rosa'),
 	 ('Heredia','Santo Domingo','Tures'),
 	 ('Heredia','Santo Domingo','Pará');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Heredia','Santa Bárbara','Santa Bárbara'),
 	 ('Heredia','Santa Bárbara','San Pedro'),
 	 ('Heredia','Santa Bárbara','San Juan'),
@@ -350,7 +350,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Heredia','San Rafael','San Josecito'),
 	 ('Heredia','San Rafael','Santiago'),
 	 ('Heredia','San Rafael','Ángeles');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Heredia','San Rafael','Concepción'),
 	 ('Heredia','San Isidro','San Isidro'),
 	 ('Heredia','San Isidro','San José'),
@@ -361,7 +361,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Heredia','Belén','La Asunción'),
 	 ('Heredia','Flores','San Joaquín'),
 	 ('Heredia','Flores','Barrantes');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Heredia','Flores','Llorente'),
 	 ('Heredia','San Pablo','San Pablo'),
 	 ('Heredia','San Pablo','Rincón de Sabanilla'),
@@ -372,7 +372,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Heredia','Sarapiquí','Cureña'),
 	 ('Guanacaste','Liberia','Liberia'),
 	 ('Guanacaste','Liberia','Cañas Dulces');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Guanacaste','Liberia','Mayorga'),
 	 ('Guanacaste','Liberia','Nacascolo'),
 	 ('Guanacaste','Liberia','Curubandé'),
@@ -383,7 +383,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Guanacaste','Nicoya','Sámara'),
 	 ('Guanacaste','Nicoya','Nosara'),
 	 ('Guanacaste','Nicoya','Belén de Nosarita');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Guanacaste','Santa Cruz','Santa Cruz'),
 	 ('Guanacaste','Santa Cruz','Bolsón'),
 	 ('Guanacaste','Santa Cruz','Veintisiete de Abril'),
@@ -394,7 +394,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Guanacaste','Santa Cruz','Cabo Velas'),
 	 ('Guanacaste','Santa Cruz','Tamarindo'),
 	 ('Guanacaste','Bagaces','Bagaces');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Guanacaste','Bagaces','La Fortuna'),
 	 ('Guanacaste','Bagaces','Mogote'),
 	 ('Guanacaste','Bagaces','Río Naranjo'),
@@ -405,7 +405,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Guanacaste','Cañas','Cañas'),
 	 ('Guanacaste','Cañas','Palmira'),
 	 ('Guanacaste','Cañas','San Miguel');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Guanacaste','Cañas','Bebedero'),
 	 ('Guanacaste','Cañas','Porozal'),
 	 ('Guanacaste','Abangares','Las Juntas'),
@@ -416,7 +416,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Guanacaste','Tilarán','Quebrada Grande'),
 	 ('Guanacaste','Tilarán','Tronadora'),
 	 ('Guanacaste','Tilarán','Santa Rosa');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Guanacaste','Tilarán','Líbano'),
 	 ('Guanacaste','Tilarán','Tierras Morenas'),
 	 ('Guanacaste','Tilarán','Arenal'),
@@ -427,7 +427,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Guanacaste','Nandayure','San Pablo'),
 	 ('Guanacaste','Nandayure','Porvenir'),
 	 ('Guanacaste','Nandayure','Bejuco');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Guanacaste','La Cruz','La Cruz'),
 	 ('Guanacaste','La Cruz','Santa Cecilia'),
 	 ('Guanacaste','La Cruz','La Garita'),
@@ -438,7 +438,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Guanacaste','Hojancha','Huacas'),
 	 ('Guanacaste','Hojancha','Matambú'),
 	 ('Puntarenas','Puntarenas','Puntarenas');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Puntarenas','Puntarenas','Pitahaya'),
 	 ('Puntarenas','Puntarenas','Chomes'),
 	 ('Puntarenas','Puntarenas','Lepanto'),
@@ -449,7 +449,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Puntarenas','Puntarenas','Isla del Coco'),
 	 ('Puntarenas','Puntarenas','Cóbano'),
 	 ('Puntarenas','Puntarenas','Chacarita');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Puntarenas','Puntarenas','Chira'),
 	 ('Puntarenas','Puntarenas','Acapulco'),
 	 ('Puntarenas','Puntarenas','El Roble'),
@@ -460,7 +460,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Puntarenas','Esparza','San Rafael'),
 	 ('Puntarenas','Esparza','San Jerónimo'),
 	 ('Puntarenas','Esparza','Caldera');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Puntarenas','Buenos Aires','Buenos Aires'),
 	 ('Puntarenas','Buenos Aires','Volcán'),
 	 ('Puntarenas','Buenos Aires','Potrero Grande'),
@@ -471,7 +471,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Puntarenas','Buenos Aires','Biolley'),
 	 ('Puntarenas','Buenos Aires','Brunka'),
 	 ('Puntarenas','Montes de Oro','Miramar');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Puntarenas','Montes de Oro','La Unión'),
 	 ('Puntarenas','Montes de Oro','San Isidro'),
 	 ('Puntarenas','Osa','Puerto Cortés'),
@@ -482,7 +482,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Puntarenas','Osa','Bahía Drake'),
 	 ('Puntarenas','Quepos','Quepos'),
 	 ('Puntarenas','Quepos','Savegre');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Puntarenas','Quepos','Naranjito'),
 	 ('Puntarenas','Golfito','Golfito'),
 	 ('Puntarenas','Golfito','Puerto Jiménez'),
@@ -493,7 +493,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Puntarenas','Coto Brus','Aguabuena'),
 	 ('Puntarenas','Coto Brus','Limoncito'),
 	 ('Puntarenas','Coto Brus','Pittier');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Puntarenas','Coto Brus','Gutiérrez Braun'),
 	 ('Puntarenas','Parrita','Parrita'),
 	 ('Puntarenas','Corredores','Corredor'),
@@ -504,7 +504,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Puntarenas','Garabito','Tárcoles'),
 	 ('Puntarenas','Garabito','Lagunillas'),
 	 ('Puntarenas','Monteverde','Monteverde');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Limón','Limón','Limón'),
 	 ('Limón','Limón','Valle La Estrella'),
 	 ('Limón','Limón','Río Blanco'),
@@ -515,7 +515,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Limón','Pococí','Roxana'),
 	 ('Limón','Pococí','Cariari'),
 	 ('Limón','Pococí','Colorado');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Limón','Pococí','La Colonia'),
 	 ('Limón','Siquirres','Siquirres'),
 	 ('Limón','Siquirres','Pacuarito'),
@@ -526,7 +526,7 @@ INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
 	 ('Limón','Siquirres','Reventazón'),
 	 ('Limón','Talamanca','Bratsi'),
 	 ('Limón','Talamanca','Sixaola');
-INSERT INTO crm_seguros.localidades (provincia,canton,distrito) VALUES
+INSERT INTO localidades (provincia,canton,distrito) VALUES
 	 ('Limón','Talamanca','Cahuita'),
 	 ('Limón','Talamanca','Telire'),
 	 ('Limón','Matina','Matina'),

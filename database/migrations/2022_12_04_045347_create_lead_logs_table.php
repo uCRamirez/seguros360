@@ -29,7 +29,7 @@ return new class extends Migration
             $table->unsignedInteger('time_taken')->nullable()->default(null);
             $table->longText('notes')->nullable()->default(null);
             $table->dateTime('date_time');
-            $table->dateTime('next_contact');
+            $table->dateTime('next_contact')->nullable()->default(null);
             $table->string('booking_status')->nullable()->default(null);  // ['actioned', 'changed', 'deleted']
             $table->bigInteger('created_by_id')->unsigned()->nullable()->default(null);
             $table->foreign('created_by_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');

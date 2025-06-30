@@ -14,6 +14,29 @@
             <a-divider />
 
             <template v-if="currentStep == 0">
+                <a-row :gutter="16" class="mb-10">
+                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                        <a-typography-paragraph>
+                            <ul>
+                                <li>
+                                    <a-typography-link
+                                        :href="sampleFileUrl"
+                                        target="_blank"
+                                    >
+                                        {{
+                                            $t(
+                                                "messages.click_here_to_download_sample_file"
+                                            )
+                                        }}
+                                    </a-typography-link>
+                                </li>
+                            </ul>
+                        </a-typography-paragraph>
+                    </a-col>
+                    <a-col v-if="camposRequerido" :xs="24" :sm="24" :md="24" :lg="24">
+                        <strong>{{ camposRequerido }} : Name - Internal Code - Price - Campaign</strong>
+                    </a-col>
+                </a-row>
                 <a-row>
                     <a-col :span="24">
                         <div class="table-responsive">
@@ -260,6 +283,7 @@ export default defineComponent({
         const importLeadColumns = ref(undefined);
         const selectedFormFields = ref([]);
         const { formatDateTime } = common();
+        const sampleFileUrl = window.config.base_sample_file;
 
 
         const addFieldsButtonStatus = ref(false);
@@ -510,6 +534,7 @@ export default defineComponent({
 
 
         return {
+            sampleFileUrl,
             showExportLeadsConfirm,
             formatDateTime,
             tableClienteSerch,

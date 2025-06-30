@@ -1119,7 +1119,6 @@ class ComposerStaticInit8bb40aceb2f9a567968abfbb06df5242
         'App\\Models\\UphoneCalls' => __DIR__ . '/../..' . '/app/Models/UphoneCalls.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Models\\VariableCalidad' => __DIR__ . '/../..' . '/app/Models/VariableCalidad.php',
-        'App\\Models\\Venta' => __DIR__ . '/../..' . '/app/Models/Venta.php',
         'App\\Notifications\\MainNotification' => __DIR__ . '/../..' . '/app/Notifications/MainNotification.php',
         'App\\Notifications\\SendLeadMail' => __DIR__ . '/../..' . '/app/Notifications/SendLeadMail.php',
         'App\\Notifications\\TestMail' => __DIR__ . '/../..' . '/app/Notifications/TestMail.php',

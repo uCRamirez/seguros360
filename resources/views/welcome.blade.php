@@ -51,6 +51,7 @@
                 'staff_member_sample_file': "{{ asset('images/sample_staff_members.csv') }}",
                 'translatioins_sample_file': "{{ asset('images/sample_translations.csv') }}",
                 'notes_typification_sample_file': "{{ asset('images/note_typifications.csv') }}",
+                'base_sample_file': "{{ asset('images/base_sample_file.csv') }}",
                 'perPage': 10,
 				'product_name': "{{ $appName }}",
 				'product_version': "{{ $appVersion }}",

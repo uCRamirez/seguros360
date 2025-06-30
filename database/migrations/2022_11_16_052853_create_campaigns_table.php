@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('company_id')->unsigned()->nullable()->default(null);
             $table->foreign('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('plantilla_calidad_id')->references('id')->on('plantillas_calidad')->onUpdate('cascade')->onDelete('set null');
+            // $table->foreign('plantilla_calidad_id')->references('id')->on('plantillas_calidad')->onUpdate('cascade')->onDelete('set null');
             $table->string('name');
             $table->longText('detail_fields')->nullable()->default(null);
             $table->longText('uc_campaigns')->nullable()->default(null);

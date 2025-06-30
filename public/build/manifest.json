@@ -1,0 +1,62 @@
+{
+  "_vendor-43bf694e.js": {
+    "file": "assets/vendor-43bf694e.js"
+  },
+  "resources/js/app.css": {
+    "file": "assets/app-dc993457.css",
+    "src": "resources/js/app.css"
+  },
+  "resources/js/app.js": {
+    "css": [
+      "assets/app-dc993457.css"
+    ],
+    "dynamicImports": [
+      "resources/js/common/layouts/Admin.vue",
+      "resources/js/common/layouts/Admin.vue",
+      "resources/js/common/layouts/Admin.vue",
+      "resources/js/common/layouts/Admin.vue",
+      "resources/js/common/layouts/Admin.vue",
+      "resources/js/common/layouts/Admin.vue",
+      "resources/js/common/layouts/Admin.vue",
+      "resources/js/main/views/formsUCB/Web/WebForms/Correspondencia/index.vue",
+      "resources/js/common/layouts/Admin.vue",
+      "resources/js/common/layouts/Admin.vue",
+      "resources/js/common/layouts/Admin.vue",
+      "resources/js/common/layouts/Admin.vue",
+      "resources/js/common/layouts/Admin.vue",
+      "resources/js/common/layouts/Admin.vue",
+      "resources/js/common/layouts/Admin.vue"
+    ],
+    "file": "assets/app-4423a56b.js",
+    "imports": [
+      "_vendor-43bf694e.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/app.js"
+  },
+  "resources/js/common/layouts/Admin.css": {
+    "file": "assets/Admin-499f6be2.css",
+    "src": "resources/js/common/layouts/Admin.css"
+  },
+  "resources/js/common/layouts/Admin.vue": {
+    "css": [
+      "assets/Admin-499f6be2.css"
+    ],
+    "file": "assets/Admin-fe6e1197.js",
+    "imports": [
+      "resources/js/app.js",
+      "_vendor-43bf694e.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/common/layouts/Admin.vue"
+  },
+  "resources/js/main/views/formsUCB/Web/WebForms/Correspondencia/index.vue": {
+    "file": "assets/index-5e541c52.js",
+    "imports": [
+      "_vendor-43bf694e.js",
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/main/views/formsUCB/Web/WebForms/Correspondencia/index.vue"
+  }
+}

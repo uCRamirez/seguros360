@@ -175,7 +175,7 @@
                 </a-col>
             </a-row>
 
-            <a-row :gutter="16">
+            <!-- <a-row :gutter="16">
                 <a-col :xs="24" :sm="24" :md="12" :lg="12">
                     <a-form-item
                         :label="$t('product.tax_label')"
@@ -214,7 +214,7 @@
                         </a-input-number>
                     </a-form-item>
                 </a-col>
-            </a-row>
+            </a-row> -->
             <a-row :gutter="16">
                 <a-col :xs="24" :sm="24" :md="12" :lg="12">
                     <a-form-item

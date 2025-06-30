@@ -58,44 +58,51 @@ class LeadAuxController extends ApiBaseController
             return response()->json(['error' => 'Invalid base format'], 400);
         }
 
-        // Extraer nombre base sin extensión
-        $nombreBase = pathinfo($fileName, PATHINFO_FILENAME);
-        $cantidadRegistros  = count($leadsArray);
-        foreach ($leadsArray as $leadData) {
-            \App\Models\LeadAux::create([
-                'cedula'           => $leadData['cedula'] ?? null,
-                'nombre'           => $leadData['nombre'] ?? null,
-                'apellido1'        => $leadData['apellido1'] ?? null,
-                'apellido2'        => $leadData['apellido2'] ?? null,
-                'tel1'             => $leadData['tel1'] ?? null,
-                'tel2'             => $leadData['tel2'] ?? null,
-                'email'            => $leadData['email'] ?? null,
-                'edad'             => $leadData['edad'] ?? null,
-                'fechaNacimiento'  => $leadData['fechaNacimiento'] ?? null,
-                'agente'           => $leadData['agente'] ?? null,
-                'nombreBase'       => $nombreBase,
-                'campaign_id'      => $campaign_id,
-                'company_id'       => $company_id,
-                'created_by'       => $myId, 
-                'started'          => 0,
-            ]);
+        try {
+            $nombreBase = pathinfo($fileName, PATHINFO_FILENAME);
+            $cantidadRegistros  = count($leadsArray);
+            foreach ($leadsArray as $leadData) {
+                \App\Models\LeadAux::create([
+                    'cedula'           => $leadData['cedula'] ?? null,
+                    'nombre'           => $leadData['nombre'] ?? null,
+                    'apellido1'        => $leadData['apellido1'] ?? null,
+                    'apellido2'        => $leadData['apellido2'] ?? null,
+                    'tel1'             => $leadData['tel1'] ?? null,
+                    'tel2'             => $leadData['tel2'] ?? null,
+                    'email'            => $leadData['email'] ?? null,
+                    'edad'             => $leadData['edad'] ?? null,
+                    'fechaNacimiento'  => $leadData['fechaNacimiento'] ?? null,
+                    'agente'           => $leadData['agente'] ?? null,
+                    'nombreBase'       => $nombreBase,
+                    'campaign_id'      => $campaign_id,
+                    'company_id'       => $company_id,
+                    'created_by'       => $myId, 
+                    'started'          => 0,
+                ]);
+            }
+
+            $sql = "
+                CALL sincronizarInformacionBaseLeads(
+                    {$campaign_id},
+                    '" . addslashes($nombreBase) . "',
+                    {$myId},
+                    {$cantidadRegistros},
+                    '" . addslashes($etapa) . "'
+                )
+            ";
+            DB::statement($sql);
+
+            return response()->json(['message' => 'Leads insertados correctamente']); 
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            DB::table('lead_aux')->truncate();
+
+            return response()->json([
+                'error'   => 'Error al procesar los leads.',
+                'details' => $th->getMessage(),
+            ], 500);
         }
-
-
-        $sql = "
-            CALL crm_seguros.sincronizarInformacionBaseLeads(
-                {$campaign_id},
-                '" . addslashes($nombreBase) . "',
-                {$myId},
-                {$cantidadRegistros},
-                '" . addslashes($etapa) . "'
-            )
-        ";
-        DB::statement($sql);
-
-
-        return response()->json(['message' => 'Leads insertados correctamente']);
+        
     }
-
 
 }

@@ -1467,7 +1467,7 @@ export default {
                             clientToManage();
                         }
                         crmState.client.call_log = leadCallLogResponse.data.call_log;
-
+                        crmState.client.toManage = true;
                         newPageLoad.value = false;
                         refreshTimeLine.value = false;
 

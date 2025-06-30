@@ -42,10 +42,10 @@ class NotesTypificationController extends ApiBaseController
     public function destroying(NotesTypification $notesTypification)
     {
         // Can not delete parent category
-        $childCategoryCount = NotesTypification::where('parent_id', $notesTypification->id)->count();
-        if ($childCategoryCount > 0) {
-            throw new ApiException('Parent category cannot be deleted. Please delete child category first.');
-        }
+        // $childCategoryCount = NotesTypification::where('parent_id', $notesTypification->id)->count();
+        // if ($childCategoryCount > 0) {
+        //     throw new ApiException('Parent category cannot be deleted. Please delete child category first.');
+        // }
 
         // Category assigned to any product will not be deleted
         // $productCount = Product::where('category_id', $notesTypification->id)->count();
@@ -108,8 +108,8 @@ class NotesTypificationController extends ApiBaseController
                 $typification4 = new NotesTypification();
                 $typification4->name = $typfication['typification_4'];
                 $typification4->parent_id = $typification3->id;
-                $typification4->sale = $typfication['sale'];
-                $typification4->schedule = $typfication['schedule'];
+                $typification4->sale = $typfication['sale'] ?? false;
+                $typification4->schedule = $typfication['schedule'] ?? false;
                 $typification4->name ? $typification4->save() : '';
             }
         }

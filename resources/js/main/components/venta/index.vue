@@ -249,6 +249,7 @@
                                     "
                                     type="primary"
                                     @click="showDeleteConfirm(record.xid)"
+                                    danger
                                 >
                                     <template #icon><DeleteOutlined /></template>
                                 </a-button>

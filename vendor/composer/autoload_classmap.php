@@ -345,7 +345,6 @@ return array(
     'App\\Models\\UphoneCalls' => $baseDir . '/app/Models/UphoneCalls.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
     'App\\Models\\VariableCalidad' => $baseDir . '/app/Models/VariableCalidad.php',
-    'App\\Models\\Venta' => $baseDir . '/app/Models/Venta.php',
     'App\\Notifications\\MainNotification' => $baseDir . '/app/Notifications/MainNotification.php',
     'App\\Notifications\\SendLeadMail' => $baseDir . '/app/Notifications/SendLeadMail.php',
     'App\\Notifications\\TestMail' => $baseDir . '/app/Notifications/TestMail.php',

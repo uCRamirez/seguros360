@@ -25,6 +25,10 @@ class AccionCalidad extends BaseModel implements Auditable
         'tipo',
     ];
 
+    protected $casts = [
+        'users_ids' => 'array',
+    ];
+
     public function evaluaciones()
     {
         return $this->hasMany(EvaluacionCalidad::class, 'accion_calidad_id', 'id');

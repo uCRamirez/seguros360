@@ -226,6 +226,7 @@
                                     v-if="permsArray.includes('admin') || permsArray.includes('notes_delete')"
                                     type="primary"
                                     @click="showDeleteConfirm(record.xid)"
+                                    danger
                                 >
                                     <template #icon><DeleteOutlined /></template>
                                 </a-button>
