@@ -25,7 +25,11 @@ const fields = () => {
             dataIndex: "email",
             key: "email",
         },
-
+        {
+            title: t("lead.proyect"),
+            dataIndex: "campaign",
+            key: "campaign",
+        },
         {
             title: t("lead.agent"),
             dataIndex: "assign_to",

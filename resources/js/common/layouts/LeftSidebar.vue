@@ -215,7 +215,10 @@
                     </a-sub-menu>
                     <!-- ventas -->
                     <LeftSideBarMainHeading v-if="(permsArray.includes('sales_view') || permsArray.includes('admin'))" :title="$t('menu.sales')" :visible="menuCollapsed" />
-                    <a-menu-item @click="
+                    <a-menu-item
+                        v-if="(permsArray.includes('sales_view') ||
+                                permsArray.includes('admin'))"
+                        @click="
                         () => {
                             menuSelected();
                             $router.push({

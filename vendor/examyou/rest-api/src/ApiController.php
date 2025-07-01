@@ -18,6 +18,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Models\NotesTypification;
+use App\Models\Campaign;
 use Examyou\RestAPI\Exceptions\ApiException;
 use Examyou\RestAPI\ApiResponse;
 
@@ -296,9 +297,19 @@ class ApiController extends \Illuminate\Routing\Controller
 			$object = call_user_func([$this, 'destroying'], $object);
 		}
 
-		 if ($object instanceof NotesTypification) {
+		if ($object instanceof NotesTypification) {
 			// Desactivamos en lugar de borrar que a como se encuentra originalmente
 			$object->status = 0;
+			$object->save();            
+			\DB::commit();              
+
+			$meta = $this->getMetaData(true);
+			return ApiResponse::make("Resource deleted successfully", null, $meta);
+		}
+
+		if ($object instanceof Campaign) {
+			// Desactivamos en lugar de borrar que a como se encuentra originalmente
+			$object->active = 0;
 			$object->save();            
 			\DB::commit();              
 

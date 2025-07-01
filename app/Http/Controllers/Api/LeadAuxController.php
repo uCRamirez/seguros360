@@ -34,19 +34,14 @@ class LeadAuxController extends ApiBaseController
         // \Log::info('pushData', ['leadsArrayJson' => $leadsArrayJson]);
 
         $fileName = $request->input('file');
-        // \Log::info('pushData', ['fileName' => $fileName]);
 
-        $campaign_id = $request->input('campaign_id');
-        // \Log::info('pushData', ['campaign_id' => $campaign_id]);
+        $campaign_id = $request->input('campaign_id');;
 
         $myId = $request->input('myId');
-        // \Log::info('pushData', ['myId' => $myId]);
 
         $company_id = $this->getIdFromHash($request->input('company_id'));
-        // \Log::info('pushData', ['company_id' => $company_id]);
 
         $etapa = $request->input('etapa');
-        // \Log::info('pushData', ['etapa' => $etapa]);
 
         if (is_string($leadsArrayJson)) {
             $leadsArray = json_decode($leadsArrayJson, true);

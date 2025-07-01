@@ -311,6 +311,9 @@ export default {
         showLeadDetails: {
             default: false,
         },
+        todos: {
+            undefined: false
+        },
     },
     emits: ["success"],
     components: {
@@ -374,16 +377,17 @@ export default {
                         // user_id: user.value.xid,
                     };
                 }
-                    leadInfo.value = props.leadInfo;
-                    crudVariables.crudUrl.value = addEditUrl;
-                    crudVariables.langKey.value = "notes";
-                    crudVariables.initData.value = { ...initData, lead_id: props.leadId };
-                    crudVariables.formData.value = { ...initData, lead_id: props.leadId };
-                    crudVariables.hashableColumns.value = [...hashableColumns];
-                    crudVariables.hashable.value = [...hashableColumns];
-                // if (props.leadId !== undefined && props.leadId !== null) {
+                leadInfo.value = props.leadInfo;
+                crudVariables.crudUrl.value = addEditUrl;
+                crudVariables.langKey.value = "notes";
+                crudVariables.initData.value = { ...initData, lead_id: props.leadId };
+                crudVariables.formData.value = { ...initData, lead_id: props.leadId };
+                crudVariables.hashableColumns.value = [...hashableColumns];
+                crudVariables.hashable.value = [...hashableColumns];
+                if (props.leadId !== undefined && props.leadId !== null) {
                     setUrlData();
-                // };
+                };
+                
             });
         });
 

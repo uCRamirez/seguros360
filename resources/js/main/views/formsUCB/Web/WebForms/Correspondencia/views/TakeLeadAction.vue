@@ -1155,8 +1155,14 @@
                                                     }),
                                                 }" :columns="columns" :data-source="tableClienteSerch.data"
                                                     :pagination="tableClienteSerch.pagination" :loading="tableClienteSerch.loading"
-                                                    @change="handleClientSerchTableChange" bordered size="middle">
+                                                    @change="handleClientSerchTableChange" bordered size="small">
                                                     <template #bodyCell="{ column, record }">
+                                                        <template v-if="column.dataIndex === 'campaign'">
+                                                                {{ record.campaign && record.campaign.name
+                                                                    ? record.campaign.name
+                                                                    : ''
+                                                                }}
+                                                        </template>
                                                         <template v-if="column.dataIndex === 'assign_to'">
                                                                 {{ record.assign_to && record.assign_to.name
                                                                     ? record.assign_to.name
@@ -1178,7 +1184,7 @@
                                 </a-tab-pane>
                                 <!-- FIN Tab de busqueda de leads -->
 
-                                <a-tab-pane key="call_logs" :disabled="crmState.client.toManage === false">
+                                <a-tab-pane key="call_logs" :disabled="!crmState.client.showLogs">
                                     <template #tab>
                                         <span>
                                             <PhoneOutlined />
@@ -1197,7 +1203,7 @@
                                     />
                                 </a-tab-pane>
 
-                                <a-tab-pane key="lead_notes" :disabled="crmState.client.toManage === false">
+                                <a-tab-pane key="lead_notes" :disabled="!crmState.client.showLogs">
                                     <template #tab>
                                         <span>
                                             <FileTextOutlined />
@@ -1218,6 +1224,7 @@
                                                 ? false
                                                 : true
                                         "
+                                        :todos="false"
                                     />
                                 </a-tab-pane>
                             </a-tabs>

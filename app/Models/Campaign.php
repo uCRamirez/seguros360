@@ -25,7 +25,7 @@ class Campaign extends BaseModel  implements Auditable
 
     protected $appends = ['xid', 'x_company_id', 'image_url', 'x_plantilla_calidad_id','x_form_id', 'x_email_template_id', 'x_created_by', 'x_updated_by', 'x_last_action_by', 'x_completed_by', 'upcoming_lead_action', 'managed_data'];
 
-    protected $filterable = ['name'];
+    protected $filterable = ['name', 'active'];
 
     protected $hashableGetterFunctions = [
         'getXCompanyIdAttribute' => 'company_id',

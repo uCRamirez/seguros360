@@ -375,16 +375,18 @@ class LeadController extends ApiBaseController
         $user = user();
 
         // Total Active/Completed Campaign Counts
-        $totalActiveCampaign = Campaign::where('campaigns.status', '!=', 'completed');
-        $totalCompletedCampaign = Campaign::where('campaigns.status', '=', 'completed');
+        $totalActiveCampaign = Campaign::where('campaigns.status', '!=', 'completed')->where('active', 1);
+        $totalCompletedCampaign = Campaign::where('campaigns.status', '=', 'completed')->where('active', 1);
 
         // Total Leads
-        $totalLeads = Lead::join('campaigns', 'campaigns.id', '=', 'leads.campaign_id');
+        $totalLeads = Lead::join('campaigns', 'campaigns.id', '=', 'leads.campaign_id')->where('campaigns.active', 1);
         $callMade = Lead::join('campaigns', 'campaigns.id', '=', 'leads.campaign_id')
-            ->where('started', 1);
+            ->where('started', 1)
+            ->where('active', 1);
         $callNotMade = Lead::join('campaigns', 'campaigns.id', '=', 'leads.campaign_id')
-            ->where('started', 0);
-        $totalDuration = Lead::join('campaigns', 'campaigns.id', '=', 'leads.campaign_id');
+            ->where('started', 0)
+            ->where('active', 1);
+        $totalDuration = Lead::join('campaigns', 'campaigns.id', '=', 'leads.campaign_id')->where('campaigns.active', 1);
 
         if (!$user->ability('admin', 'leads_view_all') || ($request->has('user_id') && $request->user_id != '')) {
             $userId = $user->ability('admin', 'leads_view_all') ? $this->getIdFromHash($request->user_id) : $user->id;

@@ -43,6 +43,7 @@ function getEmptyClient() {
     isNew: true,
     toManage: false,
     managing: false,
+    showLogs:false,
     call_log:{}
     }
 };
@@ -295,6 +296,7 @@ const functionsCRM = () => {
         // Y finalmente los flags que siempre van así
         crmState.client.isNew = false;
         crmState.client.toManage = true;
+        crmState.client.showLogs = true;
 
         timer.reset(crmState.client.time_taken, false);
     };

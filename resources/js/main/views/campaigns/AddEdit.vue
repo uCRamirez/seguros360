@@ -40,7 +40,7 @@
                             />
                         </a-form-item>
                     </a-col>
-                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                    <a-col :xs="24" :sm="24" :md="20" :lg="20">
                         <a-form-item :label="$t('campaign.name')" name="name"
                             :help="rules.name ? rules.name.message : null" :validateStatus="rules.name ? 'error' : null"
                             class="required">
@@ -48,6 +48,30 @@
                                 $t('campaign.name'),
                             ])
                                 " />
+                        </a-form-item>
+                    </a-col>
+                     <a-col :xs="24" :sm="24" :md="4" :lg="4">
+                        <a-form-item
+                                :label="$t('user.status')"
+                                name="active"
+                                :help="
+                                    rules.active ? rules.active.message : null
+                                "
+                                :validateStatus="rules.active ? 'error' : null"
+                                class="required"
+                            >
+                                <a-select
+                                    v-model:value="formData.active"
+                                    :placeholder="
+                                        $t('common.select_default_text', [
+                                            $t('user.status'),
+                                        ])
+                                    "
+                                    :allowClear="true"
+                                >
+                                    <a-select-option :value="1">Enabled</a-select-option>
+                                    <a-select-option :value="0">Disabled</a-select-option>
+                                </a-select>
                         </a-form-item>
                     </a-col>
                 </a-row>

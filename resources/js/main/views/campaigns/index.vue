@@ -226,6 +226,20 @@
                                         : "-"
                                 }}
                             </template>
+                            <template v-if="column.dataIndex === 'active'">
+                                <a-tag
+                                    color="success"
+                                    v-if="record.active == 1"
+                                >
+                                    {{ $t("common.active") }}
+                                </a-tag>
+                                <a-tag
+                                    color="error"
+                                    v-if="record.active == 0"
+                                >
+                                    {{ $t("common.inactive") }}
+                                </a-tag>
+                            </template>
                             <template v-if="column.dataIndex === 'action'">
                                 <a-space>
                                     <a-tooltip :title="$t('common.export_leads')">

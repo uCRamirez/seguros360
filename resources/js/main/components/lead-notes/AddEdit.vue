@@ -1043,7 +1043,7 @@ export default defineComponent({
         const onSubmit = async () => {
             try {
                 props.formData.isSale = isSale.value ? 1 : 0;
-                props.formData.campaign_id = props.leadInfo.campaign.id;
+                props.formData.campaign_id =  props.leadInfo?.campaign?.xid ?? props.data.x_campaign_id;
 
                 props.formData.lead_id ||= props.leadInfo.xid;
 

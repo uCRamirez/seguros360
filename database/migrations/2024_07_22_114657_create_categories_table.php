@@ -21,7 +21,7 @@ return new class extends Migration
 
         Schema::table('products', function (Blueprint $table) {
             $table->bigInteger('category_id')->unsigned()->nullable()->default(null);
-            $table->foreign('category_id')->references('id')->on('categories')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onUpdate('cascade')->onDelete('set null');
         });
     }
 

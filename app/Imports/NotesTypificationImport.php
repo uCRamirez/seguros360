@@ -64,8 +64,8 @@ class NotesTypificationImport implements ToArray, WithHeadingRow
                     $typification4 = new NotesTypification();
                     $typification4->name = $typification['typification_4'];
                     $typification4->parent_id = $typification3->id;
-                    $typification4->sale = $typification['sale'];
-                    $typification4->schedule = $typification['schedule'];
+                    $typification4->sale = $typification['sale'] ?? false;
+                    $typification4->schedule = $typification['schedule'] ?? false;
                     $typification4->name ? $typification4->save() : '';
                 }
 

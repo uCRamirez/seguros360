@@ -92,6 +92,7 @@ class CreateSincronizarSpProcedure extends Migration
                 FROM leads_aux AS la
                 LEFT JOIN users AS u
                 ON u.`user` = la.agente
+                AND u.status = 'enabled'
                 ON DUPLICATE KEY UPDATE
                 nombre          = VALUES(nombre),
                 apellido1       = VALUES(apellido1),

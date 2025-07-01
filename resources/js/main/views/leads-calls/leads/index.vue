@@ -78,7 +78,7 @@
                                             ])
                                                 " :allowClear="true" style="width: 100%" optionFilterProp="title"
                                                 show-search @change="campaignChanged">
-                                                <a-select-option v-for="allCampaign in allCampaigns"
+                                                <a-select-option v-for="allCampaign in allCampaigns.filter(s => s.active === 1)"
                                                     :key="allCampaign.xid" :title="allCampaign.name"
                                                     :value="allCampaign.xid" :campaign="allCampaign">
                                                     {{ allCampaign.name }}
@@ -260,7 +260,7 @@
                                     $t('lead.assign_to'),
                                 ])
                                     " :allowClear="true" @change="refetchAllData()">
-                                <a-select-option v-for="campaignUser in campaignUsers" :key="campaignUser.xid"
+                                <a-select-option v-for="campaignUser in campaignUsers.filter(s => s.status === 'enabled')" :key="campaignUser.xid"
                                     :title="campaignUser.name" :label="campaignUser.name">
                                     {{ campaignUser.name }}
                                 </a-select-option>

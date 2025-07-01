@@ -103,16 +103,49 @@ class AuthController extends ApiBaseController
     public function allUsers()
     {
         $request = request();
+        $user    = user();
 
-        if ($request->has('log_type') && $request->log_type == 'salesman_bookings') {
+        // 1) Si piden salesman_bookings, devuelvo todos los Salesman
+        if ($request->filled('log_type') && $request->log_type === 'salesman_bookings') {
             $users = Salesman::select('id', 'name', 'profile_image')->get();
+
         } else {
-            $users = StaffMember::select('id', 'name', 'profile_image')->get();
+            // 2) Rol "admin" ve TODOS los staff
+            if ($user->hasRole('admin')) {
+                $users = StaffMember::select('id', 'name', 'profile_image')
+                    ->get();
+
+            // 3) Permiso "leads_view_all" (pero no admin) ve sólo su campaña (+ él mismo)
+            } elseif ($user->ability([], ['leads_view_all'])) {
+
+                $campaignIds = CampaignUser::where('user_id', $user->id)
+                                        ->pluck('campaign_id');
+
+                $teammateIds = CampaignUser::whereIn('campaign_id', $campaignIds)
+                                        ->pluck('user_id')
+                                        ->unique();
+
+                // Incluyo al propio usuario y aseguro unicidad
+                $allUserIds = $teammateIds->push($user->id)->unique();
+
+                $users = StaffMember::select('id', 'name', 'profile_image')
+                                    ->whereIn('id', $allUserIds)
+                                    ->get();
+
+            // 4) Sin rol ni permiso: sólo se ve a sí mismo
+            } else {
+                $users = StaffMember::select('id', 'name', 'profile_image')
+                                    ->where('id', $user->id)
+                                    ->get();
+            }
         }
+
         return ApiResponse::make('Success', [
             'users' => $users
         ]);
     }
+
+
 
     public function login(LoginRequest $request)
     {
@@ -286,10 +319,12 @@ class AuthController extends ApiBaseController
                 return $query->where('campaigns.status', 'started')
                     ->orWhereNull('campaigns.status');
             })
+            ->where('campaigns.active', 1)
             ->count();
-
+            
         $yourLeadCount = Lead::join('campaigns', 'campaigns.id', '=', 'leads.campaign_id')
             ->where('leads.last_action_by', '=', $user->id)
+            ->where('campaigns.active', 1)
             ->where(function ($query) {
                 return $query->where('campaigns.status', 'started')
                     ->orWhereNull('campaigns.status');
@@ -297,6 +332,7 @@ class AuthController extends ApiBaseController
 
         $totalTimes = Lead::join('campaigns', 'campaigns.id', '=', 'leads.campaign_id')
             ->where('leads.last_action_by', '=', $user->id)
+            ->where('campaigns.active', 1)
             ->where(function ($query) {
                 return $query->where('campaigns.status', 'started')
                     ->orWhereNull('campaigns.status');
@@ -306,6 +342,7 @@ class AuthController extends ApiBaseController
             ->join('lead_logs', 'lead_logs.id', '=', 'leads.lead_follow_up_id')
             ->where('lead_logs.user_id', '=', $user->id)
             ->where('campaigns.status', '!=', 'completed')
+            ->where('campaigns.active', 1)
             ->whereNotNull('leads.lead_follow_up_id');
 
         if ($request->has('dates') && $request->dates != null && count($request->dates) > 0) {
@@ -465,6 +502,7 @@ class AuthController extends ApiBaseController
                 ->join('lead_logs as ll', 'll.campaign_id', '=', 'c.id')
                 ->select('c.name', DB::raw('COUNT(*) as total'))
                 ->where('ll.log_type', 'notes')
+                ->where('c.active',1)
                 ->whereIn('ll.user_id', $allUserIds)
                 ->whereDate('ll.date_time', '>=', $startDate)
                 ->whereDate('ll.date_time', '<=', $endDate);
@@ -473,6 +511,7 @@ class AuthController extends ApiBaseController
                 ->join('lead_logs as ll', 'll.campaign_id', '=', 'c.id')
                 ->select('c.name', DB::raw('COUNT(*) as total'))
                 ->where('ll.log_type', 'notes')
+                ->where('c.active',1)
                 ->where('ll.user_id', $user->id)
                 ->whereDate('ll.date_time', '>=', $startDate)
                 ->whereDate('ll.date_time', '<=', $endDate);
@@ -636,6 +675,7 @@ class AuthController extends ApiBaseController
             ->join('campaigns', 'campaigns.id', '=', 'leads.campaign_id')
             ->join('lead_logs', 'lead_logs.id', '=', 'leads.salesman_booking_id')
             ->where('leads.last_action_by', '=', $user->id)
+            ->where('campaigns.active', 1)
             ->where(function ($query) {
                 return $query->where('campaigns.status', 'started')
                     ->orWhereNull('campaigns.status');
@@ -683,6 +723,7 @@ class AuthController extends ApiBaseController
             ->join('campaigns', 'campaigns.id', '=', 'leads.campaign_id')
             ->join('lead_logs', 'lead_logs.id', '=', 'leads.lead_follow_up_id')
             ->where('leads.last_action_by', '=', $user->id)
+            ->where('campaigns.active', 1)
             ->where(function ($query) {
                 return $query->where('campaigns.status', 'started')
                     ->orWhereNull('campaigns.status');

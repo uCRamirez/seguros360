@@ -545,6 +545,24 @@ class PermsSeed
             'display_name' => 'Quality Actions Delete'
         ],
 
+        // faltante
+        'leads_view' => [
+            'name' => 'leads_view',
+            'display_name' => 'Leads View'
+        ],
+        'call_logs_view' => [
+            'name' => 'call_logs_view',
+            'display_name' => 'Call Logs View'
+        ],
+        'lead_notes_view' => [
+            'name' => 'lead_notes_view',
+            'display_name' => 'Lead Notes View'
+        ],
+        'lead_notes_ventas_view' => [
+            'name' => 'lead_notes_ventas_view',
+            'display_name' => 'Lead Notes Sales View'
+        ],
+
     ];
 
     public static $eStorePermissions = [];

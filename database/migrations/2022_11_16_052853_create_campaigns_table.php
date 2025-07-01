@@ -43,6 +43,7 @@ return new class extends Migration
             $table->foreign('updated_by')->references('id')->on('users')->onUpdate('cascade')->onDelete('set null');
             $table->bigInteger('last_action_by')->unsigned()->nullable()->default(null);
             $table->foreign('last_action_by')->references('id')->on('users')->onUpdate('cascade')->onDelete('set null');
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
 

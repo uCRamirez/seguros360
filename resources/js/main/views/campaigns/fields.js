@@ -3,7 +3,7 @@ import { useI18n } from "vue-i18n";
 
 const fields = () => {
     const url =
-        "campaigns?fields=id,xid,name,image,image_url,reference_prefix,allow_reference_prefix,remaining_leads,total_leads,lead_distribution_method,campaignUsers{id,xid,user_id,x_user_id,campaign_id,x_campaign_id},campaignUsers:user{id,xid,name,profile_image,profile_image_url},email_template_id,x_email_template_id,emailTemplate{id,xid,name},form_id,x_form_id,form{id,xid,name,form_fields},plantilla_calidad_id,x_plantilla_calidad_id,plantilla_calidad{id,xid,nombre},detail_fields,last_action_by,x_last_action_by,lastActioner{id,xid,name},completed_by,x_completed_by,completedBy{id,xid,name},started_on,completed_on,upcoming_lead_action";
+        "campaigns?fields=id,xid,name,image,image_url,active,reference_prefix,allow_reference_prefix,remaining_leads,total_leads,lead_distribution_method,campaignUsers{id,xid,user_id,x_user_id,campaign_id,x_campaign_id},campaignUsers:user{id,xid,name,profile_image,profile_image_url},email_template_id,x_email_template_id,emailTemplate{id,xid,name},form_id,x_form_id,form{id,xid,name,form_fields},plantilla_calidad_id,x_plantilla_calidad_id,plantilla_calidad{id,xid,nombre},detail_fields,last_action_by,x_last_action_by,lastActioner{id,xid,name},completed_by,x_completed_by,completedBy{id,xid,name},started_on,completed_on,upcoming_lead_action&filters=active eq 1";
     const addEditUrl = "campaigns";
     const hashableColumns = ["form_id", "email_template_id"];
     const { t } = useI18n();
@@ -25,6 +25,7 @@ const fields = () => {
         detail_fields: [],
         import_lead_fields: [],
         lead_distribution_method: "random",
+        active: 1,
     };
 
     const columns = computed(() => {
@@ -57,6 +58,10 @@ const fields = () => {
                 {
                     title: t("campaign.started_on"),
                     dataIndex: "started_on",
+                },
+                {
+                    title: t("common.status"),
+                    dataIndex: "active",
                 },
                 // {
                 //     title: t("campaign.last_actioner"),

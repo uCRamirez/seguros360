@@ -20,7 +20,7 @@ class User extends BaseModel implements AuthenticatableContract, JWTSubject, Aud
     
     use Notifiable, EntrustUserTrait, Authenticatable, HasFactory;
 
-    protected $default = ["xid", "name", "profile_image"];
+    protected $default = ["xid", "name", "profile_image", "status"];
 
     protected $guarded = ['company_id', 'created_at', 'updated_at'];
 
