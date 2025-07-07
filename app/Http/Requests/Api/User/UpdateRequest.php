@@ -44,7 +44,13 @@ class UpdateRequest extends BaseRequest
                 })->ignore($id)
             ],
             'name' => 'required',
-            'user' => 'required',
+            'user' => [
+                'required',
+                Rule::unique('users', 'user')->where(function ($query) {
+                    return $query->where('user_type', 'staff_members')
+                        ->orWhere('user_type', 'super_admins');
+                })->ignore($id)
+            ],
             'status' => 'required',
         ];
 

@@ -42,7 +42,13 @@ class StoreRequest extends BaseRequest
                 })
             ],
             'status' => 'required',
-            'user' => 'required',
+            'user' => [
+                'required',
+                Rule::unique('users', 'user')
+                    ->where(function ($query) {
+                        $query->whereIn('user_type', ['staff_members', 'super_admins']);
+                    }),
+            ],
         ];
 
         if ($loggedUser->hasRole('admin')) {
