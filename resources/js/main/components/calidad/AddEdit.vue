@@ -21,6 +21,11 @@
                         : "-"
                 }}
                 {{
+                    data.lead && data.lead.segundo_nombre && data.lead.segundo_nombre
+                        ? data.lead.segundo_nombre
+                        : ""
+                }}
+                {{
                     data.lead && data.lead.apellido1 && data.lead.apellido1
                         ? data.lead.apellido1
                         : "-"
@@ -70,6 +75,57 @@
                 {{
                     data.lead && data.lead.email && data.lead.email
                         ? data.lead.email
+                        : "-"
+                }}
+            </a-descriptions-item>
+            <a-descriptions-item class="label-bold" :label="$t('lead.expiration_date')">
+                {{
+                    data.lead && data.lead.fechaVencimiento && data.lead.fechaVencimiento
+                        ? formatDateTime(data.lead.fechaVencimiento)
+                        : "-"
+                }}
+            </a-descriptions-item>
+        </a-descriptions>
+
+        <a-descriptions
+            class="mt-10"
+        >
+            <a-descriptions-item class="label-bold" :label="$t('lead.plan_type')">
+                        {{
+                            data.lead && data.lead.tipo_plan && data.lead.tipo_plan
+                                ? data.lead.tipo_plan
+                                : "-"
+                        }}
+            </a-descriptions-item>
+            <a-descriptions-item class="label-bold" :label="$t('lead.card_type')">
+                {{
+                    data.lead && data.lead.tipo_tarjeta && data.lead.tipo_tarjeta
+                        ? data.lead.tipo_tarjeta
+                        : "-"
+                }}
+            </a-descriptions-item>
+            <a-descriptions-item class="label-bold" :label="$t('lead.transmitter')">
+                {{
+                    data.lead && data.lead.emisor && data.lead.emisor
+                        ? data.lead.emisor
+                        : "-"
+                }}
+            </a-descriptions-item>
+        </a-descriptions>
+        <a-descriptions
+            class="mt-10"
+        >
+            <a-descriptions-item  class="label-bold" :label="$t('lead.last_digits')">
+                {{
+                    data.lead && data.lead.ultimos_digitos && data.lead.ultimos_digitos
+                        ? data.lead.ultimos_digitos
+                        : "-"
+                }}
+            </a-descriptions-item>
+            <a-descriptions-item class="label-bold" :label="$t('lead.sales_focus')">
+                {{
+                    data.lead && data.lead.foco_venta && data.lead.foco_venta
+                        ? data.lead.foco_venta
                         : "-"
                 }}
             </a-descriptions-item>
@@ -596,6 +652,7 @@ import _ from 'lodash';
 function getEmptyEvaluacionCalidad() {
     return {
         //De la evaluacion
+        user_id: null,
         idVenta: null,
         plantilla_id: null,
         variables: [],
@@ -761,6 +818,7 @@ export default defineComponent({
             try {
                 await formRef.value.validate();
                 datos.calidad.nota_estado = calificacion.value;
+                datos.calidad.user_id = props.data.is_sale && props.data.is_sale.user ? props.data.is_sale.user.id : null;
                 addEditRequestAdmin({
                     url: 'calidad/save',
                     data: datos.calidad,
@@ -856,7 +914,7 @@ export default defineComponent({
                     }
                     
                     datos.calidad.idVenta = props.data.is_sale.idVenta;
-                    datos.calidad.plantilla_id = plantillaCalidad.value.id;
+                    datos.calidad.plantilla_id = plantillaCalidad.value ? plantillaCalidad.value.id : null;
                     datos.calidad.estadoVenta = props.data.is_sale.estadoVenta;
 
                     tableProducts.data = props.data.is_sale.productos.map(item => {

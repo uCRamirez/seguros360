@@ -359,6 +359,8 @@ class Common
     {
         $user = user();
 
+        // \Log::info('saveLead', ['data' => $data]);
+
         // 1) IDs hasheados
         $callLogId = isset($data['call_log_id'])
             ? Common::getIdFromHash($data['call_log_id'])
@@ -391,12 +393,22 @@ class Common
         // 5) Mapear campos personales
         $lead->cedula          = $data['cedula']              ?? $lead->cedula;
         $lead->nombre          = $data['nombre']              ?? $lead->nombre;
+        $lead->segundo_nombre  = $data['segundo_nombre']      ?? $lead->segundo_nombre;
         $lead->apellido1       = $data['apellido1']           ?? $lead->apellido1;
         $lead->apellido2       = $data['apellido2']           ?? $lead->apellido2;
         $lead->estadoCivil_id  = $data['estado_civil']['id']  ?? $lead->estadoCivil_id;
+        $lead->tipo_plan       = $data['tipo_plan']           ?? $lead->tipo_plan;
+        $lead->fechaVencimiento= $data['fechaVencimiento']    ?? $lead->fechaVencimiento;
+        $lead->tipo_tarjeta    = $data['tipo_tarjeta']        ?? $lead->tipo_tarjeta;
+        $lead->emisor          = $data['emisor']              ?? $lead->emisor;
+        $lead->ultimos_digitos = $data['ultimos_digitos']     ?? $lead->ultimos_digitos;
+        $lead->mes_carga       = $data['mes_carga']           ?? $lead->mes_carga;
+        $lead->anno_carga      = $data['anno_carga']          ?? $lead->anno_carga;
+        $lead->foco_venta      = $data['foco_venta']          ?? $lead->foco_venta;
         $lead->hijos           = $data['hijos']               ?? $lead->hijos;
         $lead->fechaNacimiento = $data['fechaNacimiento']     ?? $lead->fechaNacimiento;
         $lead->edad            = $data['edad']                ?? $lead->edad;
+        $lead->genero          = $data['genero']              ?? $lead->genero;
         $lead->nacionalidad    = $data['nacionalidad']        ?? $lead->nacionalidad;
         $lead->tel1            = $data['tel1']                ?? $lead->tel1;
         $lead->tel2            = $data['tel2']                ?? $lead->tel2;
@@ -405,10 +417,12 @@ class Common
         $lead->tel5            = $data['tel5']                ?? $lead->tel5;
         $lead->tel6            = $data['tel6']                ?? $lead->tel6;
         $lead->email           = $data['email']               ?? $lead->email;
+        $lead->provincia_voto  = $data['provincia_voto']      ?? $lead->provincia_voto;
         $lead->provincia       = $data['provincia']           ?? $lead->provincia;
         $lead->canton          = $data['canton']              ?? $lead->canton;
         $lead->distrito        = $data['distrito']            ?? $lead->distrito;
         $lead->nombreBase      = $data['nombreBase']          ?? $lead->nombreBase;
+        $lead->tarjeta         = $data['tarjeta']             ?? $lead->tarjeta;
 
         // 6) Campos adicionales y relaciones
         if (isset($data['lead_data'])) {

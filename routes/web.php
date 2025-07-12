@@ -133,6 +133,8 @@ ApiRoute::group(['namespace' => 'App\Http\Controllers\Api'], function () {
         //////////////////////////////////////////////////////////////////////////////////
 
         ApiRoute::post('leads/find-by-phone', ['as' => 'api.leads.find-by-phone','uses' => 'LeadController@findLeadByPhone']);        
+        ApiRoute::post('leads/find-distribution', ['as' => 'api.leads.find-distribution','uses' => 'LeadController@getDataForDistribution']);        
+        ApiRoute::post('leads/assign', ['as' => 'api.leads.assign','uses' => 'LeadController@pushAssign']);        
         ApiRoute::post('leads/find-by-phone-campaign', ['as' => 'api.leads.find-by-phone-campaign','uses' => 'LeadController@findLeadByPhoneCampaign']);  
         ApiRoute::post('campaigns/find-campaigns-homologate', ['as' => 'api.campaigns.find-campaigns-homologate', 'uses' => 'CampaignController@getHomologateCampaigns']);
 

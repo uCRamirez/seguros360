@@ -123,7 +123,7 @@
                                 </a-row>
                             </template>
                         </a-card-meta>
-                        <template #actions>
+                        <!-- <template #actions>
                             <a-button
                                 type="link"
                                 :style="{
@@ -168,7 +168,7 @@
                                 </template>
                                 {{ $t("common.stop") }}
                             </a-button>
-                        </template>
+                        </template> -->
                     </a-card>
                 </a-col>
             </a-row>

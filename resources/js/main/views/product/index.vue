@@ -193,6 +193,20 @@
                             <template v-if="column.dataIndex === 'price'">
                                 {{ formatAmountCurrency(record.price) }}
                             </template>
+                            <template v-if="column.dataIndex === 'status'">
+                                <a-tag
+                                    color="success"
+                                    v-if="record.status == 1"
+                                >
+                                    {{ $t("common.active") }}
+                                </a-tag>
+                                <a-tag
+                                    color="error"
+                                    v-if="record.status == 0"
+                                >
+                                    {{ $t("common.inactive") }}
+                                </a-tag>
+                            </template>
                             <template v-if="column.dataIndex === 'action'">
                                 <a-button
                                     v-if="
@@ -276,6 +290,7 @@ export default {
         const filters = ref({
             category_id: undefined,
             campaign_id: undefined,
+            status: 0,
         });
 
         onMounted(() => {

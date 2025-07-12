@@ -136,7 +136,7 @@
             </template>
 
             <template v-if="currentStep == 1">
-                <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                <!-- <a-col :xs="24" :sm="24" :md="24" :lg="24">
                     <a-form-item
                         :label="$t('bases.base') + ' ' + $t('bases.stage')"
                         name="stage"
@@ -179,7 +179,7 @@
                             </a-select-option>
                         </a-select>
                     </a-form-item>
-                </a-col>
+                </a-col> -->
                 <ImportLeads v-if="permsArray.includes('bases_view') || permsArray.includes('admin')" 
                     acceptFormat=".csv" :allFields="selectedFormFields" @fileUploaded="leadFileUploaded"
                     @leadColumnChanged="leadColumnChanged" />

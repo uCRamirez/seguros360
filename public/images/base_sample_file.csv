@@ -1,2 +1,2 @@
-cedula;nombre;apellido1;apellido2;tel1;tel2;email;edad;fechaNacimiento;agente;
-X0X0X0;X0X0X0;X0X0X0;X0X0X0;X0X0X0;X0X0X0;X0X0X0;ano-mes-dia;X0X0X0;
+cedula;nombre;segundo_nombre;apellido1;apellido2;tel1;tel2;tel3;tel4;tel5;tel6;email;provincia_voto;hijos;estadoCivil;tipo_plan;fechaVencimiento;tarjeta;tipo_tarjeta;emisor;ultimos_digitos;mes_carga;anno_carga;foco_venta;fechaNacimiento;genero;nacionalidad;agente;
+X0X0X0;X0X0X0;X0X0X0;X0X0X0;X0X0X0;X0X0X0;X0X0X0;X0X0X0;X0X0X0;X0X0X0;X0X0X0;X0X0X0;X0X0X0;X0;X0X0X0;X0X0X0;YYYY-MM-DD h:m:s;X0X0X0;X0X0X0;X0X0X0;X0X0X0;00;2025;X0X0X0;YYY-MM-DD;X0X0X0;X0X0X0;X0X0X0;

@@ -1,5 +1,9 @@
 <template>
-	<DoughnutChart ref="chartRef" :chartData="testData" :options="options" />
+  <DoughnutChart
+    ref="chartRef"
+    :chartData="chartData"
+    :options="options"
+  />
 </template>
 
 <script>
@@ -10,53 +14,42 @@ import { Chart, registerables } from "chart.js";
 Chart.register(...registerables);
 
 export default {
-	props: ["data"],
-	components: {
-		DoughnutChart,
-	},
-	setup(props) {
-		const chartRef = ref();
+  name: "TopProductsDonut",
+  props: ["data"],
+  components: { DoughnutChart },
+  setup(props) {
+    const chartRef = ref();
 
-		const options = ref({
-			responsive: true,
-			plugins: {
-				legend: {
-					position: "bottom",
-				},
-				title: {
-					display: false,
-					text: "Chart.js Doughnut Chart",
-				},
-			},
-		});
+    const options = ref({
+      responsive: true,
+      plugins: {
+        legend: { position: "bottom" },
+        title: { display: false }
+      }
+    });
 
-		const testData = ref({});
+    const chartData = ref({
+      labels: [],
+      datasets: [{ data: [], backgroundColor: [] }]
+    });
 
-		watch(props, (newVal, oldVal) => {
-			testData.value = {
-				labels: newVal.data.topSellingProducts
-					? newVal.data.topSellingProducts.labels
-					: [],
-				datasets: [
-					{
-						data: newVal.data.topSellingProducts
-							? newVal.data.topSellingProducts.values
-							: [],
-						backgroundColor: newVal.data.topSellingProducts
-							? newVal.data.topSellingProducts.colors
-							: [],
-					},
-				],
-			};
-		});
+    watch(
+      () => props.data.topProducts,
+      (tp) => {
+        chartData.value = {
+          labels: tp?.labels || [],
+          datasets: [
+            {
+              data: tp?.data || [],
+              backgroundColor: tp?.colors || []
+            }
+          ]
+        };
+      },
+      { immediate: true }
+    );
 
-		return {
-			chartRef,
-			testData,
-			options,
-		};
-	},
+    return { chartRef, chartData, options };
+  }
 };
 </script>
-
-<style></style>

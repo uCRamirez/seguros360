@@ -58,7 +58,7 @@
                                 </a-space>
                             </template>
                         </a-tab-pane>
-                        <!-- <a-tab-pane key="un_matched">
+                        <a-tab-pane key="un_matched">
                             <template #tab>
                                 <a-space>
                                     <a-badge
@@ -68,7 +68,7 @@
                                     {{ $t("campaign.unmatched_columns") }}
                                 </a-space>
                             </template>
-                        </a-tab-pane> -->
+                        </a-tab-pane>
                     </a-tabs>
                 </a-col>
             </a-row>

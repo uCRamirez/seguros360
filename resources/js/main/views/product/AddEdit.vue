@@ -29,6 +29,29 @@
                             "
                         />
                     </a-form-item>
+                    <a-form-item
+                            :label="$t('common.status')"
+                            name="status"
+                            :help="
+                                rules.status ? rules.status.message : null
+                            "
+                            :validateStatus="rules.status ? 'error' : null"
+                            class="required"
+                            style="margin-top: 20%;"
+                        >
+                            <a-select
+                                v-model:value="formData.status"
+                                :placeholder="
+                                    $t('common.select_default_text', [
+                                        $t('user.status'),
+                                    ])
+                                "
+                                :allowClear="true"
+                            >
+                                <a-select-option :value="1">{{ $t('common.enabled') }}</a-select-option>
+                                <a-select-option :value="0">{{ $t('common.disabled') }}</a-select-option>
+                            </a-select>
+                    </a-form-item>
                 </a-col>
                 <a-col :xs="24" :sm="24" :md="18" :lg="18">
                     <a-row :gutter="16">
@@ -175,7 +198,7 @@
                 </a-col>
             </a-row>
 
-            <!-- <a-row :gutter="16">
+            <a-row :gutter="16">
                 <a-col :xs="24" :sm="24" :md="12" :lg="12">
                     <a-form-item
                         :label="$t('product.tax_label')"
@@ -214,7 +237,7 @@
                         </a-input-number>
                     </a-form-item>
                 </a-col>
-            </a-row> -->
+            </a-row>
             <a-row :gutter="16">
                 <a-col :xs="24" :sm="24" :md="12" :lg="12">
                     <a-form-item

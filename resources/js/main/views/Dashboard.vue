@@ -23,10 +23,9 @@
                     <ActionedCampaigns :data="responseData" />
                 </a-card>
             </a-col>
-            <!-- ventas y monto total por usuario -->   
             <a-col style="max-height: fit-content;" :xs="24" :sm="24" :md="24" :lg="24" :xl="12">
-                <a-card :title="$t('dashboard.sales_user')">
-                     <graficoVentas :data="responseData.ventasMontos"/>
+                <a-card :title="$t('dashboard.products_sold')">
+                    <topProducts :data="responseData" />
                 </a-card>
             </a-col>
             
@@ -50,23 +49,6 @@
                         </template>
                     </StateWidget>
                 </a-col>
-                <!-- total de seguimientos
-                <a-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
-                    <StateWidget bgColor="#389e0d">
-                        <template #image>
-                            <ScheduleOutlined
-                                style="color: #fff; font-size: 24px"
-                            />
-                        </template>
-                        <template #description>
-                            <h2 v-if="responseData.stateData">
-                                {{ responseData.stateData.total_follow_ups }}
-                            </h2>
-                            <p>{{ $t("dashboard.total_follow_up") }}</p>
-                        </template>
-                    </StateWidget>
-                </a-col> -->
-                <!-- total de contactos o llamadas -->
                 <a-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
                     <StateWidget bgColor="#d46b08">
                         <template #image>
@@ -107,8 +89,35 @@
             </a-row>
         </div>
 
-        <!-- Contactos o llamadas realizadas -->
+        <!-- ventas y monto total por usuario -->   
+        <a-row :gutter="[18, 18]" class="mt-30 mb-20">
+            <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                <a-card :title="$t('dashboard.sales_user')">
+                        <graficoVentas :data="responseData.ventasMontos"/>
+                </a-card>
+            </a-col>
+        </a-row>
+
+        <!-- Montos Ventas -->
         <a-row v-if="permsArray.includes('users_view') || permsArray.includes('admin')" :gutter="[18, 18]" class="mt-30 mb-20">
+            <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                <a-card :title="$t('dashboard.total_sales_amount')">
+                    <AmountSalesMade :data="responseData" />
+                </a-card>
+            </a-col>
+        </a-row>
+
+        <!-- Ventas -->
+        <a-row v-if="permsArray.includes('users_view') || permsArray.includes('admin')" :gutter="[18, 18]" class="mt-30 mb-20">
+            <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                <a-card :title="$t('dashboard.sales_made')">
+                    <SalesMade :data="responseData" />
+                </a-card>
+            </a-col>
+        </a-row>
+
+        <!-- Contactos o llamadas realizadas -->
+        <!-- <a-row v-if="permsArray.includes('users_view') || permsArray.includes('admin')" :gutter="[18, 18]" class="mt-30 mb-20">
             <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
                 <a-card :title="$t('dashboard.call_made')">
                     <CallMade :data="responseData" />
@@ -128,7 +137,8 @@
                     </template>
                 </a-card>
             </a-col>
-        </a-row>
+        </a-row> -->
+
     </div>
 </template>
 
@@ -147,9 +157,10 @@ import AdminPageHeader from "../../common/layouts/AdminPageHeader.vue";
 import StateWidget from "../../common/components/common/card/StateWidget.vue";
 import ActionedCampaigns from "../components/charts/dashboard/ActionedCampaigns.vue";
 import graficoVentas from "../components/charts/dashboard/ventasCantidadMonto.vue";
+import topProducts from "../components/charts/dashboard/TopProducts.vue";
 import CallMade from "../components/charts/dashboard/CallMade.vue";
-import SalesmanBooking from "./dashboard/SalesmanBookings.vue";
-import Followups from "./dashboard/Followups.vue";
+import SalesMade from "../components/charts/dashboard/SalesMade.vue";
+import AmountSalesMade from "../components/charts/dashboard/AmountSalesMade.vue";
 import DateRangePicker from "../../common/components/common/calendar/DateRangePicker.vue";
 
 export default {
@@ -159,8 +170,9 @@ export default {
         ActionedCampaigns,
         graficoVentas,
         CallMade,
-        SalesmanBooking,
-        Followups,
+        SalesMade,
+        AmountSalesMade,
+        topProducts,
         DateRangePicker,
 
         MobileOutlined,

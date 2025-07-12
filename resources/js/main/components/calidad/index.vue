@@ -271,7 +271,7 @@
                                 record.lead &&
                                 record.lead.nombre &&
                                 record.lead.nombre != undefined
-                                    ? `${record.lead.nombre} ${record.lead.apellido1} ${record.lead.apellido2}`
+                                    ? `${(record.lead.nombre ?? '')} ${(record.lead.apellido1 ?? '')} ${(record.lead?.apellido2 ?? '')}`
                                     : "-"
                             }}
                         </template>

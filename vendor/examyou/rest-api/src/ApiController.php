@@ -18,6 +18,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Models\NotesTypification;
+use App\Models\Product;
 use App\Models\Campaign;
 use Examyou\RestAPI\Exceptions\ApiException;
 use Examyou\RestAPI\ApiResponse;
@@ -296,8 +297,11 @@ class ApiController extends \Illuminate\Routing\Controller
 		if (method_exists($this, 'destroying')) {
 			$object = call_user_func([$this, 'destroying'], $object);
 		}
+	    \Log::info('Llego al IF');
+        \Log::info('object', [$object]);
+		if ($object instanceof NotesTypification || $object instanceof Product) {
+	        \Log::info('entro if correcto');
 
-		if ($object instanceof NotesTypification) {
 			// Desactivamos en lugar de borrar que a como se encuentra originalmente
 			$object->status = 0;
 			$object->save();            

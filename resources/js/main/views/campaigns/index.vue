@@ -113,6 +113,12 @@
             @closed="closeAddNotification"
         />
 
+        <RecycleLead 
+            :visible="visible" 
+            :campaign="selectedCampaign"  
+            @close="closeCampaign" 
+        />
+
         <a-row
             v-if="
                 permsArray.includes('view_completed_campaigns') ||
@@ -267,7 +273,7 @@
                                         @success="setUrlData"
                                     >
                                         <template #icon>
-                                            <PlusOutlined />
+                                            <UserAddOutlined />
                                         </template>
                                     </AddLead>
                                     <a-tooltip :title="$t('common.edit')">
@@ -292,7 +298,7 @@
                                         </a-button>
                                     </a-tooltip>
                                     <a-tooltip
-                                        :title="$t('campaign.recycling_campaigns')"
+                                        :title="$t('campaign.lead_distribution')"
                                     >
                                         <a-button
                                             v-if="
@@ -304,7 +310,7 @@
                                             @click="getAllNonCampaign(record)"
                                             style="margin-left: 4px"
                                         >
-                                            <template #icon><SwapOutlined /></template>
+                                            <template #icon><RadarChartOutlined/></template>
                                         </a-button>
                                     </a-tooltip>
                                     <!-- notificaciones -->
@@ -342,14 +348,12 @@
                 </div>
             </a-col>
         </a-row>
-        <RecycleLead :visible="visible" :data="campaignData" @close="closeCampaign" />
     </admin-page-table-content>
 </template>
 
 <script>
 import { onMounted, ref, createVNode } from "vue";
 import {
-    PlusOutlined,
     EditOutlined,
     FileAddOutlined,
     NotificationOutlined,
@@ -360,6 +364,8 @@ import {
     ExclamationCircleOutlined,
     CloudDownloadOutlined,
     SwapOutlined,
+    RadarChartOutlined,
+    UserAddOutlined,
 } from "@ant-design/icons-vue";
 import { Modal, notification } from "ant-design-vue";
 import crud from "../../../common/composable/crud";
@@ -377,7 +383,8 @@ import RecycleLead from "./RecycleLead.vue";
 
 export default {
     components: {
-        PlusOutlined,
+        RadarChartOutlined,
+        UserAddOutlined,
         EditOutlined,
         FileAddOutlined,
         NotificationOutlined,
@@ -414,6 +421,7 @@ export default {
         const campaignData = ref();
 
         const getAllNonCampaign = (items) => {
+            selectedCampaign.value = items;
             visible.value = true;
             campaignData.value = items.xid;
         };

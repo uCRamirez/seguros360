@@ -323,23 +323,30 @@ class EvaluacionCalidadController extends ApiBaseController
 
     protected function envioMailCalidad($evaluacion, $estado, $data, array $users_ids)
     {
-        // 1) Recuperar solo emails válidos
+        $users_ids[] = $data['user_id'];
+        if($data['estado'] === 'REASIGNADA'){
+            $users_ids[] = $data['reasignado_a'];
+        }
+
+        \Log::info('users_ids', $users_ids);
+
+        // Recuperar solo emails válidos
         $toList = User::whereIn('id', $users_ids)
                     ->pluck('email')
                     ->filter()      // quita null/strings vacíos
                     ->all();        // convierte a array simple
 
-        // 2) Si no hay destinatarios, salir
+        // Si no hay destinatarios, salir
         if (empty($toList)) {
             \Log::warning('envioMailCalidad: acción sin destinatarios válidos.');
             return;
         }
-
-        // ya tienes $evaluacion y $estado cargados
+        
+        // Armar el template a enviar
         $summary = $this->generarTemplatecalidad($evaluacion, $estado, $data);
 
 
-        // 3) Disparar la notificación vía mail, usando tu Notification
+        // Disparar los mails
         Notification::route('mail', $toList)
             ->notify(new SendLeadMail(
                 'Detalle de calidad realizada',

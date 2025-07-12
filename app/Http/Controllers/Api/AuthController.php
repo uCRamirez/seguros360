@@ -145,8 +145,6 @@ class AuthController extends ApiBaseController
         ]);
     }
 
-
-
     public function login(LoginRequest $request)
     {
         // Removing all sessions before login
@@ -371,9 +369,12 @@ class AuthController extends ApiBaseController
 
         return ApiResponse::make('Data fetched', [
             'actionedCampaigns' => $this->getActionedCampaigns(),
-            'callMade' => $this->getCallMade(),
-            'allAppointments' => $this->getBookedAppointments(),
-            'allFollowUps' => $this->getFollowUps(),
+            'salesMade' => $this->getSalesMade(),
+            'amountSales' => $this->getAmountSales(),
+            'topProducts' => $this->getTopProducts(),
+            // 'callMade' => $this->getCallMade(),
+            // 'allAppointments' => $this->getBookedAppointments(),
+            // 'allFollowUps' => $this->getFollowUps(),
             'ventasMontos' => $this->getVentasMontos(),
             'stateData' => [
                 'campaign_count' => $yourCampaignCount,
@@ -382,6 +383,253 @@ class AuthController extends ApiBaseController
                 'total_follow_ups' => $totalFollowUps,
             ]
         ]);
+    }
+
+    public function getTopProducts()
+    {
+        $request = request();
+
+        // 1) Rango de fechas
+        if ($request->has('dates') && is_array($request->dates) && count($request->dates) === 2) {
+            $startDate = Carbon::parse($request->dates[0])->format('Y-m-d');
+            $endDate   = Carbon::parse($request->dates[1])->format('Y-m-d');
+        } else {
+            $startDate = Carbon::now()->subDays(30)->format('Y-m-d');
+            $endDate   = Carbon::now()->format('Y-m-d');
+        }
+
+        // 2) Traer también internal_code
+        $rows = DB::table('productos_ventas as pv')
+            ->join('products as p', 'p.id', '=', 'pv.idProducto')
+            ->join('ventas as v', 'v.idVenta', '=', 'pv.idVenta')
+            ->join('lead_logs as ll', 'll.id', '=', 'v.idNota')
+            ->select(
+                'p.id',
+                'p.name',
+                'p.internal_code',
+                DB::raw('SUM(pv.cantidadProducto) as total_vendido')
+            )
+            ->whereBetween(DB::raw('DATE(ll.date_time)'), [$startDate, $endDate])
+            ->groupBy('p.id', 'p.name', 'p.internal_code')
+            ->orderByDesc('total_vendido')
+            ->limit(10)
+            ->get();
+
+        // 3) Combinar name e internal_code en cada etiqueta
+        $labels = $rows->map(fn($r) => "{$r->name} - {$r->internal_code}")->toArray();
+
+        // 4) Datos y colores
+        $data   = $rows->pluck('total_vendido')->map(fn($v)=>(int)$v)->toArray();
+        $colors = array_map(
+            fn($i) => '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT),
+            range(1, count($labels))
+        );
+
+        return [
+            'labels' => $labels,
+            'data'   => $data,
+            'colors' => $colors,
+        ];
+    }
+
+    public function getAmountSales()
+    {
+        $user    = user();
+        $request = request();
+
+        // 1) Rango de fechas
+        if ($request->has('dates') && is_array($request->dates) && count($request->dates) === 2) {
+            $startDate = Carbon::parse($request->dates[0])->format('Y-m-d');
+            $endDate   = Carbon::parse($request->dates[1])->format('Y-m-d');
+        } else {
+            $startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
+            $endDate   = Carbon::now()->format('Y-m-d');
+        }
+
+        // 2) Query base con join a ventas
+        $query = LeadLog::join('users as u', 'u.id', '=', 'lead_logs.user_id')
+            ->join('ventas', 'ventas.idNota', '=', 'lead_logs.id')
+            ->select(
+                DB::raw("u.`user` AS username"),
+                DB::raw("DATE(lead_logs.date_time) AS date"),
+                DB::raw("SUM(ventas.montoTotal) AS total_amount")
+            )
+            ->where('lead_logs.log_type', 'notes')
+            ->where('lead_logs.isSale', 1)
+            ->whereBetween(DB::raw('DATE(lead_logs.date_time)'), [$startDate, $endDate]);
+
+        // 3) Filtrado por permisos
+        if ($user->ability($user->role->name, 'leads_view_all') && $user->role->name != 'admin') {
+            $campaignIds = CampaignUser::where('user_id', $user->id)
+                            ->pluck('campaign_id');
+            $teammateIds = CampaignUser::whereIn('campaign_id', $campaignIds)
+                            ->distinct()
+                            ->pluck('user_id');
+            $allUserIds = $teammateIds->push($user->id)->unique();
+            $query->whereIn('lead_logs.user_id', $allUserIds);
+        }
+
+        // 4) Agrupar y obtener
+        $rawRows = $query
+            ->groupBy(DB::raw("u.`user`"), DB::raw("DATE(lead_logs.date_time)"))
+            ->orderBy(DB::raw("DATE(lead_logs.date_time)"), 'asc')
+            ->get();
+
+        // 5) Generar array completo de fechas
+        $periodDates = CarbonPeriod::create($startDate, $endDate);
+        $datesArray  = [];
+        foreach ($periodDates as $dt) {
+            $datesArray[] = $dt->format('Y-m-d');
+        }
+
+        // 6) Lista de usuarios
+        $usersList = $rawRows->pluck('username')->unique()->values()->toArray();
+
+        // 7) Inicializar ceros
+        $amountsByUser = [];
+        foreach ($usersList as $u) {
+            foreach ($datesArray as $d) {
+                $amountsByUser[$u][$d] = 0;
+            }
+        }
+
+        // 8) Rellenar con sumas reales
+        foreach ($rawRows as $row) {
+            $amountsByUser[$row->username][$row->date] = (float) $row->total_amount;
+        }
+
+        // 9) Formatear series para el frontend
+        $series = [];
+        foreach ($usersList as $u) {
+            $color = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+            $dataArray = [];
+            foreach ($datesArray as $d) {
+                $dataArray[] = $amountsByUser[$u][$d];
+            }
+            $series[] = [
+                'user'    => $u,
+                'amounts' => $dataArray,
+                'color'   => $color,
+            ];
+        }
+
+        return [
+            'dates'  => $datesArray,
+            'series' => $series,
+        ];
+    }
+
+    // funcion para obtener los contacto o llamadas a los leads por usuario - listo
+    public function getSalesMade()
+    {
+        $user    = user();         
+        $request = request();
+
+        if ($request->has('dates') && is_array($request->dates) && count($request->dates) === 2) {
+            $startDate = Carbon::parse($request->dates[0])->format('Y-m-d');
+            $endDate   = Carbon::parse($request->dates[1])->format('Y-m-d');
+        } else {
+            $startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
+            $endDate   = Carbon::now()->format('Y-m-d');
+        }
+
+        // \Log::info('getCallMade', ['$user' => $user]);
+        if ($user->ability($user->role->name, 'leads_view_all') && $user->role->name != 'admin') {
+            // \Log::info('getSalesMade - ENTRO IF');
+            $campaignIds = CampaignUser::where('user_id', $user->id)
+                            ->pluck('campaign_id');
+            $teammateIds = CampaignUser::whereIn('campaign_id', $campaignIds)
+                            ->distinct()
+                            ->pluck('user_id');
+            $allUserIds = $teammateIds->push($user->id)->unique();
+            // \Log::info('modifyIndex', ['allUserIds' => $allUserIds]);
+
+            $rawRows = LeadLog::join('users as u', 'u.id', '=', 'lead_logs.user_id')
+                ->select(
+                    DB::raw("u.`user` AS username"),
+                    DB::raw("DATE(lead_logs.date_time) AS date"),
+                    DB::raw("COUNT(lead_logs.id) AS total_logs")
+                )
+                ->where('lead_logs.log_type', 'notes')
+                ->where('lead_logs.isSale', 1)
+                ->whereIn('lead_logs.user_id', $allUserIds)
+                ->whereBetween(DB::raw('DATE(lead_logs.date_time)'), [$startDate, $endDate])
+                ->groupBy(DB::raw("u.`user`"), DB::raw("DATE(lead_logs.date_time)"))
+                ->orderBy(DB::raw("DATE(lead_logs.date_time)"), 'asc')
+                ->get();
+
+        }else{
+            // \Log::info('getSalesMade - ENTRO ELSE');
+            $rawRows = LeadLog::join('users as u', 'u.id', '=', 'lead_logs.user_id')
+                ->select(
+                    DB::raw("u.`user` AS username"),
+                    DB::raw("DATE(lead_logs.date_time) AS date"),
+                    DB::raw("COUNT(lead_logs.id) AS total_logs")
+                )
+                ->where('lead_logs.log_type', 'notes')
+                ->where('lead_logs.isSale', 1)
+                ->whereBetween(DB::raw('DATE(lead_logs.date_time)'), [$startDate, $endDate])
+                ->groupBy(DB::raw("u.`user`"), DB::raw("DATE(lead_logs.date_time)"))
+                ->orderBy(DB::raw("DATE(lead_logs.date_time)"), 'asc')
+                ->get();
+        }
+        // \Log::info('modifyIndex', ['rawRows' => $rawRows]);
+            // ->get() devuelve colección de instancias con propiedades: username, date, total_logs
+
+        // 3) Construir lista completa de fechas (todos los días entre startDate y endDate)
+        $periodDates = CarbonPeriod::create($startDate, $endDate);
+        $datesArray  = [];
+        foreach ($periodDates as $periodDate) {
+            $datesArray[] = $periodDate->format('Y-m-d');
+        }
+
+        // 4) Obtener lista única de usuarios involucrados en ese rango
+        $usersList = $rawRows
+            ->pluck('username')    
+            ->unique()             
+            ->values()             
+            ->toArray();           
+
+        $countsByUser = [];
+        foreach ($usersList as $u) {
+            foreach ($datesArray as $d) {
+                $countsByUser[$u][$d] = 0;
+            }
+        }
+
+        foreach ($rawRows as $row) {
+            $u     = $row->username;       
+            $d     = $row->date;           
+            $count = (int) $row->total_logs; 
+            $countsByUser[$u][$d] = $count;
+        }
+
+        $series = [];
+        foreach ($usersList as $u) {
+            $color = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+
+            $countsArray = [];
+            foreach ($datesArray as $d) {
+                $countsArray[] = $countsByUser[$u][$d];
+            }
+
+            $series[] = [
+                'user'   => $u,
+                'counts' => $countsArray,
+                'color'  => $color,
+            ];
+        }
+
+        // \Log::info('modifyIndex', [
+        //     'dates'  => $datesArray,
+        //     'series' => $series,
+        // ]);
+
+
+        return [
+            'dates'  => $datesArray,
+            'series' => $series,
+        ];
     }
 
     public function getVentasMontos()
@@ -397,35 +645,52 @@ class AuthController extends ApiBaseController
             $endDate   = Carbon::now()->format('Y-m-d');
         }
 
-        $usuarioPermitido = $request->usuarioPermitido;
+        // $usuarioPermitido = $request->usuarioPermitido;
 
 
-        if($usuarioPermitido){
+        // if($usuarioPermitido){
 
-            $campaignIds = CampaignUser::where('user_id', $user->id)
-                            ->pluck('campaign_id');
-            $teammateIds = CampaignUser::whereIn('campaign_id', $campaignIds)
-                            ->distinct()
-                            ->pluck('user_id');
-            $allUserIds = $teammateIds->push($user->id)->unique();
+        //     $campaignIds = CampaignUser::where('user_id', $user->id)
+        //                     ->pluck('campaign_id');
+        //     $teammateIds = CampaignUser::whereIn('campaign_id', $campaignIds)
+        //                     ->distinct()
+        //                     ->pluck('user_id');
+        //     $allUserIds = $teammateIds->push($user->id)->unique();
 
-            $rawLogs = LeadLog::select(
-                'users.name as agente',
-                DB::raw('DATE(lead_logs.date_time) as fecha'),
-                DB::raw('COUNT(lead_logs.id)       as total_logs'),
-                DB::raw('SUM(ventas.montoTotal)     as total_montos')
-            )
-            ->join('users', 'lead_logs.user_id', '=', 'users.id')
-            ->join('ventas', 'ventas.idNota', '=', 'lead_logs.id')
-            ->where('lead_logs.isSale', 1)
-            ->whereIn('lead_logs.user_id', $allUserIds)
-            ->whereDate('lead_logs.date_time', '>=', $startDate)
-            ->whereDate('lead_logs.date_time', '<=', $endDate)
-            ->groupBy('users.name', DB::raw('DATE(lead_logs.date_time)'))
-            ->orderBy('fecha', 'asc')
-            ->get();
-        }else{
-            $rawLogs = LeadLog::select(
+        //     $rawLogs = LeadLog::select(
+        //         'users.name as agente',
+        //         DB::raw('DATE(lead_logs.date_time) as fecha'),
+        //         DB::raw('COUNT(lead_logs.id)       as total_logs'),
+        //         DB::raw('SUM(ventas.montoTotal)     as total_montos')
+        //     )
+        //     ->join('users', 'lead_logs.user_id', '=', 'users.id')
+        //     ->join('ventas', 'ventas.idNota', '=', 'lead_logs.id')
+        //     ->where('lead_logs.isSale', 1)
+        //     ->whereIn('lead_logs.user_id', $allUserIds)
+        //     ->whereDate('lead_logs.date_time', '>=', $startDate)
+        //     ->whereDate('lead_logs.date_time', '<=', $endDate)
+        //     ->groupBy('users.name', DB::raw('DATE(lead_logs.date_time)'))
+        //     ->orderBy('fecha', 'asc')
+        //     ->get();
+        // }else{
+        //     $rawLogs = LeadLog::select(
+        //         'users.name as agente',
+        //         DB::raw('DATE(lead_logs.date_time) as fecha'),
+        //         DB::raw('COUNT(lead_logs.id)       as total_logs'),
+        //         DB::raw('SUM(ventas.montoTotal)     as total_montos')
+        //     )
+        //     ->join('users', 'lead_logs.user_id', '=', 'users.id')
+        //     ->join('ventas', 'ventas.idNota', '=', 'lead_logs.id')
+        //     ->where('lead_logs.isSale', 1)
+        //     ->where('lead_logs.user_id','=', $user->id)
+        //     ->whereDate('lead_logs.date_time', '>=', $startDate)
+        //     ->whereDate('lead_logs.date_time', '<=', $endDate)
+        //     ->groupBy('users.name', DB::raw('DATE(lead_logs.date_time)'))
+        //     ->orderBy('fecha', 'asc')
+        //     ->get();
+        // }
+
+        $rawLogs = LeadLog::select(
                 'users.name as agente',
                 DB::raw('DATE(lead_logs.date_time) as fecha'),
                 DB::raw('COUNT(lead_logs.id)       as total_logs'),
@@ -440,8 +705,6 @@ class AuthController extends ApiBaseController
             ->groupBy('users.name', DB::raw('DATE(lead_logs.date_time)'))
             ->orderBy('fecha', 'asc')
             ->get();
-        }
-        
 
         $allLogs = $rawLogs->groupBy('fecha');
 

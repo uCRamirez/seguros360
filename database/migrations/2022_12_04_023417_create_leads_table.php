@@ -52,7 +52,7 @@ return new class extends Migration
             $table->string('provincia', 200)->nullable();
             $table->string('canton', 200)->nullable();
             $table->string('distrito', 200)->nullable();
-            $table->string('nombreBase', 200)->nullable();
+            $table->string('nombreBase', 200)->nullable()->default('Manual');
             $table->string('tarjeta', 200)->nullable();
 
             // Relations

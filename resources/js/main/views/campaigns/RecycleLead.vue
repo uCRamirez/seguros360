@@ -1,298 +1,416 @@
 <template>
-    <a-drawer
-        :title="$t('campaign.recycling_campaigns')"
-        :width="drawerWidth"
-        :open="visible"
-        :body-style="{ paddingBottom: '80px' }"
-        :footer-style="{ textAlign: 'right' }"
-        :maskClosable="false"
-        @close="onClose"
-    >
-        <a-form layout="vertical">
-            <a-row :gutter="16">
+    <a-drawer :title="$t('campaign.lead_distribution')" :width="drawerWidth" :open="visible"
+        :body-style="{ paddingBottom: '80px' }" :footer-style="{ textAlign: 'right' }" :mask-closable="false"
+        @close="onClose">
+        <a-row :gutter="16" class="mt-20">
+            <a-col :xs="24" :sm="24" :md="12" :lg="12">
+                <a-form-item>
+                    <a-transfer v-model:target-keys="targetKeys" v-model:selected-keys="selectedKeys"
+                        :data-source="mockData" :one-way="true" :render="item => item.title" :locale="{
+                            itemUnit: $t('bases.base'),
+                            itemsUnit: $t('bases.bases')
+                        }" @change="handleChange" :show-search="true" :filter-option="filterOption" :list-style="{
+                            width: '100%',
+                            height: '300px',
+                        }" />
+                </a-form-item>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="12" :lg="12">
                 <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                    <a-form-item
-                        :label="$t('campaign.campaign')"
-                        name="campaign_id"
-                        :help="rules.campaign_id ? rules.campaign_id.message : null"
-                        :validateStatus="rules.campaign_id ? 'error' : null"
-                        class="required"
-                    >
-                        <span style="display: flex">
-                            <a-select
-                                v-model:value="formData.campaign_id"
-                                :placeholder="
-                                    $t('common.select_default_text', [
-                                        $t('campaign.campaign'),
-                                    ])
-                                "
-                                :allowClear="true"
-                            >
-                                <a-select-option
-                                    v-for="campaign in campaigns"
-                                    :key="campaign.xid"
-                                    :value="campaign.xid"
-                                >
-                                    {{ campaign.name }}
-                                </a-select-option>
-                            </a-select>
-                        </span>
+                    <a-form-item>
+                        <div style="height: 243px; overflow-y: auto; padding-right: 8px;">
+                            <FilterBuilder v-model="filtros" :operators="filterOperators" />
+                        </div>
                     </a-form-item>
                 </a-col>
-            </a-row>
-            <a-row :gutter="16">
-                <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                    <a-form-item
-                        :label="$t('campaign.select_lead_type')"
-                        name="select_lead_type"
-                        :help="
-                            rules.select_lead_type ? rules.select_lead_type.message : null
-                        "
-                        :validateStatus="rules.select_lead_type ? 'error' : null"
-                        class="required"
-                    >
-                        <span style="display: flex">
-                            <a-select
-                                v-model:value="formData.select_lead_type"
-                                :placeholder="
-                                    $t('common.select_default_text', [
-                                        $t('campaign.lead_type'),
-                                    ])
-                                "
-                                :allowClear="true"
-                            >
-                                <a-select-option value="all_non_managed_leads">
-                                    {{ $t("campaign.all_non_managed_leads") }}
-                                </a-select-option>
-                                <a-select-option value="select_non_managed_leads">
-                                    {{ $t("campaign.select_non_managed_leads") }}
-                                </a-select-option>
-                            </a-select>
-                        </span>
-                    </a-form-item>
-                </a-col>
-            </a-row>
-            <a-row :gutter="16">
-                <a-col
-                    :xs="12"
-                    :sm="12"
-                    :md="12"
-                    :lg="12"
-                    v-if="formData.select_lead_type == 'select_non_managed_leads'"
-                >
-                    <a-form-item
-                        :help="
-                            rules.select_all_leads ? rules.select_all_leads.message : null
-                        "
-                        :validateStatus="rules.select_all_leads ? 'error' : null"
-                        class="required"
-                    >
-                        <template #label>
-                            {{ $t("campaign.select_all_leads") }} : {{ selectedRowCount }}
+                <a-col style="margin-bottom: 10px;display: flex;justify-content: end;gap: 1%;" :xs="24" :sm="24"
+                    :md="24" :lg="24">
+                    <a-input-number v-model:value="maxRegistros" :min="1" :max="10000">
+                        <template #addonBefore>
+                            {{ $t('campaign.records') }}
                         </template>
-                    </a-form-item>
+                    </a-input-number>
+                    <a-button type="primary" @click="serchInformationClient" :loading="tableClienteSerch.loading">
+                        <template #icon>
+                            <SearchOutlined />
+                        </template>
+                    </a-button>
                 </a-col>
-            </a-row>
-        </a-form>
+            </a-col>
+        </a-row>
 
         <a-row>
-            <a-col
-                :span="24"
-                v-if="formData.select_lead_type == 'select_non_managed_leads'"
-            >
+            <a-col :span="24">
                 <div class="table-responsive">
-                    <a-table
-                        :row-selection="{
-                            selectedRowKeys: selectedRowKeys,
-                            preserveSelectedRowKeys: true,
-                            onChange: onRowSelectChange,
-                            getCheckboxProps: (record) => ({
-                                disabled: false,
-                                name: record.xid,
-                            }),
-                        }"
-                        :columns="leadColumn"
-                        :row-key="(record) => record.xid"
-                        :data-source="table.data"
-                        :pagination="table.pagination"
-                        :loading="table.loading"
-                        @change="handleTableChange"
-                    >
+                    <a-table :row-key="record => record.id" :columns="columns" :data-source="tableClienteSerch.data"
+                        :pagination="tableClienteSerch.pagination" :loading="tableClienteSerch.loading"
+                        @change="handleClientSerchTableChange" bordered size="small">
                         <template #bodyCell="{ column, record }">
-                            <template v-if="column.dataIndex === 'reference_number'">
+                            <template v-if="column.dataIndex === 'campaign_id'">
+                                {{ record.campaign && record.campaign.name ? record.campaign.name : '' }}
+                            </template>
+                            <template v-if="column.dataIndex === 'cedula'">
+                                {{ record.cedula ?? '' }}
+                            </template>
+                            <template v-if="column.dataIndex === 'nombre'">
+                                {{ `${record.nombre} ${record?.apellido1} ${record?.apellido2}` }}
+                            </template>
+                            <template v-if="column.dataIndex === 'edad'">
+                                {{ record.edad ?? '' }}
+                            </template>
+                            <template v-if="column.dataIndex === 'etapa'">
                                 {{
-                                    record.reference_number != "" &&
-                                    record.reference_number != undefined
-                                        ? record.reference_number
-                                        : "---"
+                                    record.etapa === 'nueva'
+                                        ? $t('bases.new')
+                                        : record.etapa === 'reproceso'
+                                            ? $t('bases.reprocessing')
+                                            : record.etapa === 'na'
+                                                ? $t('bases.na')
+                                                : ''
                                 }}
                             </template>
-                            <template v-if="column.dataIndex === 'total_notes'">
-                                {{ record.notes_count }}
-                            </template>
-                            <template v-if="column.dataIndex === 'campaign_id'">
-                                {{ record.campaign.name }}
+                            <template v-if="column.dataIndex === 'nombreBase'">
+                                {{ record.nombreBase }}
                             </template>
                             <template v-if="column.dataIndex === 'assign_to'">
-                                {{ record.assign_users ? record.assign_users.name : "-" }}
+                                {{ record.assign_to && record.assign_to.user ? record.assign_to.user : '' }}
                             </template>
-                            <template v-if="column.dataIndex === 'name'">
-                                <div v-for="lead in record.lead_data" :key="lead.id">
-                                    <div v-if="lead.field_name === 'First Name'">
-                                        {{ lead.field_value }}
-                                    </div>
-                                </div>
-                            </template>
-                            <template v-if="column.dataIndex === 'email'">
-                                <div v-for="lead in record.lead_data" :key="lead.id">
-                                    <div v-if="lead.field_name === 'Email'">
-                                        {{ lead.field_value }}
-                                    </div>
-                                </div>
-                            </template>
+                        </template>
+                        <template #footer>
+                            <strong>{{ `${$t('campaign.records')} : ${registrosEncontrados}` }}</strong>
                         </template>
                     </a-table>
                 </div>
             </a-col>
         </a-row>
 
+        <a-row :gutter="16" align="bottom" class="mt-20">
+            <a-col :xs="24" :sm="24" :md="6" :lg="6">
+                <a-form-item :label="$t('campaign.members')" name="user_id" :help="rules.user_id?.message"
+                    :validateStatus="rules.user_id ? 'error' : null" class="required">
+                    <a-select v-model:value="selectedUserIds" mode="multiple"
+                        :placeholder="$t('common.select_default_text', [$t('lead.agent')])" :allowClear="true"
+                        style="min-width: 200px;">
+                        <a-select-option v-for="member in campaign.campaign_users" :key="member.xid"
+                            :value="member.user.id">
+                            {{ member.user.name }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
+            </a-col>
+
+            <a-col :xs="24" :sm="24" :md="6" :lg="6">
+                <a-form-item>
+                    <a-input-number :disabled="registrosEncontrados === 0" v-model:value="registrosPorAgente" :min="0" :max="10000">
+                        <template #addonBefore>
+                            {{ $t('common.records_by_agent') }}
+                        </template>
+                    </a-input-number>
+                </a-form-item>
+            </a-col>
+
+            <a-col :xs="24" :sm="24" :md="12" :lg="12">
+                <a-form-item>
+                    <a-button :disabled="registrosEncontrados === 0 || selectedUserIds.length === 0" type="primary" @click="asignarLeadBuscados" :loading="tableClienteSerch.loading">
+                        <template #icon>
+                            <DeleteOutlined />
+                        </template>
+                        {{ $t("lead.assign_users") }}
+                    </a-button>
+                </a-form-item>
+            </a-col>
+        </a-row>
+
+
         <template #footer>
-            <a-button
-                type="primary"
-                @click="onSubmit"
-                style="margin-right: 8px"
-                :loading="loading"
-            >
-                <template #icon>
-                    <SaveOutlined />
-                </template>
-                {{ $t("common.create") }}
-            </a-button>
             <a-button @click="onClose">
-                {{ $t("common.cancel") }}
+                {{ $t('common.cancel') }}
             </a-button>
         </template>
     </a-drawer>
 </template>
 
 <script>
-import { defineComponent, ref, watch } from "vue";
-import { PlusOutlined, MinusSquareOutlined, SaveOutlined } from "@ant-design/icons-vue";
+import { defineComponent, ref, reactive, watch } from "vue";
+import {
+    MinusSquareOutlined,
+    SaveOutlined,
+    UserAddOutlined,
+    CloudDownloadOutlined,
+    UserDeleteOutlined,
+    SearchOutlined,
+} from "@ant-design/icons-vue";
 import apiAdmin from "../../../common/composable/apiAdmin";
 import { useI18n } from "vue-i18n";
 import fields from "./fields";
 import crud from "../../../common/composable/crud";
 import { filter, forEach } from "lodash-es";
+import FilterBuilder from "./FilterBuilder.vue";
+import { message } from 'ant-design-vue';
+
+export const datos = reactive({
+    bases: [],
+    filtros: [],
+});
 
 export default defineComponent({
-    props: ["data", "visible", "pageTitle"],
+    name: "RecycleLead",
+    props: {
+        visible: { type: Boolean, required: true },
+        pageTitle: { type: String, default: "" },
+        campaign: { type: Object, required: true },
+        disabled: { type: Boolean, default: false }
+    },
+    emits: ["close"],
     components: {
-        PlusOutlined,
         MinusSquareOutlined,
         SaveOutlined,
+        UserAddOutlined,
+        CloudDownloadOutlined,
+        UserDeleteOutlined,
+        FilterBuilder,
+        SearchOutlined,
     },
     setup(props, { emit }) {
+        const { t } = useI18n();
         const { addEditRequestAdmin, loading, rules } = apiAdmin();
         const { leadColumn } = fields();
         const crudVariables = crud();
 
-        const { t } = useI18n();
-        const campaigns = ref([]);
-        const formData = ref({
-            campaign_id: undefined,
-            select_lead_type: undefined,
-            xid: undefined,
+        const mockData = ref([]);
+        const targetKeys = ref([]);
+        const selectedKeys = ref([]);
+        var basesSeleccionadas = [];
+        const filtros = ref([]);
+        const maxRegistros = ref(500);
+        const registrosPorAgente = ref(0);
+        const selectedUserIds = ref([]);
+        const registrosEncontrados = ref(0);
+
+        const tableClienteSerch = reactive({
+            data: [],
+            pagination: {
+                current: 1,
+                pageSize: 10,
+                total: 0,
+                showSizeChanger: false
+            },
+            loading: false,
+            selectedRowKeys: [],
         });
 
-        const selectedRowKeys = ref([]);
+        const columns = [
+            { title: t("campaign.campaign"), dataIndex: "campaign_id", key: "campaign_id" },
+            { title: t("lead.document"), dataIndex: "cedula", key: "cedula" },
+            { title: t("lead.name"), dataIndex: "nombre", key: "nombre" },
+            { title: t("lead.age"), dataIndex: "edad", key: "edad" },
+            { title: t("lead.base_name"), dataIndex: "nombreBase", key: "nombreBase" },
+            { title: t("bases.stage"), dataIndex: "etapa", key: "etapa" },
+            { title: t("lead.agent"), dataIndex: "assign_to", key: "assign_to" },
+        ];
 
-        const selectedRowCount = ref(0);
-
-        const onRowSelectChange = (newSelectedRowKeys) => {
-            selectedRowKeys.value = newSelectedRowKeys;
-            selectedRowCount.value = selectedRowKeys.value.length;
+        const handleChange = (nextTargetKeys, direction, moveKeys) => {
+            const movedItems = mockData.value.filter(item => moveKeys.includes(item.key));
+            const movedLabels = movedItems.map(item => item.title);
+            if (direction === "right") {
+                movedLabels.forEach(label => {
+                    if (!basesSeleccionadas.includes(label)) {
+                        basesSeleccionadas.push(label);
+                    }
+                });
+            } else {
+                basesSeleccionadas = basesSeleccionadas.filter(label => !movedLabels.includes(label));
+            }
         };
 
-        const extraFilters = ref({
-            xid: undefined,
-        });
+        const handleClientSerchTableChange = (pagination) => {
+            tableClienteSerch.pagination.current = pagination.current;
+        };
+        const filterOption = (inputValue, item) => {
+            return item.title.toLowerCase().includes(inputValue.toLowerCase());
+        };
+
+        const serchInformationClient = async () => {
+
+            if (basesSeleccionadas.length <= 0) {
+                message.info(t('common.minimum_base'));
+                return;
+            }
+            tableClienteSerch.loading = true;
+            try {
+                const resp = await axiosAdmin.post(
+                    'leads/find-distribution',
+                    {
+                        bases: basesSeleccionadas,
+                        filtros: filtros.value,
+                        campaign_id: props.campaign.id,
+                    }
+                );
+                fillSearchTable(resp.data.leads);
+            } catch (err) {
+                fillSearchTable([]);
+                console.error('Error al buscar leads con expansiones:', err);
+            }
+        };
+
+        function distribuirLeads(leads, agents) {
+            const totalLeads = leads.length;
+            const totalAgents = agents.length;
+            const perAgent = Math.floor(totalLeads / totalAgents);
+            const remainder = totalLeads % totalAgents;
+
+            const assignments = [];
+            let cursor = 0;
+
+            agents.forEach((agentId, idx) => {
+                const count = perAgent + (idx < remainder ? 1 : 0);
+                const slice = leads.slice(cursor, cursor + count);
+                assignments.push({
+                agent_id: agentId,
+                lead_ids: slice.map(l => l.id)
+                });
+                cursor += count;
+            });
+
+            return assignments;
+        }
+
+        const asignarLeadBuscados = async () => {
+            if (selectedUserIds.value.length <= 0) {
+                message.info(t('common.select_default_text', [t('lead.agent')]));
+                return;
+            }
+            if (tableClienteSerch.data.length === 0) {
+                message.info(t('common.no_leads_found'));
+                return;
+            }
+
+            tableClienteSerch.loading = true;
+            try {
+
+                const assignments = distribuirLeads(tableClienteSerch.data, selectedUserIds.value);
+                await axiosAdmin.post('leads/assign',{campaign_id: props.campaign.id,assignments});
+                serchInformationClient();
+                tableClienteSerch.loading = false;
+                message.success(t('common.updated'));
+
+            } catch (err) {
+                tableClienteSerch.loading = false;
+                console.error('Error al asignar leads:', err);
+                message.error(t('common.error'));
+            }
+        };
+
+        const onRowSelectChange = (newSelectedRowKeys) => {
+            tableClienteSerch.selectedRowKeys = newSelectedRowKeys;
+        };
 
         const onSubmit = () => {
             const newFormData = {
-                ...formData.value,
-                selectedRowKeys: selectedRowKeys.value,
+                xid: props.campaign.xid,
+                selectedRowKeys: tableClienteSerch.selectedRowKeys
             };
             addEditRequestAdmin({
                 url: "campaigns/recycle-campaign-leads",
                 data: newFormData,
                 successMessage: t("campaign.recucle_campaign_add"),
-                success: (response) => {
-                    formData.value = {};
-                    selectedRowKeys.value = [];
-                    selectedRowCount.value = 0;
+                success: () => {
                     emit("close");
-                },
+                }
             });
         };
 
-        const setUrlData = () => {
-            crudVariables.tableUrl.value = {
-                url: `leads?fields=id,xid,reference_number,lead_data,campaign_id,x_campaign_id,campaign{id,xid,name,status},notes_count,campaignUsers{id,xid,user_id,x_user_id},campaignUsers:user{id,xid,name},assign_to,x_assign_to,assignUsers{id,xid,name}`,
-                extraFilters,
-            };
-            // crudVariables.table.filterableColumns = uphoneFilterableColumns;
+        const setUrlData = async () => {
+            mockData.value = [];
+            selectedKeys.value = []; 
+            try {
+                const resp = await axiosAdmin.get(`bases/${props.campaign.xid}`);
+                fillSearchBases(resp);
+            } catch (error) {
+                if (error.response) {
+                    console.error("Error 500 al obtener bases:", error.response.data);
+                    this.$message.error("Ocurrió un error interno al cargar las bases.");
+                } else {
+                    console.error("Error de red o de configuración:", error);
+                    this.$message.error("No se pudo conectar al servidor.");
+                }
+            }
+        };
 
-            crudVariables.fetch({
-                page: 1,
-            });
+        const fillSearchBases = (data) => {
+            mockData.value = data.map((base) => ({
+                key: base.id,
+                title: base.nombreBase
+            }));
+        };
+
+        const fillSearchTable = (data) => {
+            registrosPorAgente.value = 0;
+            if (data.length >= 1) {
+                tableClienteSerch.data = data;
+                tableClienteSerch.pagination.total = data.length;
+                tableClienteSerch.selectedRowKeys = [];
+                registrosEncontrados.value = data.length;
+            } else {
+                tableClienteSerch.data = [];
+                tableClienteSerch.pagination.total = 0;
+                tableClienteSerch.selectedRowKeys = [];
+                registrosEncontrados.value = 0;
+            }
+            tableClienteSerch.loading = false;
         };
 
         const onClose = () => {
             rules.value = {};
-            formData.value = {
-                campaign_id: undefined,
-                select_lead_type: undefined,
-                xid: undefined,
-            };
-
-            selectedRowKeys.value = [];
             emit("close");
         };
 
         watch(
             () => props.visible,
-            (newVal, oldVal) => {
+            (newVal) => {
                 if (newVal) {
-                    campaigns.value = [];
-                    extraFilters.value.xid = props.data;
+                    maxRegistros.value = 500;
+                    registrosEncontrados.value = 0;
+                    registrosPorAgente.value = 0;
+                    mockData.value = [];
+                    targetKeys.value = [];
+                    selectedKeys.value = [];
+                    basesSeleccionadas.value = []
+                    selectedUserIds.value = [];
+                    fillSearchTable([]);
                     setUrlData();
-
-                    formData.value.xid = props.data;
-
-                    axiosAdmin
-                        .post("campaigns/campaign-lists-except", { xid: props.data })
-                        .then((response) => {
-                            campaigns.value = response.data.campaigns;
-                        });
                 }
             }
         );
 
+
+        const drawerWidth = window.innerWidth <= 991 ? "90%" : "70%";
+
         return {
-            ...crudVariables,
-            rules,
+            asignarLeadBuscados,
+            selectedUserIds,
+            registrosEncontrados,
+            registrosPorAgente,
+            maxRegistros,
+            filtros,
+            filterOption,
+            mockData,
+            targetKeys,
+            selectedKeys,
+            tableClienteSerch,
+            columns,
             loading,
-            onClose,
+            rules,
             onSubmit,
-            campaigns,
-            formData,
-            setUrlData,
-            leadColumn,
+            onClose,
+            handleChange,
+            handleClientSerchTableChange,
+            serchInformationClient,
             onRowSelectChange,
-            selectedRowKeys,
-            selectedRowCount,
-            drawerWidth: window.innerWidth <= 991 ? "90%" : "45%",
+            fillSearchBases,
+            fillSearchTable,
+            drawerWidth
         };
-    },
+    }
 });
 </script>

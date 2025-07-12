@@ -50,7 +50,7 @@
                                 " />
                         </a-form-item>
                     </a-col>
-                     <a-col :xs="24" :sm="24" :md="4" :lg="4">
+                    <a-col :xs="24" :sm="24" :md="4" :lg="4">
                         <a-form-item
                                 :label="$t('user.status')"
                                 name="active"
@@ -69,8 +69,8 @@
                                     "
                                     :allowClear="true"
                                 >
-                                    <a-select-option :value="1">Enabled</a-select-option>
-                                    <a-select-option :value="0">Disabled</a-select-option>
+                                    <a-select-option :value="1">{{ $t('common.enabled') }}</a-select-option>
+                                    <a-select-option :value="0">{{ $t('common.disabled') }}</a-select-option>
                                 </a-select>
                         </a-form-item>
                     </a-col>

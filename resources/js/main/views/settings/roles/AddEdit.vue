@@ -278,7 +278,7 @@
                                                                 ">
                                                                 {{
                                                                     $t(
-                                                                        "common.campaigns_recycle"
+                                                                        "campaign.lead_distribution"
                                                                     )
                                                                 }}
                                                             </a-checkbox>

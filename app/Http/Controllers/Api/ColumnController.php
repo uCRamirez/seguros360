@@ -21,7 +21,9 @@ class ColumnController extends ApiBaseController
         }
         // obtiene todos los nombres de columna
         $columns = Schema::getColumnListing($table);
-        $columns = array_filter($columns, fn($col) => in_array($col, ['cedula','nombre','apellido1','apellido2','tel1','tel2','email','edad','fechaNacimiento','agente']));
+        $columns = array_filter($columns, fn($col) => in_array($col, 
+            ['cedula','nombre','segundo_nombre','apellido1','apellido2','tel1','tel2','tel3','tel4','tel5','tel6','email','provincia_voto','hijos','estadoCivil','tipo_plan','fechaVencimiento','tarjeta','tipo_tarjeta','emisor','ultimos_digitos','mes_carga','anno_carga','foco_venta','fechaNacimiento','genero','nacionalidad','agente']
+        ));
         return response()->json($columns);
     }
 }

@@ -28,6 +28,7 @@ return new class extends Migration
             $table->integer('tax_rate')->nullable()->default(null);
             $table->string('description', 1000)->nullable()->default(null);
             $table->string('nombreBase')->nullable();
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
     }

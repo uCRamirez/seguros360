@@ -22,7 +22,7 @@ class StaffMember extends BaseModel implements AuthenticatableContract, JWTSubje
 
     protected  $table = 'users';
 
-    protected $default = ["xid", "name", "profile_image"];
+    protected $default = ["xid", "name", "profile_image","user"];
 
     protected $guarded = ['id', 'company_id', 'is_superadmin', 'created_at', 'updated_at'];
 
