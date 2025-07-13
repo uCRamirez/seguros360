@@ -10,6 +10,7 @@ BEGIN
    	DECLARE v_prev_etapa  VARCHAR(191);
 	DECLARE v_prev_date   DATETIME;
 	DECLARE v_etapa_final VARCHAR(191);
+	-- DECLARE v_nuevos      INT;
 
 	-- 0) Handler para atrapar cualquier error y deshacer cambios
 	DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
@@ -17,6 +18,7 @@ BEGIN
 	    -- Deshacer todos los cambios de la transacción activa
 	    ROLLBACK;
 	    -- El SP continuará (silenciosamente) tras este bloque
+	    -- RESIGNAL;
 	END;
 
 	START TRANSACTION;
@@ -269,13 +271,23 @@ BEGIN
     INSERT INTO bases_historico(campaign_id, nombreBase, user_id, cantidadRegistros, etapa, estado, created_at, updated_at)
 	VALUES(p_campaign_id,p_nombreBase,p_myId,p_cantidadRegistros,v_etapa_final,1,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
 
-    -- 8) Limpiar los datos de Aux
-    TRUNCATE TABLE leads_aux;
+	/*SELECT 
+	    COUNT(*) 
+	  INTO v_nuevos
+	FROM leads_aux AS la
+	WHERE la.campaign_id = p_campaign_id
+	  AND la.nombreBase = ''
+	  AND l.cedula IS NULL;*/
 
     -- 9) Actualizar el total de leads de la campana
-    UPDATE campaigns
-    SET total_leads = total_leads + p_cantidadRegistros
-    WHERE id = p_campaign_id;
+   /* UPDATE campaigns
+	SET total_leads     = total_leads     + v_nuevos,
+	    remaining_leads = remaining_leads + v_nuevos,
+	    reference_prefix = v_nuevos
+	WHERE id = p_campaign_id;*/
+
+	-- 8) Limpiar los datos de Aux
+    TRUNCATE TABLE leads_aux;
 
    	COMMIT;
     -- 10) Restauramos el modo SQL original

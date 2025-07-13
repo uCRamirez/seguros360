@@ -176,9 +176,9 @@
                             <template v-if="column.dataIndex === 'image'">
                                 <a-image :width="32" :src="record.image_url" />
                             </template>
-                            <template v-if="column.dataIndex === 'progress'">
+                            <!-- <template v-if="column.dataIndex === 'progress'">
                                 <CampaignProgress :campaign="record" @success="fetch" />
-                            </template>
+                            </template> -->
                             <template v-if="column.dataIndex === 'form'">
                                 {{
                                     record.x_form_id != "" &&
@@ -248,7 +248,7 @@
                             </template>
                             <template v-if="column.dataIndex === 'action'">
                                 <a-space>
-                                    <a-tooltip :title="$t('common.export_leads')">
+                                    <!-- <a-tooltip :title="$t('common.export_leads')">
                                         <a-button
                                             v-if="
                                                 permsArray.includes('export_leads') ||
@@ -266,7 +266,7 @@
                                                 <CloudDownloadOutlined />
                                             </template>
                                         </a-button>
-                                    </a-tooltip>
+                                    </a-tooltip> -->
                                     <AddLead
                                         :campaign="record"
                                         btnType="primary"
@@ -377,7 +377,7 @@ import AddNotification from "./AddNotification.vue";
 import AdminPageHeader from "../../../common/layouts/AdminPageHeader.vue";
 import AddLead from "./AddLead.vue";
 import CampaignMembers from "./CampaignMembers.vue";
-import CampaignProgress from "./CampaignProgress.vue";
+// import CampaignProgress from "./CampaignProgress.vue";
 import { useI18n } from "vue-i18n";
 import RecycleLead from "./RecycleLead.vue";
 
@@ -402,7 +402,7 @@ export default {
         AdminPageHeader,
         AddLead,
         CampaignMembers,
-        CampaignProgress,
+        // CampaignProgress,
     },
     setup() {
         const { permsArray, appSetting, formatDateTime } = common();

@@ -7,6 +7,7 @@ const fields = () => {
 
     const initData = {
         name: "",
+        type: "",
         color: "1f87e8",
     };
 

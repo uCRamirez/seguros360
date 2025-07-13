@@ -43,10 +43,10 @@ const fields = () => {
                     title: t("campaign.name"),
                     dataIndex: "name",
                 },
-                {
-                    title: t("campaign.progress"),
-                    dataIndex: "progress",
-                },
+                // {
+                //     title: t("campaign.progress"),
+                //     dataIndex: "progress",
+                // },
                 {
                     title: t("campaign.members"),
                     dataIndex: "members",

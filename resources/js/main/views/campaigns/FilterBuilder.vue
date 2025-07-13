@@ -1,7 +1,7 @@
 <template>
-    <a-row gutter="12">
+    <a-row gutter="5">
         <template v-for="(filter, index) in filtersLocal" :key="filter.id">
-            <a-col :xs="24" :sm="24" :md="6" :lg="6">
+            <a-col :xs="24" :sm="24" :md="7" :lg="7">
                 <a-form-item>
                     <a-select v-model:value="filter.field" show-search option-filter-prop="title"
                         :placeholder="t('common.select_default_text')" @change="onFieldChange(index)">
@@ -23,7 +23,7 @@
                 </a-form-item>
             </a-col>
 
-            <a-col :xs="24" :sm="24" :md="8" :lg="8">
+            <a-col :xs="24" :sm="24" :md="7" :lg="7">
                 <a-form-item>
                     <a-input v-model:value="filter.value" :placeholder="t('common.value')" />
                 </a-form-item>
@@ -68,12 +68,22 @@ export default defineComponent({
         const columns = [
             { label: t('lead.document'), value: 'cedula' },
             { label: t('lead.name'), value: 'nombre' },
+            { label: t('lead.middle_name'), value: 'segundo_nombre' },
             { label: t('lead.first_last_name'), value: 'apellido1' },
             { label: t('lead.second_last_name'), value: 'apellido2' },
+            { label: t('lead.plan_type'), value: 'tipo_plan' },
+            { label: t('lead.expiration_date'), value: 'fechaVencimiento' },
+            { label: t('lead.card_type'), value: 'tipo_tarjeta' },
+            { label: t('lead.transmitter'), value: 'emisor' },
+            { label: t('lead.last_digits'), value: 'ultimos_digitos' },
+            { label: t('lead.month_charge'), value: 'mes_carga' },
+            { label: t('lead.year_charge'), value: 'anno_carga' },
+            { label: t('lead.sales_focus'), value: 'foco_venta' },
             // { label: t('lead.marital_status'), value: 'estadoCivil' },
-            { label: t('lead.children'), value: 'hijos' },
+            // { label: t('lead.children'), value: 'hijos' },
             { label: t('lead.date_birth'), value: 'fechaNacimiento' },
             { label: t('lead.age'), value: 'edad' },
+            { label: t('lead.gender'), value: 'genero' },
             { label: t('lead.nationality'), value: 'nacionalidad' },
             { label: `${t('lead.phone')} 1`, value: 'tel1' },
             { label: `${t('lead.phone')} 2`, value: 'tel2' },
@@ -81,10 +91,13 @@ export default defineComponent({
             { label: `${t('lead.phone')} 4`, value: 'tel4' },
             { label: `${t('lead.phone')} 5`, value: 'tel5' },
             { label: `${t('lead.phone')} 6`, value: 'tel6' },
+            { label: t('lead.email'), value: 'email' },
+            { label: t('lead.electoral_province'), value: 'provincia_voto' },
             { label: t('lead.province'), value: 'provincia' },
             { label: t('lead.canton'), value: 'canton' },
             { label: t('lead.district'), value: 'distrito' },
-            { label: t('lead.card'), value: 'tarjeta' }
+            { label: t('lead.card'), value: 'tarjeta' },
+            { label: t('bases.stage'), value: 'etapa' },
         ];
 
         // Operadores

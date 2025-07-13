@@ -25,6 +25,14 @@
                 </a-col>
                 <a-col style="margin-bottom: 10px;display: flex;justify-content: end;gap: 1%;" :xs="24" :sm="24"
                     :md="24" :lg="24">
+                    <a-select v-model:value="filtrarAsigandos" :placeholder="$t('campaign.assigned_leads')" :allowClear="true" style="width: 50%;">
+                        <a-select-option :value="0">
+                            {{ $t('common.no') }}
+                        </a-select-option>
+                        <a-select-option :value="1">
+                            {{ $t('common.yes') }}
+                        </a-select-option>
+                    </a-select>
                     <a-input-number v-model:value="maxRegistros" :min="1" :max="10000">
                         <template #addonBefore>
                             {{ $t('campaign.records') }}
@@ -46,9 +54,9 @@
                         :pagination="tableClienteSerch.pagination" :loading="tableClienteSerch.loading"
                         @change="handleClientSerchTableChange" bordered size="small">
                         <template #bodyCell="{ column, record }">
-                            <template v-if="column.dataIndex === 'campaign_id'">
+                            <!-- <template v-if="column.dataIndex === 'campaign_id'">
                                 {{ record.campaign && record.campaign.name ? record.campaign.name : '' }}
-                            </template>
+                            </template> -->
                             <template v-if="column.dataIndex === 'cedula'">
                                 {{ record.cedula ?? '' }}
                             </template>
@@ -60,11 +68,11 @@
                             </template>
                             <template v-if="column.dataIndex === 'etapa'">
                                 {{
-                                    record.etapa === 'nueva'
+                                    record.etapa === 'Nueva'
                                         ? $t('bases.new')
-                                        : record.etapa === 'reproceso'
+                                        : record.etapa === 'Reproceso'
                                             ? $t('bases.reprocessing')
-                                            : record.etapa === 'na'
+                                            : record.etapa === 'No aplica'
                                                 ? $t('bases.na')
                                                 : ''
                                 }}
@@ -186,6 +194,7 @@ export default defineComponent({
         const registrosPorAgente = ref(0);
         const selectedUserIds = ref([]);
         const registrosEncontrados = ref(0);
+        const filtrarAsigandos = ref(null);
 
         const tableClienteSerch = reactive({
             data: [],
@@ -200,7 +209,7 @@ export default defineComponent({
         });
 
         const columns = [
-            { title: t("campaign.campaign"), dataIndex: "campaign_id", key: "campaign_id" },
+            // { title: t("campaign.campaign"), dataIndex: "campaign_id", key: "campaign_id" },
             { title: t("lead.document"), dataIndex: "cedula", key: "cedula" },
             { title: t("lead.name"), dataIndex: "nombre", key: "nombre" },
             { title: t("lead.age"), dataIndex: "edad", key: "edad" },
@@ -244,6 +253,8 @@ export default defineComponent({
                         bases: basesSeleccionadas,
                         filtros: filtros.value,
                         campaign_id: props.campaign.id,
+                        filtrarAsigandos: filtrarAsigandos.value,
+                        maxRegistros: maxRegistros.value,
                     }
                 );
                 fillSearchTable(resp.data.leads);
@@ -338,9 +349,17 @@ export default defineComponent({
         };
 
         const fillSearchBases = (data) => {
-            mockData.value = data.map((base) => ({
-                key: base.id,
-                title: base.nombreBase
+            const seenTitles = new Set();
+
+            mockData.value = data
+                .filter(base => {
+                    if (seenTitles.has(base.nombreBase)) return false;
+                        seenTitles.add(base.nombreBase);
+                        return true;
+                    })
+                .map(base => ({
+                    key: base.id,
+                    title: base.nombreBase
             }));
         };
 
@@ -369,6 +388,7 @@ export default defineComponent({
             () => props.visible,
             (newVal) => {
                 if (newVal) {
+                    filtrarAsigandos.value = null;
                     maxRegistros.value = 500;
                     registrosEncontrados.value = 0;
                     registrosPorAgente.value = 0;
@@ -387,6 +407,7 @@ export default defineComponent({
         const drawerWidth = window.innerWidth <= 991 ? "90%" : "70%";
 
         return {
+            filtrarAsigandos,
             asignarLeadBuscados,
             selectedUserIds,
             registrosEncontrados,

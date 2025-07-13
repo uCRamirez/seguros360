@@ -788,41 +788,96 @@ class LeadController extends ApiBaseController
     }
 
     // usa Request para recoger bien los arrays de JSON:
+    // public function getDataForDistribution(Request $request)
+    // {
+    //     $bases   = $request->input('bases',   []);
+    //     $filtros = $request->input('filtros', []);
+    //     $campaign_id = $request->input('campaign_id');
+    //     $filtrarAsigandos = $request->input('filtrarAsigandos');
+    //     $maxRegistros = $request->input('maxRegistros');
+
+    //     // \Log::info('Filtros recibidos:', ['filtros' => $filtros]);
+    //     // \Log::info('filtrarAsigandos:', ['filtrarAsigandos' => $filtrarAsigandos]);
+
+    //     $query = Lead::query();
+    //     if (!empty($bases)) {
+    //         $query->whereIn('nombreBase', $bases);
+    //     }
+    //     $query->where('campaign_id', $campaign_id);
+
+    //     foreach ($filtros as $f) {
+    //         if (isset($f['field'], $f['operator'], $f['value'])) {
+    //             if($f['operator'] === 'like'){
+    //                 $query->where($f['field'], 'like', "%{$f['value']}%");
+    //             }else{
+    //                 $query->where($f['field'], $f['operator'], $f['value']);
+    //             }
+    //         }
+    //     }
+
+    //     if ($filtrarAsigandos === 1) {
+    //         $query->whereNotNull('assign_to');
+    //     } 
+    //     else if ($filtrarAsigandos === 0) {
+    //         $query->whereNull('assign_to');
+    //     }
+
+    //     $query->with(['campaign', 'assignTo']);
+    //     $query->limit($maxRegistros);
+
+    //     // \Log::info('SQL:', [
+    //     //     'sql'      => $query->toSql(),
+    //     //     'bindings' => $query->getBindings(),
+    //     // ]);
+
+    //     $leads = $query->get();
+
+    //     return ApiResponse::make('Success', [
+    //         'leads'   => $leads,
+    //     ]);
+    // }
+
     public function getDataForDistribution(Request $request)
     {
-        $bases   = $request->input('bases',   []);
-        $filtros = $request->input('filtros', []);
-        $campaign_id = $request->input('campaign_id');
+        $bases           = $request->input('bases', []);
+        $filtros         = $request->input('filtros', []);
+        $campaign_id     = $request->input('campaign_id');
+        $filtrarAsigandos = $request->input('filtrarAsigandos');
+        $maxRegistros    = (int) $request->input('maxRegistros', 500);
 
-        // \Log::info('Filtros recibidos:', ['filtros' => $filtros]);
-
-        $query = Lead::query();
-        if (!empty($bases)) {
-            $query->whereIn('nombreBase', $bases);
-        }
-        $query->where('campaign_id', $campaign_id);
+        $query = Lead::query()
+            ->with(['assignTo'])
+            ->select(['id', 'cedula','nombreBase', 'nombre', 'segundo_nombre','apellido1','apellido2','edad','etapa','assign_to'])
+            ->when(!empty($bases), fn($q) => $q->whereIn('nombreBase', $bases))
+            ->where('campaign_id', $campaign_id)
+            ->when($filtrarAsigandos === 1, fn($q) => $q->whereNotNull('assign_to'))
+            ->when($filtrarAsigandos === 0, fn($q) => $q->whereNull('assign_to'));
 
         foreach ($filtros as $f) {
-            if (
-                isset($f['field'], $f['operator'], $f['value'])
-            ) {
-                $query->where($f['field'], $f['operator'], $f['value']);
+            if (isset($f['field'], $f['operator'], $f['value'])) {
+                if ($f['operator'] === 'like') {
+                    $query->where($f['field'], 'like', "%{$f['value']}%");
+                } else {
+                    $query->where($f['field'], $f['operator'], $f['value']);
+                }
             }
         }
 
-        // \Log::info('SQL:', [
-        //     'sql'      => $query->toSql(),
-        //     'bindings' => $query->getBindings(),
-        // ]);
-
-        $query->with(['campaign', 'assignTo']);
-
-        $leads = $query->get();
+        $result = [];
+        $query->chunkById(500, function ($leadsBatch) use (&$result, $maxRegistros) {
+            foreach ($leadsBatch as $lead) {
+                $result[] = $lead;
+                if (count($result) >= $maxRegistros) {
+                    return false; // detiene el chunk cuando llega al máximo
+                }
+            }
+        });
 
         return ApiResponse::make('Success', [
-            'leads'   => $leads,
+            'leads' => $result,
         ]);
     }
+
 
     public function pushAssign(Request $request)
     {

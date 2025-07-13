@@ -388,7 +388,7 @@
                                                         )) &&
                                                     !record.started
                                                 ">
-                                                    <a-button type="primary" @click="
+                                                    <a-button danger type="primary" @click="
                                                         showDeleteConfirm(record.xid)
                                                         ">
                                                         <template #icon>
