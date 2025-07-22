@@ -65,18 +65,6 @@
                                     </a-col>
                                 </a-row>
 
-
-                                <a-row :gutter="16" class="mt-25">
-                                    <a-col :span="8">
-                                        {{ $t("campaign.managed_vs_total_leads") }}
-                                    </a-col>
-                                    <a-col :span="16">
-                                        {{ allCampaign.managed_data.started_leads }}/{{
-                                            allCampaign.managed_data.total_leads
-                                        }}
-                                    </a-col>
-                                </a-row>
-
                                 <a-row :gutter="16" class="mt-25">
                                     <a-col :span="8">
                                         {{ $t("campaign.not_having_notes") }}

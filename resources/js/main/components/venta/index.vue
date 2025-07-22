@@ -8,6 +8,7 @@
         @closed="onCloseAddEdit"
         :formData="formData"
         :leadInfo="leadInfo"
+        :allCampaigns="allCampaigns"
         :allProductos="allProductos"
         :data="viewData"
         :pageTitle="!soloVer 
@@ -122,6 +123,41 @@
                 "
             />
         </a-col>
+        <!-- Filtro campo de busqueda -->
+        <a-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8" 
+            v-if="
+                showUserFilter &&
+                permsArray.includes('leads_view_all') ||
+                permsArray.includes('admin')
+            ">
+            <a-input-group class="d-flex" compact>
+                <a-select
+                    v-model:value="table.searchColumn"
+                    :placeholder="$t('common.select_default_text', [''])"
+                    class="flex-none"
+                    style="width: 45%;"
+                    :allowClear="true"
+                >
+                    <a-select-option
+                        v-for="filterableColumn in filterableColumns"
+                        :key="filterableColumn.key"
+                    >
+                        {{ filterableColumn.value }}
+                    </a-select-option>
+                </a-select>
+
+                <a-input-search
+                    v-model:value="table.searchString"
+                    :placeholder="$t('common.select_default_text', [$t('common.information')])"
+                    show-search
+                    @change="onTableSearch"
+                    @search="onTableSearch"
+                    :loading="table.filterLoading"
+                    class="flex-1"
+                    style="min-width: 0;"  
+                />
+            </a-input-group>
+        </a-col>
     </a-row>
 
     <a-row class="mt-20">
@@ -216,6 +252,9 @@
                                 </template>
                             </a-comment>
                         </template>
+                        <template v-if="column.dataIndex === 'calidad'">
+                            {{ record }}
+                        </template>
                         <template v-if="column.dataIndex === 'notes_file'">
                             <a-typography-link
                                 :href="record.notes_file_url"
@@ -260,6 +299,24 @@
             </div>
         </a-col>
     </a-row>
+    <a-row v-if="showCalidad">
+        <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+            <a-descriptions :title="`${$t('common.information')} ${$t('menu.quality')}`">
+                <a-descriptions-item :label="$t('common.date_time')">
+                    {{ datosCalidad.esCalidad ? formatDateTime(datosCalidad.fecha_calidad) : "-" }}
+                </a-descriptions-item>
+                <a-descriptions-item :label="$t('common.action')">
+                    {{ datosCalidad.esCalidad ? datosCalidad.accion_calidad : "-" }}
+                </a-descriptions-item>
+                <a-descriptions-item :label="$t('common.qualification')">
+                    {{ datosCalidad.esCalidad ? datosCalidad.nota_estado : "-" }}
+                </a-descriptions-item>
+                <a-descriptions-item :label="$t('lead.agent')">
+                    {{ datosCalidad.esCalidad ? datosCalidad.creado_por : "-" }}
+                </a-descriptions-item>
+            </a-descriptions>
+        </a-col>
+    </a-row>
 
     <!-- Global Compaonent -->
     <view-lead-details
@@ -272,7 +329,7 @@
 </template>
 
 <script>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, reactive } from "vue";
 import {
     PlusOutlined,
     EditOutlined,
@@ -290,6 +347,16 @@ import fields from "./fields";
 import AddEdit from "./AddEdit.vue";
 import DateRangePicker from "../../../common/components/common/calendar/DateRangePicker.vue";
 
+function getItemCalidad() {
+    return {
+        esCalidad: false,
+        fecha_calidad: "",
+        nota_estado: "",
+        accion_calidad: "",
+        creado_por: "",
+    };
+};
+export var datosCalidad = reactive(getItemCalidad());
 export default {
     props: {
         pageName: {
@@ -378,6 +445,7 @@ export default {
             allUsers,
             getPrefetchData,
             allProductos,
+            t,
         } = fields(props);
         const crudVariables = crud();
         const leadInfo = ref({});
@@ -397,7 +465,11 @@ export default {
             user_id: undefined,
         });
 
+        const showCalidad = ref(false);
+
         onMounted(() => {
+            showCalidad.value = false;
+            Object.assign(datosCalidad, getItemCalidad());
             getPrefetchData().then((response) => {
                 
                     leadInfo.value = props.leadInfo;
@@ -464,18 +536,43 @@ export default {
                 setUrlData();
             });
         };
-
-        watch(() => props.idNota, newIdNota => {
+        
+        watch(() => props.idNota, async (newIdNota) => {
+            showCalidad.value = false;
+            Object.assign(datosCalidad, getItemCalidad());
             if(props.soloUna){
                 filters.value['lead_logs.id'] = newIdNota;
+                if(newIdNota){
+                    try {
+                        const resp = await axiosAdmin.get(`evaluaciones-calidad/{${newIdNota},nota}`);
+                        colocarCalidad(resp);
+                    } catch (e) {
+                        console.error('Error:', e);   
+                    }
+                }
             }else{
                 filters.value['lead_logs.id'] = undefined;
             }
         }, { immediate: true })
 
+        const colocarCalidad = (resp) => {
+            if (resp.success && resp.evaluacion_calidad && resp.estado_calidad_venta) {
+                showCalidad.value = true;
+                datosCalidad.esCalidad = true;
+                datosCalidad.fecha_calidad = resp.evaluacion_calidad.fecha_calidad;
+                datosCalidad.nota_estado = resp.estado_calidad_venta.nota_estado;
+                datosCalidad.accion_calidad = resp.evaluacion_calidad.accion_calidad ? resp.evaluacion_calidad.accion_calidad.nombre : "";
+                datosCalidad.creado_por = resp.evaluacion_calidad.creador ? resp.evaluacion_calidad.creador.name : "";
+            } else {
+                showCalidad.value = false;
+                Object.assign(datosCalidad, getItemCalidad());
+            }
+        }
 
 
         watch(() => props.leadId, (newLeadId) => {
+            showCalidad.value = false;
+            Object.assign(datosCalidad, getItemCalidad());
             if (newLeadId) {
                 leadInfo.value = props.leadInfo;
                 extraFilters.value.lead_id = newLeadId;
@@ -494,6 +591,8 @@ export default {
         );
 
         return {
+            datosCalidad,
+            showCalidad,
             permsArray,
             appSetting,
             columns,

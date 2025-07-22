@@ -1,5 +1,8 @@
 ﻿lang_key;group;key;value;
 esp;common;enabled;Habilitado;
+esp;common;no_contact;No contactar más;
+esp;common;average_grade;Promedio de nota;
+esp;common;leads_worked;Leads trabajados;
 esp;common;disabled;Deshabilitado;
 esp;common;id;Id;
 esp;common;action;Acción;

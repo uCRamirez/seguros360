@@ -446,51 +446,94 @@ const common = () => {
         }
     };
 
+    // const getRecursiveTypifications2 = (response, excludeId = null) => {
+    //     const allTypificationArray = [];
+    //     const listArray = [];
+
+    //     response.data.map((responseArray) => {
+    //         if (excludeId == null || (excludeId != null && responseArray.x_parent_id != excludeId)) {
+
+    //             let disableNode = true;
+    //             let parentNode = find(response.data, { xid: responseArray.x_parent_id });
+    //             if (responseArray.x_parent_id === null || (parentNode != undefined && parentNode.x_parent_id === null)) {
+    //                 disableNode = false;
+    //             }
+
+    //             listArray.push({
+    //                 xid: responseArray.xid,
+    //                 x_parent_id: responseArray.x_parent_id,
+    //                 title: responseArray.name,
+    //                 value: responseArray.xid,
+    //                 disabled: disableNode,
+    //             });
+    //         }
+    //     });
+
+    //     // console.log(listArray);
+    //     listArray.forEach((node) => {
+    //         // No parentId means top level
+    //         if (!node.x_parent_id) return allTypificationArray.push(node);
+
+    //         // Insert node as child of parent in listArray array
+
+    //         const parentIndex = listArray.findIndex(
+    //             (el) => el.xid === node.x_parent_id
+    //         );
+
+    //         if (!listArray[parentIndex].children) {
+    //             return (listArray[parentIndex].children = [node]);
+    //         }
+
+
+    //         listArray[parentIndex].children.push(node);
+
+    //     });
+
+    //     return allTypificationArray;
+    // }
+
     const getRecursiveTypifications = (response, excludeId = null) => {
-        const allTypificationArray = [];
-        const listArray = [];
+    // 1) Plano sin disabled
+    const listArray = response.data
+        .filter(item => !(excludeId != null && item.x_parent_id === excludeId))
+        .map(item => ({
+        xid:         item.xid,
+        x_parent_id: item.x_parent_id,
+        title:       item.name,
+        value:       item.xid,
+        children:    []
+        }));
 
-        response.data.map((responseArray) => {
-            if (excludeId == null || (excludeId != null && responseArray.x_parent_id != excludeId)) {
+    // 2) Armo el árbol
+    const allTypificationArray = [];
+    listArray.forEach(node => {
+        if (!node.x_parent_id) {
+        allTypificationArray.push(node);
+        } else {
+        const parent = listArray.find(el => el.xid === node.x_parent_id);
+        if (parent) parent.children.push(node);
+        }
+    });
 
-                let disableNode = true;
-                let parentNode = find(response.data, { xid: responseArray.x_parent_id });
-                if (responseArray.x_parent_id === null || (parentNode != undefined && parentNode.x_parent_id === null)) {
-                    disableNode = false;
-                }
-
-                listArray.push({
-                    xid: responseArray.xid,
-                    x_parent_id: responseArray.x_parent_id,
-                    title: responseArray.name,
-                    value: responseArray.xid,
-                    disabled: disableNode,
-                });
-            }
+    // 3) Marco disabled solo en hojas de nivel >=2
+    const markDisabled = (nodes, depth = 1) => {
+        nodes.forEach(node => {
+        if (node.children.length === 0) {
+            // si es hoja, solo deshabilito si depth > 1
+            node.disabled = depth > 1;
+        } else {
+            // si tiene hijos, siempre habilitado y sigo bajando
+            node.disabled = false;
+            markDisabled(node.children, depth + 1);
+        }
         });
+    };
+    markDisabled(allTypificationArray);
 
-        // console.log(listArray);
-        listArray.forEach((node) => {
-            // No parentId means top level
-            if (!node.x_parent_id) return allTypificationArray.push(node);
-
-            // Insert node as child of parent in listArray array
-
-            const parentIndex = listArray.findIndex(
-                (el) => el.xid === node.x_parent_id
-            );
-
-            if (!listArray[parentIndex].children) {
-                return (listArray[parentIndex].children = [node]);
-            }
+    return allTypificationArray;
+    };
 
 
-            listArray[parentIndex].children.push(node);
-
-        });
-
-        return allTypificationArray;
-    }
 
     const getCampaignUrl = (campaignStatus = "active", viewType = "self") => {
         var campaignsUrl = `call-managers?fields=id,xid,name,status,active,form_id,x_form_id,form{id,xid,name,form_fields},campaignUsers{id,xid,user_id,x_user_id,campaign_id,x_campaign_id},campaignUsers:user{id,xid,name,profile_image,profile_image_url}&campaign_status=${campaignStatus}&view_type=${viewType}&filters=active eq 1&limit=10000`;

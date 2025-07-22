@@ -2,7 +2,7 @@ import axios from 'axios';
 import { message } from "ant-design-vue";
 
 var axiosAdmin = axios.create({
-	baseURL: window.config.path + '/api/v1'
+	baseURL: window.config.path + '/api/v1',
 });
 
 // Axios default headers
@@ -30,7 +30,7 @@ axiosAdmin.interceptors.response.use(function (response) {
 		// throw new Error('Unauthorized');
 	} else if (errorCode === 400) {
 		var errMessage = error.response.data.error.message;
-		message.error(errMessage);
+		message.error(error.response.data.error.message.d);
 	} else if (errorCode === 403) {
 		var errMessage = error.response.data.error.message;
 		message.error(errMessage);

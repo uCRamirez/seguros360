@@ -34,6 +34,7 @@ use Examyou\RestAPI\Exceptions\ApiException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request; 
+use Illuminate\Support\Facades\DB;
 
 class LeadController extends ApiBaseController
 {
@@ -47,6 +48,7 @@ class LeadController extends ApiBaseController
     protected function modifyIndex($query)
     {
         $request = request();
+
         $user = user();
 
         // Extra Filter For campaign Type
@@ -121,6 +123,10 @@ class LeadController extends ApiBaseController
 
     public function createLead(CreateLeadRequest $request)
     {
+        // \Log::info('CreateLeadRequest -campaign_id', [$request->all()]);
+        // \Log::info('CreateLeadRequest -campaign_id', [$request->campaign_id]);
+        // \Log::info('CreateLeadRequest - assign_to', [$request->assign_to]);
+
         $user = user();
 
         if (!$user->ability('admin', 'leads_create')) {
@@ -128,7 +134,20 @@ class LeadController extends ApiBaseController
         }
 
         $xCampaignId = $request->campaign_id;
-        $campaignId = $this->getIdFromHash($xCampaignId);
+
+        if(is_int($request->campaign_id)){
+            $campaignId= $request->campaign_id;
+            // \Log::info('is_int - campaign_id', [$campaignId]);
+        }else{
+            $campaignId = $this->getIdFromHash($xCampaignId);
+        }
+        if(is_int($request->assign_to)){
+            $userId  = $request->assign_to;
+            // \Log::info('is_int - assign_to', [$request->assign_to]);
+        }else{
+            $userId = $this->getIdFromHash($request->input('assign_to'));
+        }
+
         $loggedUser = user();
         $campaign = Campaign::find($campaignId);
 
@@ -138,21 +157,10 @@ class LeadController extends ApiBaseController
 
         $cedula = $request->input('cedula');
 
-        // 1. Validar si la cédula y campaign_id ya existen
+        // Validar si la cédula y campaign_id ya existen
         $lead = Lead::where('cedula', $cedula)
                     ->where('campaign_id', $campaignId)
                     ->first();
-
-        // $leadHashString = "";
-        // $leadDatas = $request->lead_data;
-        // if (is_array($leadDatas)) {
-        //     foreach ($leadDatas as $leadData) {
-        //         if (isset($leadData['field_value'])) {
-        //             $leadHashString .= strtolower($leadData['field_value']);
-        //         }
-        //     }
-        // }
-        // $calculatedLeadHash = md5($leadHashString . $campaignId);
 
         $isNewLead = false;
         if (!$lead) {
@@ -161,27 +169,26 @@ class LeadController extends ApiBaseController
             $lead->created_by = $loggedUser->id; 
             $isNewLead = true;
 
-            if ($campaign->allow_reference_prefix) {
-                $lead->reference_number = $campaign->reference_prefix . \Carbon\Carbon::now()->timestamp;
-            }
+            // if ($campaign->allow_reference_prefix) {
+            //     $lead->reference_number = $campaign->reference_prefix . \Carbon\Carbon::now()->timestamp;
+            // }
         }
 
         if ($request->has('assign_to') && $request->input('assign_to') != '') {
-            $userId = $this->getIdFromHash($request->input('assign_to'));
             $lead->assign_to = $userId;
         } elseif ($isNewLead && !$request->has('assign_to')) {
-            $lead->assign_to = null;
+            $lead->assign_to = $loggedUser->id;
         }
 
         $lead->lead_data = $request->lead_data;
-        // $lead->lead_hash = $calculatedLeadHash;
-        $lead->cedula    = $cedula; // La cédula del request es la que se usa/asigna.
+        $lead->cedula    = $cedula; 
 
         $personalFieldsFromForm = [
             'nombre',
             'segundo_nombre',       
             'apellido1',   
             'apellido2',  
+            'estadoCivil_id',
             'tipo_plan',       
             'fechaVencimiento',       
             'tarjeta',       
@@ -204,7 +211,8 @@ class LeadController extends ApiBaseController
             'tel4',          
             'tel5',          
             'tel6',          
-            'email'        
+            'email',
+            'etapa'     
         ];
 
         foreach ($personalFieldsFromForm as $fieldKey) {
@@ -215,13 +223,13 @@ class LeadController extends ApiBaseController
         }
 
         $lead->save();
-
+        $lead->load('assignTo:id,name');
         // Calculating Lead Counts
         Common::recalculateCampaignLeads($campaignId);
 
         $message = $isNewLead ? 'Lead created successfully' : 'Lead updated successfully';
         //\Log::info('createLead', ['message' => $message]);
-        return ApiResponse::make($message, ['lead_id' => $this->getHashFromId($lead->id)]);
+        return ApiResponse::make($message, ['lead' => $lead]);
     }
 
     public function createLeadCallLog($leadXId)
@@ -787,62 +795,14 @@ class LeadController extends ApiBaseController
         }
     }
 
-    // usa Request para recoger bien los arrays de JSON:
-    // public function getDataForDistribution(Request $request)
-    // {
-    //     $bases   = $request->input('bases',   []);
-    //     $filtros = $request->input('filtros', []);
-    //     $campaign_id = $request->input('campaign_id');
-    //     $filtrarAsigandos = $request->input('filtrarAsigandos');
-    //     $maxRegistros = $request->input('maxRegistros');
-
-    //     // \Log::info('Filtros recibidos:', ['filtros' => $filtros]);
-    //     // \Log::info('filtrarAsigandos:', ['filtrarAsigandos' => $filtrarAsigandos]);
-
-    //     $query = Lead::query();
-    //     if (!empty($bases)) {
-    //         $query->whereIn('nombreBase', $bases);
-    //     }
-    //     $query->where('campaign_id', $campaign_id);
-
-    //     foreach ($filtros as $f) {
-    //         if (isset($f['field'], $f['operator'], $f['value'])) {
-    //             if($f['operator'] === 'like'){
-    //                 $query->where($f['field'], 'like', "%{$f['value']}%");
-    //             }else{
-    //                 $query->where($f['field'], $f['operator'], $f['value']);
-    //             }
-    //         }
-    //     }
-
-    //     if ($filtrarAsigandos === 1) {
-    //         $query->whereNotNull('assign_to');
-    //     } 
-    //     else if ($filtrarAsigandos === 0) {
-    //         $query->whereNull('assign_to');
-    //     }
-
-    //     $query->with(['campaign', 'assignTo']);
-    //     $query->limit($maxRegistros);
-
-    //     // \Log::info('SQL:', [
-    //     //     'sql'      => $query->toSql(),
-    //     //     'bindings' => $query->getBindings(),
-    //     // ]);
-
-    //     $leads = $query->get();
-
-    //     return ApiResponse::make('Success', [
-    //         'leads'   => $leads,
-    //     ]);
-    // }
-
     public function getDataForDistribution(Request $request)
     {
         $bases           = $request->input('bases', []);
         $filtros         = $request->input('filtros', []);
         $campaign_id     = $request->input('campaign_id');
         $filtrarAsigandos = $request->input('filtrarAsigandos');
+        $filtrarTrabajados = $request->input('filtrarTrabajados');
+        $noContacto = $request->input('noContacto');
         $maxRegistros    = (int) $request->input('maxRegistros', 500);
 
         $query = Lead::query()
@@ -851,7 +811,17 @@ class LeadController extends ApiBaseController
             ->when(!empty($bases), fn($q) => $q->whereIn('nombreBase', $bases))
             ->where('campaign_id', $campaign_id)
             ->when($filtrarAsigandos === 1, fn($q) => $q->whereNotNull('assign_to'))
-            ->when($filtrarAsigandos === 0, fn($q) => $q->whereNull('assign_to'));
+            ->when($filtrarAsigandos === 0, fn($q) => $q->whereNull('assign_to'))
+            ->when($filtrarTrabajados === 1, fn($q) => $q->where('started',1))
+            ->when($filtrarTrabajados === 0, fn($q) => $q->where('started',0))
+            ->when($noContacto === 1, function ($q) {
+                $q->whereDoesntHave('latestNotesLog', function ($q2) {
+                    $q2->whereHas('notesTypification3', function ($q3) {
+                        $q3->where('no_contact', 1);
+                    });
+                });
+            });
+
 
         foreach ($filtros as $f) {
             if (isset($f['field'], $f['operator'], $f['value'])) {
@@ -879,29 +849,66 @@ class LeadController extends ApiBaseController
     }
 
 
+    // public function pushAssign(Request $request)
+    // {
+
+    //     $campaignId  = $request->input('campaign_id');
+    //     $assignments = $request->input('assignments');
+
+    //     // \Log::info('campaignId:', [$campaignId]);
+    //     // \Log::info('assignments:', [$assignments]);
+
+    //     // Usamos transacción para asegurar consistencia
+    //     \DB::transaction(function() use ($campaignId, $assignments) {
+    //         foreach ($assignments as $grp) {
+    //             // Actualiza todos esos leads en una sola query
+    //             Lead::whereIn('id', $grp['lead_ids'])
+    //                 ->where('campaign_id', $campaignId)
+    //                 ->update(['assign_to' => $grp['agent_id']]);
+    //         }
+
+    //         // Recalcula totales de la campaña
+    //         Common::recalculateCampaignLeads($campaignId);
+    //     });
+
+    //     return ApiResponse::make('Leads assigned successfully');
+    // }
+
     public function pushAssign(Request $request)
     {
-
         $campaignId  = $request->input('campaign_id');
         $assignments = $request->input('assignments');
+        $scheduled   = $request->boolean('scheduled');
+        $scheduledAt = $request->input('scheduled_at'); // datetime (string)
 
-        // \Log::info('campaignId:', [$campaignId]);
-        // \Log::info('assignments:', [$assignments]);
-
-        // Usamos transacción para asegurar consistencia
-        \DB::transaction(function() use ($campaignId, $assignments) {
+        if ($scheduled && $scheduledAt) {
             foreach ($assignments as $grp) {
-                // Actualiza todos esos leads en una sola query
+                DB::table('scheduled_lead_assignments')->insert([
+                    'campaign_id' => $campaignId,
+                    'agent_id'    => $grp['agent_id'],
+                    'lead_ids'    => json_encode($grp['lead_ids']),
+                    'scheduled_at'=> Carbon::parse($scheduledAt),
+                    'created_at'  => now(),
+                    'updated_at'  => now(),
+                ]);
+            }
+
+            return ApiResponse::make('Leads assignment scheduled successfully');
+        }
+
+        // Asignación inmediata (actual lógica)
+        DB::transaction(function () use ($campaignId, $assignments) {
+            foreach ($assignments as $grp) {
                 Lead::whereIn('id', $grp['lead_ids'])
                     ->where('campaign_id', $campaignId)
                     ->update(['assign_to' => $grp['agent_id']]);
             }
 
-            // Recalcula totales de la campaña
             Common::recalculateCampaignLeads($campaignId);
         });
 
         return ApiResponse::make('Leads assigned successfully');
     }
+
 
 }

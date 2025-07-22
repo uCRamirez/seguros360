@@ -8,6 +8,23 @@
     >
         <a-form layout="vertical">
             <a-row :gutter="16">
+                <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                    <a-form-item class="required" :label="$t('lead.campaign')" name="campaign_id" :help="rules.campaign_id ? rules.campaign_id.message : null" :validateStatus="rules.campaign_id ? 'error' : null">
+                        <a-select :disabled="(addEditType === 'edit' && formData.parent_id) || (addEditType === 'add' && formData.parent_id)" v-model:value="formData.campaign_id" :placeholder="$t('common.select_default_text', [
+                            $t('lead.campaign'),
+                        ])
+                            " :allowClear="true" style="width: 100%" optionFilterProp="title"
+                            show-search @change="campaignChanged">
+                            <a-select-option v-for="allCampaign in allCampaigns.filter(s => s.active === 1)"
+                                :key="allCampaign.xid" :title="allCampaign.name"
+                                :value="allCampaign.xid" :campaign="allCampaign">
+                                {{ allCampaign.name }}
+                            </a-select-option>
+                        </a-select>
+                    </a-form-item>
+                </a-col>
+            </a-row>
+            <a-row :gutter="16">
                 <a-col v-if="!formData.acciones || addEditType === 'add'" :xs="24" :sm="24" :md="24" :lg="24">
                     <a-form-item
                         :label="$t('notes_typification.parent_id')"
@@ -16,6 +33,7 @@
                         :validateStatus="rules.parent_id ? 'error' : null"
                     >
                         <a-tree-select
+                            :disabled="addEditType === 'edit' && !formData.parent_id"
                             v-model:value="formData.parent_id"
                             show-search
                             style="width: 100%"
@@ -60,7 +78,6 @@
                     <a-form-item
                         :label="$t('menu.actions')"
                         name="acciones"
-                        v-if="formData.acciones"
                     >
                         <a-checkbox style="margin-left: 10px;" v-model:checked="formData.sale">
                             {{ $t('lead_notes.sale') }}
@@ -68,6 +85,10 @@
 
                         <a-checkbox  v-model:checked="formData.schedule">
                             {{ $t('common.scheduled') }}
+                        </a-checkbox>
+
+                        <a-checkbox  v-model:checked="formData.no_contact" :disabled="currentLevel !== 3">
+                            {{ $t('common.no_contact') }}
                         </a-checkbox>
 
                     </a-form-item>
@@ -96,7 +117,7 @@ import common from "../../../common/composable/common";
 import { forEach } from "lodash-es";
 
 export default defineComponent({
-    props: ["formData", "data", "visible", "url", "addEditType"],
+    props: ["formData", "data", "visible", "url", "addEditType","allCampaigns"],
     components: {
         PlusOutlined,
         LoadingOutlined,
@@ -110,14 +131,14 @@ export default defineComponent({
 
         const getTypifications = (xid = null) => {
             var url =
-                "notes-typifications?fields=id,xid,name,parent_id,x_parent_id,sale,schedule,status&filters=status eq 1&limit=10000";
+                "notes-typifications?fields=id,xid,name,parent_id,x_parent_id,sale,schedule,status,campaign{id,xid,name}&filters=status eq 1&limit=10000";
             if (xid != null) {
                 url += `&filters=id ne ${xid}&hashable=${xid}`;
             }
 
             axiosAdmin.get(url).then((response) => {
                 allTypifications.value = getRecursiveTypifications(response, xid);
-
+                flatTypificationMap.value = flattenTypifications(allTypifications.value);
                 // if (allTypifications.value.length >= 3) {
                 //     allTypifications.value[2].disabled = true;
                 // }
@@ -162,8 +183,48 @@ export default defineComponent({
                 getTypifications(newVal.data.xid);
             }
         });
+        
+
+        const flatTypificationMap = ref({});
+
+        const flattenTypifications = (list) => {
+            const map = {};
+            const recurse = (nodes) => {
+                nodes.forEach((node) => {
+                    map[node.xid] = node;
+                    if (node.children) recurse(node.children);
+                });
+            };
+            recurse(list);
+            return map;
+        };
+
+        const getTypificationLevel = (parentId) => {
+            let level = 1;
+            let current = flatTypificationMap.value[parentId];
+
+            while (current && current.x_parent_id) {
+                level++;
+                current = flatTypificationMap.value[current.x_parent_id];
+            }
+
+            return level;
+        };
+
+        const currentLevel = computed(() => {
+            return props.formData.parent_id ? getTypificationLevel(props.formData.parent_id) + 1 : 1;
+        });
+
+
+        watch(currentLevel, (val) => {
+            if (val !== 3 && props.formData.no_contact) {
+                props.formData.no_contact = false;
+            }
+        });
+
 
         return {
+            currentLevel,
             loading,
             rules,
             onClose,

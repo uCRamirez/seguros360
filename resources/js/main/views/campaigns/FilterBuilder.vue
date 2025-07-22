@@ -24,7 +24,43 @@
             </a-col>
 
             <a-col :xs="24" :sm="24" :md="7" :lg="7">
-                <a-form-item>
+                <a-form-item v-if="['provincia', 'provincia_voto'].includes(filter.field)">
+                    <a-select v-model:value="filter.value" show-search :allowClear="true"
+                        :placeholder="$t('common.select_default_text')">
+                        <a-select-option v-for="prov in provincias" :key="prov" :value="prov">
+                            {{ prov }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
+
+                <a-form-item v-else-if="filter.field === 'canton'">
+                    <a-select v-model:value="filter.value" show-search :allowClear="true"
+                        :placeholder="$t('common.select_default_text')">
+                        <a-select-option v-for="canton in cantones" :key="canton" :value="canton">
+                            {{ canton }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
+
+                <a-form-item v-else-if="filter.field === 'distrito'">
+                    <a-select v-model:value="filter.value" show-search :allowClear="true"
+                        :placeholder="$t('common.select_default_text')">
+                        <a-select-option v-for="distrito in distritos" :key="distrito" :value="distrito">
+                            {{ distrito }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
+
+                <a-form-item v-else-if="filter.field === 'etapa'">
+                    <a-select v-model:value="filter.value" show-search :allowClear="true"
+                        :placeholder="$t('common.select_default_text')">
+                        <a-select-option v-for="etapa in etapas" :key="etapa" :value="etapa">
+                            {{ etapa }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
+
+                <a-form-item v-else>
                     <a-input v-model:value="filter.value" :placeholder="t('common.value')" />
                 </a-form-item>
             </a-col>
@@ -47,7 +83,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch, onMounted } from 'vue';
+import { defineComponent, ref, watch, onMounted, computed} from 'vue';
 import { useI18n } from 'vue-i18n';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons-vue';
 
@@ -63,6 +99,20 @@ export default defineComponent({
     emits: ['update:modelValue'],
     setup(props, { emit }) {
         const { t } = useI18n();
+        const localidades = ref([]);
+        const etapas = ['Nueva','Reproceso','N/A'];
+        const provincias = computed(() => {
+            return [...new Set(localidades.value.map(l => l.provincia))].sort();
+        });
+
+        const cantones = computed(() => {
+            return [...new Set(localidades.value.map(l => l.canton))].sort();
+        });
+
+        const distritos = computed(() => {
+            return [...new Set(localidades.value.map(l => l.distrito))].sort();
+        });
+
 
         // Columnas disponibles
         const columns = [
@@ -116,6 +166,17 @@ export default defineComponent({
             return { id: nextId++, field: null, operator: null, value: '' };
         }
 
+        const fetchLocalidades = async () => {
+            try {
+                const resp = await axiosAdmin.get(
+                    "localidades?fields=provincia,canton,distrito&limit=1000"
+                );
+                localidades.value = resp.data;
+            } catch (e) {
+                console.error("Error fetching localidades:", e);
+            }
+        };
+
         // Estado local inicial
         const filtersLocal = ref([]);
         onMounted(() => {
@@ -125,6 +186,7 @@ export default defineComponent({
                     ? props.modelValue.map(f => ({ ...f }))
                     : [createEmptyFilter()];
             nextId = filtersLocal.value.length + 1;
+            fetchLocalidades();
         });
 
         // Emitir cambios al padre
@@ -133,6 +195,18 @@ export default defineComponent({
             (newVal) => emit('update:modelValue', newVal),
             { deep: true }
         );
+
+        watch(
+        () => props.modelValue,
+            (newVal) => {
+                filtersLocal.value = newVal.length
+                ? newVal.map(f => ({ ...f }))
+                : [createEmptyFilter()];
+                nextId = filtersLocal.value.length + 1;
+            },
+        { immediate: true, deep: true }
+        );
+
 
         function addFilter() {
             filtersLocal.value.push(createEmptyFilter());
@@ -147,6 +221,10 @@ export default defineComponent({
         }
 
         return {
+            etapas,
+            provincias,
+            cantones,
+            distritos,
             t,
             columns,
             operators,

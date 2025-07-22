@@ -9,17 +9,24 @@
         :destroyOnClose="true"
     >
         <a-descriptions :title="$t('common.basic_details')">
-            <a-descriptions-item class="label-bold" :label="$t('lead.campaign')">
+            <a-descriptions-item :label="$t('lead.campaign')">
                 {{ lead && lead.campaign ? lead.campaign.name : "-" }}
             </a-descriptions-item>
-            <a-descriptions-item class="label-bold" :label="$t('campaign.last_actioner')">
+            <a-descriptions-item :label="$t('campaign.first_actioner')">
+                {{
+                    lead && lead.first_actioner && lead.first_actioner.name
+                        ? lead.first_actioner.name
+                        : "-"
+                }}
+            </a-descriptions-item>
+            <a-descriptions-item :label="$t('campaign.last_actioner')">
                 {{
                     lead && lead.last_actioner && lead.last_actioner.name
                         ? lead.last_actioner.name
                         : "-"
                 }}
             </a-descriptions-item>
-            <a-descriptions-item class="label-bold" :label="$t('lead.call_duration')">
+            <a-descriptions-item :label="$t('lead.call_duration')">
                 {{ lead && lead.time_taken ? formatTimeDuration(lead.time_taken) : "-" }}
             </a-descriptions-item>
         </a-descriptions>
@@ -35,23 +42,18 @@
                 <a-descriptions
                     class="mt-10"
                 >
-                    <a-descriptions-item class="label-bold" :label="$t('lead.document')">
+                    <a-descriptions-item :label="$t('lead.document')">
                         {{ lead && lead.cedula ? lead.cedula : "-" }}
                     </a-descriptions-item>
                 </a-descriptions>
                 <a-descriptions
                     class="mt-10"
                 >
-                    <a-descriptions-item class="label-bold" :label="$t('lead.name')">
+                    <a-descriptions-item :label="$t('lead.name')">
                         {{
                             lead && lead.nombre && lead.nombre
                                 ? lead.nombre
                                 : "-"
-                        }}
-                        {{
-                            lead && lead.segundo_nombre
-                                ? lead.segundo_nombre
-                                : ""
                         }}
                         {{
                             lead && lead.apellido1 && lead.apellido1
@@ -64,14 +66,14 @@
                                 : ""
                         }}
                     </a-descriptions-item>
-                    <a-descriptions-item class="label-bold" :label="$t('lead.date_birth')">
+                    <a-descriptions-item :label="$t('lead.date_birth')">
                         {{
                             lead && lead.fechaNacimiento && lead.fechaNacimiento
                                 ? lead.fechaNacimiento
                                 : "-"
                         }}
                     </a-descriptions-item>
-                    <a-descriptions-item class="label-bold" :label="$t('lead.age')">
+                    <a-descriptions-item :label="$t('lead.age')">
                         {{
                             lead && lead.edad && lead.edad
                                 ? lead.edad
@@ -82,67 +84,24 @@
                 <a-descriptions
                     class="mt-10"
                 >
-                    <a-descriptions-item class="label-bold" :label="$t('lead.base_name')">
+                    <a-descriptions-item :label="$t('lead.base_name')">
                         {{
                             lead && lead.nombreBase && lead.nombreBase
                                 ? lead.nombreBase
                                 : "-"
                         }}
                     </a-descriptions-item>
-                    <a-descriptions-item class="label-bold" :label="$t('lead.nationality')">
+                    <a-descriptions-item :label="$t('lead.nationality')">
                         {{
                             lead && lead.nacionalidad && lead.nacionalidad
                                 ? lead.nacionalidad
                                 : "-"
                         }}
                     </a-descriptions-item>
-                    <a-descriptions-item class="label-bold" :label="$t('lead.plan_type')">
+                    <a-descriptions-item :label="$t('lead.phone') + ' ' + '1'">
                         {{
-                            lead && lead.tipo_plan && lead.tipo_plan
-                                ? lead.tipo_plan
-                                : "-"
-                        }}
-                    </a-descriptions-item>
-                </a-descriptions>
-                <a-descriptions
-                    class="mt-10"
-                >
-                    <a-descriptions-item class="label-bold" :label="$t('lead.expiration_date')">
-                        {{
-                            lead && lead.fechaVencimiento && lead.fechaVencimiento
-                                ? lead.fechaVencimiento
-                                : "-"
-                        }}
-                    </a-descriptions-item>
-                    <a-descriptions-item class="label-bold" :label="$t('lead.card_type')">
-                        {{
-                            lead && lead.tipo_tarjeta && lead.tipo_tarjeta
-                                ? lead.tipo_tarjeta
-                                : "-"
-                        }}
-                    </a-descriptions-item>
-                    <a-descriptions-item class="label-bold" :label="$t('lead.transmitter')">
-                        {{
-                            lead && lead.emisor && lead.emisor
-                                ? lead.emisor
-                                : "-"
-                        }}
-                    </a-descriptions-item>
-                </a-descriptions>
-                <a-descriptions
-                    class="mt-10"
-                >
-                    <a-descriptions-item  class="label-bold" :label="$t('lead.last_digits')">
-                        {{
-                            lead && lead.ultimos_digitos && lead.ultimos_digitos
-                                ? lead.ultimos_digitos
-                                : "-"
-                        }}
-                    </a-descriptions-item>
-                    <a-descriptions-item class="label-bold" :label="$t('lead.sales_focus')">
-                        {{
-                            lead && lead.foco_venta && lead.foco_venta
-                                ? lead.foco_venta
+                            lead && lead.tel1 && lead.tel1
+                                ? lead.tel1
                                 : "-"
                         }}
                     </a-descriptions-item>
@@ -278,8 +237,3 @@ export default defineComponent({
     },
 });
 </script>
-<style scoped>
-::v-deep .label-bold .ant-descriptions-item-label {
-  font-weight: bold;
-}
-</style>

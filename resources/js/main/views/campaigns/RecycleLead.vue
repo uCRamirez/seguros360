@@ -25,7 +25,8 @@
                 </a-col>
                 <a-col style="margin-bottom: 10px;display: flex;justify-content: end;gap: 1%;" :xs="24" :sm="24"
                     :md="24" :lg="24">
-                    <a-select v-model:value="filtrarAsigandos" :placeholder="$t('campaign.assigned_leads')" :allowClear="true" style="width: 50%;">
+
+                    <a-select v-model:value="filtrarAsigandos" :placeholder="$t('campaign.assigned_leads')" :allowClear="true" style="width: 30%;">
                         <a-select-option :value="0">
                             {{ $t('common.no') }}
                         </a-select-option>
@@ -33,11 +34,25 @@
                             {{ $t('common.yes') }}
                         </a-select-option>
                     </a-select>
-                    <a-input-number v-model:value="maxRegistros" :min="1" :max="10000">
-                        <template #addonBefore>
-                            {{ $t('campaign.records') }}
-                        </template>
-                    </a-input-number>
+
+                    <a-select v-model:value="filtrarTrabajados" :placeholder="$t('common.leads_worked')" :allowClear="true" style="width: 30%;">
+                        <a-select-option :value="0">
+                            {{ $t('common.no') }}
+                        </a-select-option>
+                        <a-select-option :value="1">
+                            {{ $t('common.yes') }}
+                        </a-select-option>
+                    </a-select>
+
+                    <a-select v-model:value="noContacto" :placeholder="$t('common.no_contact')" :allowClear="true" style="width: 30%;">
+                        <a-select-option :value="0">
+                            {{ $t('common.no') }}
+                        </a-select-option>
+                        <a-select-option :value="1">
+                            {{ $t('common.yes') }}
+                        </a-select-option>
+                    </a-select>
+                    
                     <a-button type="primary" @click="serchInformationClient" :loading="tableClienteSerch.loading">
                         <template #icon>
                             <SearchOutlined />
@@ -54,9 +69,6 @@
                         :pagination="tableClienteSerch.pagination" :loading="tableClienteSerch.loading"
                         @change="handleClientSerchTableChange" bordered size="small">
                         <template #bodyCell="{ column, record }">
-                            <!-- <template v-if="column.dataIndex === 'campaign_id'">
-                                {{ record.campaign && record.campaign.name ? record.campaign.name : '' }}
-                            </template> -->
                             <template v-if="column.dataIndex === 'cedula'">
                                 {{ record.cedula ?? '' }}
                             </template>
@@ -94,6 +106,15 @@
 
         <a-row :gutter="16" align="bottom" class="mt-20">
             <a-col :xs="24" :sm="24" :md="6" :lg="6">
+                <a-form-item>
+                    <a-input-number v-model:value="maxRegistros" :min="1" :max="10000">
+                        <template #addonBefore>
+                            {{ $t('campaign.records') }}
+                        </template>
+                    </a-input-number>
+                </a-form-item>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="6" :lg="6">
                 <a-form-item :label="$t('campaign.members')" name="user_id" :help="rules.user_id?.message"
                     :validateStatus="rules.user_id ? 'error' : null" class="required">
                     <a-select v-model:value="selectedUserIds" mode="multiple"
@@ -117,7 +138,7 @@
                 </a-form-item>
             </a-col>
 
-            <a-col :xs="24" :sm="24" :md="12" :lg="12">
+            <a-col :xs="24" :sm="24" :md="6" :lg="6">
                 <a-form-item>
                     <a-button :disabled="registrosEncontrados === 0 || selectedUserIds.length === 0" type="primary" @click="asignarLeadBuscados" :loading="tableClienteSerch.loading">
                         <template #icon>
@@ -127,6 +148,28 @@
                     </a-button>
                 </a-form-item>
             </a-col>
+
+            <a-col :xs="24" :sm="24" :md="12" :lg="6">
+                <a-form-item>
+                    <a-checkbox v-model:checked="asignacionProgramada">
+                        {{ $t('common.scheduled') }}
+                    </a-checkbox>
+                </a-form-item>
+            </a-col>
+
+            <a-col :xs="24" :sm="24" :md="12" :lg="6">
+                <a-form-item>
+                    <a-date-picker
+                        v-model:value="fechaProgramada"
+                        :disabled="!asignacionProgramada"
+                        :show-time="true"
+                        format="YYYY-MM-DD HH:mm:ss"
+                        style="width: 100%"
+                        :placeholder="$t('common.scheduled')"
+                    />
+                </a-form-item>
+            </a-col>
+
         </a-row>
 
 
@@ -195,6 +238,11 @@ export default defineComponent({
         const selectedUserIds = ref([]);
         const registrosEncontrados = ref(0);
         const filtrarAsigandos = ref(null);
+        const filtrarTrabajados = ref(null);
+        const noContacto = ref(null);
+        const asignacionProgramada = ref(false);
+        const fechaProgramada = ref(null);
+
 
         const tableClienteSerch = reactive({
             data: [],
@@ -254,6 +302,8 @@ export default defineComponent({
                         filtros: filtros.value,
                         campaign_id: props.campaign.id,
                         filtrarAsigandos: filtrarAsigandos.value,
+                        filtrarTrabajados: filtrarTrabajados.value,
+                        noContacto: noContacto.value,
                         maxRegistros: maxRegistros.value,
                     }
                 );
@@ -300,10 +350,20 @@ export default defineComponent({
             try {
 
                 const assignments = distribuirLeads(tableClienteSerch.data, selectedUserIds.value);
-                await axiosAdmin.post('leads/assign',{campaign_id: props.campaign.id,assignments});
+                // await axiosAdmin.post('leads/assign',{campaign_id: props.campaign.id,assignments});
+                await axiosAdmin.post('leads/assign', {
+                    campaign_id: props.campaign.id,
+                    assignments,
+                    scheduled: asignacionProgramada.value ? 1 : 0,
+                    scheduled_at: asignacionProgramada.value ? fechaProgramada.value : null
+                });
+
                 serchInformationClient();
                 tableClienteSerch.loading = false;
                 message.success(t('common.updated'));
+                if(asignacionProgramada.value && fechaProgramada.value) {
+                    emit('close');
+                }
 
             } catch (err) {
                 tableClienteSerch.loading = false;
@@ -314,21 +374,6 @@ export default defineComponent({
 
         const onRowSelectChange = (newSelectedRowKeys) => {
             tableClienteSerch.selectedRowKeys = newSelectedRowKeys;
-        };
-
-        const onSubmit = () => {
-            const newFormData = {
-                xid: props.campaign.xid,
-                selectedRowKeys: tableClienteSerch.selectedRowKeys
-            };
-            addEditRequestAdmin({
-                url: "campaigns/recycle-campaign-leads",
-                data: newFormData,
-                successMessage: t("campaign.recucle_campaign_add"),
-                success: () => {
-                    emit("close");
-                }
-            });
         };
 
         const setUrlData = async () => {
@@ -388,7 +433,12 @@ export default defineComponent({
             () => props.visible,
             (newVal) => {
                 if (newVal) {
+                    filtros.value = [];
+                    asignacionProgramada.value = false;
+                    fechaProgramada.value = null;
                     filtrarAsigandos.value = null;
+                    filtrarTrabajados.value = null;
+                    noContacto.value = null;
                     maxRegistros.value = 500;
                     registrosEncontrados.value = 0;
                     registrosPorAgente.value = 0;
@@ -407,7 +457,11 @@ export default defineComponent({
         const drawerWidth = window.innerWidth <= 991 ? "90%" : "70%";
 
         return {
+            fechaProgramada,
+            asignacionProgramada,
             filtrarAsigandos,
+            filtrarTrabajados,
+            noContacto,
             asignarLeadBuscados,
             selectedUserIds,
             registrosEncontrados,
@@ -422,7 +476,6 @@ export default defineComponent({
             columns,
             loading,
             rules,
-            onSubmit,
             onClose,
             handleChange,
             handleClientSerchTableChange,

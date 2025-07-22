@@ -11,6 +11,9 @@ class LangTrans
     public static $mainTranslations = [
         'common' => [
             'comments' => 'Comments',
+            'leads_worked' => 'Worked leads',
+            'no_contact' => "Don't contact anymore",
+            'average_grade' => "Average grade",
             'enabled' => 'Enabled',
             'disabled' => 'Disabled',
             'id' => 'Id',

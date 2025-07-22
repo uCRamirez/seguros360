@@ -13,22 +13,24 @@ class NotesTypification extends BaseModel implements Auditable
 
     protected $table = 'notes_typifications';
 
-    protected $default = ['xid', 'name', 'parent_id', 'sale', 'schedule','status', 'x_parent_id'];
+    protected $default = ['xid', 'campaign_id','name', 'parent_id', 'sale', 'schedule','status', 'x_parent_id','x_campaign_id'];
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $hidden = ['id','parent_id'];
 
-    protected $appends = ['xid','x_parent_id'];
+    protected $appends = ['xid','x_parent_id','x_campaign_id'];
 
-    protected $filterable = ['id', 'name','parent_id', 'sale', 'schedule','status'];
+    protected $filterable = ['id', 'name','parent_id', 'sale', 'schedule', 'no_contact','status'];
 
     protected $hashableGetterFunctions = [
         'getXParentIdAttribute' => 'parent_id',
+        'getXCampaignIdAttribute' => 'campaign_id',
     ];
 
     protected $casts = [
         'parent_id' => Hash::class . ':hash',
+        'campaign_id' => Hash::class . ':hash',
     ];
 
     protected static function boot()
@@ -78,6 +80,11 @@ class NotesTypification extends BaseModel implements Auditable
     public function childs()
     {
         return $this->subcategories()->with('childs');
+    }
+
+    public function campaign()
+    {
+        return $this->belongsTo(Campaign::class, 'campaign_id', 'id');
     }
 
 }

@@ -8,6 +8,7 @@
         @closed="onCloseAddEdit"
         :formData="formData"
         :leadInfo="leadInfo"
+        :allCampaigns="allCampaigns"
         :allProductos="allProductos"
         :data="viewData"
         :pageTitle="pageTitle"
@@ -25,6 +26,15 @@
                         <span>
                             <PlayCircleOutlined />
                             {{ $t("campaign.active_campaign") }}
+                        </span>
+                    </template>
+                </a-tab-pane>
+
+                <a-tab-pane key="next_contact">
+                    <template #tab>
+                        <span>
+                            <ScheduleOutlined />
+                            {{ $t("common.next_contact") }}
                         </span>
                     </template>
                 </a-tab-pane>
@@ -256,6 +266,7 @@ import {
     EyeOutlined,
     DeleteOutlined,
     PlayCircleOutlined,
+    ScheduleOutlined,
     StopOutlined,
     DownloadOutlined,
 } from "@ant-design/icons-vue";
@@ -322,6 +333,7 @@ export default {
         EyeOutlined,
         DeleteOutlined,
         PlayCircleOutlined,
+        ScheduleOutlined,
         StopOutlined,
         DownloadOutlined,
         AddEdit,
@@ -342,7 +354,6 @@ export default {
             initData,
             columns,
             filterableColumns,
-            // allFormFieldNames,
             hashableColumns,
             allCampaigns,
             allUsers,
@@ -351,6 +362,7 @@ export default {
         } = fields(props);
         const crudVariables = crud();
         const leadInfo = ref({});
+        const nextContact = ref(false);
         const leadDrawer = viewDrawer();
         const extraFilters = ref({
             page_name: props.pageName,
@@ -384,6 +396,7 @@ export default {
                 crudVariables.formData.value = { ...initData, lead_id: props.leadId };
                 crudVariables.hashableColumns.value = [...hashableColumns];
                 crudVariables.hashable.value = [...hashableColumns];
+                nextContact.value = false;
                 if (props.leadId !== undefined && props.leadId !== null) {
                     setUrlData();
                 };
@@ -397,6 +410,9 @@ export default {
             crudVariables.tableUrl.value = {
                 url,
                 filters,
+                filterString: nextContact.value
+                    ? "next_contact ne null"
+                    : "",
                 extraFilters,
             };
             crudVariables.table.filterableColumns = filterableColumns;
@@ -431,6 +447,12 @@ export default {
         };
 
         const campaignTypeChanged = (value) => {
+            if(value === "next_contact") {
+                nextContact.value = true;
+                setUrlData();
+                return;
+            } 
+            nextContact.value = false;
             extraFilters.value = {
                 ...extraFilters.value,
                 campaign_id: undefined,

@@ -178,8 +178,26 @@ const api = () => {
                             description: configObject.successMessage,
                         });
                     }
+                    
+                    //mio
+                    const sms1 = 'Field missing from header';
+                    const sms2 = 'Campaign name is required';
+                    const sms3 = 'Campaign not found:';
+                    const sms4 = 'The typification_1 is obligatory';
 
-                    success(response.data);
+                    if (response.message &&
+                    (
+                        response.message.startsWith(sms1) ||
+                        response.message.startsWith(sms2) ||
+                        response.message.startsWith(sms3) ||
+                        response.message.startsWith(sms4)
+                    )
+                    ){
+                         success(response.message);
+                    }else{
+                        success(response.data);
+                    }
+
                     loading.value = false;
                     rules.value = {};
                 }

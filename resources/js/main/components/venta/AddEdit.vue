@@ -20,7 +20,7 @@
                                         formData.notes_typification_id_4 = undefined;
                                         getChildTypification(formData.notes_typification_id_1);
                                     }">
-                                    <a-select-option v-for="parentTypification in parentTypificationData"
+                                    <a-select-option v-for="parentTypification in filteredParentTypifications"
                                         :key="parentTypification.xid" :title="parentTypification.name"
                                         :value="parentTypification.xid">
                                         {{ parentTypification.name }}
@@ -179,7 +179,7 @@
                             </a-col>
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- Agente -->
-                                <a-form-item :label="$t('lead.agent')">
+                                <a-form-item class="label-bold" :label="$t('lead.agent')">
 
                                     <a-input v-if="soloVer" :value="datos.venta.agente" />
 
@@ -546,6 +546,7 @@ export default defineComponent({
         "soloVer",
         "formData",
         "leadInfo",
+        "allCampaigns",
         "allProductos",
         "data",
         "visible",
@@ -583,6 +584,13 @@ export default defineComponent({
         const suma = ref(0);
         const sumaAsist = ref(0);
         const agenteCampana = ref([]);
+        const campaigns_id = ref([]);
+
+        const filteredProductosByCampaign = computed(() =>
+            props.allProductos.filter(p =>
+                campaigns_id.value.includes(p.x_campaign_id)
+            )
+        );
         
         const columns = [
             {
@@ -713,18 +721,26 @@ export default defineComponent({
         // Computed lists
         const filteredByCode = computed(() =>
             datosProducto.producto.internal_code
-                ? props.allProductos.filter(p => p.internal_code === datosProducto.producto.internal_code)
-                : props.allProductos
+                ? filteredProductosByCampaign.value.filter(p =>
+                    p.internal_code === datosProducto.producto.internal_code
+                )
+                : filteredProductosByCampaign.value
         );
         const filteredByName = computed(() =>
             datosProducto.producto.name
-                ? props.allProductos.filter(p => p.name === datosProducto.producto.name)
-                : props.allProductos
+                ? filteredProductosByCampaign.value.filter(p =>
+                    p.name === datosProducto.producto.name
+                )
+                : filteredProductosByCampaign.value
         );
         const intersection = computed(() => {
-            let arr = props.allProductos;
-            if (datosProducto.producto.internal_code) arr = arr.filter(p => p.internal_code === datosProducto.producto.internal_code);
-            if (datosProducto.producto.name) arr = arr.filter(p => p.name === datosProducto.producto.name);
+            let arr = filteredProductosByCampaign.value.slice();
+            if (datosProducto.producto.internal_code) {
+                arr = arr.filter(p => p.internal_code === datosProducto.producto.internal_code);
+            }
+            if (datosProducto.producto.name) {
+                arr = arr.filter(p => p.name === datosProducto.producto.name);
+            }
             return arr;
         });
         const matchingProducts = computed(() =>
@@ -806,6 +822,8 @@ export default defineComponent({
             { immediate: true }
         );
 
+        const filteredParentTypifications = ref([]);
+
         // Mostrar/editar
         watch(() => props.visible, async newVal => {
             datos.venta = getEmptyVenta();
@@ -814,8 +832,13 @@ export default defineComponent({
             childrenTypificationData.value = [];
             childrenChildData.value = [];
             lastChildrenChildData.value = [];
+            campaigns_id.value = [];
 
             if (newVal && props.addEditType === "edit") {
+                campaigns_id.value.push(props.data.x_campaign_id || 0);
+                filteredParentTypifications.value = parentTypificationData.value.filter(pt =>
+                    campaigns_id.value.includes(pt.x_campaign_id)
+                );
 
                 isInitializing.value = true;
 
@@ -883,6 +906,17 @@ export default defineComponent({
                 }
 
             }else{
+                if (props.leadInfo &&props.leadInfo.campaign?.xid) {
+                    campaigns_id.value.push(props.leadInfo.campaign.xid);
+                } else {
+                    props.allCampaigns.forEach(item => {
+                        campaigns_id.value.push(item.xid);
+                    });
+                }
+
+                filteredParentTypifications.value = parentTypificationData.value.filter(pt =>
+                    campaigns_id.value.includes(pt.x_campaign_id)
+                );
                 suma.value = 0;
                 sumaAsist.value = 0;
             }
@@ -1141,6 +1175,7 @@ export default defineComponent({
         })
 
         return {
+            campaigns_id,
             agenteCampana,
             drawerWidth,
             removeProducto,
@@ -1182,6 +1217,7 @@ export default defineComponent({
             onClose,
             permsArray,
             handleTableChange,
+            filteredParentTypifications,
         };
     },
 });

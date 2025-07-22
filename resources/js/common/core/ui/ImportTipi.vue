@@ -76,6 +76,7 @@ import { CloudDownloadOutlined, UploadOutlined } from "@ant-design/icons-vue";
 import { useI18n } from "vue-i18n";
 import apiAdmin from "../../composable/apiAdmin";
 import UploadFile from "./file/UploadFile.vue";
+import { message, notification } from 'ant-design-vue';
 
 export default defineComponent({
     props: ["pageTitle", "sampleFileUrl", "importUrl","camposRequerido"],
@@ -103,14 +104,26 @@ export default defineComponent({
             }
 
             loading.value = true;
-
+            
             addEditFileRequestAdmin({
                 url: props.importUrl,
                 data: formData,
-                successMessage: t("messages.imported_successfully"),
+                // successMessage: t("messages.imported_successfully"),
                 success: (res) => {
-                    handleCancel();
-                    emit("onUploadSuccess");
+                    if (Array.isArray(res) && res.length === 0) {
+                        notification.success({message: t("common.success"),description: t("messages.imported_successfully")});
+                        handleCancel();
+                        emit("onUploadSuccess");
+                        return;
+                    }
+
+                    if (typeof res === 'string' && (res.startsWith('Field missing from header') || res.startsWith('Campaign name is required') || res.startsWith('Campaign not found:') || res.startsWith('The typification_1 is obligatory'))) {
+                        message.info(res);
+                    } else {
+                        notification.success({message: t("common.success"),description: t("messages.imported_successfully")});
+                        handleCancel();
+                        emit("onUploadSuccess");
+                    }
                 },
             });
         };

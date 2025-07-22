@@ -134,6 +134,27 @@ campaignDetails, campaignDetailsKey
                             }">
                                 <a-form layout="vertical" class="mt-10">
                                     <a-row :gutter="10">
+                                        <!-- proyecto -->
+                                        <a-col :xs="24" :sm="24" :md="6" :lg="6">
+                                            <a-form-item class="required" :label="$t('lead.proyect')" name="campaign_id" :help="rules.campaign_id
+                                                    ? $t('lead.proyect')
+                                                    : null
+                                                " :validateStatus="rules.campaign_id
+                                                            ? 'error'
+                                                            : null
+                                                        ">
+                                                <a-select v-model:value="crmState.client.campaign.id" show-search
+                                                    option-filter-prop="title" :allowClear="true"
+                                                    :placeholder="$t('common.select_default_text', [$t('lead.proyect')])">
+                                                    <a-select-option v-for="allAgentCamp in allAgentCamps"
+                                                        :key="allAgentCamp.xid" :value="allAgentCamp.id"
+                                                        :title="allAgentCamp.name">
+                                                        {{ allAgentCamp.name }}
+                                                    </a-select-option>
+                                                </a-select>
+
+                                            </a-form-item>
+                                        </a-col>
                                         <!-- documento -->
                                         <a-col :xs="24" :sm="24" :md="12" :lg="12">
                                             <a-form-item :label="$t('lead.document')" name="cedula"
@@ -185,16 +206,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input disabled v-model:value="crmState.client.etapa
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'bases.stage'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                <a-input disabled v-model:value="crmState.client.etapa"/>
                                             </a-form-item>
                                         </a-col>
                                         <!-- nombre -->
@@ -426,7 +438,7 @@ campaignDetails, campaignDetailsKey
                                                                 ? 'error'
                                                                 : null
                                                             " style="margin-left: auto;">
-                                                        <a-input-number v-model:value="crmState.client.edad
+                                                        <a-input-number :min="0" v-model:value="crmState.client.edad
                                                             " style="width: 100%" />
                                                     </a-form-item>
                                                 </div>
@@ -434,6 +446,28 @@ campaignDetails, campaignDetailsKey
 
                                             </a-col>
                                         </a-config-provider>
+                                        <!-- tipo tarjeta -->
+                                        <a-col :xs="24" :sm="24" :md="6" :lg="6">
+                                            <a-form-item :label="$t('lead.card')
+                                                " name="tarjeta" :help="rules.tarjeta
+                                                        ? $t('lead.card')
+                                                        : null
+                                                    " :validateStatus="rules.tarjeta
+                                                        ? 'error'
+                                                        : null
+                                                    ">
+                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.tarjeta
+                                                    " :placeholder="$t(
+                                                        'common.placeholder_default_text',
+                                                        [
+                                                            $t(
+                                                                'lead.card'
+                                                            ),
+                                                        ]
+                                                    )
+                                                        " />
+                                            </a-form-item>
+                                        </a-col>
                                         <!-- tipo tarjeta -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
                                             <a-form-item :label="$t('lead.card_type')
@@ -620,10 +654,10 @@ campaignDetails, campaignDetailsKey
                                         </a-col>
                                         <!-- Tel1 -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="`${$t('lead.phone')} 1`" name="tel1" :help="rules.phone1
+                                            <a-form-item :label="`${$t('lead.phone')} 1`" name="tel1" :help="rules.tel1
                                                     ? `${$t('lead.phone')} 1`
                                                     : null
-                                                " :validateStatus="rules.phone1
+                                                " :validateStatus="rules.tel1
                                                         ? 'error'
                                                         : null
                                                     " class="required">
@@ -746,7 +780,7 @@ campaignDetails, campaignDetailsKey
                                             </a-form-item>
                                         </a-col>
                                         <!-- email -->
-                                        <a-col :xs="24" :sm="24" :md="12" :lg="12">
+                                        <a-col :xs="24" :sm="24" :md="6" :lg="6">
                                             <a-form-item :label="$t('lead.email')
                                                 " name="email" :help="rules.email
                                                         ? $t('lead.email')
@@ -767,6 +801,7 @@ campaignDetails, campaignDetailsKey
                                                         " />
                                             </a-form-item>
                                         </a-col>
+                                        
                                         <!-- Provincia - Canton - Distrito -->
                                         <a-col :xxl="24" :xl="24" :xs="24" style="display: flex;">
                                             <!-- Provincia -->
@@ -825,28 +860,25 @@ campaignDetails, campaignDetailsKey
                                 <a-row :gutter="16">
                                     <a-col :xs="24" :sm="24" :md="20" :lg="20">
                                         <a-space>
-                                            <a-button type="primary" :loading="loading" @click="saveLead('save')"
-                                                :disabled="crmState.client.managing === false">
+                                            <a-button type="primary" :loading="loading" @click="saveLead('save')"> 
                                                 <template #icon>
                                                     <SaveOutlined />
                                                 </template>
                                                 {{ $t("common.save") }}
                                             </a-button>
-                                            <a-button type="primary" :loading="loading" @click="saveAndExit"
-                                                :disabled="crmState.client.managing === false">
+                                            <a-button type="primary" :loading="loading" @click="saveAndExit">
                                                 <template #icon>
                                                     <DeliveredProcedureOutlined />
                                                 </template>
                                                 {{ $t("campaign.save_exit") }}
                                             </a-button>
-                                            <a-button type="primary" @click="addNote"
-                                                :disabled="crmState.client.managing === false">
+                                            <a-button type="primary" @click="addNote" :disabled="crmState.client.managing === false">
                                                 <template #icon>
                                                     <PlusOutlined />
                                                 </template>
                                                 {{ $t("notes.add") }}
                                             </a-button>
-                                            <!-- <a-button
+                                            <!-- <a-button :disabled="crmState.client.managing === false"
                                     :style="{
                                         background: '#ff4d4f',
                                         borderColor: '#ff4d4f',
@@ -1282,11 +1314,11 @@ export default {
         });
 
         onUnmounted(() => {
+            clearSerchInformation();
             activeKey.value = 'lead_details';
             if (crmState.client.managing) {
                 saveLead('save');
             }
-            clearSerchInformation();
         });
 
 
@@ -1367,6 +1399,25 @@ export default {
             });
         };
 
+        const validarClienteSave = () => {
+            if(crmState.client.isNew || (!crmState.client.managing && !crmState.client.isNew)) {
+                crmState.client.campaign_id = crmState.client.campaign.id;
+                crmState.client.assign_to = store.state.auth.user.id;
+                addEditRequestAdmin({
+                    url: "leads/create-lead",
+                    data: crmState.client,
+                    // successMessage: t("lead.created"),
+                    success: (res) => {
+                        // crmState.client.xid = res.lead.xid;
+                        onClientSelected(res.lead);
+                        handleClientToManage();
+                        return true;
+                    },
+                });
+            }
+            return false;
+        };
+
         const saveLead = (saveType = "auto") => {
             if (saveType == "save") {
                 loading.value = true;
@@ -1374,29 +1425,44 @@ export default {
                 loading.value = true;
             }
 
-            addEditRequestAdmin({
-                url: `campaigns/update-actioned-lead`,
-                data: {
-                    ...crmState.client,
-                    call_log_id: crmState.client.call_log.xid,
-                    call_time: calculateTotalTimeInSeconds(),
-                    x_lead_id: crmState.client.xid,
-                },
-                success: (res) => {
-                    autoSaved.value = true;
+            // Validar si el cliente es nuevo y guardar
+            if(validarClienteSave()){
+                if(saveType == "save_exit"){
+                    crmState.client.managing = false;
                     loading.value = false;
+                    router.push({
+                        name: "admin.leads.index",
+                    });
+                }
+                return;
+            }
 
-                    if (saveType == "save_exit") {
+            if(crmState.client.managing){
+                addEditRequestAdmin({
+                    url: `campaigns/update-actioned-lead`,
+                    data: {
+                        ...crmState.client,
+                        call_log_id: crmState.client.call_log.xid,
+                        call_time: calculateTotalTimeInSeconds(),
+                        x_lead_id: crmState.client.xid,
+                    },
+                    success: (res) => {
+                        autoSaved.value = true;
                         loading.value = false;
-                        router.push({
-                            name: "admin.leads.index",
-                        });
-                    } else {
-                        crmState.client.managing = false;
-                        timer.reset(crmState.client.time_taken, false);
-                    }
-                },
-            });
+    
+                        if (saveType == "save_exit") {
+                            loading.value = false;
+                            router.push({
+                                name: "admin.leads.index",
+                            });
+                        } else {
+                            crmState.client.managing = false;
+                            timer.reset(crmState.client.time_taken, false);
+                        }
+                    },
+                });
+            }
+            loading.value = false;
         };
 
         const takeLeadAction = (actionName) => {

@@ -117,7 +117,7 @@ class EvaluacionCalidadController extends ApiBaseController
         DB::beginTransaction();
 
         try {
-            $evaluacion = EvaluacionCalidad::where('idVenta', $data['idVenta'])->first();
+            $evaluacion = EvaluacionCalidad::where('id', $data['idVenta'])->first();
             if (! $evaluacion) {
                 throw new ApiException('Evaluación no encontrada');
             }
@@ -135,7 +135,7 @@ class EvaluacionCalidadController extends ApiBaseController
             $evaluacion->numero_poliza                = $data['numero_poliza'];
             $evaluacion->save();
 
-            $estado = EstadoCalidadVenta::where('idVenta', $data['idVenta'])->first();
+            $estado = EstadoCalidadVenta::where('evaluacion_id',$evaluacion->id)->first();
             if (!$estado) {
                 $estado = new EstadoCalidadVenta();
                 $estado->idVenta = $data['idVenta'];
@@ -150,13 +150,13 @@ class EvaluacionCalidadController extends ApiBaseController
             $estado->save();
 
             if($data['estado'] === 'REASIGNADA' && $data['reasignado_a']){
-                Venta::where('idVenta', $data['idVenta'])->update([
+                Venta::where('idVenta', $evaluacion->idVenta)->update([
                     'calidad'    => 1,
                     'estadoVenta'=> $data['estadoVenta'],
                     'user_id' => $data['reasignado_a'],
                 ]);
             }else{
-                Venta::where('idVenta', $data['idVenta'])->update([
+                Venta::where('idVenta', $evaluacion->idVenta)->update([
                     'calidad'    => 1,
                     'estadoVenta'=> $data['estadoVenta'],
                 ]);
@@ -183,66 +183,93 @@ class EvaluacionCalidadController extends ApiBaseController
         }
     }
 
-
     public function getEvaluacionEstado($xid)
     {
-        $idVenta = trim($xid, '{}');
-        // \Log::info('idVenta', ['idVenta' => $idVenta]);
+        $contenido  = trim($xid, '{}');
+        $comentario = null;
+        $isNota     = false;
 
-        $evaluacion = EvaluacionCalidad::where('idVenta', $idVenta)->first();
-        // \Log::info('evaluacion', ['evaluacion' => $evaluacion]);
+        if (strpos($contenido, ',') !== false) {
+            // Es nota
+            list($idNota, $comentario) = explode(',', $contenido, 2);
+            $isNota = true;
 
-        $estado = EstadoCalidadVenta::where('idVenta', $idVenta)->first();
-        // \Log::info('estado', ['estado' => $estado]);
+            $idVenta = Venta::where('idNota', $idNota)->value('idVenta');
+
+            $evaluacion = EvaluacionCalidad::where('idVenta', $idVenta)
+                            ->latest()
+                            ->first();
+
+            $estado = EstadoCalidadVenta::where('idVenta', $idVenta)
+                            ->latest()
+                            ->first();
+
+            if ($evaluacion) {
+                $evaluacion->load('accionCalidad', 'creador');
+            }
+
+        } else {
+            // No es nota, tomar todos
+            $idVenta = $contenido;
+
+            $evaluacion = EvaluacionCalidad::where('idVenta', $idVenta)
+                            ->with(['accionCalidad', 'creador'])
+                            ->get();
+
+            $estado = EstadoCalidadVenta::where('idVenta', $idVenta)->get();
+        }
 
         return response()->json([
-            'success' => true,
-            'evaluacion_calidad' => $evaluacion,
-            'estado_calidad_venta' => $estado,
+            'success'               => true,
+            'evaluacion_calidad'    => $evaluacion,
+            'estado_calidad_venta'  => $estado,
         ]);
     }
+
 
     
     public function deleteCalidad($xid)
     {
-        $idVenta = trim($xid, '{}');
+        $id = trim($xid, '{}');
 
         DB::beginTransaction();
 
         try {
-            $venta = Venta::where('idVenta', $idVenta)->first();
-
-            if (!$venta) {
+            $evaluacion = EvaluacionCalidad::find($id);
+            if (! $evaluacion) {
                 DB::rollBack();
                 return response()->json([
                     'success' => false,
-                    'message' => 'Venta no encontrada'
+                    'message' => 'Evaluación no encontrada'
                 ], 404);
             }
+            $idVenta = $evaluacion->idVenta;
+            $evaluacion->delete();
 
-            $venta->calidad = 0;
-            $venta->save();
+            $total = EvaluacionCalidad::where('idVenta', $idVenta)->count();
 
-            $evaluacion = EvaluacionCalidad::where('idVenta', $idVenta)->first();
-            $estado = EstadoCalidadVenta::where('idVenta', $idVenta)->first();
-
-            if ($evaluacion) {
-                $evaluacion->delete();
-            }
-            if ($estado) {
-                $estado->delete();
+            if ($total === 0) {
+                $venta = Venta::where('idVenta', $idVenta)->first();
+                if (! $venta) {
+                    DB::rollBack();
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Venta no encontrada'
+                    ], 404);
+                }
+                $venta->calidad = 0;
+                $venta->save();
             }
 
             DB::commit();
 
-            return response()->json([
-                'success' => true,
-            ]);
+            return response()->json(['success' => true]);
         } catch (\Exception $e) {
             DB::rollBack();
             throw new ApiException('Error al eliminar: ' . $e->getMessage());
         }
     }
+
 
    protected function generarTemplatecalidad(EvaluacionCalidad $evaluacion, EstadoCalidadVenta $estado, array $data)
     {
@@ -328,7 +355,7 @@ class EvaluacionCalidadController extends ApiBaseController
             $users_ids[] = $data['reasignado_a'];
         }
 
-        \Log::info('users_ids', $users_ids);
+        // \Log::info('users_ids', $users_ids);
 
         // Recuperar solo emails válidos
         $toList = User::whereIn('id', $users_ids)

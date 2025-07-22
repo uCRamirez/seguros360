@@ -16,11 +16,11 @@ class Lead extends BaseModel implements Auditable
 
     protected $table = 'leads';
 
-    protected $default = ['xid', 'reference_number','cedula'];
+    protected $default = ['xid', 'reference_number','cedula','etapa'];
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    protected $hidden = ['company_id', 'campaign_id', 'first_action_by', 'last_action_by', 'lead_follow_up_id', 'salesman_booking_id', 'estadoCivil_id','lead_status_id', 'assign_to'];
+    protected $hidden = ['company_id', 'campaign_id', 'first_action_by', 'last_action_by', 'lead_follow_up_id', 'salesman_booking_id', 'estadoCivil_id','lead_status_id'];
 
     protected $appends = ['xid', 'x_company_id', 'x_campaign_id', 'x_first_action_by', 'x_last_action_by', 'x_lead_follow_up_id', 'x_salesman_booking_id', 'x_estadoCivil_id','x_lead_status_id', 'x_assign_to'];
 
@@ -32,8 +32,18 @@ class Lead extends BaseModel implements Auditable
         'lead_status',
         'cedula',
         'nombre',
+        'segundo_nombre',
         'apellido1',
         'apellido2',
+        'tipo_plan',
+        'fechaVencimiento',
+        'tipo_tarjeta',
+        'emisor',
+        'ultimos_digitos',
+        'mes_carga',
+        'anno_carga',
+        'foco_venta',
+        'genero',
         'email',
         'tel1',
         'tel2',
@@ -41,6 +51,7 @@ class Lead extends BaseModel implements Auditable
         'tel4',
         'tel5',
         'tel6',
+        'provincia_voto',
         'provincia',
         'canton',
         'distrito',
@@ -153,4 +164,12 @@ class Lead extends BaseModel implements Auditable
     {
         return $this->belongsTo(User::class, 'assign_to');
     }
+
+    public function latestNotesLog()
+    {
+        return $this->hasOne(LeadLog::class, 'lead_id')
+            ->where('log_type', 'notes')
+            ->latest('date_time'); // último log por fecha
+    }
+
 }

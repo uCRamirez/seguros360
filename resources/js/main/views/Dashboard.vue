@@ -91,9 +91,20 @@
 
         <!-- ventas y monto total por usuario -->   
         <a-row :gutter="[18, 18]" class="mt-30 mb-20">
-            <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+            <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
                 <a-card :title="$t('dashboard.sales_user')">
                         <graficoVentas :data="responseData.ventasMontos"/>
+                </a-card>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+                <a-card :title="$t('menu.quality')" style="height: 100%; min-height: 40%; ">
+                    <div style="width: 100%; height: 100%;padding-top: 13%;">
+                        <Calidad
+                            v-if="responseData?.calidad"
+                            :totalRellamadas="responseData.calidad.total_rellamada"
+                            :promedioNota="responseData.calidad.promedio_nota"
+                        />
+                    </div>
                 </a-card>
             </a-col>
         </a-row>
@@ -158,6 +169,7 @@ import StateWidget from "../../common/components/common/card/StateWidget.vue";
 import ActionedCampaigns from "../components/charts/dashboard/ActionedCampaigns.vue";
 import graficoVentas from "../components/charts/dashboard/ventasCantidadMonto.vue";
 import topProducts from "../components/charts/dashboard/TopProducts.vue";
+import Calidad from "../components/charts/dashboard/Calidad.vue";
 import CallMade from "../components/charts/dashboard/CallMade.vue";
 import SalesMade from "../components/charts/dashboard/SalesMade.vue";
 import AmountSalesMade from "../components/charts/dashboard/AmountSalesMade.vue";
@@ -173,6 +185,7 @@ export default {
         SalesMade,
         AmountSalesMade,
         topProducts,
+        Calidad,
         DateRangePicker,
 
         MobileOutlined,

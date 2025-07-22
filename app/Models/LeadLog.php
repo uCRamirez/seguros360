@@ -19,13 +19,13 @@ class LeadLog extends BaseModel implements Auditable
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    protected $hidden = ['company_id','campaign_id', 'lead_id', 'user_id', 'notes_typification_id_1', 'notes_typification_id_2', 'notes_typification_id_3','notes_typification_id_4'];
+    protected $hidden = ['company_id', 'lead_id', 'user_id', 'notes_typification_id_1', 'notes_typification_id_2', 'notes_typification_id_3','notes_typification_id_4'];
 
     protected $appends = ['xid', 'x_company_id','x_campaign_id', 'x_lead_id', 'x_user_id', 'x_created_by_id', 'notes_file_url', 'x_notes_typification_id_1', 'x_notes_typification_id_2', 'x_notes_typification_id_3','x_notes_typification_id_4','notes_typification_name_1', 'notes_typification_name_2', 'notes_typification_name_3', 'notes_typification_name_4'];
 
-    protected $filterable = ['lead_logs.id', 'log_type', 'lead_id', 'campaign_id', 'user_id', 'isSale','leads.id','leads.cedula','leads.nombre','leads.apellido1','leads.apellido2','leads.tel1','leads.tel2','leads.tel3','leads.tel4','leads.tel5','leads.tel6','campaigns.name','isSale.estadoVenta','isSale.calidad','isSale.user_id', 'isSale_calidad.estado','created_at'];
+    protected $filterable = ['next_contact','lead_logs.id', 'log_type', 'lead_id', 'campaign_id', 'user_id', 'isSale','leads.id','leads.cedula','leads.nombre','leads.segundo_nombre','leads.apellido1','leads.apellido2','leads.tipo_plan','leads.fechaVencimiento','leads.tipo_tarjeta','leads.emisor','leads.ultimos_digitos','leads.mes_carga','leads.anno_carga','leads.foco_venta','leads.genero','leads.provincia_voto','leads.etapa','leads.tel1','leads.tel2','leads.tel3','leads.tel4','leads.tel5','leads.tel6','campaigns.name','isSale.idVenta','isSale.estadoVenta','isSale.calidad','isSale.user_id', 'isSale_calidad.estado','created_at'];
 
-    protected $dates = ['date_time'];
+    protected $dates = ['date_time','next_contact'];
 
     protected $hashableGetterFunctions = [
         'getXCompanyIdAttribute' => 'company_id',

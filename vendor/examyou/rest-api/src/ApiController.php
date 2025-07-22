@@ -297,10 +297,10 @@ class ApiController extends \Illuminate\Routing\Controller
 		if (method_exists($this, 'destroying')) {
 			$object = call_user_func([$this, 'destroying'], $object);
 		}
-	    \Log::info('Llego al IF');
-        \Log::info('object', [$object]);
+	    // \Log::info('Llego al IF');
+        // \Log::info('object', [$object]);
 		if ($object instanceof NotesTypification || $object instanceof Product) {
-	        \Log::info('entro if correcto');
+	        // \Log::info('entro if correcto');
 
 			// Desactivamos en lugar de borrar que a como se encuentra originalmente
 			$object->status = 0;

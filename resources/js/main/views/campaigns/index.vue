@@ -52,7 +52,7 @@
                     <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="12">
                         <a-input-group compact>
                             <a-select
-                                style="width: 25%"
+                                style="width: 35%"
                                 v-model:value="table.searchColumn"
                                 :placeholder="$t('common.select_default_text', [''])"
                             >
@@ -64,7 +64,7 @@
                                 </a-select-option>
                             </a-select>
                             <a-input-search
-                                style="width: 75%"
+                                style="width: 65%"
                                 v-model:value="table.searchString"
                                 show-search
                                 @change="onTableSearch"

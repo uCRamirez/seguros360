@@ -300,6 +300,18 @@
                                 {{ $t('common.no') }}
                             </a-tag>
                         </template>
+                        <template v-if="column.dataIndex === 'is_sale.estadoCalidad'">
+                                {{
+                                    ({
+                                        CERTIFICADA:              $t('common.certified'),
+                                        RELLAMADA_CERTIFICADA:    $t('common.certified_recall'),
+                                        RELLAMADA:                $t('common.recall'),
+                                        CANCELADA_CALIDAD:        $t('common.cancelled_quality'),
+                                        CANCELADA_SUPERVISION:    $t('common.cancelled_supervision'),
+                                        REASIGNADA:               $t('common.reassigned')
+                                    }[record?.is_sale?.estado_calidad?.estado] || '')
+                                }}
+                        </template>
 
                         <template v-if="column.dataIndex === 'notes'">
                             <a-comment>

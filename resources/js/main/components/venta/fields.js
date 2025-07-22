@@ -6,10 +6,10 @@ import common from "../../../common/composable/common";
 const fields = (props) => {
     const { convertStringToKey, getCampaignUrl, user } = common();
     const leadUrl =
-        "lead{id,xid,reference_number,cedula,nombre,segundo_nombre,apellido1,apellido2,tipo_plan,fechaVencimiento,tipo_tarjeta,emisor,ultimos_digitos,foco_venta,fechaNacimiento,edad,nacionalidad,nombreBase,tel1,email,lead_data,started,campaign_id,x_campaign_id,time_taken,first_action_by,x_first_action_by,last_action_by,x_last_action_by},lead:campaign{id,xid,name,status},lead:firstActioner{id,xid,name},lead:lastActioner{id,xid,name}";
+        "lead{id,xid,reference_number,cedula,nombre,segundo_nombre,apellido1,apellido2,fechaNacimiento,edad,nacionalidad,nombreBase,tel1,email,lead_data,started,campaign_id,x_campaign_id,time_taken,first_action_by,x_first_action_by,last_action_by,x_last_action_by},lead:campaign{id,xid,name,status},lead:firstActioner{id,xid,name},lead:lastActioner{id,xid,name}";
     const formFieldNamesUrl = "form-field-names/all";
     const url = 
-        `lead-logs?fields=id,xid,log_type,time_taken,next_contact,date_time,user_id,x_user_id,notes,phone,message,user{id,xid,name,profile_image,profile_image_url},lead_id,x_lead_id,notes_file,notes_file_url,${leadUrl},campaign_id,notes_typification_id_1,x_notes_typification_id_1,notes_typification_id_2,x_notes_typification_id_2,notes_typification_id_3,x_notes_typification_id_3,notes_typification_id_4,x_notes_typification_id_4,notes_typification_name_1,notes_typification_name_2,notes_typification_name_3,notes_typification_name_4,isSale{idVenta,idNota,idLead,user_id,telVenta,estadoVenta,tarjeta,aplicaBeneficiarios,cantidadBeneficiarios,beneficiarios,aplicaBeneficiariosAsist,cantidadBeneficiariosAsist,beneficiariosAsist,montoTotal,calidad},isSale:productos{x_id_producto,idProducto,cantidadProducto,precio},isSale:user{id,xid,name}`;
+        `lead-logs?fields=id,xid,log_type,time_taken,campaign_id,x_campaign_id,next_contact,date_time,user_id,x_user_id,notes,phone,message,user{id,xid,name,profile_image,profile_image_url},lead_id,x_lead_id,notes_file,notes_file_url,${leadUrl},campaign_id,notes_typification_id_1,x_notes_typification_id_1,notes_typification_id_2,x_notes_typification_id_2,notes_typification_id_3,x_notes_typification_id_3,notes_typification_id_4,x_notes_typification_id_4,notes_typification_name_1,notes_typification_name_2,notes_typification_name_3,notes_typification_name_4,isSale{idVenta,idNota,idLead,user_id,telVenta,estadoVenta,tarjeta,aplicaBeneficiarios,cantidadBeneficiarios,beneficiarios,aplicaBeneficiariosAsist,cantidadBeneficiariosAsist,beneficiariosAsist,montoTotal,calidad},isSale:productos{x_id_producto,idProducto,cantidadProducto,precio},isSale:user{id,xid,name}`;
     const allFormFieldNames = ref([]);
     const addEditUrl = "lead-logs";
     const hashableColumns = ["lead_id", "campaign_id", "user_id", "notes_typification_id_1", "notes_typification_id_2", "notes_typification_id_3","notes_typification_id_4"];
@@ -35,7 +35,36 @@ const fields = (props) => {
     const allUsers = ref([]);
     const allProductos = ref([]);
 
-    const filterableColumns = [];
+    const filterableColumns = [
+         {
+            key: "isSale.idVenta",
+            value: `${t("lead.id")} ${t("lead_notes.sale")}`,
+        },
+        {
+            key: "leads.id",
+            value: t("uphone_calls.client_id"),
+        },
+        {
+            key: "leads.cedula",
+            value: t("lead.document"),
+        },
+        {
+            key: "leads.nombre",
+            value: t("lead.name"),
+        },
+        {
+            key: "leads.segundo_nombre",
+            value: t("lead.middle_name"),
+        },
+        {
+            key: "leads.apellido1",
+            value: t("lead.first_last_name"),
+        },
+        {
+            key: "leads.apellido2",
+            value: t("lead.second_last_name"),
+        },
+    ];
 
     const getPrefetchData = () => {
         const campaignsUrl = getCampaignUrl();
@@ -125,6 +154,7 @@ const fields = (props) => {
     };
 
     return {
+        t,
         url,
         addEditUrl,
         initData,

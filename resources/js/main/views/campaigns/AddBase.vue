@@ -136,50 +136,6 @@
             </template>
 
             <template v-if="currentStep == 1">
-                <!-- <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                    <a-form-item
-                        :label="$t('bases.base') + ' ' + $t('bases.stage')"
-                        name="stage"
-                        :help="
-                            rules.stage
-                                ? rules.stage.message
-                                : null
-                        "
-                        :validateStatus="
-                            rules.stage ? 'error' : null
-                        "
-                        class="required"
-                    >
-                        <a-select
-                            v-model:value="formData.etapa"
-                            :placeholder="$t(
-                            'common.select_default_text',
-                            [ $t('bases.base') + ' ' + $t('bases.stage') ]
-                            )"
-                            :allowClear="true"
-                            show-search
-                        >
-                            <a-select-option
-                                key="nueva"
-                                value="nueva"
-                            >
-                                {{ $t("bases.new") }}
-                            </a-select-option>
-                            <a-select-option
-                                key="reproceso"
-                                value="reproceso"
-                            >
-                                {{ $t("bases.reprocessing") }}
-                            </a-select-option>
-                            <a-select-option
-                                key="na"
-                                value="na"
-                            >
-                                {{ $t("bases.na") }}
-                            </a-select-option>
-                        </a-select>
-                    </a-form-item>
-                </a-col> -->
                 <ImportLeads v-if="permsArray.includes('bases_view') || permsArray.includes('admin')" 
                     acceptFormat=".csv" :allFields="selectedFormFields" @fileUploaded="leadFileUploaded"
                     @leadColumnChanged="leadColumnChanged" />

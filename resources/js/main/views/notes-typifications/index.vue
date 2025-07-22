@@ -91,6 +91,7 @@
             :formData="formData"
             :data="viewData"
             :destroyOnClose="true"
+            :allCampaigns="allCampaigns"
         />
 
         <a-row>
@@ -106,6 +107,9 @@
                         size="middle"
                     >
                         <template #bodyCell="{ column, text, record }">
+                            <template v-if="column.dataIndex === 'campaigns_id'">
+                                {{ record.campaign ? record.campaign.name : '' }}
+                            </template>
                             <template v-if="column.dataIndex === 'action'">
                                 <a-button
                                     v-if="
@@ -141,6 +145,7 @@
         </a-row>
     </admin-page-table-content>
     <AddMultiple
+        :allCampaigns="allCampaigns"
         :visible="visibleAddMultiple"
         @close="closeMultipleItems"
         :pageTitle="$t('notes_typification.add_multiple_typification')"
@@ -164,7 +169,7 @@ import common from "../../../common/composable/common";
 import AddEdit from "./AddEdit.vue";
 import AdminPageHeader from "../../../common/layouts/AdminPageHeader.vue";
 import AddMultiple from "./AddMultiple.vue";
-import ImportNotesTypification from "../../../common/core/ui/Import.vue";
+import ImportNotesTypification from "../../../common/core/ui/ImportTipi.vue";
 
 export default {
     components: {
@@ -179,7 +184,7 @@ export default {
     },
     setup() {
         const store = useStore();
-        const { initData, columns } = fields();
+        const { initData, columns, allCampaigns } = fields();
         const { permsArray } = common();
         const { t } = useI18n();
         const sampleFileUrl = window.config.notes_typification_sample_file;
@@ -229,7 +234,7 @@ export default {
         });
 
         const getTypifications = () => {
-            const notesTypificationUrl = `notes-typifications?fields=id,xid,name,parent_id,x_parent_id,sale,schedule,status&filters=status eq 1&order=id asc&limit=10000`;
+            const notesTypificationUrl = `notes-typifications?fields=id,xid,name,parent_id,x_parent_id,campaign_id,x_campaign_id,sale,schedule,no_contact,status,campaign{id,xid,name}&filters=status eq 1&order=id asc&limit=10000`;
 
             axiosAdmin.get(notesTypificationUrl).then((response) => {
                 const allCategoriesArray = [];
@@ -262,7 +267,10 @@ export default {
                 // Check if the current node's name matches the "like" condition
                 const isMatch =
                     isString(node.name) &&
-                    node.name.toLowerCase().includes(searchName.toLowerCase());
+                    node.name.toLowerCase().includes(searchName.toLowerCase()) ||
+                    (node.campaign && node.campaign.name
+                        ? node.campaign.name.toLowerCase().includes(searchName.toLowerCase())
+                        : false);
 
                 // If the current node doesn't match, recursively check its children
                 if (node.children) {
@@ -303,10 +311,12 @@ export default {
             // If add action is performed then move page to first
             if (addEditType.value == "add") {
                 formData.value = {
+                    campaign_id: null,
                     name: "",
                     parent_id: null,
                     sale: false,
-		            schedule: false,
+		            schedule: false, 
+                    no_contact: false,
                     acciones: true,
                 };
             }
@@ -327,10 +337,12 @@ export default {
         const editItem = (item) => {
             const { children = [] } = item;
             formData.value = {
+                campaign_id: item.x_campaign_id,
                 name: item.name,
                 parent_id: item.x_parent_id,
                 sale: item.sale,
                 schedule: item.schedule,
+                no_contact: item.no_contact,
                 acciones: children.length === 0,
                 _method: "PUT",
             };
@@ -400,6 +412,7 @@ export default {
         };
 
         return {
+            allCampaigns,
             columns,
             addEditSuccess,
             formData,

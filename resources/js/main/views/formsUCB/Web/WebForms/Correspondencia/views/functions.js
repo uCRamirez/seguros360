@@ -1,6 +1,6 @@
 // DO NOT DELETE
-import ucb_framework from "../../../../framework/ucb_framework";
-import $ from 'jquery';
+// import ucb_framework from "../../../../framework/ucb_framework";
+// import $ from 'jquery';
 import { reactive, nextTick, watch, ref } from "vue";
 import { notification } from "ant-design-vue";
 import { useI18n } from "vue-i18n";
@@ -42,6 +42,7 @@ function getEmptyClient() {
         tel5: '',
         tel6: '',
         email: '',
+        genero: '',
         provincia_voto: '',
         etapa: '',
         provincia: null,
@@ -122,7 +123,7 @@ var activeKey = ref("lead_details");
 
 
 // framework function that we are or we have to use in the form
-const { UCB_executeQuery, UCB_audit, UCB_uploadFile } = ucb_framework();
+// const { UCB_executeQuery, UCB_audit, UCB_uploadFile } = ucb_framework();
 // ************************************************************ //
 
 
@@ -207,7 +208,7 @@ const functionsCRM = () => {
             filters.push(`campaign_id eq "${campana}"`);
         }
         if (validarParametrosSelect(leadStatus)) {
-            filters.push(`lead_status_id eq "${leadStatus}"`);
+            filters.push(`(lead_status_id eq ${leadStatus})`);
         }
 
         // Filtro para que cada agente vea solo lo asignado a el, solo el admin o un usuario con permisos vea todo

@@ -372,6 +372,7 @@ class AuthController extends ApiBaseController
             'salesMade' => $this->getSalesMade(),
             'amountSales' => $this->getAmountSales(),
             'topProducts' => $this->getTopProducts(),
+            'calidad' => $this->getCalidadData(),
             // 'callMade' => $this->getCallMade(),
             // 'allAppointments' => $this->getBookedAppointments(),
             // 'allFollowUps' => $this->getFollowUps(),
@@ -383,6 +384,37 @@ class AuthController extends ApiBaseController
                 'total_follow_ups' => $totalFollowUps,
             ]
         ]);
+    }
+
+    public function getCalidadData()
+    {
+        $request = request();
+        $user = user();
+
+        // 1) Rango de fechas
+        if ($request->has('dates') && is_array($request->dates) && count($request->dates) === 2) {
+            $startDate = Carbon::parse($request->dates[0])->format('Y-m-d');
+            $endDate   = Carbon::parse($request->dates[1])->format('Y-m-d');
+        } else {
+            $startDate = Carbon::now()->subDays(30)->format('Y-m-d');
+            $endDate   = Carbon::now()->format('Y-m-d');
+        }
+
+        // 2) Consulta con agregaciones
+        $result = DB::table('ventas as v')
+            ->rightJoin('estados_calidad_venta as ecv', 'ecv.idVenta', '=', 'v.idVenta')
+            ->where('v.user_id', $user->id)
+            ->whereBetween(DB::raw('DATE(ecv.created_at)'), [$startDate, $endDate])
+            ->selectRaw("
+                COUNT(CASE WHEN ecv.estado = 'RELLAMADA' THEN 1 END) as total_rellamada,
+                AVG(ecv.nota_estado) as promedio_nota
+            ")
+            ->first();
+
+        return [
+            'total_rellamada' => (int) $result->total_rellamada,
+            'promedio_nota'   => round((float) $result->promedio_nota, 2),
+        ];
     }
 
     public function getTopProducts()

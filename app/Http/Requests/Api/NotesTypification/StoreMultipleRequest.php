@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api\NotesTypification;
 
 use App\Http\Requests\Api\BaseRequest;
 
-class StoreRequest extends BaseRequest
+class StoreMultipleRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,7 @@ class StoreRequest extends BaseRequest
     public function rules()
     {
         return [
-            // campaign_id es obligatorio solo si parent_id NO está presente
-            'campaign_id' => 'required_without:parent_id',
-            'name'        => 'required|string',
+            'campaign_id' => 'required',
         ];
 
         return $rules;

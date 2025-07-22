@@ -109,47 +109,53 @@ export default {
     }
 
     watch(
-      () => props.data,
-      (newData) => {
-        if (!newData || !newData.ventas) {
-          testData.value = {
-            labels: [],
-            datasets: [
-              {
-                label: t("dashboard.sales_quantity"),
-                data: [],
-                backgroundColor: [],
-                yAxisID: "yQuantity",
-              },
-              {
-                label: t("dashboard.sales_amount"),
-                data: [],
-                backgroundColor: [],
-                yAxisID: "yAmount",
-              },
-            ],
-          };
-          return;
-        }
+    () => props.data,
+    (newData) => {
+      if (!newData || !newData.ventas) {
+        testData.value = {
+          labels: [],
+          datasets: [
+            {
+              label: t("dashboard.sales_quantity"),
+              data: [],
+              backgroundColor: [],
+              yAxisID: "yQuantity",
+            },
+            {
+              label: t("dashboard.sales_amount"),
+              data: [],
+              backgroundColor: [],
+              yAxisID: "yAmount",
+            },
+          ],
+        };
+        return;
+      }
 
-        const processed = transformVentasData(newData);
-        const labels = processed.map((p) => p.teleoperatorName);
-        const qtys = processed.map((p) => p.quantity);
-        const amts = processed.map((p) => p.amount);
+      const processed = transformVentasData(newData);
+      const labels = processed.map((p) => p.teleoperatorName);
+      const qtys = processed.map((p) => p.quantity);
+      const amts = processed.map((p) => p.amount);
 
-        const colorsQty = labels.map(() => randomHexColor());
-        const colorsAmt = labels.map(() => randomHexColor());
+      const colorsQty = labels.map(() => randomHexColor());
+      const colorsAmt = labels.map(() => randomHexColor());
 
-        testData.value.labels = labels;
+      testData.value.labels = labels;
+      testData.value.datasets[0].data = qtys;
+      testData.value.datasets[0].backgroundColor = colorsQty;
 
-        testData.value.datasets[0].data = qtys;
-        testData.value.datasets[0].backgroundColor = colorsQty;
+      testData.value.datasets[1].data = amts;
+      testData.value.datasets[1].backgroundColor = colorsAmt;
 
-        testData.value.datasets[1].data = amts;
-        testData.value.datasets[1].backgroundColor = colorsAmt;
-      },
-      { immediate: true, deep: true }
-    );
+      const maxQty = Math.max(...qtys);
+      const maxAmt = Math.max(...amts);
+
+      salesByTeleopOptions.value.scales.yQuantity.suggestedMax = maxQty + Math.ceil(maxQty * 0.1);
+      salesByTeleopOptions.value.scales.yAmount.suggestedMax = maxAmt + Math.ceil(maxAmt * 0.1);
+    },
+    { immediate: true, deep: true }
+  );
+
 
     return {
       testData,

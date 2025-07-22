@@ -135,11 +135,6 @@ class Venta extends BaseModel implements Auditable
         static::addGlobalScope(new CompanyScope);
     }
 
-    // public function producto() 
-    // { 
-    //     return $this->hasOne(Product::class, 'idProducto', 'id')->withoutGlobalScopes();
-
-    // }
 
     public function user() 
     { 
@@ -153,10 +148,12 @@ class Venta extends BaseModel implements Auditable
             ->withoutGlobalScopes();
     }
 
+    public function estadoCalidad()
+    {
+        return $this->hasOne(EstadoCalidadVenta::class, 'idVenta', 'idVenta')
+                    ->latest('id') // Suponiendo que el campo `id` es autoincremental
+                    ->withoutGlobalScopes();
+    }
 
-    // public function product() 
-    // { 
-    //     return $this->belongsTo(Product::class, 'idProducto', 'id')->withoutGlobalScopes();
-    // }
 
 }

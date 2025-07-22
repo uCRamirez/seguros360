@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Examyou\RestAPI\Exceptions\ApiException;
 use App\Models\CampaignUser;
 use Illuminate\Support\Str; 
+use Illuminate\Support\Facades\DB;
 
 class LeadLogController extends ApiBaseController
 {
@@ -121,12 +122,33 @@ class LeadLogController extends ApiBaseController
         }
         
         $filtersParam = $request->query('filters', '');
-        if (Str::contains($filtersParam, 'isSale.estadoVenta') || Str::contains($filtersParam, 'isSale.calidad') || Str::contains($filtersParam, 'isSale.user_id') || Str::contains($filtersParam, 'isSale_calidad.estado')) {
-            // \Log::info('ENTRA IF');
-            
+        // Detectamos si se usan filtros relacionados a ventas
+        $needsJoinSale = Str::contains($filtersParam, 'isSale.estadoVenta') ||
+                        Str::contains($filtersParam, 'isSale.calidad') ||
+                        Str::contains($filtersParam, 'isSale.user_id') ||
+                        Str::contains($filtersParam, 'isSale.idVenta') ||
+                        Str::contains($filtersParam, 'isSale_calidad.estado');
+
+        // Solo hacemos JOIN a ventas si alguno lo necesita
+        if ($needsJoinSale) {
             $query->leftJoin('ventas as isSale', 'isSale.idNota', '=', 'lead_logs.id');
-            $query->leftJoin('estados_calidad_venta as isSale_calidad', 'isSale_calidad.idVenta', '=', 'isSale.idVenta');
-        } 
+        }
+
+        // Si se requiere el estado más reciente de calidad
+        if (Str::contains($filtersParam, 'isSale_calidad.estado')) {
+            $query->leftJoin(DB::raw('
+                (
+                    SELECT ecv.*
+                    FROM estados_calidad_venta ecv
+                    INNER JOIN (
+                        SELECT idVenta, MAX(id) as max_id
+                        FROM estados_calidad_venta
+                        GROUP BY idVenta
+                    ) latest_ecv
+                    ON ecv.idVenta = latest_ecv.idVenta AND ecv.id = latest_ecv.max_id
+                ) as isSale_calidad
+            '), 'isSale_calidad.idVenta', '=', 'isSale.idVenta');
+        }
 
         // \Log::info('modifyIndex SQL', ['sql' => $query->toSql(), 'bindings' => $query->getBindings()]);
 

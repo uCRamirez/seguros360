@@ -24,6 +24,8 @@ class UpdateRequest extends BaseRequest
 	public function rules()
 	{
 		return [
+			// campaign_id es obligatorio solo si parent_id NO está presente
+            'campaign_id' => 'required_without:parent_id',
 			'name' => 'required'
 		];
 	}

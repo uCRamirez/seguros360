@@ -41,6 +41,8 @@ class Kernel extends ConsoleKernel
         ->hourly()
         ->appendOutputTo(storage_path('logs/cron-scheduler.log'));
 
+        $schedule->command('assignments:run')->everyMinute();
+
     }
 
     /**

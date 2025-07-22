@@ -6,6 +6,7 @@ use App\Classes\Notify;
 use App\Http\Controllers\ApiBaseController;
 use App\Http\Requests\Api\NotesTypification\IndexRequest;
 use App\Http\Requests\Api\NotesTypification\StoreRequest;
+use App\Http\Requests\Api\NotesTypification\StoreMultipleRequest;
 use App\Http\Requests\Api\NotesTypification\UpdateRequest;
 use App\Http\Requests\Api\NotesTypification\DeleteRequest;
 use App\Http\Requests\Api\NotesTypification\ImportRequest;
@@ -17,6 +18,7 @@ use Examyou\RestAPI\ApiResponse;
 use Examyou\RestAPI\Exceptions\ApiException;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\NotesTypificationImport;
+// use Illuminate\Http\Request;
 
 class NotesTypificationController extends ApiBaseController
 {
@@ -24,6 +26,7 @@ class NotesTypificationController extends ApiBaseController
 
     protected $indexRequest = IndexRequest::class;
     protected $storeRequest = StoreRequest::class;
+    protected $storeMultipleRequest = StoreMultipleRequest::class;
     protected $updateRequest = UpdateRequest::class;
     protected $deleteRequest = DeleteRequest::class;
 
@@ -58,16 +61,19 @@ class NotesTypificationController extends ApiBaseController
         return $notesTypification;
     }
 
-    public function addMultipleTypification()
+    public function addMultipleTypification(StoreMultipleRequest $request)
     {
 
-        $request = request();
+        // $request->validate();
+        // $request = request();
+        // \Log::info('campaign', [$request->campaign_id]);
         // \Log::info('notes', [$request->notes]);
 
         foreach ($request->notes as $typfication) {
             // \Log::info('typfication', [$typfication]);
             if ($typfication['typification_1']) {
                 $typification1 = new NotesTypification();
+                $typification1->campaign_id = $request->campaign_id;
                 $typification1->name = $typfication['typification_1'];
 
                 if(!$typfication['typification_2']){
@@ -117,7 +123,7 @@ class NotesTypificationController extends ApiBaseController
         return ApiResponse::make('Success', []);
     }
 
-    public function import(ImportRequest $request)
+    public function import2(ImportRequest $request)
     {
         if ($request->hasFile('file')) {
             Excel::import(new NotesTypificationImport, request()->file('file'));
@@ -125,4 +131,37 @@ class NotesTypificationController extends ApiBaseController
 
         return ApiResponse::make('Imported Successfully', []);
     }
+
+    public function import(ImportRequest $request)
+    {
+        try {
+            if ($request->hasFile('file')) {
+                Excel::import(new NotesTypificationImport, request()->file('file'));
+            }
+
+            // \Log::info('NotesTypificationImport ejecutado correctamente');
+            return ApiResponse::make('Imported Successfully', []);
+
+        } catch (ApiException $e) {
+            \Log::error('Error en NotesTypificationImport', [
+                'mensaje'   => $e->getMessage(),
+            ]);
+
+            // return ApiResponse::error($e->getMessage(), 422);
+            return ApiResponse::make(
+                $e->getMessage(),      
+                [],                   
+                true,
+            );
+
+
+        } catch (\Throwable $e) {
+            \Log::error('Ocurrió un error inesperado', [
+                'mensaje'   => $e->getMessage(),
+            ]);
+            
+            return ApiResponse::make('Ocurrió un error inesperado',[$e]);
+        }
+    }
+
 }

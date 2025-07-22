@@ -18,6 +18,6 @@ class VerifyCsrfToken extends Middleware
         '/save-paypal-invoices',
         '/save-razorpay-invoices',
         '/save-paystack-invoices',
-        "langs/download/*"
+        "langs/download/*",
     ];
 }

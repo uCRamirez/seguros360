@@ -1,6 +1,6 @@
 <template>
     <a-modal
-        width="70%"
+        width="80%"
         :open="visible"
         :closable="false"
         :centered="true"
@@ -9,13 +9,30 @@
     >
         <a-form layout="vertical">
             <template v-if="formData.length > 0">
+                <a-row :gutter="16">
+                    <a-col :xs="24" :sm="24" :md="6" :lg="6">
+                        <a-form-item class="required" :label="$t('lead.campaign')" name="campaign_id" :help="rules.campaign_id ? rules.campaign_id.message : null" :validateStatus="rules.campaign_id ? 'error' : null">
+                            <a-select v-model:value="campaignId" :placeholder="$t('common.select_default_text', [
+                                $t('lead.campaign'),
+                            ])
+                                " :allowClear="true" style="width: 100%" optionFilterProp="title"
+                                show-search @change="campaignChanged">
+                                <a-select-option v-for="allCampaign in allCampaigns.filter(s => s.active === 1)"
+                                    :key="allCampaign.id" :title="allCampaign.name"
+                                    :value="allCampaign.id" :campaign="allCampaign">
+                                    {{ allCampaign.name }}
+                                </a-select-option>
+                            </a-select>
+                        </a-form-item>
+                    </a-col>
+                </a-row>
                 <a-row
                     :gutter="16"
                     v-for="(data, index) in formData"
                     :key="data.id"
                     style="display: flex; align-items: center"
                 >
-                    <a-col :xs="24" :sm="24" :md="5" :lg="5">
+                    <a-col :xs="24" :sm="24" :md="4" :lg="4">
                         <a-form-item
                             :label="$t('lead_notes.typification_1')"
                             :name="['form_data', index, 'typification_1']"
@@ -39,8 +56,8 @@
                         v-show="data.typification_1 != ''"
                         :xs="24"
                         :sm="24"
-                        :md="5"
-                        :lg="5"
+                        :md="4"
+                        :lg="4"
                     >
                         <a-form-item
                             :label="$t('lead_notes.typification_2')"
@@ -65,8 +82,8 @@
                         v-show="data.typification_1 != '' && data.typification_2 != ''"
                         :xs="24"
                         :sm="24"
-                        :md="5"
-                        :lg="5"
+                        :md="4"
+                        :lg="4"
                     >
                         <a-form-item
                             :label="$t('lead_notes.typification_3')"
@@ -91,8 +108,8 @@
                         v-show="data.typification_1 != '' && data.typification_2 != '' && data.typification_3 != ''"
                         :xs="24"
                         :sm="24"
-                        :md="5"
-                        :lg="5"
+                        :md="4"
+                        :lg="4"
                     >
                         <a-form-item
                             :label="$t('lead_notes.typification_4')"
@@ -113,7 +130,10 @@
                         </a-form-item>
                     </a-col>
 
-                    <a-col :span="1" style="margin-top: 6px;display: inline-flex;">
+                    <a-col :xs="24"
+                        :sm="24"
+                        :md="6"
+                        :lg="6" :span="1" style="margin-top: 6px;display: inline-flex;">
                         <MinusSquareOutlined @click="removeFormField(data)" danger/>
 
                         <a-checkbox style="margin-left: 10px;" v-model:checked="data.sale">
@@ -122,6 +142,10 @@
 
                         <a-checkbox  v-model:checked="data.schedule">
                             {{ $t('common.scheduled') }}
+                        </a-checkbox>
+
+                        <a-checkbox  v-model:checked="data.no_contact">
+                            {{ $t('common.no_contact') }}
                         </a-checkbox>
                     </a-col>
                 </a-row>
@@ -173,7 +197,7 @@ import { some, forEach, filter } from "lodash-es";
 import { useI18n } from "vue-i18n";
 
 export default defineComponent({
-    props: ["data", "visible", "pageTitle", "addEditType"],
+    props: ["data", "visible", "pageTitle", "addEditType","allCampaigns"],
     components: {
         PlusOutlined,
         MinusSquareOutlined,
@@ -190,8 +214,11 @@ export default defineComponent({
                 typification_4: "",
                 sale: false,
                 schedule: false,
+                no_contact: false,
             },
         ]);
+
+        const campaignId = ref(null);
 
         const removedName = ref([]);
         const onlyValidateErrors = ref({});
@@ -208,9 +235,10 @@ export default defineComponent({
         const onSubmit = () => {
 
             var newFormData = {
+                campaign_id: campaignId.value,
                 notes: formData.value,
             };
-
+            
             addEditRequestAdmin({
                 url: "multiple-typifications",
                 data: newFormData,
@@ -259,6 +287,7 @@ export default defineComponent({
             () => props.visible,
             (newVal, oldVal) => {
                 onlyValidateErrors.value = {};
+                campaignId.value = null;
                 formData.value = [
                     { typification_1: "", typification_2: "", typification_3: "",  typification_4: "" },
                 ];
@@ -266,6 +295,7 @@ export default defineComponent({
         );
 
         return {
+            campaignId,
             rules,
             loading,
             // formatDateTime,

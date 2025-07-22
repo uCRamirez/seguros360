@@ -21,11 +21,6 @@
                         : "-"
                 }}
                 {{
-                    data.lead && data.lead.segundo_nombre && data.lead.segundo_nombre
-                        ? data.lead.segundo_nombre
-                        : ""
-                }}
-                {{
                     data.lead && data.lead.apellido1 && data.lead.apellido1
                         ? data.lead.apellido1
                         : "-"
@@ -78,57 +73,6 @@
                         : "-"
                 }}
             </a-descriptions-item>
-            <a-descriptions-item class="label-bold" :label="$t('lead.expiration_date')">
-                {{
-                    data.lead && data.lead.fechaVencimiento && data.lead.fechaVencimiento
-                        ? formatDateTime(data.lead.fechaVencimiento)
-                        : "-"
-                }}
-            </a-descriptions-item>
-        </a-descriptions>
-
-        <a-descriptions
-            class="mt-10"
-        >
-            <a-descriptions-item class="label-bold" :label="$t('lead.plan_type')">
-                        {{
-                            data.lead && data.lead.tipo_plan && data.lead.tipo_plan
-                                ? data.lead.tipo_plan
-                                : "-"
-                        }}
-            </a-descriptions-item>
-            <a-descriptions-item class="label-bold" :label="$t('lead.card_type')">
-                {{
-                    data.lead && data.lead.tipo_tarjeta && data.lead.tipo_tarjeta
-                        ? data.lead.tipo_tarjeta
-                        : "-"
-                }}
-            </a-descriptions-item>
-            <a-descriptions-item class="label-bold" :label="$t('lead.transmitter')">
-                {{
-                    data.lead && data.lead.emisor && data.lead.emisor
-                        ? data.lead.emisor
-                        : "-"
-                }}
-            </a-descriptions-item>
-        </a-descriptions>
-        <a-descriptions
-            class="mt-10"
-        >
-            <a-descriptions-item  class="label-bold" :label="$t('lead.last_digits')">
-                {{
-                    data.lead && data.lead.ultimos_digitos && data.lead.ultimos_digitos
-                        ? data.lead.ultimos_digitos
-                        : "-"
-                }}
-            </a-descriptions-item>
-            <a-descriptions-item class="label-bold" :label="$t('lead.sales_focus')">
-                {{
-                    data.lead && data.lead.foco_venta && data.lead.foco_venta
-                        ? data.lead.foco_venta
-                        : "-"
-                }}
-            </a-descriptions-item>
         </a-descriptions>
 
         <a-tabs v-model:activeKey="activeTabKey" class="mt-20">
@@ -170,24 +114,20 @@
                 </a-descriptions>
                 <div class="row">
                     <div class="table-responsive">
-                        <a-table
-                            :columns="columnsProduct"
-                            :data-source="tableProducts.data"
-                            :pagination="tableProducts.pagination"
-                            @change="handleTableChange"
-                            :row-key="record => record.price"
-                            size="small"
-                        >
+                        <a-table :columns="columnsProduct" :data-source="tableProducts.data"
+                            :pagination="tableProducts.pagination" @change="handleTableChange"
+                            :row-key="record => record.price" size="small">
                             <template #bodyCell="{ column, record }">
 
                                 <template v-if="column.dataIndex === 'price'">
-                                        {{ formatAmountCurrency(record.price)}}
+                                    {{ formatAmountCurrency(record.price) }}
                                 </template>
-                                
+
                             </template>
                             <template #footer>
                                 <div class="text-center">
-                                    <strong>{{ $t('lead.total_amount') }} : {{ formatAmountCurrency(data.is_sale.montoTotal) }}</strong>
+                                    <strong>{{ $t('lead.total_amount') }} : {{
+                                        formatAmountCurrency(data.is_sale.montoTotal) }}</strong>
                                 </div>
                             </template>
                         </a-table>
@@ -195,48 +135,58 @@
                 </div>
                 <a-descriptions :layout="descLayout" :column="{ xs: 1, sm: 1, md: 2, lg: 3 }">
 
-                    <a-col v-if="data.is_sale && data.is_sale.aplicaBeneficiarios === 1" :span="(data.is_sale.aplicaBeneficiarios && !data.is_sale.aplicaBeneficiariosAsist) ? 3 : 2">
-                        <a-form-item  :label="$t('lead.beneficiaries')">
+                    <a-col v-if="data.is_sale && data.is_sale.aplicaBeneficiarios === 1"
+                        :span="(data.is_sale.aplicaBeneficiarios && !data.is_sale.aplicaBeneficiariosAsist) ? 3 : 2">
+                        <a-form-item :label="$t('lead.beneficiaries')">
                             <a-checkbox :checked="(data.is_sale && data.is_sale.aplicaBeneficiarios == 1)"></a-checkbox>
                         </a-form-item>
                     </a-col>
 
-                    <a-col v-if="data.is_sale && data.is_sale.aplicaBeneficiariosAsist === 1" :span="(data.is_sale.aplicaBeneficiariosAsist && !data.is_sale.aplicaBeneficiarios) ? 3 : 1">
+                    <a-col v-if="data.is_sale && data.is_sale.aplicaBeneficiariosAsist === 1"
+                        :span="(data.is_sale.aplicaBeneficiariosAsist && !data.is_sale.aplicaBeneficiarios) ? 3 : 1">
                         <a-form-item :label="$t('lead.beneficiaries_asist')">
-                            <a-checkbox :checked="(data.is_sale && data.is_sale.aplicaBeneficiariosAsist == 1)"></a-checkbox>
+                            <a-checkbox
+                                :checked="(data.is_sale && data.is_sale.aplicaBeneficiariosAsist == 1)"></a-checkbox>
                         </a-form-item>
                     </a-col>
 
                 </a-descriptions>
                 <row class="d-flex">
-                    <a-col style="margin-right: 1%;" v-if="data.is_sale && data.is_sale.aplicaBeneficiarios === 1" :xs="12" :sm="12" :md="12" :lg="12">
-                        <a-form-item class="label-bold" :label="$t('lead.beneficiary_information')" :labelCol="{ span: 24 }"
-                            :wrapperCol="{ span: 24 }">
+                    <a-col style="margin-right: 1%;" v-if="data.is_sale && data.is_sale.aplicaBeneficiarios === 1"
+                        :xs="12" :sm="12" :md="12" :lg="12">
+                        <a-form-item class="label-bold" :label="$t('lead.beneficiary_information')"
+                            :labelCol="{ span: 24 }" :wrapperCol="{ span: 24 }">
                             <a-space direction="vertical" style="width: 100%;">
                                 <div v-for="(benef, i) in beneficiarios" :key="i" style="display: flex; gap: 1rem;">
                                     <a-form-item :name="['beneficiarios', i, 'nombre']" noStyle>
-                                        <a-input :value="benef.nombre" :placeholder="$t('lead.name')" style="flex: 1;" />
+                                        <a-input :value="benef.nombre" :placeholder="$t('lead.name')"
+                                            style="flex: 1;" />
                                     </a-form-item>
                                     <a-form-item :name="['beneficiarios', i, 'porcentaje']" noStyle>
-                                        <a-input-number disabled v-model:value="benef.porcentaje" :min="0" :precision="0"
-                                            :step="1" :placeholder="$t('lead.percentage')" style="width: 80px;" />
+                                        <a-input-number disabled v-model:value="benef.porcentaje" :min="0"
+                                            :precision="0" :step="1" :placeholder="$t('lead.percentage')"
+                                            style="width: 80px;" />
                                     </a-form-item>
                                 </div>
                             </a-space>
                         </a-form-item>
                     </a-col>
 
-                    <a-col v-if="data.is_sale && data.is_sale.aplicaBeneficiariosAsist === 1" :xs="12" :sm="12" :md="12" :lg="12">
-                        <a-form-item class="label-bold" :label="$t('lead.beneficiary_asist_information')" :labelCol="{ span: 24 }"
-                            :wrapperCol="{ span: 24 }">
+                    <a-col v-if="data.is_sale && data.is_sale.aplicaBeneficiariosAsist === 1" :xs="12" :sm="12" :md="12"
+                        :lg="12">
+                        <a-form-item class="label-bold" :label="$t('lead.beneficiary_asist_information')"
+                            :labelCol="{ span: 24 }" :wrapperCol="{ span: 24 }">
                             <a-space direction="vertical" style="width: 100%;">
-                                <div v-for="(benef, i) in beneficiariosAsist" :key="i" style="display: flex; gap: 1rem;">
+                                <div v-for="(benef, i) in beneficiariosAsist" :key="i"
+                                    style="display: flex; gap: 1rem;">
                                     <a-form-item :name="['beneficiarios', i, 'nombre']" noStyle>
-                                        <a-input :value="benef.nombre" :placeholder="$t('lead.name')" style="flex: 1;" />
+                                        <a-input :value="benef.nombre" :placeholder="$t('lead.name')"
+                                            style="flex: 1;" />
                                     </a-form-item>
                                     <a-form-item :name="['beneficiarios', i, 'porcentaje']" noStyle>
-                                        <a-input-number disabled v-model:value="benef.porcentaje" :min="0" :precision="0"
-                                            :step="1" :placeholder="$t('lead.percentage')" style="width: 80px;" />
+                                        <a-input-number disabled v-model:value="benef.porcentaje" :min="0"
+                                            :precision="0" :step="1" :placeholder="$t('lead.percentage')"
+                                            style="width: 80px;" />
                                     </a-form-item>
                                 </div>
                             </a-space>
@@ -263,8 +213,11 @@
 
                 <a-form v-else ref="formRef" :model="datos.calidad" :rules="rules">
                     <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                        <h2 v-if="plantillaCalidad.nombre"><strong>{{ $t('common.template') }}: {{ plantillaCalidad.nombre }}</strong></h2>
-                        <strong><small v-if="plantillaCalidad.descripcion"> {{ plantillaCalidad.descripcion }}</small></strong>
+                        <h2 v-if="plantillaCalidad.nombre"><strong>{{ $t('common.template') }}: {{
+                                plantillaCalidad.nombre
+                                }}</strong></h2>
+                        <strong><small v-if="plantillaCalidad.descripcion"> {{ plantillaCalidad.descripcion
+                                }}</small></strong>
 
                         <div v-if="plantillaCalidad.variables && plantillaCalidad.variables.length"
                             class="table-responsive">
@@ -273,7 +226,8 @@
                                 <template #bodyCell="{ column, record }">
                                     <!-- tipo de variables -->
                                     <template v-if="column.dataIndex === 'tipo'">
-                                        <a-tag style="width: 100%; text-align: center;" v-if="record.tipo === 'critica'" color="#f5b041">
+                                        <a-tag style="width: 100%; text-align: center;" v-if="record.tipo === 'critica'"
+                                            color="#f5b041">
                                             {{ $t('message_template.critical_variable') }}
                                         </a-tag>
                                         <a-tag style="width: 100%; text-align: center;" v-else color="#4cb050">
@@ -282,17 +236,21 @@
                                     </template>
                                     <!-- peso de las varibales -->
                                     <template v-if="column.dataIndex === 'nota_maxima'">
-                                        {{ record.tipo === 'critica' ? 'N/A' :record.nota_maxima }}
+                                        {{ record.tipo === 'critica' ? 'N/A' : record.nota_maxima }}
                                     </template>
                                     <!-- slot para acciones -->
                                     <template v-if="column.dataIndex === 'acciones'">
-                                        <a-checkbox v-if="datos.calidad.accion === 'add'" class="checkbox-x" @change="selectVariable(record)"></a-checkbox>
-                                        <a-checkbox v-else v-model:checked="record.marcada" @change="selectVariable(record)" class="checkbox-x"></a-checkbox>
+                                        <a-checkbox v-if="datos.calidad.accion === 'add'" class="checkbox-x"
+                                            @change="selectVariable(record)"></a-checkbox>
+                                        <a-checkbox v-else v-model:checked="record.marcada"
+                                            @change="selectVariable(record)" class="checkbox-x"></a-checkbox>
                                     </template>
                                 </template>
                                 <template #footer>
                                     <div class="w-full text-right">
-                                        <strong> {{ $t('common.qualification') }} : <span :style="{color: calificacion === 0  ? 'red' : calificacion > 0 && calificacion <= 50 ? '#f5b041' : 'inherit'}">{{ calificacion }}</span></strong>
+                                        <strong> {{ $t('common.qualification') }} : <span
+                                                :style="{ color: calificacion === 0 ? 'red' : calificacion > 0 && calificacion <= 50 ? '#f5b041' : 'inherit' }">{{
+                                                calificacion }}</span></strong>
                                     </div>
                                 </template>
 
@@ -308,33 +266,32 @@
                         <a-row :gutter="[16, 16]">
 
                             <a-col :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: 6 }" :lg="{ span: 6 }">
-                                <a-form-item name="minuto_precio" :label-col="{ span: 24 }" :label="$t('message_template.minute')" class="required label-bold">
-                                    <a-input-number v-model:value="datos.calidad.minuto_precio" style="width:100%" :placeholder="$t('message_template.minute')" :min="0" :max="59" />
+                                <a-form-item name="minuto_precio" :label-col="{ span: 24 }"
+                                    :label="$t('message_template.minute')" class="required label-bold">
+                                    <a-input-number v-model:value="datos.calidad.minuto_precio" style="width:100%"
+                                        :placeholder="$t('message_template.minute')" :min="0" :max="59" />
                                 </a-form-item>
                             </a-col>
-                            
+
 
                             <a-col :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: 6 }" :lg="{ span: 6 }">
-                                <a-form-item name="duracion" :label-col="{ span: 24 }" :label="$t('lead.call_duration')" class="required label-bold">
-                                    <a-input-number v-model:value="datos.calidad.duracion" style="width:100%" :placeholder="$t('lead.call_duration')" :min="0" />
+                                <a-form-item name="duracion" :label-col="{ span: 24 }" :label="$t('lead.call_duration')"
+                                    class="required label-bold">
+                                    <a-input-number v-model:value="datos.calidad.duracion" style="width:100%"
+                                        :placeholder="$t('lead.call_duration')" :min="0" />
                                 </a-form-item>
                             </a-col>
 
                             <a-col :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: 12 }" :lg="{ span: 12 }">
-                                <a-form-item name="accion_calidad_id" :label-col="{ span: 24 }" :label="$t('common.action')" class="required label-bold">
-                                    <a-select 
-                                        style="width: 100%"
+                                <a-form-item name="accion_calidad_id" :label-col="{ span: 24 }"
+                                    :label="$t('common.action')" class="required label-bold">
+                                    <a-select style="width: 100%"
                                         :placeholder="$t('common.select_default_text', [$t('common.action')])"
-                                        :allowClear="true"
-                                        show-search
-                                        optionFilterProp="title"
-                                        v-model:value="datos.calidad.accion_calidad_id"
-                                    >
-                                        <a-select-option v-for="accion in allAccionesCalidad.filter(s => s.tipo === 'accion')" 
-                                            :key="accion.xid"
-                                            :value="accion.xid"
-                                            :title="accion.nombre"
-                                        >
+                                        :allowClear="true" show-search optionFilterProp="title"
+                                        v-model:value="datos.calidad.accion_calidad_id">
+                                        <a-select-option
+                                            v-for="accion in allAccionesCalidad.filter(s => s.tipo === 'accion')"
+                                            :key="accion.xid" :value="accion.xid" :title="accion.nombre">
                                             {{ accion.nombre }}
                                         </a-select-option>
                                     </a-select>
@@ -345,184 +302,128 @@
 
                         <a-row :gutter="[16, 16]">
 
-                            
 
-                            <a-col :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: datos.calidad.cierre_venta ? 6 : 12 }" :lg="{ span: datos.calidad.cierre_venta ? 6: 12 }">
-                                <a-form-item name="cierre_venta" :label-col="{ span: 24 }" :label="$t('common.closing_sale')" class="required label-bold">
-                                    <a-select 
-                                        style="width: 100%"
+
+                            <a-col :xs="{ span: 24 }" :sm="{ span: 24 }"
+                                :md="{ span: datos.calidad.cierre_venta ? 6 : 12 }"
+                                :lg="{ span: datos.calidad.cierre_venta ? 6 : 12 }">
+                                <a-form-item name="cierre_venta" :label-col="{ span: 24 }"
+                                    :label="$t('common.closing_sale')" class="required label-bold">
+                                    <a-select style="width: 100%"
                                         :placeholder="$t('common.select_default_text', [$t('common.closing_sale')])"
-                                        :allowClear="true"
-                                        show-search
-                                        optionFilterProp="title"
-                                        v-model:value="datos.calidad.cierre_venta"
-                                    >
-                                        <a-select-option  
-                                            key="si"
-                                            :value="true"
-                                            :title="$t('common.yes')"
-                                        >
+                                        :allowClear="true" show-search optionFilterProp="title"
+                                        v-model:value="datos.calidad.cierre_venta">
+                                        <a-select-option key="si" :value="true" :title="$t('common.yes')">
                                             {{ $t('common.yes') }}
                                         </a-select-option>
-                                        <a-select-option  
-                                            key="no"
-                                            :value="false"
-                                            :title="$t('common.no')"
-                                        >
+                                        <a-select-option key="no" :value="false" :title="$t('common.no')">
                                             {{ $t('common.no') }}
                                         </a-select-option>
                                     </a-select>
                                 </a-form-item>
                             </a-col>
 
-                            <a-col v-if="datos.calidad.cierre_venta" :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: 6 }" :lg="{ span: 6 }">
-                                <a-form-item name="cerrado_por" :label-col="{ span: 24 }" :label="$t('common.closed_by')" class="required label-bold">
-                                    <a-select 
-                                        style="width: 100%"
+                            <a-col v-if="datos.calidad.cierre_venta" :xs="{ span: 24 }" :sm="{ span: 24 }"
+                                :md="{ span: 6 }" :lg="{ span: 6 }">
+                                <a-form-item name="cerrado_por" :label-col="{ span: 24 }"
+                                    :label="$t('common.closed_by')" class="required label-bold">
+                                    <a-select style="width: 100%"
                                         :placeholder="$t('common.select_default_text', [$t('common.closed_by')])"
-                                        :allowClear="true"
-                                        show-search
-                                        optionFilterProp="title"
-                                        v-model:value="datos.calidad.cerrado_por"
-                                    >
-                                        <a-select-option v-for="accion in allAccionesCalidad.filter(s => s.tipo === 'cierre')" 
-                                            :key="accion.xid"
-                                            :value="accion.xid"
-                                            :title="accion.nombre"
-                                        >
+                                        :allowClear="true" show-search optionFilterProp="title"
+                                        v-model:value="datos.calidad.cerrado_por">
+                                        <a-select-option
+                                            v-for="accion in allAccionesCalidad.filter(s => s.tipo === 'cierre')"
+                                            :key="accion.xid" :value="accion.xid" :title="accion.nombre">
                                             {{ accion.nombre }}
                                         </a-select-option>
                                     </a-select>
                                 </a-form-item>
                             </a-col>
 
-                            <a-col :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: datos.calidad.estado === 'CERTIFICADA' || datos.calidad.estado === 'RELLAMADA_CERTIFICADA' || datos.calidad.estado === 'CANCELADA_CALIDAD' || datos.calidad.estado === 'REASIGNADA' ? 12 : 12 }"  :lg="{ span: datos.calidad.estado === 'CERTIFICADA' || datos.calidad.estado === 'RELLAMADA_CERTIFICADA' || datos.calidad.estado === 'CANCELADA_CALIDAD' || datos.calidad.estado === 'REASIGNADA' ? 6 : 12 }">
-                                <a-form-item
-                                    :label="$t('common.status')"
-                                    name="estado"
-                                    class="required label-bold"
-                                    :label-col="{ span: 24 }"
-                                >
-                                    <a-select
-                                        style="width: 100%"
+                            <a-col :xs="{ span: 24 }" :sm="{ span: 24 }"
+                                :md="{ span: datos.calidad.estado === 'CERTIFICADA' || datos.calidad.estado === 'RELLAMADA_CERTIFICADA' || datos.calidad.estado === 'CANCELADA_CALIDAD' || datos.calidad.estado === 'REASIGNADA' ? 12 : 12 }"
+                                :lg="{ span: datos.calidad.estado === 'CERTIFICADA' || datos.calidad.estado === 'RELLAMADA_CERTIFICADA' || datos.calidad.estado === 'CANCELADA_CALIDAD' || datos.calidad.estado === 'REASIGNADA' ? 6 : 12 }">
+                                <a-form-item :label="$t('common.status')" name="estado" class="required label-bold"
+                                    :label-col="{ span: 24 }">
+                                    <a-select style="width: 100%"
                                         :placeholder="$t('common.select_default_text', [$t('common.status')])"
-                                        :allowClear="true"
-                                        show-search
-                                        optionFilterProp="title"
-                                        v-model:value="datos.calidad.estado"
-                                    >
-                                        <a-select-option
-                                            v-for="opt in cierreVentaOptions"
-                                            :key="opt.value"
-                                            :value="opt.value"
-                                            :title="opt.label"
-                                        >
+                                        :allowClear="true" show-search optionFilterProp="title"
+                                        v-model:value="datos.calidad.estado">
+                                        <a-select-option v-for="opt in cierreVentaOptions" :key="opt.value"
+                                            :value="opt.value" :title="opt.label">
                                             {{ opt.label }}
                                         </a-select-option>
                                     </a-select>
-                                </a-form-item> 
+                                </a-form-item>
                             </a-col>
                             <!-- opciones que aparecen dependiendo se la selecion superior -->
-                            <a-col v-if="datos.calidad.estado === 'CERTIFICADA'" :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: datos.calidad.estado === 'CERTIFICADA' ? 24 : 12 }" :lg="{ span: datos.calidad.estado === 'CERTIFICADA' ? 6 : 12 }">
-                                <a-form-item
-                                    :label="$t('common.policy')"
-                                    name="numero_poliza"
-                                    class="label-bold"
-                                    :label-col="{ span: 24 }"
-                                >
-                                    <a-input :maxlength="99" v-model:value="datos.calidad.numero_poliza" :placeholder="$t('common.policy')" />
-                                </a-form-item> 
+                            <a-col v-if="datos.calidad.estado === 'CERTIFICADA'" :xs="{ span: 24 }" :sm="{ span: 24 }"
+                                :md="{ span: datos.calidad.estado === 'CERTIFICADA' ? 24 : 12 }"
+                                :lg="{ span: datos.calidad.estado === 'CERTIFICADA' ? 6 : 12 }">
+                                <a-form-item :label="$t('common.policy')" name="numero_poliza" class="label-bold"
+                                    :label-col="{ span: 24 }">
+                                    <a-input :maxlength="99" v-model:value="datos.calidad.numero_poliza"
+                                        :placeholder="$t('common.policy')" />
+                                </a-form-item>
                             </a-col>
 
-                            <a-col v-if="datos.calidad.estado === 'RELLAMADA_CERTIFICADA'" :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: datos.calidad.estado === 'RELLAMADA_CERTIFICADA' ? 24 : 12 }" :lg="{ span: datos.calidad.estado === 'RELLAMADA_CERTIFICADA' ? 6 : 12 }">
-                                <a-form-item
-                                    :label="$t('common.call_certificate')"
-                                    name="numero_certificado"
-                                    class="required label-bold"
-                                    :label-col="{ span: 24 }"
-                                >
-                                    <a-input :maxlength="99" v-model:value="datos.calidad.numero_certificado" :placeholder="$t('common.call_certificate')" />
-                                </a-form-item> 
+                            <a-col v-if="datos.calidad.estado === 'RELLAMADA_CERTIFICADA'" :xs="{ span: 24 }"
+                                :sm="{ span: 24 }"
+                                :md="{ span: datos.calidad.estado === 'RELLAMADA_CERTIFICADA' ? 24 : 12 }"
+                                :lg="{ span: datos.calidad.estado === 'RELLAMADA_CERTIFICADA' ? 6 : 12 }">
+                                <a-form-item :label="$t('common.call_certificate')" name="numero_certificado"
+                                    class="required label-bold" :label-col="{ span: 24 }">
+                                    <a-input :maxlength="99" v-model:value="datos.calidad.numero_certificado"
+                                        :placeholder="$t('common.call_certificate')" />
+                                </a-form-item>
                             </a-col>
-                            <a-col v-if="datos.calidad.estado === 'CANCELADA_CALIDAD'" :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: datos.calidad.estado === 'CANCELADA_CALIDAD' ? 24 : 12 }" :lg="{ span: datos.calidad.estado === 'CANCELADA_CALIDAD' ? 6 : 12 }">
-                                <a-form-item
-                                    :label="$t('message_template.reason')"
-                                    name="motivo_cancelacion_id"
-                                    class="required label-bold"
-                                    :label-col="{ span: 24 }"
-                                >
-                                    <a-select 
-                                        style="width: 100%"
+                            <a-col v-if="datos.calidad.estado === 'CANCELADA_CALIDAD'" :xs="{ span: 24 }"
+                                :sm="{ span: 24 }"
+                                :md="{ span: datos.calidad.estado === 'CANCELADA_CALIDAD' ? 24 : 12 }"
+                                :lg="{ span: datos.calidad.estado === 'CANCELADA_CALIDAD' ? 6 : 12 }">
+                                <a-form-item :label="$t('message_template.reason')" name="motivo_cancelacion_id"
+                                    class="required label-bold" :label-col="{ span: 24 }">
+                                    <a-select style="width: 100%"
                                         :placeholder="$t('common.select_default_text', [$t('message_template.reason')])"
-                                        :allowClear="true"
-                                        show-search
-                                        optionFilterProp="title"
-                                        v-model:value="datos.calidad.motivo_cancelacion_id"
-                                    >
-                                        <a-select-option v-for="motivo in allMotivosCalidad" 
-                                            :key="motivo.xid"
-                                            :value="motivo.xid"
-                                            :title="motivo.motivo"
-                                        >
+                                        :allowClear="true" show-search optionFilterProp="title"
+                                        v-model:value="datos.calidad.motivo_cancelacion_id">
+                                        <a-select-option v-for="motivo in allMotivosCalidad" :key="motivo.xid"
+                                            :value="motivo.xid" :title="motivo.motivo">
                                             {{ motivo.motivo }}
                                         </a-select-option>
                                     </a-select>
-                                </a-form-item> 
+                                </a-form-item>
                             </a-col>
 
-                            <a-col v-if="datos.calidad.estado === 'REASIGNADA'" :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: datos.calidad.estado === 'REASIGNADA' ? 24 : 12 }" :lg="{ span: datos.calidad.estado === 'REASIGNADA' ? 6 : 12 }">
-                                <a-form-item
-                                    :label="$t('lead.agent')"
-                                    name="reasignado_a"
-                                    class="required label-bold"
-                                    :label-col="{ span: 24 }"
-                                >
-                                    <a-select 
-                                        style="width: 100%"
+                            <a-col v-if="datos.calidad.estado === 'REASIGNADA'" :xs="{ span: 24 }" :sm="{ span: 24 }"
+                                :md="{ span: datos.calidad.estado === 'REASIGNADA' ? 24 : 12 }"
+                                :lg="{ span: datos.calidad.estado === 'REASIGNADA' ? 6 : 12 }">
+                                <a-form-item :label="$t('lead.agent')" name="reasignado_a" class="required label-bold"
+                                    :label-col="{ span: 24 }">
+                                    <a-select style="width: 100%"
                                         :placeholder="$t('common.select_default_text', [$t('lead.agent')])"
-                                        :allowClear="true"
-                                        show-search
-                                        optionFilterProp="title"
-                                        v-model:value="datos.calidad.reasignado_a"
-                                    >
-                                        <a-select-option v-for="agente in agenteCampana" 
-                                            :title="agente.name" 
-                                            :key="agente"
-                                            :value="agente.id">
+                                        :allowClear="true" show-search optionFilterProp="title"
+                                        v-model:value="datos.calidad.reasignado_a">
+                                        <a-select-option v-for="agente in agenteCampana" :title="agente.name"
+                                            :key="agente" :value="agente.id">
                                             {{ agente.name }}
                                         </a-select-option>
                                     </a-select>
-                                </a-form-item> 
+                                </a-form-item>
                             </a-col>
 
                             <!-- ---------------------------------------------------------- -->
                             <a-col :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: 12 }" :lg="{ span: 12 }">
-                                <a-form-item 
-                                    :label="`${$t('common.status')} ${$t('lead_notes.sale')}`" 
-                                    class="required label-bold" 
-                                    :label-col="{ span: 24 }"
-                                    name="estadoVenta"
-                                >
-                                    <a-select
-                                        :placeholder="
-                                            $t('common.select_default_text', [
-                                                $t('common.status'),
-                                            ])
-                                        "
-                                        :allowClear="true"
-                                        show-search
-                                        v-model:value="datos.calidad.estadoVenta"
-                                    >
-                                        <a-select-option
-                                            key="Efectiva"
-                                            value="Efectiva"
-                                        >
+                                <a-form-item :label="`${$t('common.status')} ${$t('lead_notes.sale')}`"
+                                    class="required label-bold" :label-col="{ span: 24 }" name="estadoVenta">
+                                    <a-select :placeholder="$t('common.select_default_text', [
+                                        $t('common.status'),
+                                    ])
+                                        " :allowClear="true" show-search v-model:value="datos.calidad.estadoVenta">
+                                        <a-select-option key="Efectiva" value="Efectiva">
                                             {{ $t("lead_notes.effective") }}
                                         </a-select-option>
-                                        <a-select-option
-                                            key="Cancelada"
-                                            value="Cancelada"
-                                        >
+                                        <a-select-option key="Cancelada" value="Cancelada">
                                             {{ $t("lead_notes.canceled") }}
                                         </a-select-option>
                                     </a-select>
@@ -530,70 +431,48 @@
                             </a-col>
 
                             <a-col :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: 12 }" :lg="{ span: 12 }">
-                                <a-form-item 
-                                    :label="$t('common.improvement_options')" 
-                                    class="label-bold" 
-                                    :label-col="{ span: 24 }"
-                                    name="oportunidades"
-                                >
-                                    <a-select
-                                        :placeholder="
-                                            $t('common.select_default_text', [
-                                                $t('common.improvement_options'),
-                                            ])
-                                        "
-                                        mode="multiple"
-                                        :allowClear="true"
-                                        show-search
-                                        v-model:value="datos.calidad.oportunidades"
-                                    >
-                                        <a-select-option v-for="accion in allAccionesCalidad.filter(s => s.tipo === 'mejora')" 
-                                            :key="accion.xid"
-                                            :value="accion.id"
-                                            :title="accion.nombre"
-                                        >
+                                <a-form-item :label="$t('common.improvement_options')" class="label-bold"
+                                    :label-col="{ span: 24 }" name="oportunidades">
+                                    <a-select :placeholder="$t('common.select_default_text', [
+                                        $t('common.improvement_options'),
+                                    ])
+                                        " mode="multiple" :allowClear="true" show-search
+                                        v-model:value="datos.calidad.oportunidades">
+                                        <a-select-option
+                                            v-for="accion in allAccionesCalidad.filter(s => s.tipo === 'mejora')"
+                                            :key="accion.xid" :value="accion.id" :title="accion.nombre">
                                             {{ accion.nombre }}
                                         </a-select-option>
                                     </a-select>
                                 </a-form-item>
                             </a-col>
-                            
-                            <a-col v-if="datos.calidad.oportunidades.length >= 1" :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: 24 }" :lg="{ span: 24 }">
-                                <a-form-item
-                                    :label="`${$t('common.comments')} ${$t('common.improvement_options')}`"
-                                    name="comentarios"
-                                    class="label-bold"
-                                    :label-col="{ span: 24 }"
-                                >
-                                    <a-textarea
-                                        v-model:value="datos.calidad.comentarios_oportunidades"
+
+                            <a-col v-if="datos.calidad.oportunidades.length >= 1" :xs="{ span: 24 }" :sm="{ span: 24 }"
+                                :md="{ span: 24 }" :lg="{ span: 24 }">
+                                <a-form-item :label="`${$t('common.comments')} ${$t('common.improvement_options')}`"
+                                    name="comentarios" class="label-bold" :label-col="{ span: 24 }">
+                                    <a-textarea v-model:value="datos.calidad.comentarios_oportunidades"
                                         :placeholder="$t('common.placeholder_default_text', [$t('common.comments') + ' ' + $t('common.improvement_options')])"
-                                        :rows="2" 
-                                        :maxlength="2000"
-                                    />
+                                        :rows="2" :maxlength="2000" />
                                 </a-form-item>
                             </a-col>
 
                             <a-col :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: 24 }" :lg="{ span: 24 }">
-                                <a-form-item
-                                    :label="$t('common.comments')"
-                                    name="comentarios"
-                                    class="label-bold"
-                                    :label-col="{ span: 24 }"
-                                >
-                                    <a-textarea
-                                        v-model:value="datos.calidad.comentarios"
+                                <a-form-item :label="$t('common.comments')" name="comentarios" class="label-bold"
+                                    :label-col="{ span: 24 }">
+                                    <a-textarea v-model:value="datos.calidad.comentarios"
                                         :placeholder="$t('common.placeholder_default_text', [$t('common.comments')])"
-                                        :rows="2" 
-                                        :maxlength="2000"
-                                    />
+                                        :rows="2" :maxlength="2000" />
                                 </a-form-item>
                             </a-col>
 
-                            <a-descriptions v-if="datos.calidad.fecha_calidad" :layout="descLayout" :column="{ xs: 1, sm: 1, md: 2, lg: 3 }">
+                            <a-descriptions v-if="datos.calidad.fecha_calidad" :layout="descLayout"
+                                :column="{ xs: 1, sm: 1, md: 2, lg: 3 }">
 
                                 <a-descriptions-item class="label-bold" :label="$t('common.date_time')">
-                                    {{datos.calidad && datos.calidad.fecha_calidad ? formatDateTime(datos.calidad.fecha_calidad) : "-" }}
+                                    {{ datos.calidad && datos.calidad.fecha_calidad ?
+                                        formatDateTime(datos.calidad.fecha_calidad) :
+                                    "-" }}
                                 </a-descriptions-item>
 
                                 <a-descriptions-item>
@@ -604,30 +483,162 @@
 
                             </a-descriptions>
 
-                            <a-col class="text-center" :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: 24 }" :lg="{ span: 24 }">
-                                <a-button :disabled="isQualityDateExpired" key="submit" type="primary" @click="submitQuality" style="margin-right: 1%;" :loading="loading">
+                            <a-col class="text-center" :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: 24 }"
+                                :lg="{ span: 24 }">
+                                <a-button v-if="
+                                    (datos.calidad.accion === 'add' && (permsArray.includes('quality_add') || permsArray.includes('admin'))) ||
+                                    (datos.calidad.accion === 'edit' && (permsArray.includes('quality_edit') || permsArray.includes('admin')))
+                                " :disabled="isQualityDateExpired" key="submit" type="primary"
+                                    @click="submitQuality" style="margin-right: 1%;" :loading="loading">
                                     <SaveOutlined />
                                     {{ datos.calidad.accion === 'add' ? $t("common.add") : $t("common.edit") }}
                                 </a-button>
-                                <a-popconfirm :title="$t('menu.you_agree')" @confirm="onDelete">
-                                    <a-button v-if="datos.calidad.accion === 'edit'" danger type="primary" :loading="loading">
-                                        <DeleteOutlined />
-                                        {{ $t("common.delete") }}
-                                    </a-button>
-                                    <template #icon>
-                                        <question-circle-outlined style="color: red" />
-                                    </template>
-                                </a-popconfirm>
-                                
                             </a-col>
 
                         </a-row>
-                        
+
                     </a-col>
                 </a-form>
 
 
             </a-tab-pane>
+
+
+            <!-- histórico de calidad -->
+            <a-tab-pane v-for="(ev, idx) in infoCalidad.historico.evaluaciones_calidad" :key="`calidad-${ev.id}`">
+                <template #tab>
+                    <span>
+                        <UnorderedListOutlined />
+                        {{ $t("common.information") }} {{ $t('menu.quality') }} {{ idx + 1 }}
+                    </span>
+                </template>
+
+                <!-- Tabla de variables de esta evaluación -->
+                <a-table :columns="columns" :data-source="ev.variables" :pagination="false" row-key="id" size="middle">
+                    <template #bodyCell="{ column, record }">
+                        <template v-if="column.dataIndex === 'tipo'">
+                            <a-tag style="width: 100%; text-align: center;" v-if="record.tipo === 'critica'"
+                                color="#f5b041">
+                                {{ $t('message_template.critical_variable') }}
+                            </a-tag>
+                            <a-tag style="width: 100%; text-align: center;" v-else color="#4cb050">
+                                {{ $t('message_template.critical_not_variable') }}
+                            </a-tag>
+                        </template>
+                        <!-- Checkbox readonly para 'acciones' -->
+                        <template v-else-if="column.dataIndex === 'acciones'">
+                            <a-checkbox :checked="record.marcada" class="checkbox-x" />
+                        </template>
+                        <!-- 'nota_maxima' respeta 'critica' -->
+                        <template v-else-if="column.dataIndex === 'nota_maxima'">
+                            {{ record.tipo === 'critica' ? 'N/A' : record.nota_maxima }}
+                        </template>
+                        <!-- el resto de campos directos -->
+                        <template v-else>
+                            {{ record[column.dataIndex] }}
+                        </template>
+                    </template>
+                    <template #footer>
+                        <div class="w-full text-right">
+                            <strong> {{ $t('common.qualification') }} : <span :style="{ color: infoCalidad.historico.estados_calidad_venta[idx].nota_estado === 0 ? 'red' : infoCalidad.historico.estados_calidad_venta[idx].nota_estado > 0 && infoCalidad.historico.estados_calidad_venta[idx].nota_estado <= 50 ? '#f5b041' : 'inherit' }">
+                                {{ infoCalidad.historico.estados_calidad_venta[idx].nota_estado }}</span></strong>
+                        </div>
+                    </template>
+                </a-table>
+
+                <!-- Resumen de esta evaluación -->
+                <a-descriptions :column="1" bordered size="small" class="mb-4">
+                    <a-descriptions-item :label="$t('common.date_time')">
+                        {{ formatDateTime(ev.fecha_calidad) }}
+                    </a-descriptions-item>
+                    <a-descriptions-item :label="$t('message_template.minute')">
+                        {{ ev.minuto_precio }}
+                    </a-descriptions-item>
+                    <a-descriptions-item :label="$t('lead.call_duration')">
+                        {{ ev.duracion }}
+                    </a-descriptions-item>
+                    <a-descriptions-item :label="$t('common.action')">
+                        {{ allAccionesCalidad.find(a => a.xid === ev.xAccionCalidadId)?.nombre || '-' }}
+                    </a-descriptions-item>
+                    <a-descriptions-item :label="$t('common.closing_sale')">
+                        {{ ev.cierre_venta ? $t('common.yes') : $t('common.no') }}
+                    </a-descriptions-item>
+                    <a-descriptions-item v-if="ev.cierre_venta" :label="$t('common.closed_by')">
+                        {{allAccionesCalidad.find(a => a.xid === ev.xCerradoPor)?.nombre || '-'}}
+                    </a-descriptions-item>
+                    <a-descriptions-item :label="$t('common.qualification')">
+                        {{ infoCalidad.historico.estados_calidad_venta[idx].nota_estado }}
+                    </a-descriptions-item>
+                    <a-descriptions-item :label="$t('common.status')">
+                        {{
+                            ({
+                            CERTIFICADA:              $t('common.certified'),
+                            RELLAMADA_CERTIFICADA:    $t('common.certified_recall'),
+                            RELLAMADA:                $t('common.recall'),
+                            CANCELADA_CALIDAD:        $t('common.cancelled_quality'),
+                            CANCELADA_SUPERVISION:    $t('common.cancelled_supervision'),
+                            REASIGNADA:               $t('common.reassigned')
+                            }[ infoCalidad.historico.estados_calidad_venta[idx].estado ] 
+                            || infoCalidad.historico.estados_calidad_venta[idx].estado
+                            )
+                        }}
+                    </a-descriptions-item>
+
+                    <a-descriptions-item v-if="infoCalidad.historico.estados_calidad_venta[idx].estado === 'RELLAMADA_CERTIFICADA'" :label="$t('common.call_certificate')">
+                        {{ infoCalidad.historico.estados_calidad_venta[idx].numero_certificado || '-' }}
+                    </a-descriptions-item>
+                    <a-descriptions-item v-if="infoCalidad.historico.estados_calidad_venta[idx].estado === 'CERTIFICADA'" :label="$t('common.policy')">
+                        {{ infoCalidad.historico.evaluaciones_calidad[idx].numero_poliza || '-' }}
+                    </a-descriptions-item>
+                    <a-descriptions-item v-if="infoCalidad.historico.estados_calidad_venta[idx].estado === 'CANCELADA_CALIDAD'" :label="$t('message_template.reason')">
+                        {{ allMotivosCalidad.find(m => m.xid === ev.motivo_cancelacion_id)?.motivo || '-' }}
+                    </a-descriptions-item>
+                    <a-descriptions-item v-if="infoCalidad.historico.estados_calidad_venta[idx].estado === 'REASIGNADA'" :label="$t('lead.agent')">
+                        {{ 
+                            agenteCampana
+                                .find(a => a.id === infoCalidad.historico.estados_calidad_venta[idx].reasignado_a)
+                                ?.name 
+                            || '-' 
+                            }}
+
+                    </a-descriptions-item>
+                    <a-descriptions-item :label="$t('common.comments')">
+                        {{ infoCalidad.historico.evaluaciones_calidad[idx].comentarios }}
+                    </a-descriptions-item>
+                    <a-descriptions-item v-if="infoCalidad.historico.evaluaciones_calidad[idx].oportunidades.length" :label="$t('common.improvement_options')">
+                        {{ allAccionesCalidad.filter(s => s.tipo === 'mejora' && infoCalidad.historico.evaluaciones_calidad[idx].oportunidades.includes(s.id)).map(o => o.nombre).join(', ') || '-' }}
+                    </a-descriptions-item>
+                    <a-descriptions-item v-if="infoCalidad.historico.evaluaciones_calidad[idx].oportunidades.length" :label="`${$t('common.comments')} ${$t('common.improvement_options')}`">
+                        {{ infoCalidad.historico.evaluaciones_calidad[idx].comentarios_oportunidades }}
+                    </a-descriptions-item>
+                    <a-descriptions-item>
+                        <a-typography-text v-if="(Date.now() - new Date(ev.fecha_calidad).getTime() > 3 * 24 * 60 * 60 * 1000 ? true : false)" type="warning" strong>
+                            {{ $t("common.non_editable_quality") }}
+                        </a-typography-text>
+                    </a-descriptions-item>
+                </a-descriptions>
+
+                <a-col class="text-center mt-20" :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: 24 }" :lg="{ span: 24 }">
+                    <a-button v-if="(permsArray.includes('quality_edit') || permsArray.includes('admin'))" :disabled="(Date.now() - new Date(ev.fecha_calidad).getTime() > 3 * 24 * 60 * 60 * 1000 ? true : false)" key="submit" type="primary"
+                        @click="goEditCalidad(idx)" style="margin-right: 1%;" :loading="loading">
+                            <SaveOutlined />
+                        {{ $t("common.edit") }}
+                    </a-button>
+                    <a-popconfirm :title="$t('menu.you_agree')" @confirm="onDelete(ev.idVenta)">
+                        <a-button
+                            v-if="(permsArray.includes('quality_delete') || permsArray.includes('admin'))"
+                            danger type="primary" :loading="loading">
+                            <DeleteOutlined />
+                            {{ $t("common.delete") }}
+                        </a-button>
+                        <template #icon>
+                            <question-circle-outlined style="color: red" />
+                        </template>
+                    </a-popconfirm>
+                </a-col>
+                
+            </a-tab-pane>
+
 
         </a-tabs>
     </a-drawer>
@@ -660,7 +671,7 @@ function getEmptyEvaluacionCalidad() {
         duracion: null,
         minuto_precio: null,
         cierre_venta: null,
-        cerrado_por: null, 
+        cerrado_por: null,
         accion_calidad_id: null,
         oportunidades: [],
         comentarios_oportunidades: "",
@@ -676,14 +687,26 @@ function getEmptyEvaluacionCalidad() {
         cancelado_por_supervision: false,
         reasignado_a: null,
         // estado de la venta en la tb venta
-        estadoVenta: null, 
+        estadoVenta: null,
         // accion a realizar
-        accion: "add"
+        accion: "add",
+    };
+}
+
+function getEmptyHistoricosCalidad() {
+    return {
+        evaluaciones_calidad: [],
+        estados_calidad_venta: [],
+        mas_de_1: false,
     };
 }
 
 export const datos = reactive({
     calidad: getEmptyEvaluacionCalidad()
+});
+
+export const infoCalidad = reactive({
+    historico: getEmptyHistoricosCalidad()
 });
 
 export default defineComponent({
@@ -708,7 +731,7 @@ export default defineComponent({
         QuestionCircleOutlined,
     },
     setup(props, { emit }) {
-        const { formatTimeDuration, formatDateTime, formatAmountCurrency } = common();
+        const { formatTimeDuration, formatDateTime, formatAmountCurrency, permsArray } = common();
         const crudVariables = crud();
         // const {  } = fields();
         const { t } = useI18n();
@@ -725,6 +748,7 @@ export default defineComponent({
         const agenteCampana = ref([]);
         const loading = ref(false);
         const isQualityDateExpired = ref(false);
+        var idEditar = null;
 
         const tableProducts = reactive({
             data: [],
@@ -739,36 +763,44 @@ export default defineComponent({
         });
 
         const rules = reactive({
-            'estadoVenta': [ { required: true, message: t('common.status') } ],
-            'accion_calidad_id': [ { required: true, message: t('common.action') } ],
-            'duracion': [ { required: true, message: t('lead.call_duration') } ],
-            'minuto_precio': [ { required: true, message: t('message_template.minute') } ],
-            'cierre_venta': [ { required: true, message: t('common.closing_sale') } ],
-            'estado': [ { required: true, message: t('common.status') } ],
+            'estadoVenta': [{ required: true, message: t('common.status') }],
+            'accion_calidad_id': [{ required: true, message: t('common.action') }],
+            'duracion': [{ required: true, message: t('lead.call_duration') }],
+            'minuto_precio': [{ required: true, message: t('message_template.minute') }],
+            'cierre_venta': [{ required: true, message: t('common.closing_sale') }],
+            'estado': [{ required: true, message: t('common.status') }],
             // 'numero_poliza': [ 
             //     { required: () => datos.estado === 'CERTIFICADA',
             //         message: t('common.policy'),
             //         trigger: 'blur' }
             // ],
-            'numero_certificado': [ 
-                { required: () => datos.estado === 'RELLAMADA_CERTIFICADA',
+            'numero_certificado': [
+                {
+                    required: () => datos.estado === 'RELLAMADA_CERTIFICADA',
                     message: t('common.call_certificate'),
-                    trigger: 'blur' }
+                    trigger: 'blur'
+                }
             ],
-            'motivo_cancelacion_id': [ 
-                { required: () => datos.estado === 'CANCELADA_CALIDAD',
+            'motivo_cancelacion_id': [
+                {
+                    required: () => datos.estado === 'CANCELADA_CALIDAD',
                     message: t('message_template.reason'),
-                    trigger: 'blur' }
+                    trigger: 'blur'
+                }
             ],
-            'cerrado_por': [ 
-                { required: () => datos.cierre_venta === true,
+            'cerrado_por': [
+                {
+                    required: () => datos.cierre_venta === true,
                     message: t('common.closed_by'),
-                    trigger: 'blur' }
+                    trigger: 'blur'
+                }
             ],
-            'reasignado_a': [ 
-                { required: () => datos.estado === 'REASIGNADA',
+            'reasignado_a': [
+                {
+                    required: () => datos.estado === 'REASIGNADA',
                     message: t('lead.agent'),
-                    trigger: 'blur' }
+                    trigger: 'blur'
+                }
             ],
         });
 
@@ -819,11 +851,14 @@ export default defineComponent({
                 await formRef.value.validate();
                 datos.calidad.nota_estado = calificacion.value;
                 datos.calidad.user_id = props.data.is_sale && props.data.is_sale.user ? props.data.is_sale.user.id : null;
+                if(datos.calidad.accion === 'edit') {
+                    datos.calidad.idVenta = infoCalidad.historico.evaluaciones_calidad[idEditar].id;
+                }
                 addEditRequestAdmin({
                     url: 'calidad/save',
                     data: datos.calidad,
                     successMessage: t("common.created"),
-                    success: (res) => { 
+                    success: (res) => {
                         loading.value = false;
                         emit("addEditDelete");
                     },
@@ -835,18 +870,20 @@ export default defineComponent({
             }
         };
 
-        const onDelete = async () => {
+        const onDelete = async (p_id = null) => {
             loading.value = true;
             try {
-                const resp = await axiosAdmin.get(`delete-calidad/{${props.data.is_sale.idVenta}}`);
-                if(resp.success){
+                if (!p_id) p_id = props.data.is_sale.idVenta;
+                
+                const resp = await axiosAdmin.get(`delete-calidad/{${p_id}}`);
+                if (resp.success) {
                     loading.value = false;
                     notification.success({ message: t(`common.success`), description: t(`common.deleted`) });
                     emit("addEditDelete");
                 }
             } catch (e) {
                 loading.value = false;
-                console.error('Error:', e);   
+                console.error('Error:', e);
             }
         };
 
@@ -869,7 +906,7 @@ export default defineComponent({
 
         watch(
             () => props.visible,
-            async(newVal) => {
+            async (newVal) => {
                 if (newVal) {
                     activeTabKey.value = "info_venta";
                     if (props.data.is_sale.aplicaBeneficiarios || props.data.is_sale.aplicaBeneficiariosAsist) {
@@ -892,27 +929,24 @@ export default defineComponent({
                     }
 
                     if (props.data.is_sale.calidad) {
-                        
+
                         datos.calidad.accion = 'edit';
 
                         try {
                             const resp = await axiosAdmin.get(`evaluaciones-calidad/{${props.data.is_sale.idVenta}}`);
                             await llenarInformacion(resp);
-                            await obtenerPlantillaUso(datos.calidad.variables,resp.evaluacion_calidad.xPlantillaId);
+                            //await obtenerPlantillaUso(datos.calidad.variables, resp.evaluacion_calidad.xPlantillaId);
+                           nuevaCalida();
+
                         } catch (e) {
-                            console.error('Error:', e);   
+                            console.error('Error:', e);
                         }
 
                     } else {
-                        isQualityDateExpired.value = false;
-                        datos.calidad = getEmptyEvaluacionCalidad();
-                        await obtenerPlantillaUso(null,null);
-                        datos.calidad.variables = (plantillaCalidad.value?.variables ?? []).map(v => ({
-                            ...v,
-                            marcada: false
-                        }));
+                        infoCalidad.historico = getEmptyHistoricosCalidad();
+                        nuevaCalida();
                     }
-                    
+
                     datos.calidad.idVenta = props.data.is_sale.idVenta;
                     datos.calidad.plantilla_id = plantillaCalidad.value ? plantillaCalidad.value.id : null;
                     datos.calidad.estadoVenta = props.data.is_sale.estadoVenta;
@@ -920,67 +954,44 @@ export default defineComponent({
                     tableProducts.data = props.data.is_sale.productos.map(item => {
                         const prod = props.allProductos.find(p => p.xid === item.x_id_producto);
                         return {
-                            xid:           item.x_id_producto,
+                            xid: item.x_id_producto,
                             internal_code: prod?.internal_code ?? '',
-                            name:          prod?.name          ?? '',
-                            coverage:      prod?.coverage      ?? '',
-                            price:         item?.precio ?? 0,
+                            name: prod?.name ?? '',
+                            coverage: prod?.coverage ?? '',
+                            price: item?.precio ?? 0,
                             product_quantity: item?.cantidadProducto ?? 0,
                         };
                     });
-                    
+
                     tableProducts.pagination.total = tableProducts.data.length;
 
                     axiosAdmin.get(`campaigns/${props.data.lead.campaign.xid}/users`).then(res => {
                         agenteCampana.value = res;
                     });
-                    
+
                 }
             }
         );
 
-        const llenarInformacion = async (data) =>{
-            datos.calidad.fecha_calidad = data.evaluacion_calidad.fecha_calidad;
-            datos.calidad.variables = data.evaluacion_calidad.variables;
-            datos.calidad.duracion = data.evaluacion_calidad.duracion;
-            datos.calidad.minuto_precio = data.evaluacion_calidad.minuto_precio;
-            datos.calidad.cierre_venta = data.evaluacion_calidad.cierre_venta;
-            datos.calidad.cerrado_por =  data.evaluacion_calidad.xCerradoPor;
-            datos.calidad.accion_calidad_id =  data.evaluacion_calidad.xAccionCalidadId;
-            datos.calidad.oportunidades =  data.evaluacion_calidad.oportunidades;
-            datos.calidad.comentarios_oportunidades =  data.evaluacion_calidad.comentarios_oportunidades;
-            datos.calidad.comentarios =  data.evaluacion_calidad.comentarios;
-            datos.calidad.numero_poliza =  data.evaluacion_calidad.numero_poliza;
+        const nuevaCalida = async () => {
+            isQualityDateExpired.value = false;
+            datos.calidad = getEmptyEvaluacionCalidad();
+            await obtenerPlantillaUso(null, null);
+            datos.calidad.variables = (plantillaCalidad.value?.variables ?? []).map(v => ({
+                ...v,
+                marcada: false
+            }));
+        };
 
-            datos.calidad.estado =  data.estado_calidad_venta.estado;
-            datos.calidad.fecha_estado =  data.estado_calidad_venta.fecha_estado;
-            datos.calidad.nota_estado =  data.estado_calidad_venta.nota_estado;
-            datos.calidad.numero_certificado =  data.estado_calidad_venta.numero_certificado;
-            datos.calidad.motivo_cancelacion_id =  data.estado_calidad_venta.xMotivoCancelacionId;
-            datos.calidad.cancelado_por_supervision =  data.estado_calidad_venta.cancelado_por_supervision;
-            datos.calidad.reasignado_a =  data.estado_calidad_venta.reasignado_a;
-
-            variablesUse.splice(0, variablesUse.length);
-
-            data.evaluacion_calidad.variables
-            .filter(v => v.marcada)
-            .forEach(v => {
-                variablesUse.push({
-                id: v.id,
-                tipo: v.tipo,
-                nota_maxima: v.nota_maxima
-                })
-            });
-
-            calificacion.value =  data.estado_calidad_venta.nota_estado;
-
-            const diffMs = Date.now() - new Date(datos.calidad.fecha_calidad).getTime();
-            isQualityDateExpired.value = diffMs > 3 * 24 * 60 * 60 * 1000 ? true : false;
-
+        const llenarInformacion = async (data) => {
+            infoCalidad.historico = getEmptyHistoricosCalidad();
+            infoCalidad.historico.evaluaciones_calidad = data.evaluacion_calidad;
+            infoCalidad.historico.estados_calidad_venta = data.estado_calidad_venta;
+            infoCalidad.historico.mas_de_1 = true;
         };
 
 
-        const obtenerPlantillaUso = async (variables,id) => {
+        const obtenerPlantillaUso = async (variables, id) => {
             const campId = id ? id : props.data.lead?.campaign?.x_plantilla_calidad_id;
             const source = props.allCalidadTemplates.find(tpl => tpl.xid === campId);
 
@@ -992,7 +1003,7 @@ export default defineComponent({
             } else {
                 plantillaCalidad.value = undefined;
             }
-            
+
             if (!variables) {
                 calificacion.value = 100;
             } else {
@@ -1039,7 +1050,60 @@ export default defineComponent({
             tableProducts.pagination.pageSize = pagination.pageSize;
         };
 
+        const goEditCalidad = async (idx) => {
+            activeTabKey.value = "calidad_data";
+            infoCalidad.historico.mas_de_1 = false;
+
+            const ev = infoCalidad.historico.evaluaciones_calidad[idx];
+            const st = infoCalidad.historico.estados_calidad_venta[idx];
+            idEditar = idx;
+            datos.calidad = {
+                ...datos.calidad,
+                fecha_calidad:     ev.fecha_calidad,
+                variables:         ev.variables.map(v => ({ ...v, marcada: v.marcada })),
+                duracion:          ev.duracion,
+                minuto_precio:     ev.minuto_precio,
+                cierre_venta:      ev.cierre_venta,
+                cerrado_por:       ev.xCerradoPor,
+                accion_calidad_id: ev.xAccionCalidadId,
+                oportunidades:     ev.oportunidades || [],
+                comentarios_oportunidades: ev.comentarios_oportunidades || "",
+                comentarios:       ev.comentarios || "",
+                numero_poliza:     ev.numero_poliza || "N/A",
+                estado:            st.estado,
+                fecha_estado:      st.fecha_estado,
+                nota_estado:       st.nota_estado,
+                numero_certificado:   st.numero_certificado || "",
+                motivo_cancelacion_id: st.xMotivoCancelacionId || null,
+                cancelado_por_supervision: st.cancelado_por_supervision || false,
+                reasignado_a:      st.reasignado_a || null,
+                accion:            'edit',
+        };
+
+        // 4. Repoblar el array de variables usadas para el cálculo de nota
+        variablesUse.splice(0, variablesUse.length);
+        datos.calidad.variables
+            .filter(v => v.marcada)
+            .forEach(v => {
+            variablesUse.push({
+                id:          v.id,
+                tipo:        v.tipo,
+                nota_maxima: v.nota_maxima,
+            });
+            });
+
+        // 5. Actualizar la calificación mostrada
+        calificacion.value = st.nota_estado;
+
+        // 6. Recargar la plantilla de calidad (ajusta variables y nombre de plantilla)
+        await obtenerPlantillaUso(datos.calidad.variables, ev.xPlantillaId);
+        };
+
+
         return {
+            goEditCalidad,
+            infoCalidad,
+            permsArray,
             isQualityDateExpired,
             loading,
             agenteCampana,
@@ -1073,18 +1137,19 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-    :deep(.checkbox-x .ant-checkbox-input:checked + .ant-checkbox-inner::after) {
-        border: none !important;
-        transform: none !important;
-        content: '×' !important;
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        font-size: 14px !important;
-        color: white !important;
-    }
-    :deep(.label-bold .ant-descriptions-item-label) {
-        font-weight: bold;
-    }
+:deep(.checkbox-x .ant-checkbox-input:checked + .ant-checkbox-inner::after) {
+    border: none !important;
+    transform: none !important;
+    content: '×' !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    font-size: 14px !important;
+    color: white !important;
+}
+
+:deep(.label-bold .ant-descriptions-item-label) {
+    font-weight: bold;
+}
 </style>

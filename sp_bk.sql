@@ -254,14 +254,14 @@ BEGIN
 
 	-- 6) Calcular la etapa final teniendo en cuenta base nueva
 	IF v_prev_etapa IS NULL THEN
-	    SET v_etapa_final = 'nueva';
-	ELSEIF v_prev_etapa = 'nueva' THEN
-	    SET v_etapa_final = 'reproceso';
-	ELSEIF v_prev_etapa = 'reproceso'
+	    SET v_etapa_final = 'Nueva';
+	ELSEIF v_prev_etapa = 'Nueva' THEN
+	    SET v_etapa_final = 'Reproceso';
+	ELSEIF v_prev_etapa = 'Reproceso'
 	       AND v_prev_date >= DATE_SUB(NOW(), INTERVAL 3 MONTH) THEN
-	    SET v_etapa_final = 'na';
-	ELSEIF v_prev_etapa = 'na' THEN
-		SET v_etapa_final = 'na';
+	    SET v_etapa_final = 'N/A';
+	ELSEIF v_prev_etapa = 'N/A' THEN
+		SET v_etapa_final = 'N/A';
 	ELSE
 	    SET v_etapa_final = p_etapa;
 	END IF;
