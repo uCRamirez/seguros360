@@ -1,5 +1,6 @@
 basura/
 Comandos.txt
 test.js
-node_modules/.vue-global-types/vue_99_0_0_0.d.ts
-public/hot/
+/node_modules
+/vendor
+.env

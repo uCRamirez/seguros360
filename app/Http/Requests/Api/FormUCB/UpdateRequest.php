@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\Form;
+namespace App\Http\Requests\Api\FormUCB;
 
 use App\Http\Requests\Api\BaseRequest;
 
