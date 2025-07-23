@@ -13,13 +13,13 @@ class NotesTypification extends BaseModel implements Auditable
 
     protected $table = 'notes_typifications';
 
-    protected $default = ['xid', 'campaign_id','name', 'parent_id', 'sale', 'schedule','status', 'x_parent_id','x_campaign_id'];
+    protected $default = ['xid', 'campaign_id', 'name', 'parent_id', 'sale', 'schedule', 'status', 'x_parent_id', 'x_campaign_id'];
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    protected $hidden = ['id','parent_id'];
+    protected $hidden = ['id', 'parent_id'];
 
-    protected $appends = ['xid','x_parent_id','x_campaign_id'];
+    protected $appends = ['xid', 'x_parent_id', 'x_campaign_id'];
 
     protected $filterable = ['id', 'name','parent_id', 'sale', 'schedule', 'no_contact','status'];
 

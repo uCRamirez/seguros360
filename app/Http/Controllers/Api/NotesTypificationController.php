@@ -4,21 +4,19 @@ namespace App\Http\Controllers\Api;
 
 use App\Classes\Notify;
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Requests\Api\NotesTypification\DeleteRequest;
+use App\Http\Requests\Api\NotesTypification\ImportRequest;
 use App\Http\Requests\Api\NotesTypification\IndexRequest;
 use App\Http\Requests\Api\NotesTypification\StoreRequest;
 use App\Http\Requests\Api\NotesTypification\StoreMultipleRequest;
 use App\Http\Requests\Api\NotesTypification\UpdateRequest;
-use App\Http\Requests\Api\NotesTypification\DeleteRequest;
-use App\Http\Requests\Api\NotesTypification\ImportRequest;
-
+use App\Imports\NotesTypificationImport;
 use App\Models\NotesTypification;
 use App\Models\Product;
 use App\Models\LeadLog;
 use Examyou\RestAPI\ApiResponse;
 use Examyou\RestAPI\Exceptions\ApiException;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\NotesTypificationImport;
-// use Illuminate\Http\Request;
 
 class NotesTypificationController extends ApiBaseController
 {

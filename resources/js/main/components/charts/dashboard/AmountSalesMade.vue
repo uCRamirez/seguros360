@@ -29,6 +29,7 @@ export default {
     });
 
     const options = ref({
+      indexAxis: 'y',
       responsive: true,
       plugins: {
         legend: { display: false },
@@ -41,52 +42,14 @@ export default {
       },
       scales: {
         x: {
-          ticks: { display: false },
+          title: { display: true, text: t('dashboard.total_sales_amount') },
+          beginAtZero: true
         },
         y: {
           beginAtZero: true,
-          title: {
-            display: true,
-            text: t("dashboard.total_sales_amount"),
-          },
         },
       },
     });
-
-    // Plugin para dibujar etiquetas sobre la barra
-    const drawTextPlugin = {
-      id: "drawTextPlugin",
-      afterDatasetsDraw(chart) {
-        const ctx = chart.ctx;
-        const datasetMeta = chart.getDatasetMeta(0);
-        const labels = chartData.value.labels;
-
-        ctx.save();
-        ctx.font = "10px sans-serif";
-        ctx.fillStyle = "#333";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "bottom";
-
-        datasetMeta.data.forEach((bar, index) => {
-          const value = chart.data.datasets[0].data[index];
-          if (value <= 0) return;
-
-          const label = labels[index];
-          const x = bar.x;
-          const y = bar.y;
-          const maxWidth = bar.width * 1.5;
-          const split = label?.length > 16 ? label.split(" – ") : [label];
-
-          split.forEach((line, i) => {
-            ctx.fillText(line, x, y - 5 - i * 12, maxWidth);
-          });
-        });
-
-        ctx.restore();
-      },
-    };
-
-    Chart.register(drawTextPlugin);
 
     watch(
       () => props.data?.amountSales,
@@ -113,14 +76,23 @@ export default {
         const dataPlano = [];
         const colorPlano = [];
 
-        newVal.dates.forEach((fecha) => {
-          newVal.series.forEach((serie) => {
-            labelsPlano.push(`${fecha} – ${serie.user}`);
-            const idxFecha = newVal.dates.indexOf(fecha);
-            const valor = serie.amounts[idxFecha] || 0;
-            dataPlano.push(valor);
-            colorPlano.push(serie.color || "#333");
-          });
+        // Para cada fecha, solo si hay ventas, agregamos los registros no-cero
+        newVal.dates.forEach((fecha, idxFecha) => {
+          // Suma total de esa fecha
+          const totalEnFecha = newVal.series.reduce(
+            (sum, serie) => sum + (serie.amounts[idxFecha] || 0),
+            0
+          );
+          if (totalEnFecha > 0) {
+            newVal.series.forEach((serie) => {
+              const valor = serie.amounts[idxFecha] || 0;
+              if (valor > 0) {
+                labelsPlano.push(`${fecha} – ${serie.user}`);
+                dataPlano.push(valor);
+                colorPlano.push(serie.color || "#333");
+              }
+            });
+          }
         });
 
         chartData.value = {
@@ -134,8 +106,9 @@ export default {
           ],
         };
 
-        const maxVal = Math.max(...dataPlano);
-        options.value.scales.y.suggestedMax = maxVal + maxVal * 0.1;
+        // Ajuste dinámico del máximo
+        const maxVal = Math.max(...dataPlano, 0);
+        options.value.scales.x.suggestedMax = maxVal * 1.1;
 
         await nextTick();
         chartRef.value?.chart?.update();
@@ -151,4 +124,3 @@ export default {
   },
 };
 </script>
-

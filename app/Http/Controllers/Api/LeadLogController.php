@@ -12,7 +12,7 @@ use App\Models\Lead;
 use Carbon\Carbon;
 use Examyou\RestAPI\Exceptions\ApiException;
 use App\Models\CampaignUser;
-use Illuminate\Support\Str; 
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
 class LeadLogController extends ApiBaseController

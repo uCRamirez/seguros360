@@ -3,15 +3,15 @@
 </template>
 
 <script>
-import { ref, watch, nextTick } from "vue";
-import { BarChart } from "vue-chart-3";
-import { Chart, registerables } from "chart.js";
-import { useI18n } from "vue-i18n";
+import { ref, watch, nextTick } from 'vue';
+import { BarChart } from 'vue-chart-3';
+import { Chart, registerables } from 'chart.js';
+import { useI18n } from 'vue-i18n';
 
 Chart.register(...registerables);
 
 export default {
-  props: ["data"],
+  props: ['data'],
   components: { BarChart },
   setup(props) {
     const { t } = useI18n();
@@ -21,7 +21,7 @@ export default {
       labels: [],
       datasets: [
         {
-          label: t("dashboard.total_sales"),
+          label: t('dashboard.total_sales'),
           data: [],
           backgroundColor: [],
         },
@@ -29,6 +29,7 @@ export default {
     });
 
     const options = ref({
+      indexAxis: 'y',
       responsive: true,
       plugins: {
         legend: { display: false },
@@ -41,53 +42,21 @@ export default {
       },
       scales: {
         x: {
-          ticks: { display: false },
+          title: {
+            display: true,
+            text: t('dashboard.total_sales'),
+          },
+          beginAtZero: true,
+          ticks: {
+            autoSkip: true,
+            maxTicksLimit: 10,
+          },
         },
         y: {
           beginAtZero: true,
-          title: {
-            display: true,
-            text: t("dashboard.total_sales"),
-          },
         },
       },
     });
-
-    // Plugin para mostrar texto encima de las barras
-    const drawTextPlugin = {
-      id: "drawTextPlugin",
-      afterDatasetsDraw(chart) {
-        const ctx = chart.ctx;
-        const datasetMeta = chart.getDatasetMeta(0);
-        const labels = chartData.value.labels;
-
-        ctx.save();
-        ctx.font = "10px sans-serif";
-        ctx.fillStyle = "#333";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "bottom";
-
-        datasetMeta.data.forEach((bar, index) => {
-          const value = chart.data.datasets[0].data[index];
-          if (value <= 0) return;
-
-          const label = labels[index];
-          const x = bar.x;
-          const y = bar.y;
-
-          const maxWidth = bar.width * 1.5;
-          const split = label.length > 16 ? label.split(" – ") : [label];
-
-          split.forEach((line, i) => {
-            ctx.fillText(line, x, y - 5 - i * 12, maxWidth);
-          });
-        });
-
-        ctx.restore();
-      },
-    };
-
-    Chart.register(drawTextPlugin);
 
     watch(
       () => props.data?.salesMade,
@@ -101,7 +70,7 @@ export default {
             labels: [],
             datasets: [
               {
-                label: t("dashboard.total_sales"),
+                label: t('dashboard.total_sales'),
                 data: [],
                 backgroundColor: [],
               },
@@ -114,30 +83,38 @@ export default {
         const dataPlano = [];
         const colorPlano = [];
 
-        newVal.dates.forEach((fecha) => {
-          newVal.series.forEach((serie) => {
-            labelsPlano.push(`${fecha} – ${serie.user}`);
-            const idxFecha = newVal.dates.indexOf(fecha);
-            const valor = serie.counts[idxFecha] || 0;
-            dataPlano.push(valor);
-            colorPlano.push(serie.color || "#333");
-          });
+        // Solo incluir fechas donde haya al menos un registro y omitir ceros
+        newVal.dates.forEach((fecha, idxFecha) => {
+          const totalEnFecha = newVal.series.reduce(
+            (sum, serie) => sum + (serie.counts[idxFecha] || 0),
+            0
+          );
+          if (totalEnFecha > 0) {
+            newVal.series.forEach((serie) => {
+              const valor = serie.counts[idxFecha] || 0;
+              if (valor > 0) {
+                labelsPlano.push(`${fecha} – ${serie.user}`);
+                dataPlano.push(valor);
+                colorPlano.push(serie.color || '#333');
+              }
+            });
+          }
         });
 
         chartData.value = {
           labels: labelsPlano,
           datasets: [
             {
-              label: t("dashboard.total_sales"),
+              label: t('dashboard.total_sales'),
               data: dataPlano,
               backgroundColor: colorPlano,
             },
           ],
         };
 
-        // 🔁 ACTUALIZA el suggestedMax dinámicamente (20% más)
-        const maxVal = Math.max(...dataPlano);
-        options.value.scales.y.suggestedMax = maxVal + maxVal * 0.2;
+        // Ajuste dinámico del máximo en el eje X
+        const maxVal = Math.max(...dataPlano, 0);
+        options.value.scales.x.suggestedMax = maxVal * 1.2;
 
         await nextTick();
         chartRef.value?.chart?.update();
@@ -153,4 +130,3 @@ export default {
   },
 };
 </script>
-

@@ -351,10 +351,10 @@ class EvaluacionCalidadController extends ApiBaseController
     protected function envioMailCalidad($evaluacion, $estado, $data, array $users_ids)
     {
         $user = user();
-        $users_ids[] = $data['user_id'];
-        if($data['estado'] === 'REASIGNADA'){
-            $users_ids[] = $data['reasignado_a'];
-        }
+        $users_ids[] = $user->id;
+        // if($data['estado'] === 'REASIGNADA'){
+        //     $users_ids[] = $data['reasignado_a'];
+        // }
 
         // \Log::info('users_ids', $users_ids);
 
@@ -372,15 +372,15 @@ class EvaluacionCalidadController extends ApiBaseController
         
         // Armar el template a enviar
         $summary = $this->generarTemplatecalidad($evaluacion, $estado, $data);
-        //\Log::info('email: ' . $user->email);
+
+
+        // Disparar los mails
         Notification::route('mail', $toList)
             ->notify(new SendLeadMail(
                 'Detalle de calidad realizada',
                 $summary,
-                $user->name,
-                $user->email  // CC al usuario actual
-        ));
-
+                $user->name
+            ));
     }
   
 }
