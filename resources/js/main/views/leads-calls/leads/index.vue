@@ -46,7 +46,7 @@
                             </template>
                         </a-tab-pane>
 
-                        <a-tab-pane v-if="
+                        <!-- <a-tab-pane v-if="
                             permsArray.includes('view_completed_campaigns') ||
                             permsArray.includes('admin')
                         " key="completed">
@@ -56,7 +56,7 @@
                                     {{ $t("campaign.completed_campaign") }}
                                 </span>
                             </template>
-                        </a-tab-pane>
+                        </a-tab-pane> -->
                     </a-tabs>
                 </a-col>
             </a-row>
@@ -105,7 +105,7 @@
                                     </StateWidget>
                                 </a-col>
 
-                                <a-col :span="24">
+                                <!-- <a-col :span="24">
                                     <StateWidget bgColor="#ffa39e" :bodyStyle="widgetBodyStyle">
                                         <template #image>
                                             <LineChartOutlined style="color: #fff; font-size: 24px" />
@@ -121,7 +121,7 @@
                                             </p>
                                         </template>
                                     </StateWidget>
-                                </a-col>
+                                </a-col> -->
 
                                 <a-col :span="24">
                                     <StateWidget bgColor="#d46b08" :bodyStyle="widgetBodyStyle">

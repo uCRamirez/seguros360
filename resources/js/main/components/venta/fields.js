@@ -109,6 +109,10 @@ const fields = (props) => {
                             dataIndex: "cedula",
                         },
                         {
+                            title: t("lead.name"),
+                            dataIndex: "nombre",
+                        },
+                        {
                             title: t("lead.campaign"),
                             dataIndex: "campaign",
                         },

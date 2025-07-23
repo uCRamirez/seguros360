@@ -32,7 +32,7 @@ class CheckPermission
 
             // Those route for which we don't want to check permission
             // We will check permission for those on controller level
-            $skipResourcePath = ['call_managers', 'leads', 'lead_logs', 'lead_follow_ups', 'salesman_bookings', 'permissions','notifications','localidades','products','plantillas_calidad','motivos_calidad','acciones_calidad'];
+            $skipResourcePath = ['call_managers', 'leads', 'lead_logs', 'lead_follow_ups', 'salesman_bookings', 'permissions','notifications','localidades','products','plantillas_calidad','motivos_calidad','acciones_calidad','notes_typifications','notes_typifications_view'];
 
             if (in_array($resourceRequestString, $resourceRequests) && in_array($routePathString, $skipResourcePath) === false) {
 
@@ -58,6 +58,7 @@ class CheckPermission
                 // \Log::info('permission', [$permission]);
 
                 if ($permission != "" && !$user->ability('admin', $permission)) {
+                    //\Log::info('permission', [$permission]);
                     throw new UnauthorizedException("Don't have valid permission");
                 }
             }

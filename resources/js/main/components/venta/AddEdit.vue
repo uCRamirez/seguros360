@@ -835,19 +835,25 @@ export default defineComponent({
             campaigns_id.value = [];
 
             if (newVal && props.addEditType === "edit") {
-                campaigns_id.value.push(props.data.x_campaign_id || 0);
+                campaigns_id.value.push(props.data?.x_campaign_id || props.data?.lead?.campaign?.xid || 0);
                 filteredParentTypifications.value = parentTypificationData.value.filter(pt =>
                     campaigns_id.value.includes(pt.x_campaign_id)
                 );
 
                 isInitializing.value = true;
-
-                if (props.formData.notes_typification_id_1 != null)
-                    getChildTypification(props.formData.notes_typification_id_1);
-                if (props.formData.notes_typification_id_2 != null)
-                    getChildrenChildTypification(props.formData.notes_typification_id_2);
-                if (props.formData.notes_typification_id_3 != null)
-                    getLastChildrenChildTypification(props.formData.notes_typification_id_3);
+                if(filteredParentTypifications.value.length !== 0){
+                    if (props.formData.notes_typification_id_1 != null)
+                        getChildTypification(props.formData.notes_typification_id_1);
+                    if (props.formData.notes_typification_id_2 != null)
+                        getChildrenChildTypification(props.formData.notes_typification_id_2);
+                    if (props.formData.notes_typification_id_3 != null)
+                        getLastChildrenChildTypification(props.formData.notes_typification_id_3);
+                }else{
+                    props.formData.notes_typification_id_1 = null;
+                    props.formData.notes_typification_id_2 = null;
+                    props.formData.notes_typification_id_3 = null;
+                    props.formData.notes_typification_id_4 = null;
+                }
 
                 axiosAdmin.get(`campaigns/${props.data.lead.campaign.xid}/users`).then(res => {
                     agenteCampana.value = res;

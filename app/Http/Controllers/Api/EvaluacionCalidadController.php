@@ -231,12 +231,11 @@ class EvaluacionCalidadController extends ApiBaseController
     public function deleteCalidad($xid)
     {
         $id = trim($xid, '{}');
-
         DB::beginTransaction();
 
         try {
             $evaluacion = EvaluacionCalidad::find($id);
-            if (! $evaluacion) {
+            if (!$evaluacion) {
                 DB::rollBack();
                 return response()->json([
                     'success' => false,
@@ -250,7 +249,8 @@ class EvaluacionCalidadController extends ApiBaseController
 
             if ($total === 0) {
                 $venta = Venta::where('idVenta', $idVenta)->first();
-                if (! $venta) {
+                if (!$venta) {
+
                     DB::rollBack();
                     return response()->json([
                         'success' => false,
@@ -263,7 +263,7 @@ class EvaluacionCalidadController extends ApiBaseController
 
             DB::commit();
 
-            return response()->json(['success' => true]);
+            return response()->json(['success' => true, 'message' => 'Evaluación eliminada correctamente']);
         } catch (\Exception $e) {
             DB::rollBack();
             throw new ApiException('Error al eliminar: ' . $e->getMessage());
@@ -350,6 +350,7 @@ class EvaluacionCalidadController extends ApiBaseController
 
     protected function envioMailCalidad($evaluacion, $estado, $data, array $users_ids)
     {
+        $user = user();
         $users_ids[] = $data['user_id'];
         if($data['estado'] === 'REASIGNADA'){
             $users_ids[] = $data['reasignado_a'];
@@ -371,14 +372,15 @@ class EvaluacionCalidadController extends ApiBaseController
         
         // Armar el template a enviar
         $summary = $this->generarTemplatecalidad($evaluacion, $estado, $data);
-
-
-        // Disparar los mails
+        //\Log::info('email: ' . $user->email);
         Notification::route('mail', $toList)
             ->notify(new SendLeadMail(
                 'Detalle de calidad realizada',
-                $summary
-            ));
+                $summary,
+                $user->name,
+                $user->email  // CC al usuario actual
+        ));
+
     }
   
 }

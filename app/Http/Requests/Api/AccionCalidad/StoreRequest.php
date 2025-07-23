@@ -27,7 +27,7 @@ class StoreRequest extends BaseRequest
         return [
             'nombre'   => 'required',
             'tipo'     => 'required',
-            'users_ids' => 'required_if:tipo,accion',
+            // 'users_ids' => 'required_if:tipo,accion',
         ];
     }
 

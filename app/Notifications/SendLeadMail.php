@@ -12,54 +12,42 @@ class SendLeadMail extends Notification implements ShouldQueue
     use Queueable;
 
     public $mailSubject;
-
     public $mailMessage;
+    public $fromName;
+    public $ccEmail;
 
-    /**
-     * Create a new notification instance.
-     *
-     * @return void
-     */
-    public function __construct($subject, $message)
+    public function __construct($subject, $message, $fromName = null, $ccEmail = null)
     {
         $this->mailSubject = $subject;
         $this->mailMessage = $message;
+        $this->fromName = $fromName ?? config('mail.from.name');
+        $this->ccEmail = $ccEmail;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
     public function via($notifiable)
     {
         return ['mail'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        $mail = (new MailMessage)
+            ->from(config('mail.from.address'), $this->fromName)
             ->subject($this->mailSubject)
             ->markdown('mail.lead_mail', ['content' => $this->mailMessage]);
+
+        if ($this->ccEmail) {
+            $mail->withSymfonyMessage(function ($message) {
+                $message->cc($this->ccEmail);
+            });
+        }
+
+        return $mail;
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
+
     public function toArray($notifiable)
     {
-        return [
-            //
-        ];
+        return [];
     }
 }

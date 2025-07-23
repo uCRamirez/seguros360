@@ -624,7 +624,7 @@
                             <SaveOutlined />
                         {{ $t("common.edit") }}
                     </a-button>
-                    <a-popconfirm :title="$t('menu.you_agree')" @confirm="onDelete(ev.idVenta)">
+                    <a-popconfirm :title="$t('menu.you_agree')" @confirm="onDelete(ev.id)">
                         <a-button
                             v-if="(permsArray.includes('quality_delete') || permsArray.includes('admin'))"
                             danger type="primary" :loading="loading">
@@ -870,12 +870,12 @@ export default defineComponent({
             }
         };
 
-        const onDelete = async (p_id = null) => {
+        const onDelete = async (xid = null) => {
             loading.value = true;
             try {
-                if (!p_id) p_id = props.data.is_sale.idVenta;
+                if (!xid) xid = props.data.is_sale.idVenta;
                 
-                const resp = await axiosAdmin.get(`delete-calidad/{${p_id}}`);
+                const resp = await axiosAdmin.get(`delete-calidad/${xid}`);
                 if (resp.success) {
                     loading.value = false;
                     notification.success({ message: t(`common.success`), description: t(`common.deleted`) });

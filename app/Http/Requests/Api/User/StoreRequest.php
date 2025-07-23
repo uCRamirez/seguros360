@@ -42,6 +42,14 @@ class StoreRequest extends BaseRequest
                 })
             ],
             'status' => 'required',
+            'name' => 'required',
+            'email' => [
+                'required',
+                Rule::unique('users', 'email')
+                    ->where(function ($query) {
+                        $query->whereIn('user_type', ['staff_members', 'super_admins']);
+                    }),
+            ],
             'user' => [
                 'required',
                 Rule::unique('users', 'user')

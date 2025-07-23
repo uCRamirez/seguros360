@@ -28,7 +28,7 @@
                     </template>
                 </a-tab-pane>
 
-                <a-tab-pane
+                <!-- <a-tab-pane
                     v-if="
                         permsArray.includes('view_completed_campaigns') ||
                         permsArray.includes('admin')
@@ -41,7 +41,7 @@
                             {{ $t("campaign.completed_campaign") }}
                         </span>
                     </template>
-                </a-tab-pane>
+                </a-tab-pane> -->
             </a-tabs>
         </a-col>
     </a-row>

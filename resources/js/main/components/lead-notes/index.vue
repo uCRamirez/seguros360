@@ -39,7 +39,7 @@
                     </template>
                 </a-tab-pane>
 
-                <a-tab-pane
+                <!-- <a-tab-pane
                     v-if="
                         permsArray.includes('view_completed_campaigns') ||
                         permsArray.includes('admin')
@@ -52,7 +52,7 @@
                             {{ $t("campaign.completed_campaign") }}
                         </span>
                     </template>
-                </a-tab-pane>
+                </a-tab-pane> -->
             </a-tabs>
         </a-col>
     </a-row>
@@ -161,6 +161,15 @@
                                 }}
                             </a-button>
                             <span v-else>{{ record.lead.cedula }}</span>
+                        </template>
+                        <template v-if="column.dataIndex === 'nombre'">
+                            {{
+                                record.lead &&
+                                record.lead.nombre &&
+                                record.lead.nombre != undefined
+                                    ? `${(record.lead.nombre ?? '')} ${(record.lead.apellido1 ?? '')} ${(record.lead?.apellido2 ?? '')}`
+                                    : "-"
+                            }}
                         </template>
                         <template v-if="column.dataIndex === 'campaign'">
                             {{

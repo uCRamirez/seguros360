@@ -80,7 +80,6 @@
 						name="users_ids"
 						:help="rules.users_ids ? $t('menu.users') : null"
 						:validateStatus="rules.users_ids ? 'error' : null"
-						class="required"
 					>
 						<a-select 
 							style="width: 100%"

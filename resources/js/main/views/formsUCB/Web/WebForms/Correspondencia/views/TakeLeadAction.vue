@@ -161,7 +161,7 @@ campaignDetails, campaignDetailsKey
                                                 :help="rules.cedula ? $t('lead.document') : null"
                                                 :validateStatus="rules.cedula ? 'error' : ''" class="required">
                                                 <a-input-group compact>
-                                                    <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.cedula
+                                                    <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.cedula
                                                         " :placeholder="$t(
                                                             'common.placeholder_default_text',
                                                             [
@@ -219,7 +219,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.nombre
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.nombre
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -241,7 +241,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.segundo_nombre
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.segundo_nombre
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -263,7 +263,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.apellido1
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.apellido1
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -285,7 +285,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.apellido2
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.apellido2
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -307,7 +307,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.genero
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.genero
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -378,7 +378,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.tipo_plan
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tipo_plan
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -401,7 +401,7 @@ campaignDetails, campaignDetailsKey
                                                             ? 'error'
                                                             : null
                                                         ">
-                                                    <a-date-picker :disabled="!permsArray.includes('admin')"
+                                                    <a-date-picker :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
                                                         format="YYYY-MM-DD" value-format="YYYY-MM-DD"
                                                         v-model:value="crmState.client.fechaVencimiento"
                                                         style="width: 100%" />
@@ -421,7 +421,7 @@ campaignDetails, campaignDetailsKey
                                                                 ? 'error'
                                                                 : null
                                                             ">
-                                                        <a-date-picker :disabled="!permsArray.includes('admin')"
+                                                        <a-date-picker :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
                                                             format="YYYY-MM-DD" value-format="YYYY-MM-DD"
                                                             @change="calcularEdad"
                                                             v-model:value="crmState.client.fechaNacimiento"
@@ -446,7 +446,7 @@ campaignDetails, campaignDetailsKey
 
                                             </a-col>
                                         </a-config-provider>
-                                        <!-- tipo tarjeta -->
+                                        <!-- tarjeta -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
                                             <a-form-item :label="$t('lead.card')
                                                 " name="tarjeta" :help="rules.tarjeta
@@ -456,7 +456,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.tarjeta
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tarjeta
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -478,7 +478,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.tipo_tarjeta
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tipo_tarjeta
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -500,7 +500,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.emisor
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.emisor
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -522,7 +522,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.ultimos_digitos
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.ultimos_digitos
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -544,7 +544,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-select :disabled="!permsArray.includes('admin')"
+                                                <a-select :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
                                                     v-model:value="crmState.client.mes_carga"
                                                     :placeholder="$t('common.select_default_text', [$t('lead.month_charge')])">
                                                     <a-select-option value="1">{{ $t('common.january')
@@ -581,7 +581,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-date-picker :disabled="!permsArray.includes('admin')" format="YYYY"
+                                                <a-date-picker :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" format="YYYY"
                                                     value-format="YYYY" v-model:value="crmState.client.anno_carga"
                                                     style="width: 100%" />
                                             </a-form-item>
@@ -596,7 +596,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.foco_venta
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.foco_venta
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -618,7 +618,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input v-model:value="crmState.client.nacionalidad
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.nacionalidad 
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -640,7 +640,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.provincia_voto
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.provincia_voto
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -661,7 +661,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     " class="required">
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.tel1
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tel1
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -682,7 +682,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.tel2
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tel2
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -703,7 +703,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.tel3
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tel3
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -724,7 +724,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.tel4
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tel4
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -746,7 +746,7 @@ campaignDetails, campaignDetailsKey
                                                         : null
                                                     "
                                             >
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.tel5
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tel5
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [
@@ -767,7 +767,7 @@ campaignDetails, campaignDetailsKey
                                                         ? 'error'
                                                         : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin')" v-model:value="crmState.client.tel6
+                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tel6
                                                     " :placeholder="$t(
                                                         'common.placeholder_default_text',
                                                         [

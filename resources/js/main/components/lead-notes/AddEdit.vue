@@ -864,24 +864,25 @@ export default defineComponent({
             campaigns_id.value = [];
 
             if (newVal && props.addEditType === "edit") {
-                campaigns_id.value.push(props.data.x_campaign_id || 0);
+                campaigns_id.value.push(props.data?.x_campaign_id || props.data?.lead?.campaign?.xid || 0);
                 filteredParentTypifications.value = parentTypificationData.value.filter(pt =>
                     campaigns_id.value.includes(pt.x_campaign_id)
                 );
 
                 isInitializing.value = true;
 
-                if (props.formData.notes_typification_id_1 != null) {
-                    getChildTypification(props.formData.notes_typification_id_1);
-                    getAccion(props.formData.notes_typification_id_1);
-                }
-                if (props.formData.notes_typification_id_2 != null) {
-                    getChildrenChildTypification(props.formData.notes_typification_id_2);
-                    getAccion(props.formData.notes_typification_id_2);
-                }
-                if (props.formData.notes_typification_id_3 != null) {
-                    getLastChildrenChildTypification(props.formData.notes_typification_id_3);
-                    getAccion(props.formData.notes_typification_id_3);
+                if(filteredParentTypifications.value.length !== 0){
+                    if (props.formData.notes_typification_id_1 != null)
+                        getChildTypification(props.formData.notes_typification_id_1);
+                    if (props.formData.notes_typification_id_2 != null)
+                        getChildrenChildTypification(props.formData.notes_typification_id_2);
+                    if (props.formData.notes_typification_id_3 != null)
+                        getLastChildrenChildTypification(props.formData.notes_typification_id_3);
+                }else{
+                    props.formData.notes_typification_id_1 = null;
+                    props.formData.notes_typification_id_2 = null;
+                    props.formData.notes_typification_id_3 = null;
+                    props.formData.notes_typification_id_4 = null;
                 }
 
                 datos.venta = (isSale.value = !!props.formData.is_sale)
@@ -938,7 +939,9 @@ export default defineComponent({
 
                 if (props.leadInfo && props.leadInfo.campaign?.xid) {
                     campaigns_id.value.push(props.leadInfo.campaign.xid);
-                } else {
+                } else if(props.leadInfo && props.leadInfo.campaign?.id){
+                    campaigns_id.value.push(props.allCampaigns.find(c => c.id === props.leadInfo.campaign.id)?.xid || 0);
+                }else {
                     props.allCampaigns.forEach(item => {
                         campaigns_id.value.push(item.xid);
                     });
