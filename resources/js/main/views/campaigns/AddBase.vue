@@ -113,7 +113,7 @@
                                                     showExportLeadsConfirm(
                                                         record.x_campaign_id,
                                                         record.nombreBase,
-                                                        0
+                                                        2
                                                     )
                                                 "
                                                 style="width: 60px;"

@@ -1,6 +1,7 @@
 <template>
     <a-drawer :title="$t('campaign.lead_distribution')" :width="drawerWidth" :open="visible"
         :body-style="{ paddingBottom: '80px' }" :footer-style="{ textAlign: 'right' }" :mask-closable="false"
+        :destroyOnClose="true"
         @close="onClose">
         <a-row :gutter="16" class="mt-20">
             <a-col :xs="24" :sm="24" :md="12" :lg="12">
@@ -19,7 +20,7 @@
                 <a-col :xs="24" :sm="24" :md="24" :lg="24">
                     <a-form-item>
                         <div style="height: 243px; overflow-y: auto; padding-right: 8px;">
-                            <FilterBuilder v-model="filtros" :operators="filterOperators" />
+                            <FilterBuilder v-model="filtros"/>
                         </div>
                     </a-form-item>
                 </a-col>
@@ -142,7 +143,7 @@
                 <a-form-item>
                     <a-button :disabled="registrosEncontrados === 0 || selectedUserIds.length === 0" type="primary" @click="asignarLeadBuscados" :loading="tableClienteSerch.loading">
                         <template #icon>
-                            <DeleteOutlined />
+                            <AppstoreAddOutlined />
                         </template>
                         {{ $t("lead.assign_users") }}
                     </a-button>
@@ -164,6 +165,7 @@
                         :disabled="!asignacionProgramada"
                         :show-time="true"
                         format="YYYY-MM-DD HH:mm:ss"
+                        value-format="YYYY-MM-DD HH:mm:ss"
                         style="width: 100%"
                         :placeholder="$t('common.scheduled')"
                     />
@@ -189,28 +191,29 @@ import {
     UserAddOutlined,
     CloudDownloadOutlined,
     UserDeleteOutlined,
+    AppstoreAddOutlined,
     SearchOutlined,
 } from "@ant-design/icons-vue";
 import apiAdmin from "../../../common/composable/apiAdmin";
 import { useI18n } from "vue-i18n";
-import fields from "./fields";
-import crud from "../../../common/composable/crud";
-import { filter, forEach } from "lodash-es";
 import FilterBuilder from "./FilterBuilder.vue";
 import { message } from 'ant-design-vue';
-
-export const datos = reactive({
-    bases: [],
-    filtros: [],
-});
 
 export default defineComponent({
     name: "RecycleLead",
     props: {
-        visible: { type: Boolean, required: true },
-        pageTitle: { type: String, default: "" },
-        campaign: { type: Object, required: true },
-        disabled: { type: Boolean, default: false }
+        visible: {
+            default: false,
+        },
+        visible: {
+            default: "",
+        },
+        disabled: {
+            default: "",
+        },
+        campaign: { 
+            default: null 
+        }
     },
     emits: ["close"],
     components: {
@@ -219,14 +222,13 @@ export default defineComponent({
         UserAddOutlined,
         CloudDownloadOutlined,
         UserDeleteOutlined,
+        AppstoreAddOutlined,
         FilterBuilder,
         SearchOutlined,
     },
     setup(props, { emit }) {
         const { t } = useI18n();
-        const { addEditRequestAdmin, loading, rules } = apiAdmin();
-        const { leadColumn } = fields();
-        const crudVariables = crud();
+        const { loading, rules } = apiAdmin();
 
         const mockData = ref([]);
         const targetKeys = ref([]);
@@ -257,7 +259,6 @@ export default defineComponent({
         });
 
         const columns = [
-            // { title: t("campaign.campaign"), dataIndex: "campaign_id", key: "campaign_id" },
             { title: t("lead.document"), dataIndex: "cedula", key: "cedula" },
             { title: t("lead.name"), dataIndex: "nombre", key: "nombre" },
             { title: t("lead.age"), dataIndex: "edad", key: "edad" },
@@ -350,7 +351,6 @@ export default defineComponent({
             try {
 
                 const assignments = distribuirLeads(tableClienteSerch.data, selectedUserIds.value);
-                // await axiosAdmin.post('leads/assign',{campaign_id: props.campaign.id,assignments});
                 await axiosAdmin.post('leads/assign', {
                     campaign_id: props.campaign.id,
                     assignments,
@@ -361,9 +361,7 @@ export default defineComponent({
                 serchInformationClient();
                 tableClienteSerch.loading = false;
                 message.success(t('common.updated'));
-                if(asignacionProgramada.value && fechaProgramada.value) {
-                    emit('close');
-                }
+                emit('close');
 
             } catch (err) {
                 tableClienteSerch.loading = false;
@@ -445,7 +443,7 @@ export default defineComponent({
                     mockData.value = [];
                     targetKeys.value = [];
                     selectedKeys.value = [];
-                    basesSeleccionadas.value = []
+                    basesSeleccionadas = [];
                     selectedUserIds.value = [];
                     fillSearchTable([]);
                     setUrlData();

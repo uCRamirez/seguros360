@@ -139,14 +139,14 @@
                         </template>
                     </a-tab-pane>
 
-                    <a-tab-pane key="completed">
+                    <!-- <a-tab-pane key="completed">
                         <template #tab>
                             <span>
                                 <StopOutlined />
                                 {{ $t("campaign.completed_campaign") }}
                             </span>
                         </template>
-                    </a-tab-pane>
+                    </a-tab-pane> -->
                 </a-tabs>
             </a-col>
         </a-row>
@@ -421,9 +421,21 @@ export default {
         const campaignData = ref();
 
         const getAllNonCampaign = (items) => {
-            selectedCampaign.value = items;
-            visible.value = true;
-            campaignData.value = items.xid;
+            try {
+                if (!items) {
+                    throw new Error('Campaign data is required');
+                }
+                selectedCampaign.value = items;
+                visible.value = true;
+                campaignData.value = items.xid;
+            } catch (error) {
+                console.error('Error in getAllNonCampaign:', error);
+                notification.error({
+                    message: t('common.error'),
+                    description: t('campaign.error_loading_distribution'),
+                    placement: 'bottomRight'
+                });
+            }
         };
 
         onMounted(() => {
@@ -535,13 +547,9 @@ export default {
         }
 
         function onBaseSuccess() {
-            addBaseVisible.value = false
-            fetch()
-        }
-
-        function onBaseSuccess() {
-            addNotificationVisible.value = false
-            // fetch()
+            addBaseVisible.value = false;
+            addNotificationVisible.value = false;
+            fetch();
         }
 
         return {

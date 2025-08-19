@@ -23,7 +23,7 @@
                     <ActionedCampaigns :data="responseData" />
                 </a-card>
             </a-col>
-            <a-col style="max-height: fit-content;" :xs="24" :sm="24" :md="24" :lg="24" :xl="12">
+            <a-col style="height: 100%;" :xs="24" :sm="24" :md="24" :lg="24" :xl="12">
                 <a-card :title="$t('dashboard.products_sold')">
                     <topProducts :data="responseData" />
                 </a-card>

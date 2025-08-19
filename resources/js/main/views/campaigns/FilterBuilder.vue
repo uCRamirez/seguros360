@@ -83,9 +83,10 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch, onMounted, computed} from 'vue';
+import { defineComponent, ref,toRaw, watch, onMounted, computed} from 'vue';
 import { useI18n } from 'vue-i18n';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons-vue';
+import isEqual from 'lodash/isEqual';
 
 export default defineComponent({
     name: 'FilterBuilder',
@@ -192,19 +193,26 @@ export default defineComponent({
         // Emitir cambios al padre
         watch(
             filtersLocal,
-            (newVal) => emit('update:modelValue', newVal),
+            newVal => {
+              if (!isEqual(newVal, props.modelValue)) {
+                // evita emitir si realmente no cambió
+                emit('update:modelValue', toRaw(newVal));
+              }
+            },
             { deep: true }
         );
 
         watch(
-        () => props.modelValue,
+            () => props.modelValue,
             (newVal) => {
+                if (!isEqual(newVal, filtersLocal.value)) {
                 filtersLocal.value = newVal.length
-                ? newVal.map(f => ({ ...f }))
-                : [createEmptyFilter()];
+                    ? newVal.map(f => ({ ...f }))
+                    : [createEmptyFilter()];
                 nextId = filtersLocal.value.length + 1;
+                }
             },
-        { immediate: true, deep: true }
+            { immediate: true }   // ← sin deep
         );
 
 

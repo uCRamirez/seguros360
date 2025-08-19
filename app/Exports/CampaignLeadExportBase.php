@@ -33,7 +33,7 @@ class CampaignLeadExportBase implements FromArray
             ->with(['leadStatus'])
             ->where('campaign_id', $this->campaign->id)
             ->where('nombreBase', $this->base)
-            ->where('started',$this->state)
+            ->where('started', $this->state === 1 ? 1 : 0)
             ->get();
 
         // \Log::info('array', ['allLeads' => $allLeads]);

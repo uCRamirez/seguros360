@@ -137,7 +137,7 @@ export default {
 
         onMounted(() => {
             fetchNotifications()
-            poller.value = setInterval(fetchNotifications, 1000)
+            poller.value = setInterval(fetchNotifications, 10000)
             const userId = store.state.user?.id
             if (window.Echo && userId) {
                 window.Echo

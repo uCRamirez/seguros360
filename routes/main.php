@@ -11,7 +11,7 @@ Route::get('/landing', ['as' => 'landing', 'uses' => 'App\Http\Controllers\Landi
 
 Route::get('{path}', function () {
     if (file_exists(storage_path('installed'))) {
-        $appName = "LeadPro";
+        $appName = "uCBusiness";
         $appVersion = File::get(public_path() . '/version.txt');
         $modulesData = Common::moduleInformations();
         $themeMode = session()->has('theme_mode') ? session('theme_mode') : 'light';

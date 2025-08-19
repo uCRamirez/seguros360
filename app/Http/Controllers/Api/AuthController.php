@@ -396,7 +396,7 @@ class AuthController extends ApiBaseController
             $startDate = Carbon::parse($request->dates[0])->format('Y-m-d');
             $endDate   = Carbon::parse($request->dates[1])->format('Y-m-d');
         } else {
-            $startDate = Carbon::now()->subDays(30)->format('Y-m-d');
+            $startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
             $endDate   = Carbon::now()->format('Y-m-d');
         }
 
@@ -426,7 +426,7 @@ class AuthController extends ApiBaseController
             $startDate = Carbon::parse($request->dates[0])->format('Y-m-d');
             $endDate   = Carbon::parse($request->dates[1])->format('Y-m-d');
         } else {
-            $startDate = Carbon::now()->subDays(30)->format('Y-m-d');
+            $startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
             $endDate   = Carbon::now()->format('Y-m-d');
         }
 

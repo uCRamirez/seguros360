@@ -17,6 +17,7 @@ use App\Models\LeadLog;
 use Examyou\RestAPI\ApiResponse;
 use Examyou\RestAPI\Exceptions\ApiException;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
 
 class NotesTypificationController extends ApiBaseController
 {
@@ -61,62 +62,59 @@ class NotesTypificationController extends ApiBaseController
 
     public function addMultipleTypification(StoreMultipleRequest $request)
     {
+        DB::transaction(function () use ($request) {
 
-        // $request->validate();
-        // $request = request();
-        // \Log::info('campaign', [$request->campaign_id]);
-        // \Log::info('notes', [$request->notes]);
+            foreach ($request->notes as $typification) {
 
-        foreach ($request->notes as $typfication) {
-            // \Log::info('typfication', [$typfication]);
-            if ($typfication['typification_1']) {
-                $typification1 = new NotesTypification();
-                $typification1->campaign_id = $request->campaign_id;
-                $typification1->name = $typfication['typification_1'];
+                $parentId = null;                     // padre actual (null = nivel 1)
+                $levels   = ['typification_1', 'typification_2', 'typification_3', 'typification_4'];
 
-                if(!$typfication['typification_2']){
-                    $typification1->sale = $typfication['sale'] ?? false;
-                    $typification1->schedule = $typfication['schedule'] ?? false;
+                foreach ($levels as $idx => $levelKey) {
+
+                    $name = $typification[$levelKey] ?? null;
+                    if (!$name) break;                // sin nombre ⇒ no hay más niveles
+
+                    /* ───── ¿YA EXISTE? ───── */
+                    $query = NotesTypification::where('name', $name)
+                                            ->where('parent_id', $parentId);
+
+                    if ($parentId === null) {        // sólo en nivel 1 se filtra por campaña
+                        $query->where('campaign_id', $request->campaign_id);
+                    }
+
+                    $node = $query->first();
+                    if ($node) {                     // existe ⇒ úsalo como padre y continua
+                        $parentId = $node->id;
+                        continue;
+                    }
+
+                    /* ───── CREAR NUEVO ───── */
+                    $node              = new NotesTypification();
+                    $node->name        = $name;
+                    $node->parent_id   = $parentId;
+                    if ($parentId === null) {        // nivel 1
+                        $node->campaign_id = $request->campaign_id;
+                    }
+
+                    // ¿soy el último nivel que se va a guardar?
+                    $isLast = ($idx === count($levels)-1) ||
+                            empty($typification[$levels[$idx+1]]);
+
+                    if ($isLast) {
+                        $node->sale     = $typification['sale']     ?? false;
+                        $node->schedule = $typification['schedule'] ?? false;
+                    }
+
+                    // `no_contact` sólo en nivel 3 (idx = 2)
+                    if ($idx === 2) {
+                        $node->no_contact = $typification['no_contact'] ?? false;
+                    }
+
+                    $node->save();
+                    $parentId = $node->id;           // nuevo padre para el siguiente nivel
                 }
-
-                $typification1->save();
             }
-
-            if ($typfication['typification_1'] || $typfication['typification_2']) {
-                $typification2 = new NotesTypification();
-                $typification2->name = $typfication['typification_2'];
-                $typification2->parent_id = $typification1->id;
-
-                if(!$typfication['typification_3']){
-                    $typification2->sale = $typfication['sale'] ?? false;
-                    $typification2->schedule = $typfication['schedule'] ?? false;
-                }
-
-                $typification2->name ? $typification2->save() : '';
-            }
-
-            if ($typfication['typification_1'] && $typfication['typification_2'] && $typfication['typification_3']) {
-                $typification3 = new NotesTypification();
-                $typification3->name = $typfication['typification_3'];
-                $typification3->parent_id = $typification2->id;
-
-                if(!$typfication['typification_4']){
-                    $typification3->sale = $typfication['sale'] ?? false;
-                    $typification3->schedule = $typfication['schedule'] ?? false;
-                }
-
-                $typification3->name? $typification3->save() : '';
-            }
-
-            if ($typfication['typification_1'] && $typfication['typification_2'] && $typfication['typification_3'] && $typfication['typification_4']) {
-                $typification4 = new NotesTypification();
-                $typification4->name = $typfication['typification_4'];
-                $typification4->parent_id = $typification3->id;
-                $typification4->sale = $typfication['sale'] ?? false;
-                $typification4->schedule = $typfication['schedule'] ?? false;
-                $typification4->name ? $typification4->save() : '';
-            }
-        }
+        });
 
         return ApiResponse::make('Success', []);
     }
