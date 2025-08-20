@@ -60,6 +60,7 @@ class NotesTypificationController extends ApiBaseController
         return $notesTypification;
     }
 
+
     public function addMultipleTypification(StoreMultipleRequest $request)
     {
         DB::transaction(function () use ($request) {

@@ -880,6 +880,8 @@ class LeadController extends ApiBaseController
         $assignments = $request->input('assignments');
         $scheduled   = $request->boolean('scheduled');
         $scheduledAt = $request->input('scheduled_at'); // datetime (string)
+        \Log::info('$scheduledAt:', [$scheduledAt]);
+        \Log::info('$scheduledAt:', [Carbon::parse($scheduledAt)]);
 
         if ($scheduled && $scheduledAt) {
             foreach ($assignments as $grp) {

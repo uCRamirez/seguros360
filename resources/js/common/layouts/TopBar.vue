@@ -16,13 +16,13 @@
                 <HeaderRightIcons>
                     <a-space>
                         <!-- activar sofphone de uC - no borrar -->
-                        <!-- <a-button @click="openRightSidebar" style="border: none"
+                        <a-button @click="openRightSidebar" style="border: none"
                             ><span v-if="rightSidebarValue == false"
                                 ><StepBackwardOutlined />
                             </span>
 
                             <span v-else><StepForwardOutlined /></span>
-                        </a-button> -->
+                        </a-button>
                         <!-- <a-button type="link" @click="openNotifications" style="border: none">
                             <BellOutlined />
                         </a-button> -->
