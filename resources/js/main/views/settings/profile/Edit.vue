@@ -118,6 +118,7 @@
                                     name="phone"
                                     :help="rules.phone ? rules.phone.message : null"
                                     :validateStatus="rules.phone ? 'error' : null"
+                                    class="required"
                                 >
                                     <a-input
                                         v-model:value="formData.phone"

@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Classes\Common;
 use App\Exports\CampaignLeadExport;
 use App\Exports\CampaignLeadExportBase;
+use App\Exports\ExportReportInfo;
 use App\Http\Controllers\ApiBaseController;
 use App\Http\Requests\Api\Campaign\IndexRequest;
 use App\Http\Requests\Api\Campaign\StoreRequest;
 use App\Http\Requests\Api\Campaign\UpdateRequest;
 use App\Http\Requests\Api\Campaign\DeleteRequest;
+use App\Http\Requests\Api\Campaign\ExportReport;
 use App\Http\Requests\Api\Campaign\CampaignLeadActionRequest;
 use App\Http\Requests\Api\Campaign\EmailTemplatesRequest;
 use App\Http\Requests\Api\Campaign\RecycleCampaignLeadsRequest;
@@ -34,6 +36,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
+use Examyou\RestAPI\Exceptions\ApiException;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Excel as ExcelFormat;
 
 class CampaignController extends ApiBaseController
 {
@@ -43,6 +48,7 @@ class CampaignController extends ApiBaseController
     protected $storeRequest = StoreRequest::class;
     protected $updateRequest = UpdateRequest::class;
     protected $deleteRequest = DeleteRequest::class;
+    protected $exportReport = ExportReport::class;
 
     protected function modifyIndex($query)
     {
@@ -79,6 +85,18 @@ class CampaignController extends ApiBaseController
         }
 
         return $query;
+    }
+
+
+    public function exportReportNotes($camps,$star,$end)
+    {
+        config(['api.cors' => false]);
+        $camps = is_array($camps) ? $camps : explode(',', $camps);
+        // \Log::info('data', [$camps]);
+        // \Log::info('data', [$star]);
+        // \Log::info('data', [$end]);
+
+        return Excel::download(new ExportReportInfo($camps, $star, $end), 'invoices.xlsx');
     }
 
 
@@ -179,6 +197,69 @@ class CampaignController extends ApiBaseController
     public function takeAction(CampaignLeadActionRequest $request)
     {
         $loggedUser = user();
+        // \Log::info('request', [$request]);
+
+        $phone = $request->call_phone;
+        $xid = $request->x_campaign_id;
+        $campaignId = $this->getIdFromHash($xid);
+
+        $campaign = Campaign::with('form')->findOrFail($campaignId);
+
+        // 1) Intento por teléfono exacto dentro de la campaña
+        $lead = null;
+        if (!empty($phone)) {
+            $lead = Lead::where('campaign_id', $campaign->id)
+                ->where(function ($q) use ($phone) {
+                    $q->where('tel1', $phone)
+                    ->orWhere('tel2', $phone)
+                    ->orWhere('tel3', $phone)
+                    ->orWhere('tel4', $phone)
+                    ->orWhere('tel5', $phone)
+                    ->orWhere('tel6', $phone);
+                })
+                ->orderByDesc('id') // si hay varios, toma el más reciente
+                ->first();
+
+            // \Log::info('lead_lookup_by_phone', [
+            //     'phone'   => $phone,
+            //     'lead_id' => optional($lead)->id,
+            // ]);
+        }
+
+        // 2) Si no existe por teléfono: crear (si hay teléfono) o caer al próximo no iniciado (si no hay teléfono)
+        if (!$lead) {
+            if (!empty($phone)) {
+                $lead = $this->createNewLead($campaign, $phone);
+                // \Log::info('lead_created', ['lead_id' => $lead->id, 'phone' => $phone]);
+            } 
+            // else {
+            //     $lead = $this->upcomingNotStartedLead($campaign->id);
+            //     \Log::info('lead_upcoming_fallback', ['lead_id' => optional($lead)->id]);
+            // }
+        }
+
+        // 3) Marcar campaña como iniciada/actualizar actor
+        if ($campaign->started_on == null) {
+            $campaign->started_on = \Carbon\Carbon::now();
+            $campaign->status = 'started';
+        }
+        $campaign->last_action_by = $loggedUser->id;
+        $campaign->save();
+
+        // \Log::info('lead', [$lead]);
+
+        return ApiResponse::make('Success', [
+            'x_lead_id' => $lead->xid,
+        ]);
+    }
+
+
+    public function takeAction_original(CampaignLeadActionRequest $request)
+    {
+        $loggedUser = user();
+        // \Log::info('request', [$request]);
+
+        $phone = $request->call_phone;
         $xid = $request->x_campaign_id;
         $id = $this->getIdFromHash($xid);
 
@@ -191,8 +272,11 @@ class CampaignController extends ApiBaseController
         // No Lead found
         // Creating new lead
         if ($lead == null) {
-            $lead = $this->createNewLead($campaign, true);
+            $lead = $this->createNewLead($campaign,$phone);
         }
+
+        // \Log::info('lead', [$lead]);
+
 
         if ($campaign->started_on == null) {
             $campaign->started_on = Carbon::now();
@@ -202,7 +286,7 @@ class CampaignController extends ApiBaseController
         $campaign->save();
 
         // Calculating Lead Counts
-        Common::recalculateCampaignLeads($campaign->id);
+        // Common::recalculateCampaignLeads($campaign->id);
 
         return ApiResponse::make('Success', [
             'x_lead_id' => $lead->xid,
@@ -235,27 +319,16 @@ class CampaignController extends ApiBaseController
         }
     }
 
-    public function createNewLead($campaign)
+    public function createNewLead($campaign, $phone)
     {
         $loggedUser = user();
 
         $lead = new Lead();
         $lead->campaign_id = $campaign->id;
+        $lead->tel1 = $phone ? $phone : null;
         // Reference Prefix
-        if ($campaign->allow_reference_prefix) {
-            $lead->reference_number = $campaign->reference_prefix . Carbon::now()->timestamp;
-        }
-
-        // if ($campaign->form_id && $campaign->form && $campaign->form->form_fields) {
-        //     $newLeadData = [];
-        //     foreach ($campaign->form->form_fields as $allFormFields) {
-        //         $newLeadData[] = [
-        //             'id' => strtolower(Str::random(12)),
-        //             'field_name' => $allFormFields['name'],
-        //             'field_value' => '',
-        //         ];
-        //     }
-        //     $lead->lead_data = $newLeadData;
+        // if ($campaign->allow_reference_prefix) {
+        //     $lead->reference_number = $campaign->reference_prefix . Carbon::now()->timestamp;
         // }
 
         $lead->started = 1;
@@ -265,10 +338,7 @@ class CampaignController extends ApiBaseController
         $lead->created_by = $loggedUser->id;
         $lead->save();
 
-        // Saving Lead Data JSON
-        //Common::generateAndSaveLeadData($lead->id);
-
-        Common::recalculateCampaignLeads($campaign->id);
+        // Common::recalculateCampaignLeads($campaign->id);ƒ
 
         return $lead;
     }
@@ -448,10 +518,11 @@ class CampaignController extends ApiBaseController
     // Traer toda las campañas de telefonia de ucontact
     public function getUContactCampaigns()
     {
-        $subdomain = 'desarrollocr';
-        $url = "https://{$subdomain}.ucontactcloud.com/IntegraChannels/resources/webhook/getCampaigns";
+        $subdomain = env('UCONTACT_SUB_DOMINIO');
+        $authKey   = env('UCONTACT_API_KEY');
 
-        $authKey = 'dUNBbG9uc28tcHJ1ZWJhczoxYjFjMzE0My1mNzg4LTRlYzYtYTk0YS0zZmNhYzdiYjhmOTM=';
+        $url = "https://{$subdomain}.ucontactcloud.com/IntegraChannels/resources/webhook/getCRMCampaigns";
+
 
         $response = Http::withHeaders([
             'Authorization' => 'Basic ' . $authKey

@@ -28,7 +28,8 @@ class UpdateRequest extends BaseRequest
      */
     public function rules()
     {
-        $loggedUser = auth('api')->user();
+        // $loggedUser = auth('api')->user();
+        $loggedUser = user();
         $convertedId = Hashids::decode($this->route('user'));
         $company = company();
         $passwordSettings = PasswordSetting::where('password_settings.company_id',$company->id)->first();

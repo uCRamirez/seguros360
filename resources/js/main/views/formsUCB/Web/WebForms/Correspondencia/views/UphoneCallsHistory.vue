@@ -94,6 +94,19 @@ export default defineComponent({
             });
         };
 
+        watch(() => props.leadId, (newLeadId) => {
+            if (newLeadId) {
+                extraFilters.value.lead_id = newLeadId
+                setUrlData()
+            } else {
+                crudVariables.table.data = []
+                crudVariables.table.pagination.current = 1
+                emit('update:leadId', null)
+            }
+        }, 
+        { immediate: true }
+        );
+
         return {
             ...crudVariables,
             loading,

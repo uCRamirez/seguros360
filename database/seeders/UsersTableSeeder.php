@@ -42,6 +42,7 @@ class UsersTableSeeder extends Seeder
         $admin->name = 'Admin';
         $admin->user = 'Admin';
         $admin->email = 'admin@example.com';
+        $admin->phone = '1234567890';
         $admin->password = '12345678';
         $admin->role_id = $adminRole->id;
         $admin->user_type = "staff_members";

@@ -28,7 +28,7 @@ class UpdateRequest extends BaseRequest
      */
     public function rules()
     {
-        $loggedUser = auth('api')->user();
+        $loggedUser = user();
         $convertedId = Hashids::decode($this->route('user'));
         $company = company();
         $passwordSettings = PasswordSetting::where('password_settings.company_id',$company->id)->first();
@@ -65,10 +65,10 @@ class UpdateRequest extends BaseRequest
             $rules['role_id'] = 'required';
         }
         
-        // if($this->ucontact == 1){
-        //     $rules['ucontact_user'] = 'required';
-        //     $rules['ucontact_password'] = 'required';
-        // }
+        if($this->ucontact == 1){
+            $rules['ucontact_user'] = 'required';
+            $rules['ucontact_password'] = 'required';
+        }
       
 
         if ($this->password != '') {

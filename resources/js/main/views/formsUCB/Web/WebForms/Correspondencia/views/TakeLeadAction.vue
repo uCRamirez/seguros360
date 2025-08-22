@@ -1089,6 +1089,19 @@ campaignDetails, campaignDetailsKey
                                 :showAction="false" :scrollStyle="{ y: 'calc(100vh - 320px)' }" />
                         </a-tab-pane>
 
+                        <a-tab-pane key="uphone_calls" :disabled="!crmState.client.showLogs">
+                            <template #tab>
+                                <span>
+                                    <MobileOutlined />
+                                    {{ $t("common.uphone_calls") }}
+                                </span>
+                            </template>
+                            <UphoneCallTable
+                                :leadId="crmState.client.xid"
+                                :visible="true"
+                            />
+                        </a-tab-pane>
+
                         <a-tab-pane key="lead_notes" :disabled="!crmState.client.showLogs">
                             <template #tab>
                                 <span>
@@ -1155,12 +1168,13 @@ import SendMessage from "./SendMessage.vue";
 import Sidebar from "../../../../../../../common/layouts/Sidebar.vue";
 import SendCall from "./SendCall.vue";
 import SearchLead from "./SearchLead.vue";
-// import UphoneCallTable from "./UphoneCallsHistory.vue";
+import UphoneCallTable from "./UphoneCallsHistory.vue";
 import fields from "../fields";
 import functions from "./functions.js";
 import esES from 'ant-design-vue/es/locale/es_ES';
 import enUS from 'ant-design-vue/es/locale/en_US';
 import dayjs from 'dayjs';
+import axios from "axios";
 
 
 export default {
@@ -1194,7 +1208,7 @@ export default {
         Sidebar,
         SendCall,
         SearchLead,
-        // UphoneCallTable,
+        UphoneCallTable,
         PlusOutlined,
     },
     setup() {
@@ -1221,7 +1235,8 @@ export default {
         const leadStatusId = ref(undefined);
         const uPhoneCampaignsLists = ref(undefined);
         const uPhoneEmailCampaignsLists = ref(undefined);
-
+        var parametroPhone = false;
+        var phoneNumber = '';
         const antdLocale = computed(() =>
             locale.value === 'en' ? enUS : esES
         );
@@ -1308,9 +1323,17 @@ export default {
             fetchLocalidades();
             fetchAgenteCampanas();
             if (route.params.id) {
-                fetchInitData(route.params.id)
+                if (route.params.id.startsWith("phone")) {
+                    parametroPhone = true;
+                    phoneNumber = route.params.id.replace("phone", "");
+                    crmSerch.clientSerch.phone = phoneNumber;
+                    serchInformationClient();
+                    activeKey.value = 'search_lead';
+                    notification.info({ message: t(`common.information`), description: t(`common.more_than_on_number`) });
+                } else {
+                    fetchInitData(route.params.id);
+                }
             }
-
         });
 
         onUnmounted(() => {
@@ -1449,7 +1472,13 @@ export default {
                     success: (res) => {
                         autoSaved.value = true;
                         loading.value = false;
-    
+
+                        if(parametroPhone) {
+                            actualizarUphoneCall();
+                            parametroPhone = false;
+                            phoneNumber = '';
+                        }
+                        
                         if (saveType == "save_exit") {
                             loading.value = false;
                             router.push({
@@ -1463,6 +1492,16 @@ export default {
                 });
             }
             loading.value = false;
+        };
+
+        const actualizarUphoneCall = () => {
+            axiosAdmin.post(`uphone-calls/update-call`, {
+                phone: phoneNumber,
+                campaign_id: crmState.client.campaign.id,
+                lead_id: crmState.client.xid
+            }).then(res => {
+                console.log("Uphone call updated successfully", res);
+            });
         };
 
         const takeLeadAction = (actionName) => {
@@ -1597,6 +1636,8 @@ export default {
 
         watch(route, (newVal, oldVal) => {
             if (newVal.params.id != undefined) {
+                fetchInitData();
+            } else if (newVal.params.phone != undefined) {
                 fetchInitData();
             }
         });

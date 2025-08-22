@@ -31,7 +31,8 @@ class StoreRequest extends BaseRequest
         $company = company();
         $passwordSettings = PasswordSetting::where('password_settings.company_id',$company->id)->first();
       
-        $loggedUser = auth('api')->user();
+        // $loggedUser = auth('api')->user();
+        $loggedUser = user();
 
         $rules = [
             'phone'    => [

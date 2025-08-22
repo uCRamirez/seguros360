@@ -759,6 +759,50 @@ class LeadController extends ApiBaseController
         return ApiResponse::make('Lead not found', [], 404);
     }
     // PARA OBTENER EL CODIGO VALIDANDO DE CUAL CAMPANA ESTA ENTRANDO LA LLAMADA
+    // public function findLeadByPhoneCampaign(Request $request)
+    // {
+    //     $phone = $request->input('phone');
+    //     $campaignName = $request->input('campaign');
+
+    //     if (!$phone) {
+    //         throw new ApiException("Phone number is required");
+    //     }
+    //     if (!$campaignName) {
+    //         throw new ApiException("Campaign is required");
+    //     }
+
+    //     $lead = Lead::join('campaigns', 'campaigns.id', '=', 'leads.campaign_id')
+    //         ->where('campaigns.name', $campaignName)
+    //         ->where(function ($q) use ($phone) {
+    //             $q->where('tel1', $phone)
+    //             ->orWhere('tel2', $phone)
+    //             ->orWhere('tel3', $phone)
+    //             ->orWhere('tel4', $phone)
+    //             ->orWhere('tel5', $phone)
+    //             ->orWhere('tel6', $phone);
+    //         })
+    //         ->select('leads.*')
+    //         ->latest('leads.id') // ordena por id descendente
+    //         ->first();           // trae el último
+
+
+    //     if ($lead) {
+    //         return ApiResponse::make('Lead found', [
+    //             'x_lead_id' => $lead->xid, // Ahora $lead es una instancia de Lead
+    //             'lead'      => $lead,
+    //     ]);
+    //     } else {
+    //         // Si no se encontró el lead, buscamos la campaña por nombre
+    //         $campaign = Campaign::where('name', $campaignName)->first();
+    //         if ($campaign) {
+    //             return ApiResponse::make('Campaign found', [
+    //                 'x_campaign_id' => $campaign->xid,
+    //             ]);
+    //         } else {
+    //             return ApiResponse::make('Campaign not found', [], 404);
+    //         }
+    //     }
+    // }
     public function findLeadByPhoneCampaign(Request $request)
     {
         $phone = $request->input('phone');
@@ -771,29 +815,39 @@ class LeadController extends ApiBaseController
             throw new ApiException("Campaign is required");
         }
 
-        $lead = Lead::join('campaigns', 'campaigns.id', '=', 'leads.campaign_id')
+        $leads = Lead::join('campaigns', 'campaigns.id', '=', 'leads.campaign_id')
             ->where('campaigns.name', $campaignName)
-            ->whereRaw("LOCATE(?, lead_data_json) > 0", [$phone])
+            ->where(function ($q) use ($phone) {
+                $q->where('tel1', $phone)
+                ->orWhere('tel2', $phone)
+                ->orWhere('tel3', $phone)
+                ->orWhere('tel4', $phone)
+                ->orWhere('tel5', $phone)
+                ->orWhere('tel6', $phone);
+            })
             ->select('leads.*')
-            ->first(); // Usa first() para obtener un solo registro
-
-        if ($lead) {
-            return ApiResponse::make('Lead found', [
-                'x_lead_id' => $lead->xid, // Ahora $lead es una instancia de Lead
-                'lead'      => $lead,
-        ]);
-        } else {
-            // Si no se encontró el lead, buscamos la campaña por nombre
-            $campaign = Campaign::where('name', $campaignName)->first();
-            if ($campaign) {
-                return ApiResponse::make('Campaign found', [
-                    'x_campaign_id' => $campaign->xid,
-                ]);
-            } else {
-                return ApiResponse::make('Campaign not found', [], 404);
-            }
+            ->orderByDesc('leads.id') // más recientes primero
+            ->get();                  // trae todos
+            
+        if ($leads->isNotEmpty()) {
+            return ApiResponse::make('Leads found', [
+                'count'       => $leads->count(),
+                'x_lead_id'  => $leads->pluck('xid'), // compatibilidad con tu respuesta anterior
+                'lead'       => $leads,               // colección completa
+            ]);
         }
+
+        // Si no se encontró ningún lead, intentamos devolver la campaña
+        $campaign = Campaign::where('name', $campaignName)->first();
+        if ($campaign) {
+            return ApiResponse::make('Campaign found', [
+                'x_campaign_id' => $campaign->xid,
+            ]);
+        }
+
+        return ApiResponse::make('Campaign not found', [], 404);
     }
+
 
     public function getDataForDistribution(Request $request)
     {
@@ -880,8 +934,8 @@ class LeadController extends ApiBaseController
         $assignments = $request->input('assignments');
         $scheduled   = $request->boolean('scheduled');
         $scheduledAt = $request->input('scheduled_at'); // datetime (string)
-        \Log::info('$scheduledAt:', [$scheduledAt]);
-        \Log::info('$scheduledAt:', [Carbon::parse($scheduledAt)]);
+        // \Log::info('$scheduledAt:', [$scheduledAt]);
+        // \Log::info('$scheduledAt:', [Carbon::parse($scheduledAt)]);
 
         if ($scheduled && $scheduledAt) {
             foreach ($assignments as $grp) {

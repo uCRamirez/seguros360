@@ -18,6 +18,7 @@ use Examyou\RestAPI\ApiResponse;
 use Examyou\RestAPI\Exceptions\ApiException;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class NotesTypificationController extends ApiBaseController
 {
@@ -140,7 +141,7 @@ class NotesTypificationController extends ApiBaseController
             return ApiResponse::make('Imported Successfully', []);
 
         } catch (ApiException $e) {
-            \Log::error('Error en NotesTypificationImport', [
+            Log::error('Error en NotesTypificationImport', [
                 'mensaje'   => $e->getMessage(),
             ]);
 
@@ -153,7 +154,7 @@ class NotesTypificationController extends ApiBaseController
 
 
         } catch (\Throwable $e) {
-            \Log::error('Ocurrió un error inesperado', [
+            Log::error('Ocurrió un error inesperado', [
                 'mensaje'   => $e->getMessage(),
             ]);
             

@@ -4,3 +4,7 @@ test.js
 /node_modules
 /vendor
 .env
+/public/hot
+.vscode
+.DS_Store
+satisfable.lock

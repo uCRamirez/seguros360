@@ -118,6 +118,31 @@
                         </a-form-item>
                     </a-col>
                 </a-row>
+
+                <!-- To indicate whether the hoods with which they must be approved with uContact -->
+                <a-row :gutter="16" class="mt-20">
+                    <a-col :xs="24" :sm="24" :md="8" :lg="8">
+                        <a-form-item :label="$t('campaign.uc_campaign')" name="uc_campaignsActive">
+                            <a-switch v-model:checked="isChecked" />
+                        </a-form-item>
+                    </a-col>
+
+                    <a-col v-if="isChecked" :xs="24" :sm="24" :md="16" :lg="16">
+                        <a-form-item :label="$t('campaign.campaign')" class="required">
+                            <span style="display: flex">
+                                <a-select v-model:value="uc_campaignsArray" mode="multiple"
+                                    :placeholder="$t('common.select_default_text', [$t('campaign.campaign')])"
+                                    :allowClear="true">
+                                    <a-select-option v-for="campaign in all_uc_campaigns" :key="campaign.queue_name"
+                                        :value="campaign.queue_name"
+                                        :disabled="isDisabledCampaign(formData.name, campaign.queue_name)">
+                                        {{ campaign.queue_name }}
+                                    </a-select-option>
+                                </a-select>
+                            </span>
+                        </a-form-item>
+                    </a-col>
+                </a-row>
             </template>
 
             <template v-if="currentStep == 1">
@@ -291,21 +316,23 @@ export default defineComponent({
 
         onMounted(() => {
             props.formData.etapa = 'nueva';
+            all_uc_campaigns.value = [];
+            all_use_uc_campaigns.value = [];
             const staffMemberPromise = axiosAdmin.get(staffMembersUrl);
             const calidadTemplatesPromise = axiosAdmin.get(urlCalidadTemplates);
-            // const all_uc_campaignsPromise = axiosAdmin.post('campaigns/uc-campaigns');
-            // const all_use_uc_campaignsPromise = axiosAdmin.post('campaigns/use-uc-campaigns');
+            const all_uc_campaignsPromise = axiosAdmin.post('campaigns/uc-campaigns');
+            const all_use_uc_campaignsPromise = axiosAdmin.post('campaigns/use-uc-campaigns');
             // const formsPromise = axiosAdmin.get(formUrl);
             // const emailTemplatesPromise = axiosAdmin.get(emailTemplateUrl);
 
-            Promise.all([staffMemberPromise, calidadTemplatesPromise]).then(//formsPromise, all_uc_campaignsPromise, all_use_uc_campaignsPromise, emailTemplatesPromise
-                ([staffMemberResponse, calidadTemplatesResponse]) => {//formsResponse, all_uc_campaignsResponse, all_use_uc_campaignsResponse, emailTemplatesResponse
+            Promise.all([staffMemberPromise, calidadTemplatesPromise, all_uc_campaignsPromise,all_use_uc_campaignsPromise]).then(//formsPromise,, , emailTemplatesPromise
+                ([staffMemberResponse, calidadTemplatesResponse, all_uc_campaignsResponse, all_use_uc_campaignsResponse]) => {//formsResponse, , emailTemplatesResponse
                     allStaffMembers.value = staffMemberResponse.data;
                     allCalidadTemplates.value = calidadTemplatesResponse.data;
                     // allForms.value = formsResponse.data;
                     // allEmailTemplates.value = emailTemplatesResponse.data.email_templates;
-                    // all_uc_campaigns.value = all_uc_campaignsResponse.message.campaigns;
-                    // all_use_uc_campaigns.value = all_use_uc_campaignsResponse.message.campaigns;
+                    all_uc_campaigns.value = all_uc_campaignsResponse.message.campaigns;
+                    all_use_uc_campaigns.value = all_use_uc_campaignsResponse.message.campaigns;
                 }
             );
         });
@@ -557,10 +584,10 @@ export default defineComponent({
                 isChecked.value = uc_campaignsArray.value.length !== 0 ? true : false;
 
                 // se consulta nuevamente las campanas en uso para poder actualizar el front del addEdit
-                // axiosAdmin.post('campaigns/use-uc-campaigns').then((response) => {
-                //     all_use_uc_campaigns.value = response.message.campaigns;
-                //     isCampaignInUse();
-                // });
+                axiosAdmin.post('campaigns/use-uc-campaigns').then((response) => {
+                    all_use_uc_campaigns.value = response.message.campaigns;
+                    isCampaignInUse();
+                });
 
                 // se consulta nuevamente las campanas en uso para poder actualizar el front del addEdit
                

@@ -163,6 +163,7 @@ class LangTrans
             'october'   => 'October',
             'november'  => 'November',
             'december'  => 'December',
+            'more_than_on_number' => 'There is more than one contact associated with the phone number.',
         ],
         //nuevo
         'bases' => [
@@ -258,6 +259,8 @@ class LangTrans
             'total_sales' => 'Total sales',
             'total_sales_amount' => 'Total sales amount',
             'products_sold' => 'Products sold',
+            'general_sales' => 'General sales',
+            'sales_with_quality' => 'Sales with quality',
 
         ],
         'user' => [
@@ -468,6 +471,10 @@ class LangTrans
             'updated_at' => 'Updated at',
             'imported_leads' => 'Imported Data',
             'no_template' => 'The project does not have a quality template assigned or the quality template is disabled or does not have any rating variables.',
+            'uc_campaign' => 'Is Ucontact Campaign?',
+            'lead_distribution' => 'Lead Distribution',
+            'export_report' => 'Export Report',
+            'time_range' => 'Time Range',
         ],
         'email_template' => [
             'add' => 'Add New Email Template',
@@ -1151,9 +1158,10 @@ class LangTrans
     {
         if ($moduleName == 'Estore') {
             return self::$eStoreTranslations;
-        } else if ($moduleName == 'Superadmin') {
-            return \App\SuperAdmin\Classes\SuperAdminLangTrans::$mainTranslations;
-        }
+        } 
+        // else if ($moduleName == 'Superadmin') {
+        //     return \App\SuperAdmin\Classes\SuperAdminLangTrans::$mainTranslations;
+        // }
 
         return self::$mainTranslations;
     }

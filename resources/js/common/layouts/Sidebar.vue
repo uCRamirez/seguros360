@@ -3,12 +3,12 @@
         borderLeft: themeMode == 'dark' ? '1px solid #303030' : '1px solid #f0f0f0',
     }">
         <!-- iframe de sofphone de ucontact -->
-        <iframe src="https://desarrollocr.ucontactcloud.com/uphone/" width="100%" frameborder="0" scrolling="no"
+        <iframe :src="`https://${ucontactSubdomain}.ucontactcloud.com/uphone/`" width="100%" frameborder="0" scrolling="no"
             allow="camera;microphone" id="ucontact" ref="iframe" @load="onIframeLoad" style="height: 100vh"></iframe>
     </div>
 </template>
 <script>
-import { defineComponent, onMounted, onUnmounted, ref, computed } from "vue";
+import { defineComponent, onMounted, onUnmounted, ref } from "vue";
 import common from "../../common/composable/common";
 import { useRouter } from "vue-router";
 
@@ -30,8 +30,9 @@ export default defineComponent({
         const { t } = useI18n();
         const store = useStore();
         const router = useRouter();
+        const leadIdRef = ref(props.leadId);
         //const routePath = computed(() => route.name);
-
+        const ucontactSubdomain = import.meta.env.VITE_UCONTACT_SUB_DOMINIO;
         const { addEditRequestAdmin } = apiAdmin();
 
         // Define the event handler
@@ -41,9 +42,10 @@ export default defineComponent({
                 axiosAdmin
                     .post("uphone-calls/save", {
                         ...e.data.params,
-                        lead_id: props.leadId,
+                        lead_id: leadIdRef.value,
                     })
                     .then((response) => {
+                        leadIdRef.value = '';
                         store.commit(
                             "auth/updateUphoneCallReloadString",
                             Math.random() * 20
@@ -69,7 +71,7 @@ export default defineComponent({
 
         function gettingCallFunction(e) {
             let phone = e.data.params.number;
-            let campaign = e.data.params.campaign;
+            let campaign = cleanCampaignName(e.data.params.campaign);
             axiosAdmin
                 .post("campaigns/find-campaigns-homologate", { campaign })
                 .then((res) => {
@@ -89,13 +91,18 @@ export default defineComponent({
                             .then((res) => {
                                 if (res.data?.x_lead_id) {
 
-                                    if(res.data.x_lead_id.length  === 1){
-                                         // Se encontró el lead; redirigimos a la vista CRM con su ID
+                                    if(res.data.count  === 1){ 
+                                        leadIdRef.value = res.data.x_lead_id[0];
+                                        // Se encontró el lead; redirigimos a la vista CRM con su ID
                                         router.push({
-                                            name: "admin.formsUCB.CRM",
+                                            name: "admin.formsUCB.Correspondencia",
                                             params: { id: res.data.x_lead_id[0] },
                                         });
                                     }else{
+                                        router.push({
+                                            name: "admin.formsUCB.Correspondencia",
+                                            params: { id: 'phone'+phone },
+                                        });
                                         console.warn('Mas de un lead con el numero telefonico asignado - INBOUN CALL');
                                     }
                                    
@@ -103,11 +110,11 @@ export default defineComponent({
                                     // Lead no encontrado, se debe crear uno nuevo
                                     addEditRequestAdmin({
                                         url: "campaigns/take-action",
-                                        data: { x_campaign_id: res.data.x_campaign_id },
+                                        data: { x_campaign_id: res.data.x_campaign_id, call_phone: phone },
                                         successMessage: t("campaign.new_lead_added"),
                                         success: (res) => {
                                             router.push({
-                                                name: "admin.formsUCB.CRM",
+                                                name: "admin.formsUCB.Correspondencia",
                                                 params: { id: res.x_lead_id },
                                             });
                                         },
@@ -131,7 +138,7 @@ export default defineComponent({
 
         function makeCallFunction(e) {
             let phone = e.data.params.number;
-            let campaign = e.data.params.campaign;
+            let campaign = cleanCampaignName(e.data.params.campaign);
             axiosAdmin
                 .post("campaigns/find-campaigns-homologate", { campaign })
                 .then((res) => {
@@ -151,21 +158,29 @@ export default defineComponent({
                         axiosAdmin
                             .post("leads/find-by-phone-campaign", { phone, campaign }) // Este endPoint retorna el primer registro que encuentra
                             .then((res) => {
-                                if (res.data?.x_lead_id) {
+                                if (res.data?.count === 1) {
+                                   leadIdRef.value = res.data.x_lead_id[0];
                                     // Se encontró el lead; redirigimos a la vista CRM con su ID
                                     router.push({
-                                        name: "admin.formsUCB.CRM",
-                                        params: { id: res.data.x_lead_id },
+                                        name: "admin.formsUCB.Correspondencia",
+                                        params: { id: res.data.x_lead_id[0] },
                                     });
+                                }else if (res.data?.count > 1) {
+                                    // Se encontró el lead; redirigimos a la vista CRM con su ID
+                                    router.push({
+                                        name: "admin.formsUCB.Correspondencia",
+                                        params: { id: 'phone'+phone },
+                                    });
+                                    console.warn('Mas de un lead con el numero telefonico asignado - OUTBOUND CALL');
                                 } else if (res.data?.x_campaign_id) {
                                     // Lead no encontrado, se debe crear uno nuevo
                                     addEditRequestAdmin({
                                         url: "campaigns/take-action",
-                                        data: { x_campaign_id: res.data.x_campaign_id },
+                                        data: { x_campaign_id: res.data.x_campaign_id, call_phone: phone },
                                         successMessage: t("campaign.new_lead_added"),
                                         success: (res) => {
                                             router.push({
-                                                name: "admin.formsUCB.CRM",
+                                                name: "admin.formsUCB.Correspondencia",
                                                 params: { id: res.x_lead_id },
                                             });
                                         },
@@ -189,11 +204,16 @@ export default defineComponent({
 
         }
 
-        // function cleanCampaignName(name) {
-        //     name = name.replace(/[-\s]*(<\-|->)\s*$/i, '');
-        //     name = name.replace(/[_\s]*(in|out)\s*$/i, '');
-        //     return name;
-        // }
+        function cleanCampaignName(name) {
+            // Quitar flechas al final (<- o ->)
+            name = name.replace(/[-\s]*(<\-|->)\s*$/i, '');
+            // Quitar sufijos "in" o "out"
+            name = name.replace(/[_\s]*(in|out)\s*$/i, '');
+            // Quitar todo lo que esté después del último "_"
+            name = name.replace(/_[^_]*$/, '');
+            return name;
+        }
+
 
 
         // axiosAdmin
@@ -309,7 +329,7 @@ export default defineComponent({
             // }
         };
 
-        return { rightSidebarValue, loading, onIframeLoad, iframe, themeMode };
+        return { rightSidebarValue, loading, onIframeLoad, iframe, themeMode, ucontactSubdomain };
     },
 });
 </script>

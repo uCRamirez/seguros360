@@ -68,6 +68,85 @@
                                 </span>
                             </a-form-item>
                         </a-col>
+
+                        <a-col :xs="24" :sm="24" :md="12" :lg="12">
+                            <a-form-item
+                                :label="$t('user.ucontact')"
+                                name="ucontact"
+                                :help="
+                                    rules.ucontact
+                                        ? rules.ucontact.message
+                                        : null
+                                "
+                                :validateStatus="
+                                    rules.ucontact ? 'error' : null
+                                "
+                            >
+                                <a-radio-group
+                                    v-model:value="formData.ucontact"
+                                    button-style="solid"
+                                    size="small"
+                                >
+                                    <a-radio-button :value="1">
+                                        {{ $t("common.yes") }}
+                                    </a-radio-button>
+                                    <a-radio-button :value="0">
+                                        {{ $t("common.no") }}
+                                    </a-radio-button>
+                                </a-radio-group>
+                            </a-form-item>
+                        </a-col>
+                    </a-row>
+
+                    <a-row :gutter="16" v-if="formData.ucontact == 1">
+                        <a-col :xs="24" :sm="24" :md="12" :lg="12">
+                            <a-form-item
+                                :label="$t('user.ucontact_user')"
+                                name="ucontact_user"
+                                :help="
+                                    rules.ucontact_user
+                                        ? rules.ucontact_user.message
+                                        : null
+                                "
+                                :validateStatus="
+                                    rules.ucontact_user ? 'error' : null
+                                "
+                                class="required"
+                            >
+                                <a-input
+                                    v-model:value="formData.ucontact_user"
+                                    :placeholder="
+                                        $t('common.placeholder_default_text', [
+                                            $t('user.ucontact_user'),
+                                        ])
+                                    "
+                                />
+                            </a-form-item>
+                        </a-col>
+                        <a-col :xs="24" :sm="24" :md="12" :lg="12">
+                            <a-form-item
+                                :label="$t('user.ucontact_password')"
+                                name="ucontact_password"
+                                :help="
+                                    rules.ucontact_password
+                                        ? rules.ucontact_password.message
+                                        : null
+                                "
+                                :validateStatus="
+                                    rules.ucontact_password ? 'error' : null
+                                "
+                                class="required"
+                            >
+                                <a-input
+                                    v-model:value="formData.ucontact_password"
+                                    :placeholder="
+                                        $t('common.placeholder_default_text', [
+                                            $t('user.ucontact_password'),
+                                        ])
+                                    "
+                                />
+                            </a-form-item>
+                        </a-col>
                     </a-row>
 
                     <a-row :gutter="16">

@@ -78,6 +78,7 @@ ApiRoute::group(['namespace' => 'App\Http\Controllers\Api'], function () {
         ApiRoute::get('campaigns/email-templates', ['as' => 'api.campaigns.email-templates', 'uses' => 'CampaignController@campaignEmailTemplates']);
         ApiRoute::get('campaigns/user-campaigns', ['as' => 'api.campaigns.user-campaigns', 'uses' => 'CampaignController@userCampaigns']);
         ApiRoute::post('campaigns/skip-delete-lead', ['as' => 'api.campaigns.skip-delete-lead', 'uses' => 'CampaignController@skipAndDeleteLead']);
+        ApiRoute::post('campaigns/export-report/{camps}/{star}/{end}',['as' => 'api.campaigns.export-report', 'uses' => 'CampaignController@exportReportNotes']); // exportar reporte de notas
         ApiRoute::post('campaigns/export-leads/{id}', ['as' => 'api.campaigns.export-leads', 'uses' => 'CampaignController@campaignExportLead']);
         ApiRoute::post('campaigns/export-leads/base/{id}/{base}/{state}', ['as' => 'api.campaigns.export-leads-base', 'uses' => 'CampaignController@campaignExportLeadBase']);
         ApiRoute::post('campaigns/update-actioned-lead', ['as' => 'api.campaigns.update-actioned-lead', 'uses' => 'CampaignController@updateActionedLead']);
@@ -130,6 +131,7 @@ ApiRoute::group(['namespace' => 'App\Http\Controllers\Api'], function () {
         ApiRoute::resource('uphones', 'UphoneCallsController', ['as' => 'api', 'only' => ['index']]);
         ApiRoute::resource('uphone-calls', 'UphoneCallsController',  ['as' => 'api', 'only' => ['index']]);
         ApiRoute::post('uphone-calls/save', ['as' => 'api.uphones-calls.save', 'uses' => 'UphoneCallsController@saveUphoneCalls']);
+        ApiRoute::post('uphone-calls/update-call', ['as' => 'api.uphones-calls.update', 'uses' => 'UphoneCallsController@updateUphoneCalls']);
         //////////////////////////////////////////////////////////////////////////////////
 
         ApiRoute::post('leads/find-by-phone', ['as' => 'api.leads.find-by-phone','uses' => 'LeadController@findLeadByPhone']);        

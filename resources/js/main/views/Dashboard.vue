@@ -19,75 +19,23 @@
         <a-row :gutter="[18, 18]" class="mt-30 mb-20">
             <!-- Campañas activas gestionadas -->   
             <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="12">
-                <a-card :title="$t('dashboard.active_actioned_campaigns')">
-                    <ActionedCampaigns :data="responseData" />
+                <a-card :title="$t('dashboard.active_actioned_campaigns')" style="height: 100%; display: flex; flex-direction: column;">
+                <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
+                    <ActionedCampaigns :data="responseData" style="width: 100%; height: 100%;" />
+                </div>
                 </a-card>
             </a-col>
-            <a-col style="height: 100%;" :xs="24" :sm="24" :md="24" :lg="24" :xl="12">
-                <a-card :title="$t('dashboard.products_sold')">
-                    <topProducts :data="responseData" />
+
+            <!-- Productos vendidos -->
+            <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="12">
+                <a-card :title="$t('dashboard.products_sold')" style="height: 100%; display: flex; flex-direction: column;">
+                <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
+                    <topProducts :data="responseData" style="width: 100%; height: 100%;" />
+                </div>
                 </a-card>
             </a-col>
-            
         </a-row>
 
-        <div class="mt-30 mb-20">
-            <a-row :gutter="[15, 15]">
-                <!-- campañas activas -->
-                <a-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
-                    <StateWidget bgColor="#08979c">
-                        <template #image>
-                            <CopyrightCircleOutlined
-                                style="color: #fff; font-size: 24px"
-                            />
-                        </template>
-                        <template #description>
-                            <h2 v-if="responseData.stateData">
-                                {{ responseData.stateData.campaign_count }}
-                            </h2>
-                            <p>{{ $t("dashboard.active_campaigns") }}</p>
-                        </template>
-                    </StateWidget>
-                </a-col>
-                <a-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
-                    <StateWidget bgColor="#d46b08">
-                        <template #image>
-                            <MobileOutlined
-                                style="color: #fff; font-size: 24px"
-                            />
-                        </template>
-                        <template #description>
-                            <h2 v-if="responseData.stateData">
-                                {{ responseData.stateData.lead_count }}
-                            </h2>
-                            <p>{{ $t("dashboard.call_made") }}</p>
-                        </template>
-                    </StateWidget>
-                </a-col>
-                <!-- total de duracion -->
-                <a-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
-                    <StateWidget bgColor="#ffa39e">
-                        <template #image>
-                            <ClockCircleOutlined
-                                style="color: #fff; font-size: 24px"
-                            />
-                        </template>
-                        <template #description>
-                            <h2 v-if="responseData.stateData">
-                                <small>
-                                    {{
-                                        formatTimeDuration(
-                                            responseData.stateData.total_times
-                                        )
-                                    }}
-                                </small>
-                            </h2>
-                            <p>{{ $t("dashboard.total_duration") }}</p>
-                        </template>
-                    </StateWidget>
-                </a-col>
-            </a-row>
-        </div>
 
         <!-- ventas y monto total por usuario -->   
         <a-row :gutter="[18, 18]" class="mt-30 mb-20">
@@ -109,43 +57,42 @@
             </a-col>
         </a-row>
 
+        <a-divider v-if="permsArray.includes('users_view') || permsArray.includes('admin')" orientation="left">{{ $t('dashboard.general_sales') }}</a-divider>
+        
         <!-- Montos Ventas -->
         <a-row v-if="permsArray.includes('users_view') || permsArray.includes('admin')" :gutter="[18, 18]" class="mt-30 mb-20">
-            <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+            <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
                 <a-card :title="$t('dashboard.total_sales_amount')">
                     <AmountSalesMade :data="responseData" />
                 </a-card>
             </a-col>
-        </a-row>
-
-        <!-- Ventas -->
-        <a-row v-if="permsArray.includes('users_view') || permsArray.includes('admin')" :gutter="[18, 18]" class="mt-30 mb-20">
-            <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+            <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
                 <a-card :title="$t('dashboard.sales_made')">
                     <SalesMade :data="responseData" />
                 </a-card>
             </a-col>
         </a-row>
 
-        <!-- Contactos o llamadas realizadas -->
+        <a-divider v-if="permsArray.includes('users_view') || permsArray.includes('admin')" orientation="left">{{ $t('dashboard.sales_with_quality') }} ({{ $t('common.certified') + '-' + $t('common.certified_recall') }})</a-divider>
+
+        <a-row v-if="permsArray.includes('users_view') || permsArray.includes('admin')" :gutter="[18, 18]" class="mt-30 mb-20">
+            <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+                <a-card :title="$t('dashboard.total_sales_amount')">
+                    <AmountSalesMadeCalidad :data="responseData" />
+                </a-card>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+                <a-card :title="$t('dashboard.sales_made')">
+                    <SalesMadeCalidad :data="responseData" />
+                </a-card>
+            </a-col>
+        </a-row>
+
+        <!-- Ventas -->
         <!-- <a-row v-if="permsArray.includes('users_view') || permsArray.includes('admin')" :gutter="[18, 18]" class="mt-30 mb-20">
-            <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-                <a-card :title="$t('dashboard.call_made')">
-                    <CallMade :data="responseData" />
-                    <template #extra>
-                        <a-button
-                            class="mt-10"
-                            type="link"
-                            @click="
-                                $router.push({
-                                    name: 'admin.leads.index',
-                                })
-                            "
-                        >
-                            {{ $t("common.view_all") }}
-                            <DoubleRightOutlined />
-                        </a-button>
-                    </template>
+            <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+                <a-card :title="$t('dashboard.sales_made')">
+                    <SalesMade :data="responseData" />
                 </a-card>
             </a-col>
         </a-row> -->
@@ -172,7 +119,9 @@ import topProducts from "../components/charts/dashboard/TopProducts.vue";
 import Calidad from "../components/charts/dashboard/Calidad.vue";
 import CallMade from "../components/charts/dashboard/CallMade.vue";
 import SalesMade from "../components/charts/dashboard/SalesMade.vue";
+import SalesMadeCalidad from "../components/charts/dashboard/SalesMadeCalidad.vue";
 import AmountSalesMade from "../components/charts/dashboard/AmountSalesMade.vue";
+import AmountSalesMadeCalidad from "../components/charts/dashboard/AmountSalesMadeCalidad.vue";
 import DateRangePicker from "../../common/components/common/calendar/DateRangePicker.vue";
 
 export default {
@@ -183,7 +132,9 @@ export default {
         graficoVentas,
         CallMade,
         SalesMade,
+        SalesMadeCalidad,
         AmountSalesMade,
+        AmountSalesMadeCalidad,
         topProducts,
         Calidad,
         DateRangePicker,
