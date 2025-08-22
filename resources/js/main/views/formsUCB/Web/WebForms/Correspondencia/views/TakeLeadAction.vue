@@ -1086,7 +1086,7 @@ campaignDetails, campaignDetailsKey
                             </template>
                             <LeadLogTable key="lead_logs" pageName="lead_action" logType="call_log"
                                 :leadId="crmState.client.xid" :showTableSearch="false" :showLeadDetails="false"
-                                :showAction="false" :scrollStyle="{ y: 'calc(100vh - 320px)' }" />
+                                :showAction="false" :scrollStyle="{ y: 'calc(100vh - 320px)' }"  />
                         </a-tab-pane>
 
                         <a-tab-pane key="uphone_calls" :disabled="!crmState.client.showLogs">
@@ -1112,6 +1112,7 @@ campaignDetails, campaignDetailsKey
                             <LeadNotesTable pageName="lead_action" :leadId="crmState.client.xid"
                                 :leadInfo="crmState.client" :managing="crmState.client.managing"
                                 :scrollStyle="{ y: 'calc(100vh - 320px)' }" @success="() => (refreshTimeLine = true)"
+                                :showUserFilter="crmState.client.managing ? false : true"
                                 :showAddButton="leadDetails &&
                                         leadDetails.campaign &&
                                         leadDetails.campaign.status == 'completed'

@@ -962,7 +962,7 @@ export default defineComponent({
                 {
                     idLead: props.leadInfo ? props.leadInfo.id : props.data.lead.id,
                     cedula: props.leadInfo ? props.leadInfo.cedula : props.data.lead.cedula,
-                    nombre: props.leadInfo ? `${props.leadInfo.nombre} ${props.leadInfo.apellido1} ${props.leadInfo.apellido2}` : `${props.data.lead.nombre} ${props.data.lead.apellido1} ${props.data.lead.apellido2}`,
+                    nombre: props.leadInfo ? `${props.leadInfo?.nombre ?? ''}  ${props.leadInfo?.apellido1 ?? ''} ${props.leadInfo?.apellido2 ?? ''}` : `${props.data?.lead?.nombre ?? ''} ${props.data?.lead?.apellido1 ?? ''} ${props.data?.lead?.apellido2 ?? ''}`,
                     email: props.leadInfo ? props.leadInfo.email : props.data.lead.email,
 
                     agente: props.addEditType === "edit"

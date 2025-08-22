@@ -645,13 +645,14 @@ class LeadController extends ApiBaseController
     public function getUphoneCampaigns()
     {
         $user = user();
+        $subdomain = env('UCONTACT_SUB_DOMINIO');
 
-
-        $url = 'https://desarrollocr.ucontactcloud.com/IntegraChannels/resources/AgentResources/GetCampaigns';
+        $url = `https://{$subdomain}.ucontactcloud.com/IntegraChannels/resources/AgentResources/GetCampaigns`;
 
         // Your basic auth key (replace with your actual key)
         // $authKey = base64_encode($user->ucontact_user . ':' . $user->ucontact_password);
-        $authKey = 'dUNBbG9uc28tcHJ1ZWJhczoxYjFjMzE0My1mNzg4LTRlYzYtYTk0YS0zZmNhYzdiYjhmOTM=';
+        // $authKey = 'dUNBbG9uc28tcHJ1ZWJhczoxYjFjMzE0My1mNzg4LTRlYzYtYTk0YS0zZmNhYzdiYjhmOTM=';
+        $authKey = 'dUNSYW1pcmV6LWNybXNlZ3Vyb3M6YTI4YmEyMmYtMTU0My00OTUwLTk0NGItZDRmN2M2ZDNmOWY0';
 
         // Prepare the form data (x-www-form-urlencoded)
         $formData = [

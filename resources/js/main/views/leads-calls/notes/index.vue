@@ -28,6 +28,7 @@
                 :showCampaignStatus="true"
                 :showTableSearch="true"
                 :showLeadDetails="true"
+                :showUserFilter="true"
                 :showAddButton="false"
                 :showActionButton="false"
             />

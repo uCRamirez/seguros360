@@ -78,11 +78,8 @@
         </a-col>
         <!-- El select de los usuarios -->
         <a-col
-            v-if="
-                showUserFilter ||
-                permsArray.includes('leads_view_all') ||
-                permsArray.includes('admin')
-            "
+            v-if="showUserFilter && (permsArray.includes('leads_view_all') || permsArray.includes('admin'))"
+
             :xs="24"
             :sm="24"
             :md="12"
