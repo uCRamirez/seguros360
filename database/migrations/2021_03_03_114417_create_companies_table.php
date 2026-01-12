@@ -36,7 +36,7 @@ class CreateCompaniesTable extends Migration
             $table->string('date_format', 20)->default("DD-MM-YYYY");
             $table->string('time_format', 20)->default("hh:mm a");
             $table->boolean('auto_detect_timezone')->default(true); // Allow Browser To Auto Detect timezone For Logged In User
-            $table->string('timezone')->default("Asia/Kolkata");
+            $table->string('timezone')->default("America/Costa_Rica");
             $table->string('session_driver', 20)->default("file");
             $table->boolean('app_debug')->default(false);
             $table->boolean('update_app_notification')->default(true);
@@ -69,8 +69,8 @@ class CreateCompaniesTable extends Migration
             // Creating entries using DB
             // So that no observer will be called
             DB::table('companies')->insert([
-                'name' => 'Lead Pro',
-                'short_name' => 'LeadPro',
+                'name' => 'uCSmartBusiness',
+                'short_name' => 'uCBusiness',
                 'email' => 'company@example.com',
                 'phone' => '+9199999999',
                 'address' => '7 street, city, state, 762782',

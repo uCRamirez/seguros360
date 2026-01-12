@@ -20,10 +20,10 @@
         </template>
     </AdminPageHeader>
     
-    <admin-page-table-content>
+    <!-- <admin-page-table-content> -->
         <component :is="formComponent" v-if="formComponent" /> 
         <p v-else>{{ $t(`crm.form_not_found`) }}</p>
-    </admin-page-table-content>
+    <!-- </admin-page-table-content> -->
 </template>
 
 <script setup>
@@ -32,8 +32,6 @@ import { useRoute } from "vue-router";
 import AdminPageHeader from "../../../../common/layouts/AdminPageHeader.vue";
 
 const route = useRoute();
-
-const pageTitle = computed(() => route.meta.menuKey || "Formularios");
 
 const formComponent = computed(() => {
     if (route.meta.formPath) {

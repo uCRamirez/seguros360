@@ -72,7 +72,7 @@
             right: 0,
             bottom: 0,
             width: '100%',
-            borderTop: '1px solid #e9e9e9',
+            // borderTop: '1px solid #e9e9e9',
             padding: '10px 16px',
             background: themeMode == 'dark' ? '#141414' : '#fff',
             zIndex: 1,
@@ -94,7 +94,7 @@ import {
     MailOutlined,
 } from "@ant-design/icons-vue";
 import common from "../../../common/composable/common";
-import { emit } from "process";
+// import { emit } from "process";
 
 export default {
     props: {

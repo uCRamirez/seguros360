@@ -60,6 +60,33 @@
                     </a-select>
                 </a-form-item>
 
+                <a-form-item v-else-if="filter.field === 'typification_1_name'">
+                    <a-select v-model:value="filter.value" show-search :allowClear="true"
+                        :placeholder="$t('common.select_default_text')">
+                        <a-select-option v-for="res in res1" :key="res" :value="res?.name">
+                            {{ res?.name }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
+
+                <a-form-item v-else-if="filter.field === 'typification_2_name'">
+                    <a-select v-model:value="filter.value" show-search :allowClear="true"
+                        :placeholder="$t('common.select_default_text')">
+                        <a-select-option v-for="res in res2" :key="res" :value="res?.name">
+                            {{ res?.name }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
+
+                <a-form-item v-else-if="filter.field === 'typification_3_name'">
+                    <a-select v-model:value="filter.value" show-search :allowClear="true"
+                        :placeholder="$t('common.select_default_text')">
+                        <a-select-option v-for="res in res3" :key="res" :value="res?.name">
+                            {{ res?.name }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
+
                 <a-form-item v-else>
                     <a-input v-model:value="filter.value" :placeholder="t('common.value')" />
                 </a-form-item>
@@ -83,7 +110,7 @@
 </template>
 
 <script>
-import { defineComponent, ref,toRaw, watch, onMounted, computed} from 'vue';
+import { defineComponent, ref, toRaw, watch, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons-vue';
 import isEqual from 'lodash/isEqual';
@@ -101,7 +128,7 @@ export default defineComponent({
     setup(props, { emit }) {
         const { t } = useI18n();
         const localidades = ref([]);
-        const etapas = ['Nueva','Reproceso','N/A'];
+        const etapas = [t('bases.new'), t('bases.reprocessing'), t('bases.na')];
         const provincias = computed(() => {
             return [...new Set(localidades.value.map(l => l.provincia))].sort();
         });
@@ -113,7 +140,6 @@ export default defineComponent({
         const distritos = computed(() => {
             return [...new Set(localidades.value.map(l => l.distrito))].sort();
         });
-
 
         // Columnas disponibles
         const columns = [
@@ -149,17 +175,21 @@ export default defineComponent({
             { label: t('lead.district'), value: 'distrito' },
             { label: t('lead.card'), value: 'tarjeta' },
             { label: t('bases.stage'), value: 'etapa' },
+            { label: t('lead_notes.typification_1'), value: 'typification_1_name' },
+            { label: t('lead_notes.typification_2'), value: 'typification_2_name' },
+            { label: t('lead_notes.typification_3'), value: 'typification_3_name' },
         ];
 
         // Operadores
         const operators = [
-            { label: 'Igual', value: '=' },
-            { label: 'Contiene', value: 'like' },
-            { label: 'Distinto', value: '!=' },
-            { label: 'Mayor', value: '>' },
-            { label: 'Menor', value: '<' },
-            { label: 'Mayor o igual', value: '>=' },
-            { label: 'Menor o igual', value: '<=' }
+            { label: t('common.operator_equal'), value: '=' },
+            { label: t('common.operator_like'), value: 'like' },
+            { label: t('common.operator_not_equal'), value: '!=' },
+            { label: t('common.operator_greater'), value: '>' },
+            { label: t('common.operator_less'), value: '<' },
+            { label: t('common.operator_greater_equal'), value: '>=' },
+            { label: t('common.operator_less_equal'), value: '<=' },
+            { label: t('common.operator_starts_with'), value: 'likeIN' },
         ];
 
         let nextId = 1;
@@ -173,10 +203,55 @@ export default defineComponent({
                     "localidades?fields=provincia,canton,distrito&limit=1000"
                 );
                 localidades.value = resp.data;
+
+                axiosAdmin.get("notes-typifications?limit=10000").then(res => {
+                    notesTypifications.value = res.data;
+                    getParentTypification();
+                });
             } catch (e) {
                 console.error("Error fetching localidades:", e);
             }
         };
+        const notesTypifications = ref([]);
+        const res1 = ref([]);
+        const res2 = ref([]);
+        const res3 = ref([]);
+
+        function getParentTypification() {
+            res1.value = [];
+            res2.value = [];
+            res3.value = [];
+
+            const parentIds = new Set();
+
+            const res1Names = new Set();
+            const res2Names = new Set();
+            const res3Names = new Set();
+
+            notesTypifications.value.forEach(t => {
+                if (t.x_parent_id == null && !res1Names.has(t.name)) {
+                    res1.value.push(t);
+                    res1Names.add(t.name);
+                    parentIds.add(t.xid);
+                }
+            });
+
+            notesTypifications.value.forEach(t => {
+                if (parentIds.has(t.x_parent_id)) {
+                    if (!res2Names.has(t.name)) {
+                        res2.value.push(t);
+                        res2Names.add(t.name);
+                    }
+                } else if (t.x_parent_id != null) {
+                    if (!res3Names.has(t.name)) {
+                        res3.value.push(t);
+                        res3Names.add(t.name);
+                    }
+                }
+            });
+        }
+
+
 
         // Estado local inicial
         const filtersLocal = ref([]);
@@ -194,10 +269,10 @@ export default defineComponent({
         watch(
             filtersLocal,
             newVal => {
-              if (!isEqual(newVal, props.modelValue)) {
-                // evita emitir si realmente no cambió
-                emit('update:modelValue', toRaw(newVal));
-              }
+                if (!isEqual(newVal, props.modelValue)) {
+                    // evita emitir si realmente no cambió
+                    emit('update:modelValue', toRaw(newVal));
+                }
             },
             { deep: true }
         );
@@ -206,10 +281,10 @@ export default defineComponent({
             () => props.modelValue,
             (newVal) => {
                 if (!isEqual(newVal, filtersLocal.value)) {
-                filtersLocal.value = newVal.length
-                    ? newVal.map(f => ({ ...f }))
-                    : [createEmptyFilter()];
-                nextId = filtersLocal.value.length + 1;
+                    filtersLocal.value = newVal.length
+                        ? newVal.map(f => ({ ...f }))
+                        : [createEmptyFilter()];
+                    nextId = filtersLocal.value.length + 1;
                 }
             },
             { immediate: true }   // ← sin deep
@@ -229,6 +304,9 @@ export default defineComponent({
         }
 
         return {
+            res1,
+            res2,
+            res3,
             etapas,
             provincias,
             cantones,

@@ -174,7 +174,7 @@
                         </template>
                         {{ $t("menu.storage_settings") }}
                     </a-menu-item> -->
-                    <!-- <a-menu-item
+                    <a-menu-item
                         key="email_settings"
                         v-if="
                             permsArray.includes('email_edit') ||
@@ -186,7 +186,7 @@
                             <MailOutlined />
                         </template>
                         {{ $t("menu.email_settings") }}
-                    </a-menu-item> -->
+                    </a-menu-item>
                     <!-- <a-menu-item
                         key="message_providers"
                         v-if="

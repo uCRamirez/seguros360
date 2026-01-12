@@ -42,7 +42,7 @@ class CreateUsersTable extends Migration
             $table->string('status')->default('enabled');
             $table->string('reset_code')->nullable()->default(null);
 
-            $table->string('timezone', 50)->default('Asia/Kolkata');
+            $table->string('timezone', 50)->default('America/Costa_Rica');
             $table->string('date_format', 20)->default('d-m-Y');
             $table->string('date_picker_format', 20)->default('dd-mm-yyyy');
             $table->string('time_format', 20)->default('h:i a');

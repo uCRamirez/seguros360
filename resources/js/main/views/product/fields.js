@@ -5,7 +5,7 @@ import { ref } from "vue";
 
 const fields = () => {
     const url =
-        "products?fields=id,xid,name,coverage,description,nombreBase,price,status,campaign_id,x_campaign_id,product_type,tax_rate,tax_label,image,image_url,internal_code,category_id,x_category_id,categories{id,xid,name},campaigns{id,xid,name}&filters=status eq 1";
+        "products?fields=id,xid,name,coverage,digitar_precio,description,nombreBase,digitar_precio,price,status,campaign_id,x_campaign_id,product_type,tax_rate,tax_label,image,image_url,internal_code,category_id,x_category_id,categories{id,xid,name},campaigns{id,xid,name}&filters=status eq 1";
     const addEditUrl = "products";
     const { t } = useI18n();
     const hashableColumns = ["category_id", "campaign_id"];
@@ -42,6 +42,7 @@ const fields = () => {
         category_id: undefined,
         campaign_id: undefined,
         status: 1,
+        digitar_precio: 0,
     };
 
     const columns = [

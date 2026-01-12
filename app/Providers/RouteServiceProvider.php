@@ -62,12 +62,6 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/front.php'));
 
-            // ** Framework ** //
-            Route::middleware('web')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/framework.php'));
-            // ** Framework ** //
-
             if (app_type() == 'non-saas') {
                 Route::middleware('web')
                     ->namespace($this->namespace)

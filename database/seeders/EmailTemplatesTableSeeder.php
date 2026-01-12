@@ -31,9 +31,9 @@ class EmailTemplatesTableSeeder extends Seeder
         $emailTemplate = new EmailTemplate();
         $emailTemplate->company_id = $company->id;
         $emailTemplate->name = 'Welcome mail';
-        $emailTemplate->subject = 'Welcome to lead pro';
+        $emailTemplate->subject = 'Welcome to uCBusiness CRM';
         $emailTemplate->body = <<<FOD
-    <p>Hi&nbsp;##First Name##,</p><p>Thanks for purchasing lead pro.</p><p>Thanks</p><p>##Company Name##<br></p>
+    <p>Hi&nbsp;##First Name##,</p><p>Thanks for purchasing uCBusiness CRM.</p><p>Thanks</p><p>##Company Name##<br></p>
 FOD;
 
         $emailTemplate->sharable = 1;

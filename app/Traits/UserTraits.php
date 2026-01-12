@@ -45,7 +45,7 @@ trait UserTraits
         $this->saveAndUpdateRole($user);
 
         // Notifying to Company
-        Notify::send('staff_member_create', $user);
+        // Notify::send('staff_member_create', $user);
 
         // Updating Company Total Users
         Common::calculateTotalUsers($user->company_id, true);
@@ -93,7 +93,7 @@ trait UserTraits
         $this->saveAndUpdateRole($user);
 
         // Notifying to Company
-        Notify::send('staff_member_update', $user);
+        // Notify::send('staff_member_update', $user);
     }
 
     public function saveAndUpdateRole($user)
@@ -158,7 +158,7 @@ trait UserTraits
         Common::calculateTotalUsers($user->company_id, true);
 
         // Notifying to Company
-        Notify::send('staff_member_delete', $user);
+        // Notify::send('staff_member_delete', $user);
     }
 
     public function import(ImportRequest $request)

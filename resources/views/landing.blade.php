@@ -45,7 +45,7 @@
                         <div class="relative mt-4">
                             <ul class="flex flex-wrap items-center gap-6 font-maven">
                                 <li>
-                                    <a href="https://ucontactcr.ucontactcloud.com/webchatclient/#/?ip=ucontactcr.ucontactcloud.com&campaign=Click2CallUC&name=Cick2Call&mail=soporte@ucbusinesscr.com&initialMessage=Cick2Call"
+                                    <a href="https://{{ config('ucontact.subdominio') }}.ucontactcloud.com/webchatclient/#/?ip={{ config('ucontact.subdominio') }}.ucontactcloud.com&campaign=Click2CallUC&name=Cick2Call&mail=soporte@ucbusinesscr.com&initialMessage=Cick2Call"
                                         target="_blank"
                                         class="inline-flex items-center justify-center px-6 py-2 backdrop-blur-2xl bg-white/20 rounded-lg transition-all duration-500 group hover:bg-primary/20 hover:text-primary mt-5"
                                         data-hs-overlay="#hs-vertically-centered-modal">
@@ -59,7 +59,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="https://ucontactcr.ucontactcloud.com/webchatclient/#/?ip=ucontactcr.ucontactcloud.com&campaign=videollamadaUC&name=VideoLlamada&mail=soporte@ucbusinesscr.com&initialMessage=VideoLlamada"
+                                    <a href="https://{{ config('ucontact.subdominio') }}.ucontactcloud.com/webchatclient/#/?ip={{ config('ucontact.subdominio') }}.ucontactcloud.com&campaign=videollamadaUC&name=VideoLlamada&mail=soporte@ucbusinesscr.com&initialMessage=VideoLlamada"
                                         target="_blank"
                                         class="inline-flex items-center justify-center px-6 py-2 backdrop-blur-2xl bg-white/20 rounded-lg transition-all duration-500 group hover:bg-primary/20 hover:text-primary mt-5"
                                         data-hs-overlay="#hs-vertically-centered-modal">
@@ -71,7 +71,7 @@
                                         </svg>&nbsp;video llamada</a>
                                 </li>
                                 <li>
-                                    <a href="https://ucontactcr.ucontactcloud.com/webchatclient/#/?ip=ucontactcr.ucontactcloud.com&campaign=BotWebchatUC&name=WebChat&mail=soporte@ucbusinesscr.com&initialMessage=WebchatUC"
+                                    <a href="https://{{ config('ucontact.subdominio') }}.ucontactcloud.com/webchatclient/#/?ip={{ config('ucontact.subdominio') }}.ucontactcloud.com&campaign=BotWebchatUC&name=WebChat&mail=soporte@ucbusinesscr.com&initialMessage=WebchatUC"
                                         target="_blank" class="inline-flex items-center justify-center px-6 py-2 backdrop-blur-2xl
                                         bg-white/20 rounded-lg transition-all duration-500 group hover:bg-primary/20
                                         hover:text-primary mt-5" data-hs-overlay="#hs-vertically-centered-modal">

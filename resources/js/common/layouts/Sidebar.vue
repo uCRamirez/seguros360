@@ -3,8 +3,9 @@
         borderLeft: themeMode == 'dark' ? '1px solid #303030' : '1px solid #f0f0f0',
     }">
         <!-- iframe de sofphone de ucontact -->
-        <iframe :src="`https://${ucontactSubdomain}.ucontactcloud.com/uphone/`" width="100%" frameborder="0" scrolling="no"
-            allow="camera;microphone" id="ucontact" ref="iframe" @load="onIframeLoad" style="height: 100vh"></iframe>
+        <iframe :src="`https://${ucontactSubdomain}.ucontactcloud.com/uphone/`" width="100%" frameborder="0"
+            scrolling="no" allow="camera;microphone" id="ucontact" ref="iframe" @load="onIframeLoad"
+            style="height: 100vh"></iframe>
     </div>
 </template>
 <script>
@@ -15,6 +16,7 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import apiAdmin from "../../../js/common/composable/apiAdmin";
 import { useI18n } from "vue-i18n";
+import { message } from "ant-design-vue";
 
 
 export default defineComponent({
@@ -32,12 +34,71 @@ export default defineComponent({
         const router = useRouter();
         const leadIdRef = ref(props.leadId);
         //const routePath = computed(() => route.name);
-        const ucontactSubdomain = import.meta.env.VITE_UCONTACT_SUB_DOMINIO;
+        const ucontactSubdomain = ref(import.meta.env.VITE_UCONTACT_SUB_DOMINIO);
         const { addEditRequestAdmin } = apiAdmin();
 
-        // Define the event handler
+        const uContactState = (e = {}) => {
+            const actual = JSON.parse(localStorage.getItem("auth_user_ucontact") || "{}") ?? {};
+
+            const { action, params } = e || {};
+            if (action === "agentLogin" || action === "agentLogout") return actual;
+
+            const normalizeHistory = (h) => {
+                if (Array.isArray(h)) {
+                    const maybeString = h.join("");
+                    if (maybeString.trim().startsWith("[") && maybeString.trim().endsWith("]")) {
+                        try {
+                            const parsed = JSON.parse(maybeString);
+                            return Array.isArray(parsed) ? parsed : [];
+                        } catch {
+                            return h;
+                        }
+                    }
+                    return h;
+                }
+                if (typeof h === "string") {
+                    try {
+                        const parsed = JSON.parse(h);
+                        return Array.isArray(parsed) ? parsed : [];
+                    } catch {
+                        return [];
+                    }
+                }
+                return [];
+            };
+
+            const history = normalizeHistory(actual.callHistory);
+
+            const campaign = params?.campaign ?? actual?.lastCall?.[0]?.campaign ?? null;
+            const number = params?.number ?? actual?.lastCall?.[0]?.number ?? null;
+            const guid = params?.guid ?? actual?.lastCall?.[0]?.guid ?? null;
+            const direction = params?.direction ?? actual?.lastCall?.[0]?.direction ?? null;
+            const date = params?.date ?? new Date().toISOString();
+            const duration = params?.duration ?? null;
+
+            const entry = { campaign, number, guid, direction, date, duration };
+
+            const isOnCall = action === "gettingCall" || action === "makeCall";
+            const lastCall = [entry];
+            const shouldPushToHistory = action === "finishedCall" && !!params?.guid;
+
+            const callHistory = shouldPushToHistory
+                ? [...history, entry]
+                : history;
+
+            return {
+                ...actual,
+                action,
+                params,
+                isOnCall: action === "finishedCall" ? false : isOnCall,
+                lastCall,
+                callHistory,
+            };
+        };
+
         // AQUI SE OBTIENE LA INFORMACION QUE RETORNA EL SOFTPHONE EN LLAMDAS ENTRANTES Y SALIENTES
         const handleMessageEvent = (e) => {
+            store.commit("auth/updateUseruContact", uContactState(e?.data));
             if (e.data.params) {
                 axiosAdmin
                     .post("uphone-calls/save", {
@@ -61,13 +122,25 @@ export default defineComponent({
                     makeCallFunction(e);
                     break;
                 case "finishedCall":
-                    // console.log('finishedCall');
+                    // validarGuid(e.data?.params);
                     break;
                 default:
                     break;
             }
 
         };
+
+        async function validarGuid(data) {
+            try {
+                let resp = await axiosAdmin.post('send-guid', { data });
+                if (!resp?.message === 'success') {
+                    console.error("Error al enviar GUID al backend");
+                    return;
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
 
         function gettingCallFunction(e) {
             let phone = e.data.params.number;
@@ -91,21 +164,21 @@ export default defineComponent({
                             .then((res) => {
                                 if (res.data?.x_lead_id) {
 
-                                    if(res.data.count  === 1){ 
+                                    if (res.data.count === 1) {
                                         leadIdRef.value = res.data.x_lead_id[0];
                                         // Se encontró el lead; redirigimos a la vista CRM con su ID
                                         router.push({
                                             name: "admin.formsUCB.Correspondencia",
                                             params: { id: res.data.x_lead_id[0] },
                                         });
-                                    }else{
+                                    } else {
                                         router.push({
                                             name: "admin.formsUCB.Correspondencia",
-                                            params: { id: 'phone'+phone },
+                                            params: { id: 'phone' + phone },
                                         });
                                         console.warn('Mas de un lead con el numero telefonico asignado - INBOUN CALL');
                                     }
-                                   
+
                                 } else if (res.data?.x_campaign_id) {
                                     // Lead no encontrado, se debe crear uno nuevo
                                     addEditRequestAdmin({
@@ -126,9 +199,10 @@ export default defineComponent({
                             });
 
                     } else if (array.length > 1) {
-                        console.warn('Campana de uContact homologada con mas de una campana de LeadPro. - INBOUND CALL');
-                    }else{
-                        console.warn('Campaña de uContact no homologada con Campaña de LeadPro');
+                        message.warn('Campana de uContact homologada con mas de una campana de uCRM. - INBOUND CALL');
+                    } else {
+                        message.warning('Campaña de uContact no homologada con Campaña de uCRM');
+                        // console.warn('Campaña de uContact no homologada con Campaña de uCRM');
                     }
                 })
                 .catch((error) => {
@@ -159,19 +233,19 @@ export default defineComponent({
                             .post("leads/find-by-phone-campaign", { phone, campaign }) // Este endPoint retorna el primer registro que encuentra
                             .then((res) => {
                                 if (res.data?.count === 1) {
-                                   leadIdRef.value = res.data.x_lead_id[0];
+                                    leadIdRef.value = res.data.x_lead_id[0];
                                     // Se encontró el lead; redirigimos a la vista CRM con su ID
                                     router.push({
                                         name: "admin.formsUCB.Correspondencia",
                                         params: { id: res.data.x_lead_id[0] },
                                     });
-                                }else if (res.data?.count > 1) {
+                                } else if (res.data?.count > 1) {
                                     // Se encontró el lead; redirigimos a la vista CRM con su ID
                                     router.push({
                                         name: "admin.formsUCB.Correspondencia",
-                                        params: { id: 'phone'+phone },
+                                        params: { id: 'phone' + phone },
                                     });
-                                    console.warn('Mas de un lead con el numero telefonico asignado - OUTBOUND CALL');
+                                    message.warn('Mas de un lead con el numero telefonico asignado - OUTBOUND CALL');
                                 } else if (res.data?.x_campaign_id) {
                                     // Lead no encontrado, se debe crear uno nuevo
                                     addEditRequestAdmin({
@@ -192,9 +266,9 @@ export default defineComponent({
                             });
 
                     } else if (array.length > 1) {
-                        console.warn('Campana de uContact homologada con mas de una campana de LeadPro. - OUTBOUND CALL');
-                    }else{
-                        console.warn('Campaña de uContact no homologada con Campaña de LeadPro');
+                        message.warn('Campana de uContact homologada con mas de una campana de uCRM. - OUTBOUND CALL');
+                    } else {
+                        message.warn('Campaña de uContact no homologada con Campaña de uCRM');
                     }
 
                 })

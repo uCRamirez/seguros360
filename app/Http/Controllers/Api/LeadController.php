@@ -21,6 +21,7 @@ use App\Models\EmailProvider;
 use App\Models\Lead;
 use App\Models\LeadAux;
 use App\Models\User;
+use App\Models\NotesTypification;
 use App\Models\LeadLog;
 use App\Models\MessageProvider;
 use App\Models\Salesman;
@@ -117,8 +118,35 @@ class LeadController extends ApiBaseController
         } else {
             $query = $query->where('leads.assign_to', $user->id);
         }
-
+         $query = $query->where('leads.active', 1);
         return $query;
+    }
+
+    public function destroy(...$args)
+    {
+        \DB::beginTransaction();
+
+        $xid = last($args);
+        $id  = \Vinkla\Hashids\Facades\Hashids::decode($xid)[0];
+
+        // Validación del request delete
+        $this->validate();
+
+        /** @var \Illuminate\Database\Eloquent\Model $obj */
+        $this->setQuery(call_user_func($this->model . '::query'));
+        // $this->modify(); // respeta filtros/tenant si los hubiera
+        $obj = $this->getQuery()->findOrFail($id);
+
+        $obj->active = 0;
+        $obj->save();
+
+        \DB::commit();
+
+        return \Examyou\RestAPI\ApiResponse::make(
+            'Resource inactivated instead of deleted',
+            ['xid' => $obj->xid],
+            $this->getMetaData(true)
+        );
     }
 
     public function createLead(CreateLeadRequest $request)
@@ -406,11 +434,11 @@ class LeadController extends ApiBaseController
         // Total Leads
         $totalLeads = Lead::join('campaigns', 'campaigns.id', '=', 'leads.campaign_id')->where('campaigns.active', 1);
         $callMade = Lead::join('campaigns', 'campaigns.id', '=', 'leads.campaign_id')
-            ->where('started', 1)
-            ->where('active', 1);
+            ->where('leads.started', 1)
+            ->where('leads.active', 1);
         $callNotMade = Lead::join('campaigns', 'campaigns.id', '=', 'leads.campaign_id')
-            ->where('started', 0)
-            ->where('active', 1);
+            ->where('leads.started', 1)
+            ->where('leads.active', 1);
         $totalDuration = Lead::join('campaigns', 'campaigns.id', '=', 'leads.campaign_id')->where('campaigns.active', 1);
 
         if (!$user->ability('admin', 'leads_view_all') || ($request->has('user_id') && $request->user_id != '')) {
@@ -852,23 +880,35 @@ class LeadController extends ApiBaseController
 
     public function getDataForDistribution(Request $request)
     {
-        $bases           = $request->input('bases', []);
-        $filtros         = $request->input('filtros', []);
-        $campaign_id     = $request->input('campaign_id');
-        $filtrarAsigandos = $request->input('filtrarAsigandos');
-        $filtrarTrabajados = $request->input('filtrarTrabajados');
-        $noContacto = $request->input('noContacto');
-        $maxRegistros    = (int) $request->input('maxRegistros', 500);
+        $bases              = $request->input('bases', []);
+        $filtros            = $request->input('filtros', []);
+        $campaign_id        = $request->input('campaign_id');
+        $filtrarAsigandos   = $request->input('filtrarAsigandos');
+        $filtrarTrabajados  = $request->input('filtrarTrabajados');
+        $noContacto         = $request->input('noContacto');
+        $maxRegistros       = (int) $request->input('maxRegistros', 500);
 
         $query = Lead::query()
             ->with(['assignTo'])
-            ->select(['id', 'cedula','nombreBase', 'nombre', 'segundo_nombre','apellido1','apellido2','edad','etapa','assign_to'])
-            ->when(!empty($bases), fn($q) => $q->whereIn('nombreBase', $bases))
-            ->where('campaign_id', $campaign_id)
-            ->when($filtrarAsigandos === 1, fn($q) => $q->whereNotNull('assign_to'))
-            ->when($filtrarAsigandos === 0, fn($q) => $q->whereNull('assign_to'))
-            ->when($filtrarTrabajados === 1, fn($q) => $q->where('started',1))
-            ->when($filtrarTrabajados === 0, fn($q) => $q->where('started',0))
+            ->select([
+                'leads.id as id',
+                'leads.cedula',
+                'leads.nombreBase',
+                'leads.nombre',
+                'leads.segundo_nombre',
+                'leads.apellido1',
+                'leads.apellido2',
+                'leads.edad',
+                'leads.etapa',
+                'leads.assign_to',
+            ])
+            ->when(!empty($bases), fn ($q) => $q->whereIn('leads.nombreBase', $bases))
+            ->where('leads.campaign_id', $campaign_id)
+            ->where('leads.active', 1)
+            ->when($filtrarAsigandos === 1, fn ($q) => $q->whereNotNull('leads.assign_to'))
+            ->when($filtrarAsigandos === 0, fn ($q) => $q->whereNull('leads.assign_to'))
+            ->when($filtrarTrabajados === 1, fn ($q) => $q->where('leads.started', 1))
+            ->when($filtrarTrabajados === 0, fn ($q) => $q->where('leads.started', 0))
             ->when($noContacto === 1, function ($q) {
                 $q->whereDoesntHave('latestNotesLog', function ($q2) {
                     $q2->whereHas('notesTypification3', function ($q3) {
@@ -877,23 +917,81 @@ class LeadController extends ApiBaseController
                 });
             });
 
+        // Para evitar hacer el join varias veces
+        $joinedLeadLogs = false;
 
         foreach ($filtros as $f) {
-            if (isset($f['field'], $f['operator'], $f['value'])) {
-                if ($f['operator'] === 'like') {
-                    $query->where($f['field'], 'like', "%{$f['value']}%");
+            if (!isset($f['field'], $f['operator'], $f['value'])) {
+                continue;
+            }
+
+            $field    = $f['field'];
+            $operator = $f['operator'];
+            $value    = $f['value'];
+
+            $isTypification = in_array(
+                $field,
+                ['typification_1_name', 'typification_2_name', 'typification_3_name'],
+                true
+            );
+
+            // ---------------- FILTROS DE TIPIFICACIÓN ----------------
+            if ($isTypification) {
+
+                $leadLogsColumn = match ($field) {
+                    'typification_1_name' => 'll.notes_typification_id_1',
+                    'typification_2_name' => 'll.notes_typification_id_2',
+                    'typification_3_name' => 'll.notes_typification_id_3',
+                };
+
+                $typQuery = NotesTypification::query();
+
+                if ($operator === 'like') {
+                    $typQuery->where('name', 'like', "%{$value}%");
                 } else {
-                    $query->where($f['field'], $f['operator'], $f['value']);
+                    $typQuery->where('name', $value);
                 }
+
+                $typificationIds = $typQuery->pluck('id')->all();
+
+                // Si no hay match, no devuelve nada
+                if (empty($typificationIds)) {
+                    $query->whereRaw('1 = 0');
+                    continue;
+                }
+
+                if (!$joinedLeadLogs) {
+                    $query->join('lead_logs as ll', 'll.lead_id', '=', 'leads.id');
+                    $query->distinct(); // evita duplicados por múltiples logs
+                    $joinedLeadLogs = true;
+                }
+
+                if ($operator === '!=' || $operator === '<>') {
+                    $query->whereNotIn($leadLogsColumn, $typificationIds);
+                } else {
+                    $query->whereIn($leadLogsColumn, $typificationIds);
+                }
+
+                continue;
+            }
+
+            // ---------------- FILTROS NORMALES (ORIGINALES) ----------------
+            if ($operator === 'like') {
+                $query->where("leads.$field", 'like', "%{$value}%");
+            } else if ($f['operator'] === 'likeIN') {
+                $query->where("leads.$field", 'like', "{$value}%");
+            } else {
+                $query->where("leads.$field", $operator, $value);
             }
         }
 
         $result = [];
+
         $query->chunkById(500, function ($leadsBatch) use (&$result, $maxRegistros) {
             foreach ($leadsBatch as $lead) {
                 $result[] = $lead;
                 if (count($result) >= $maxRegistros) {
-                    return false; // detiene el chunk cuando llega al máximo
+                    return false; // detener cuando llegue al máximo
                 }
             }
         });
@@ -902,6 +1000,7 @@ class LeadController extends ApiBaseController
             'leads' => $result,
         ]);
     }
+
 
 
     // public function pushAssign(Request $request)

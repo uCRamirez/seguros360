@@ -45,6 +45,18 @@ return [
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 
+        'azure' => [
+            'transport'    => 'smtp',
+            'host'         => env('AZURE_SMTP_HOST', 'smtp.office365.com'),
+            'port'         => env('AZURE_SMTP_PORT', 587),
+            'encryption'   => env('AZURE_SMTP_ENCRYPTION', 'tls'),
+            'username'     => 'calidad@360servicorp.com',
+            'password'     => null,          // el token en runtime
+            'auth_mode'    => 'xoauth2',     // fuerza XOAUTH2
+            'timeout'      => null,
+            'local_domain' => env('MAIL_EHLO_DOMAIN'),
+        ],
+
         'ses' => [
             'transport' => 'ses',
         ],
@@ -80,7 +92,7 @@ return [
                 'smtp',
                 'log',
             ],
-        ],
+        ]
     ],
 
     /*
@@ -95,8 +107,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'calidad@360servicorp.com'),
+        'name' => env('MAIL_FROM_NAME', 'CRM Seguros'),
     ],
 
     /*

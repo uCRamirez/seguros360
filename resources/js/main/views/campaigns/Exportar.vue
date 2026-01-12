@@ -13,8 +13,8 @@
 							mode="multiple" style="width: 100%" optionFilterProp="title" show-search
 							@change="campaignChanged">
 
-							<a-select-option v-for="campaign in campaigns_list" :key="campaign.xid" :title="campaign.name"
-								:value="campaign.id" :campaign="campaign">
+							<a-select-option v-for="campaign in campaigns_list" :key="campaign.xid"
+								:title="campaign.name" :value="campaign.id" :campaign="campaign">
 								{{ campaign.name }}
 							</a-select-option>
 
@@ -27,7 +27,8 @@
 					<a-form-item :label="$t('campaign.time_range')" name="time_range"
 						:help="rules.time_range ? $t('campaign.time_range') : null"
 						:validateStatus="rules.time_range ? 'error' : null" class="required">
-						<a-range-picker style="width: 100%;" v-model:value="time_range" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss" show-time/>
+						<a-range-picker style="width: 100%;" v-model:value="time_range" format="YYYY-MM-DD HH:mm:ss"
+							value-format="YYYY-MM-DD HH:mm:ss" show-time />
 					</a-form-item>
 
 				</a-col>
@@ -47,7 +48,7 @@
 	</a-modal>
 </template>
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import { PlusOutlined, LoadingOutlined, CloudDownloadOutlined } from "@ant-design/icons-vue";
 import apiAdmin from "../../../common/composable/apiAdmin";
 import { notification } from "ant-design-vue";
@@ -73,7 +74,7 @@ export default defineComponent({
 		const { loading, rules } = apiAdmin();
 		const campaigns_filter = ref([]);
 		const time_range = ref([]);
-        const { t } = useI18n();
+		const { t } = useI18n();
 
 		const onSubmit = () => {
 			loading.value = true;
@@ -94,10 +95,10 @@ export default defineComponent({
 
 			axiosAdmin.post(
 				`campaigns/export-report/${campaigns_filter.value}/${time_range?.value[0]}/${time_range?.value[1]}`,
-			{},
-			{
-				responseType: "blob",
-			})
+				{},
+				{
+					responseType: "blob",
+				})
 				.then(response => {
 					// Response is a blob type object
 
@@ -144,6 +145,12 @@ export default defineComponent({
 		};
 
 
+		watch(() => props.visible, newVal => {
+			if (newVal) {
+				campaigns_filter.value = [];
+				time_range.value = [];
+			}
+		});
 
 		return {
 			time_range,

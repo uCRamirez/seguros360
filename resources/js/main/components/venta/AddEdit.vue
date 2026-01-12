@@ -286,15 +286,15 @@
 
                             <div class="d-flex">
                                 <!-- precio y monto total -->
-                                <a-col :xs="24" :sm="24" :md="12" :lg="12">
+                                <a-col :xs="24" :sm="24" :md="datosProducto.producto.digitar_precio ? 6 : 12" :lg="datosProducto.producto.digitar_precio ? 6 : 12">
                                     <a-form-item class="label-bold" name="precio" :label="$t('lead.price')">
                                         <!-- 1) Si hay más de un producto candidato: select de precios -->
                                         <a-select v-if="matchingProducts.length > 1"
                                             v-model:value="datosProducto.producto.price"
                                             :placeholder="$t('common.select_default_text', [$t('lead.price')])"
                                             style="width: 100%;" show-search option-filter-prop="title" allowClear>
-                                            <a-select-option v-for="p in matchingProducts" :key="p.xid"
-                                                :value="p.price" :title="formatAmountCurrency(p.price)">
+                                            <a-select-option v-for="p in matchingProducts" :key="p.xid" :value="p.price"
+                                                :title="formatAmountCurrency(p.price)">
                                                 {{ formatAmountCurrency(p.price) }}
                                             </a-select-option>
                                         </a-select>
@@ -305,8 +305,16 @@
                                             style="width:100%" />
 
                                         <!-- 3) Si aún no hay cobertura o candidatos: campo bloqueado vacío -->
-                                        <a-input-number v-else :value="formatAmountCurrency(datosProducto.producto.price)"
-                                            disabled style="width:100%" />
+                                        <a-input-number v-else
+                                            :value="formatAmountCurrency(datosProducto.producto.price)" disabled
+                                            style="width:100%" />
+                                    </a-form-item>
+                                </a-col>
+
+                                <!-- Monto a digitar -->
+                                <a-col :xs="24" :sm="24" :md="6" :lg="6" v-if="datosProducto.producto.digitar_precio">
+                                    <a-form-item class="label-bold" :label="$t('lead.price')">
+                                        <a-input-number v-model:value="datosProducto.producto.precio_digitado" :min="0" style="width:100%" />
                                     </a-form-item>
                                 </a-col>
                                 <a-col :xs="24" :sm="24" :md="12" :lg="12">
@@ -332,7 +340,7 @@
                                     <template #bodyCell="{ column, record }">
 
                                         <template v-if="column.dataIndex === 'price'">
-                                                {{ formatAmountCurrency(record.price)}}
+                                            {{ formatAmountCurrency(record.precio_digitado  > 0 ? record.precio_digitado : record.price) }}
                                         </template>
 
                                         <template v-if="column.dataIndex === 'action'">
@@ -529,7 +537,9 @@ function getEmptyProducto() {
         name: null,
         coverage: null,
         price: 0,
+        precio_digitado: 0,
         cantidadProducto: 0,
+        digitar_precio: false,
     };
 }
 
@@ -646,20 +656,29 @@ export default defineComponent({
                 return;
             }
 
+            const yaExiste = table.data.some(item => item.xid === p.idProducto);
+            if (yaExiste) {
+                message.warning(t("messages.product_already_added") || "Este producto ya fue agregado");
+                return;
+            }
+
+            let precio = p.digitar_precio && p.precio_digitado > 0 ? parseFloat(p.precio_digitado) : parseFloat(p.price);
             const nuevo = {
-                xid:     p.idProducto,                  
+                xid: p.idProducto,
                 internal_code: p.internal_code,
-                name:    p.name,                   
-                coverage:p.coverage,
-                price:   p.price,
-                product_quantity: p.cantidadProducto
+                name: p.name,
+                coverage: p.coverage,
+                price: p.price,
+                product_quantity: p.cantidadProducto,
+                precio_digitado: p.precio_digitado,
+                digitar_precio: p.digitar_precio,
             };
 
             table.data = [...table.data, nuevo];
             table.pagination.total = table.data.length;
 
             const totalActual = parseFloat(datos.venta.montoTotal) || 0;
-            const incremento  = parseFloat(p.price) * parseFloat(p.cantidadProducto);
+            const incremento = parseFloat(precio) * parseFloat(p.cantidadProducto);
             datos.venta.montoTotal = Number((totalActual + incremento).toFixed(2));
 
             Object.assign(datosProducto.producto, getEmptyProducto());
@@ -669,8 +688,9 @@ export default defineComponent({
             // 1) Busca el ítem a eliminar
             const item = table.data.find(row => row.xid === xid);
             if (item) {
+                let precio = item.precio_digitado > 0 ? item.precio_digitado : item.price;
                 // 2) Resta subtotal (price * cantidad) de datos.venta.montoTotal
-                datos.venta.montoTotal -= item.price * item.product_quantity;
+                datos.venta.montoTotal -= precio * item.product_quantity;
             }
             
             // 3) Luego filtra el array
@@ -767,6 +787,7 @@ export default defineComponent({
             }
             datosProducto.producto.coverage = null;
             datosProducto.producto.price = 0;
+            datosProducto.producto.digitar_precio = false;
         });
 
         watch(() => datosProducto.producto.name, prod => {
@@ -775,6 +796,7 @@ export default defineComponent({
                 datosProducto.producto.internal_code = null;
             }
             datosProducto.producto.coverage = null;
+            datosProducto.producto.digitar_precio = false;
         });
 
         watch(() => datosProducto.producto.coverage, cov => {
@@ -811,6 +833,7 @@ export default defineComponent({
                     const p = lista[0];
                     datosProducto.producto.idProducto = p.xid;
                     datosProducto.producto.price = p.price;
+                    datosProducto.producto.digitar_precio = p.digitar_precio;
                 } 
                 // else {
                 //     datosProducto.producto.idProducto = null;
@@ -870,8 +893,10 @@ export default defineComponent({
                         internal_code: prod?.internal_code ?? '',
                         name:          prod?.name          ?? '',
                         coverage:      prod?.coverage      ?? '',
-                        price:         item?.precio ?? 0,
+                        price: item?.precio ?? 0,
                         product_quantity: item?.cantidadProducto ?? 0,
+                        precio_digitado: item?.precio_digitado ?? 0,
+                        digitar_precio: item?.precio_digitado > 0 ? true : false,
                     };
                 });
 

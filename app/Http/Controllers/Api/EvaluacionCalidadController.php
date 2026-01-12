@@ -11,6 +11,7 @@ use App\Http\Requests\Api\EvaluacionCalidad\DeleteRequest;
 use App\Models\EvaluacionCalidad;
 use App\Models\EstadoCalidadVenta;
 use App\Models\AccionCalidad;
+use App\Models\Campaign;
 use App\Models\Venta;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +22,12 @@ use App\Notifications\SendLeadMail;
 use Illuminate\Support\Facades\Notification;
 use App\Models\PlantillaCalidad;
 use App\Models\MotivoCancelacion;
+use App\Services\AzureSmtpToken;
+use App\Services\GraphMailService;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Mail\Markdown;
+use App\Models\Product;
+use Carbon\Carbon;
 
 
 class EvaluacionCalidadController extends ApiBaseController
@@ -271,80 +278,89 @@ class EvaluacionCalidadController extends ApiBaseController
     }
 
 
-   protected function generarTemplatecalidad(EvaluacionCalidad $evaluacion, EstadoCalidadVenta $estado, array $data)
+    protected function generarTemplatecalidad(EvaluacionCalidad $evaluacion, EstadoCalidadVenta $estado, array $data)
     {
-        $plantilla = PlantillaCalidad::find($evaluacion->plantilla_id);
-        $accion    = AccionCalidad::find($evaluacion->accion_calidad_id);
+        // \Log::info('EvaluacionCalidad', [$evaluacion]);
+        // \Log::info('EstadoCalidadVenta', [$estado]);
+        // \Log::info('data', [$data]);
 
-        $summary  = "# Resumen de Evaluación de Calidad ". ($data['accion'] === 'edit' ? 'Actualizada ' : '') . "ID #{$evaluacion->id}\n\n";
-        $summary .= "- **Venta ID:** {$data['idVenta']}\n";
-        $summary .= "- **Plantilla:** {$plantilla->nombre}\n";
-        $summary .= "\n## Variables evaluadas\n";
-        // Cabecera
-        $summary .= "| Nombre   | Tipo       | Descripción                   |     Peso    | Marcada |\n";
-        $summary .= "| -------- | ---------- | ----------------------------- | ----------- | ------- |\n";
-        // Filas
-        foreach ($data['variables'] as $var) {
-            $summary .= sprintf(
-                "| %s | %s | %s | %s | %s |\n",
-                $var['nombre'],
-                $var['tipo'] == 'critica'? 'Crítica':'No crítica',
-                $var['descripcion'],
-                $var['tipo'] == 'critica'? 'N/A' :$var['nota_maxima'],
-                $var['marcada'] ? 'Sí' : 'No'
-            );
-        }
-        $summary .= "\n";
+        $campaign = Campaign::find($data['campaign_id'] ?? null);
+        $user = User::find($data['venta']['user_id'] ?? null);
+        $headerLeft = [
+            'Proyecto'          => $campaign->name ?? '—',
+            'Colaborador (TO)'  =>  $user->name   ?? '—',
+            'Fecha Venta'       => isset($data['fecha_venta'])
+                                    ? Carbon::parse($data['fecha_venta'])->format('n/j/Y')
+                                    : (optional($evaluacion->created_at)?->format('n/j/Y') ?? '—'),
+            'Nota obtenida'     => $data['nota_estado'] ?? ($estado->nota_estado ?? 0),
+        ];
 
-        $summary .= "- **NOTA:** {$data['nota_estado']}\n\n";
+        $motivo = MotivoCancelacion::find($estado->motivo_cancelacion_id);
 
-        $summary .= "- **Duración de la llamada:** {$data['duracion']} minutos\n";
-        $summary .= "- **Mención precio en minuto:** {$data['minuto_precio']}\n";
-        $summary .= "- **Cierre de venta:** " . ($data['cierre_venta'] ? 'Sí' : 'No') . "\n";
-        $summary .= "- **Estado de la venta:** {$data['estadoVenta']}\n";
-        $summary .= "- **Estado de llamada:** " . str_replace('_', ' ', $estado->estado) . "\n\n";
+        // Encabezado derecho (como en la imagen)
+        $headerRight = [
+            'Motivo'                     => $motivo->motivo              ?? '—',
+            'Nombre cliente'             => ($data['lead']['nombre'] ?? '') . ' ' . ($data['lead']['apellido1'] ?? '') . ' ' . ($data['lead']['apellido2'] ?? '') ,
+            'ID'                         => $data['lead']['cedula']          ?? ($data['lead']['id'] ?? '—'),
+            'Monto venta'           => $data['venta']['montoTotal'] ?? '—',
+            'Seguro colocado' => !empty($data['venta']['productos'])
+                                    ? collect($data['venta']['productos'])->map(function ($p) {
+                                        $producto = Product::find($p['idProducto']); // busca el producto en BD
+                                        return "{$producto->name} - {$producto->coverage}";
+                                    })->implode("\n")
+                                    : '—',
+            'Tiene cierre de Supervisor' => isset($data['cierre_venta'])
+                                                ? ($data['cierre_venta'] ? 'SI' : 'NO')
+                                                : '—',
+            'Teléfono'                   => $data['venta']['telVenta'] ?? '—',
+        ];
 
-        // Información adicional según estado
-        switch ($estado->estado) {
-            case 'CERTIFICADA':
-                $summary .= "- **Número de póliza:** {$data['numero_poliza']}\n\n";
-                break;
-            case 'RELLAMADA_CERTIFICADA':
-                $summary .= "- **Número de certificado:** {$data['numero_certificado']}\n\n";
-                break;
-            case 'CANCELADA_CALIDAD':
-                $motivo = MotivoCancelacion::find($estado->motivo_cancelacion_id);
-                $summary .= "- **Motivo cancelación:** {$motivo->motivo}\n\n";
-                break;
-            case 'REASIGNADA':
-                $us = User::find($estado->reasignado_a);
-                $summary .= "- **Reasignada a:** {$us->name}\n\n";
-                break;
-        }
-
-        // Oportunidades de mejora
-        if (!empty($data['oportunidades'])) {
-
-            $ops = AccionCalidad::whereIn('id', $data['oportunidades'])->get();
-            $summary .= "## Oportunidades de mejora identificadas\n";
-
-            foreach ($ops as $op) {
-                $summary .= " - {$op->nombre}" . ($op->descripcion ? ": {$op->descripcion}" : '') . "\n";
+        $incumplimientos = [];
+        if (!empty($evaluacion->variables)) {
+            // Normalizar $vars a arreglo de arreglos
+            $vars = $evaluacion->variables;
+            // Si viene como string JSON -> decodificar
+            if (is_string($vars)) {
+                $decoded = json_decode($vars, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $vars = $decoded;
+                }
             }
-
-            if (!empty($data['comentarios_oportunidades'])) {
-                $summary .= "\n## Comentarios sobre las opciones de mejora\n{$data['comentarios_oportunidades']}\n";
+            // Si viene como objeto stdClass -> a arreglo
+            if (is_object($vars)) {
+                $vars = json_decode(json_encode($vars), true);
             }
-
-            $summary .= "\n";
+            // Asegurar que es un arreglo indexado
+            if (!is_array($vars)) {
+                $vars = [];
+            }
+            $incumplimientos = collect($vars)
+                ->map(function ($v) {
+                    $nombre = trim(
+                        (string) data_get($v, 'nombre', '')
+                        . ' - '
+                        . (string) data_get($v, 'descripcion', '')
+                    );
+                    return [
+                        'nombre'  => $nombre === '-' ? '' : $nombre,
+                        'marcada' => (bool) data_get($v, 'marcada', false),
+                    ];
+                })
+                ->values()
+                ->all();
         }
 
-        // Comentarios generales
-        if (!empty($data['comentarios'])) {
-            $summary .= "## Comentarios generales\n{$data['comentarios']}\n";
-        }
-
-        return $summary;
+        return [
+            // títulos
+            'titulo'            => 'DETALLE DE CALIDAD REALIZADA',
+            // encabezados
+            'header_left'       => $headerLeft,
+            'header_right'      => $headerRight,
+            // secciones grandes
+            'incumplimientos'   => $incumplimientos,                 // solo se listan los true en la vista
+            'comentarios'       => $data['comentarios'] ?? ($estado->comentarios ?? ''), // "Detalle de la escucha"
+            'mejoras'           => $data['comentarios_oportunidades']     ?? '',     // "Cuál era la forma correcta"
+        ];
     }
 
 
@@ -352,35 +368,31 @@ class EvaluacionCalidadController extends ApiBaseController
     {
         $user = user();
         $users_ids[] = $user->id;
-        // if($data['estado'] === 'REASIGNADA'){
-        //     $users_ids[] = $data['reasignado_a'];
-        // }
 
-        // \Log::info('users_ids', $users_ids);
-
-        // Recuperar solo emails válidos
         $toList = User::whereIn('id', $users_ids)
                     ->pluck('email')
-                    ->filter()      // quita null/strings vacíos
-                    ->all();        // convierte a array simple
+                    ->filter()      
+                    ->all();        
 
-        // Si no hay destinatarios, salir
         if (empty($toList)) {
             \Log::warning('envioMailCalidad: acción sin destinatarios válidos.');
             return;
         }
         
-        // Armar el template a enviar
         $summary = $this->generarTemplatecalidad($evaluacion, $estado, $data);
 
+        $systemMail = env('AZURE_MAIL_USERNAME');
 
-        // Disparar los mails
-        Notification::route('mail', $toList)
-            ->notify(new SendLeadMail(
-                'Detalle de calidad realizada',
-                $summary,
-                $user->name
-            ));
+        $markdown = app(Markdown::class);
+        $html = $markdown->render('mail.lead_mail', ['content' => $summary])->toHtml();
+
+        app(GraphMailService::class)->sendMail(
+            $systemMail,
+            $toList,
+            'Detalle de calidad realizada',
+            $html
+        );
+
     }
   
 }

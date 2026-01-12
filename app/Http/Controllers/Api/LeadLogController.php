@@ -9,11 +9,14 @@ use App\Http\Requests\Api\LeadLog\UpdateRequest;
 use App\Http\Requests\Api\LeadLog\DeleteRequest;
 use App\Models\LeadLog;
 use App\Models\Lead;
+use App\Models\Campaign;
 use Carbon\Carbon;
 use Examyou\RestAPI\Exceptions\ApiException;
 use App\Models\CampaignUser;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request; 
+use Examyou\RestAPI\ApiResponse;
 
 class LeadLogController extends ApiBaseController
 {
@@ -194,4 +197,35 @@ class LeadLogController extends ApiBaseController
 
         return $leadLog;
     }
+
+    public function addGuid(Request $request){
+        $data = $request->all();
+        \Log::info('addGuid', $data);
+
+        $campaign = $data['campaign'];
+        $campaign = $this->cleanCampaignName($campaign);
+        $campaign = Campaign::where('name', $campaign)->first();
+
+        $guid = $data['guid'];
+        $fecha = $data['date'];
+        $numero = $data['number'];
+
+        $tipificacion = LeadLog::where('campaign_id', $campaign->id)
+            ->where('log_type', 'notes');
+
+
+        
+
+        return ApiResponse::make('success');
+
+    }
+
+    protected function cleanCampaignName(string $name): string
+    {
+        $name = preg_replace('/[-\s]*(<-|->)\s*$/i', '', $name);
+        $name = preg_replace('/[_\s]*(in|out)\s*$/i', '', $name);
+        $name = preg_replace('/_[^_]*$/', '', $name);
+        return $name;
+    }
+
 }

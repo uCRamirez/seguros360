@@ -62,6 +62,7 @@
 				'app_version': "{{ $appVersion }}",
 				'app_env': "{{ $appEnv }}",
 				'app_type': "{{ $appType }}",
+                'ucontact_subdominio': "{{ config('ucontact.subdominio') }}",
             };
     </script>
 

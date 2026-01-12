@@ -319,6 +319,11 @@
                     </a-form-item>
                 </a-col>
             </a-row>
+            <a-row :gutter="16">
+                <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                    <a-checkbox v-model:checked="formData.digitar_precio">{{ $t('product.allows_digitize_price') }}</a-checkbox>
+                </a-col>
+            </a-row>
         </a-form>
         <template #footer>
             <a-space>

@@ -602,9 +602,15 @@ export default defineComponent({
     height: calc(100vh - 62px);
 }
 
-@media only screen and (max-width: 1150px) {
+@media only screen and (max-width: 767px) {
     .ant-layout-sider.ant-layout-sider-collapsed {
         left: -80px !important;
     }
 }
+@media only screen and (min-width: 850px) and (max-width: 1194px) {
+    .ant-layout-sider.ant-layout-sider-collapsed {
+        left: 0px !important;
+    }
+}
+
 </style>

@@ -1,9 +1,9 @@
 <template>
     <AddEdit
         :soloVer="true"
+        :url="addEditUrl"
         :addEditType="addEditType"
         :visible="addEditVisible"
-        :url="addEditUrl"
         @addEditSuccess="onAddEditSuccess"
         @closed="onCloseAddEdit"
         :formData="formData"

@@ -164,6 +164,16 @@ class LangTrans
             'november'  => 'November',
             'december'  => 'December',
             'more_than_on_number' => 'There is more than one contact associated with the phone number.',
+            'operator_equal' => 'Equal',
+            'operator_like' => 'Contains',
+            'operator_not_equal' => 'Not equal',
+            'operator_greater' => 'Greater',
+            'operator_less' => 'Less',
+            'operator_greater_equal' => 'Greater or equal',
+            'operator_less_equal' => 'Less or equal',
+            'operator_starts_with' => 'Starts with',
+            'unassign' => 'Unassign',
+            'delete_message' => 'Do you want to delete this record?'
         ],
         //nuevo
         'bases' => [
@@ -661,7 +671,8 @@ class LangTrans
             'import_products' => 'Import Products',
             'description' => 'Description',
             'campaign' => 'Campaign',
-            'id' => 'Id'
+            'id' => 'Id',
+            'allows_digitize_price' => 'Does it allow you to enter the price?'
         ],
         'category' => [
             'add' => 'Add New Category',
@@ -1122,6 +1133,8 @@ class LangTrans
             'company_admin_password_message' => 'Admin will login using this password. (Leave blank to keep current password)',
             'email_setting_not_configured' => 'Email setting not configured',
             'please_configure_email_settings' => 'Please configure your email settings to send emails. Click Here to configure email settings.',
+            'product_already_added' => 'This product is already added.',
+            'must_end_call' => 'You must end the call before saving.'
         ],
         'popover' => [
             'auto_detect_timezone' => 'Allow auto detect timezone from browser for currently logged in user.',

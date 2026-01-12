@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, ref, onMounted } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
 import { SnippetsOutlined } from "@ant-design/icons-vue";
 
 export default defineComponent({

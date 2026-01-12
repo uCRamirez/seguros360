@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->string('login_card_color', 20)->default("#082b4e");
+        Schema::table('productos_ventas', function (Blueprint $table) {
+            $table->decimal('precio_digitado', 12, 2)->default(0.00)->comment('Si hay precio digitado, es el que se usa para el total')->after('precio');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('login_card_color');
+        Schema::table('productos_ventas', function (Blueprint $table) {
+            $table->dropColumn('precio_digitado');
         });
     }
 };

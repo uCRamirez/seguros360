@@ -116,7 +116,7 @@ campaignDetails, campaignDetailsKey
                 </div>
             </a-col>
             <a-col :xs="24" :sm="24" :md="24" :lg="18" :xl="18">
-                <a-card class="callmanager-middle-sidebar">
+                <a-card class="callmanager-middle-sidebar" style="overflow: auto; scrollbar-width: none;">
                     <a-tabs v-model:activeKey="activeKey">
 
                         <!-- Tab con informacion del lead -->
@@ -1151,7 +1151,7 @@ import {
     IeOutlined,
     PlusOutlined,
 } from "@ant-design/icons-vue";
-import { Modal, notification } from "ant-design-vue";
+import { Modal, notification, message } from "ant-design-vue";
 import { useRoute, useRouter } from "vue-router";
 import { forEach, find } from "lodash-es";
 import { useI18n } from "vue-i18n";
@@ -1175,8 +1175,6 @@ import functions from "./functions.js";
 import esES from 'ant-design-vue/es/locale/es_ES';
 import enUS from 'ant-design-vue/es/locale/en_US';
 import dayjs from 'dayjs';
-import axios from "axios";
-
 
 export default {
     components: {
@@ -1324,8 +1322,8 @@ export default {
             fetchLocalidades();
             fetchAgenteCampanas();
             if (route.params.id) {
+                parametroPhone = true;
                 if (route.params.id.startsWith("phone")) {
-                    parametroPhone = true;
                     phoneNumber = route.params.id.replace("phone", "");
                     crmSerch.clientSerch.phone = phoneNumber;
                     serchInformationClient();
@@ -1497,7 +1495,7 @@ export default {
 
         const actualizarUphoneCall = () => {
             axiosAdmin.post(`uphone-calls/update-call`, {
-                phone: phoneNumber,
+                phone: phoneNumber ? phoneNumber : crmState.client.tel1,
                 campaign_id: crmState.client.campaign.id,
                 lead_id: crmState.client.xid
             }).then(res => {
@@ -1660,7 +1658,6 @@ export default {
         }
         );
 
-
         return {
             // En uso
             antdLocale,
@@ -1730,7 +1727,7 @@ export default {
 
 <style scoped>
 .callmanager-left-sidebar {
-    height: calc(110vh - 90px);
+    height: calc(110vh - 80px);
 }
 
 .callmanager-left-sidebar .ps {
@@ -1738,7 +1735,7 @@ export default {
 }
 
 .callmanager-middle-sidebar {
-    height: calc(110vh - 90px);
+    height: calc(110vh - 72px);
 }
 
 .callmanager-middle-sidebar .ps {
@@ -1746,6 +1743,20 @@ export default {
 }
 
 .callmanager-right-sidebar {
-    height: calc(82vh - 99px);
+    height: calc(100vh);
 }
+
+:deep(.callmanager-right-sidebar) {
+  overflow: hidden !important;
+}
+
+:deep(.callmanager-right-sidebar .ant-card-body) {
+  overflow: hidden !important;
+}
+
+:deep(.callmanager-right-sidebar .ps__rail-y),
+:deep(.callmanager-right-sidebar .ps__rail-x) {
+  display: none !important;
+}
+
 </style>

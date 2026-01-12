@@ -12,7 +12,7 @@ class CreateSincronizarSpProcedure extends Migration
 
         // 2) creamos SP con DEFINER y toda la lógica
         DB::unprepared(<<<'SQL'
-            CREATE DEFINER=`root`@`localhost` PROCEDURE `bd_seguros`.`sincronizarInformacionBaseLeads`(
+            CREATE DEFINER=`root`@`localhost` PROCEDURE `sincronizarInformacionBaseLeads`(
                 IN p_campaign_id INT,
                 IN p_nombreBase VARCHAR(191),
                 IN p_myId INT,
@@ -254,7 +254,8 @@ class CreateSincronizarSpProcedure extends Migration
                                     WHEN leads.etapa = 'Reproceso' AND leads.updated_at >= DATE_SUB(NOW(), INTERVAL 3 MONTH) THEN 'No aplica'
                                     ELSE leads.etapa
                                 END,
-                    leads.updated_at        = CURRENT_TIMESTAMP;
+                    leads.updated_at        = CURRENT_TIMESTAMP,
+                    leads.active = CASE WHEN leads.active = 0 THEN 1 ELSE leads.active END;
                 
                 -- 5) Intentar obtener la última etapa y fecha de creación para esta base
                 SELECT bh.etapa, bh.created_at
@@ -264,7 +265,6 @@ class CreateSincronizarSpProcedure extends Migration
                 AND bh.campaign_id = p_campaign_id
                 ORDER BY bh.created_at DESC
                 LIMIT 1;
-
 
                 -- 6) Calcular la etapa final teniendo en cuenta base nueva
                 IF v_prev_etapa IS NULL THEN

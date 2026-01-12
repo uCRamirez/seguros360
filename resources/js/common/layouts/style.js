@@ -33,6 +33,18 @@ const MainArea = Styled("div", props)`
 	widht:${({ innerWidth, rightSidebarValue }) =>
         rightSidebarValue == false ? "100%" : "81%"}
 	min-height: 100vh;
+	
+	// Tablets (iPad)
+	@media (min-width: 768px) and (max-width: 1024px) {
+		widht: ${({ rightSidebarValue }) =>
+            rightSidebarValue == false ? "100%" : "65%"};
+	}
+	
+	// Tablets pequeñas
+	@media (min-width: 600px) and (max-width: 767px) {
+		widht: ${({ rightSidebarValue }) =>
+            rightSidebarValue == false ? "100%" : "60%"};
+	}
 `;
 
 const HeaderRightIcons = Styled("div", props)`
@@ -128,7 +140,22 @@ const MainContentArea = Styled("div", props)`
 	`;
 //for right side bar//
 const RightSidebar = Styled("div", props)`
-	width: ${({ rightSidebarValue }) => (rightSidebarValue == false ? "0%" : "19%")}
+	width: ${({ rightSidebarValue }) => (rightSidebarValue == false ? "0%" : "25%")};
+	
+	// Tablets (iPad)
+	@media (min-width: 768px) and (max-width: 1024px) {
+		width: ${({ rightSidebarValue }) => (rightSidebarValue == false ? "0%" : "35%")};
+	}
+	
+	// Tablets pequeñas
+	@media (min-width: 600px) and (max-width: 767px) {
+		width: ${({ rightSidebarValue }) => (rightSidebarValue == false ? "0%" : "45%")};
+	}
+
+    // Celulares
+    @media (max-width: 599px) {
+		width: ${({ rightSidebarValue }) => (rightSidebarValue == false ? "0%" : "0%")};
+    }
 `;
 export {
     Div,

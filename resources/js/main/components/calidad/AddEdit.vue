@@ -268,17 +268,18 @@
                             <a-col :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: 6 }" :lg="{ span: 6 }">
                                 <a-form-item name="minuto_precio" :label-col="{ span: 24 }"
                                     :label="$t('message_template.minute')" class="required label-bold">
-                                    <a-input-number v-model:value="datos.calidad.minuto_precio" style="width:100%"
-                                        :placeholder="$t('message_template.minute')" :min="0" :max="59" />
+                                    <!-- <a-input-number v-model:value="datos.calidad.minuto_precio" style="width:100%"
+                                        :placeholder="$t('message_template.minute')" :min="0" :max="59" /> -->
+                                    <a-time-picker style="width: 100%;" v-model:value="datos.calidad.minuto_precio" format="HH:mm:ss" value-format="HH:mm:ss" :showNow="false" :allowClear="false" :placeholder="$t('message_template.minute')"/>
                                 </a-form-item>
                             </a-col>
-
 
                             <a-col :xs="{ span: 24 }" :sm="{ span: 24 }" :md="{ span: 6 }" :lg="{ span: 6 }">
                                 <a-form-item name="duracion" :label-col="{ span: 24 }" :label="$t('lead.call_duration')"
                                     class="required label-bold">
-                                    <a-input-number v-model:value="datos.calidad.duracion" style="width:100%"
-                                        :placeholder="$t('lead.call_duration')" :min="0" />
+                                    <!-- <a-input-number v-model:value="datos.calidad.duracion" style="width:100%"
+                                        :placeholder="$t('lead.call_duration')" :min="0" /> -->
+                                        <a-time-picker style="width: 100%;" v-model:value="datos.calidad.duracion" format="HH:mm:ss" value-format="HH:mm:ss" :showNow="false" :allowClear="false" :placeholder="$t('lead.call_duration')"/>
                                 </a-form-item>
                             </a-col>
 
@@ -301,8 +302,6 @@
                         </a-row>
 
                         <a-row :gutter="[16, 16]">
-
-
 
                             <a-col :xs="{ span: 24 }" :sm="{ span: 24 }"
                                 :md="{ span: datos.calidad.cierre_venta ? 6 : 12 }"
@@ -849,6 +848,10 @@ export default defineComponent({
             loading.value = true;
             try {
                 await formRef.value.validate();
+                datos.calidad.campaign_id = props?.data?.campaign_id ?? props?.data?.lead?.campaign?.id;
+                datos.calidad.fecha_venta = props?.data?.date_time?? null;
+                datos.calidad.lead = props?.data?.lead;
+                datos.calidad.venta = props?.data?.is_sale ?? null;
                 datos.calidad.nota_estado = calificacion.value;
                 datos.calidad.user_id = props.data.is_sale && props.data.is_sale.user ? props.data.is_sale.user.id : null;
                 if(datos.calidad.accion === 'edit') {

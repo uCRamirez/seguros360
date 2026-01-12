@@ -74,7 +74,7 @@
                                 {{ record.cedula ?? '' }}
                             </template>
                             <template v-if="column.dataIndex === 'nombre'">
-                                {{ `${record.nombre} ${record?.apellido1} ${record?.apellido2}` }}
+                                {{ `${record?.nombre ?? ``} ${record?.apellido1 ?? ``} ${record?.apellido2 ?? ``}` }}
                             </template>
                             <template v-if="column.dataIndex === 'edad'">
                                 {{ record.edad ?? '' }}
@@ -184,7 +184,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, watch } from "vue";
+import { defineComponent, ref, reactive, watch, onMounted } from "vue";
 import {
     MinusSquareOutlined,
     SaveOutlined,
@@ -244,7 +244,6 @@ export default defineComponent({
         const noContacto = ref(null);
         const asignacionProgramada = ref(false);
         const fechaProgramada = ref(null);
-
 
         const tableClienteSerch = reactive({
             data: [],
@@ -450,7 +449,6 @@ export default defineComponent({
                 }
             }
         );
-
 
         const drawerWidth = window.innerWidth <= 991 ? "90%" : "70%";
 

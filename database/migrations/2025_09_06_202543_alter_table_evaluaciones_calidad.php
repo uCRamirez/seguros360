@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->string('login_card_color', 20)->default("#082b4e");
+        Schema::table('evaluaciones_calidad', function (Blueprint $table) {
+            $table->string('duracion', 16)->change();
+            $table->string('minuto_precio', 16)->change();
         });
     }
 
@@ -21,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('login_card_color');
+        Schema::table('evaluaciones_calidad', function (Blueprint $table) {
+            $table->integer('duracion')->change();
+            $table->integer('minuto_precio')->change();
         });
     }
 };

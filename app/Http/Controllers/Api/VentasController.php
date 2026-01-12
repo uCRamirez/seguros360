@@ -29,8 +29,8 @@ class VentasController extends ApiBaseController
     {
         $data = $request->validated();
 
+        // \Log::info('DATA LLEGO', ['data' => $data]);
         if ($data['accion'] === 'add') {
-            // \Log::info('saveVenta - add', ['data' => $data]);
 
             DB::beginTransaction();
             try {
@@ -40,14 +40,13 @@ class VentasController extends ApiBaseController
                 $productos = json_decode($data['productos'], true);
 
                 foreach ($productos as $item) {
-
                     ProductosVenta::create([
                         'idVenta'           => $venta->idVenta,
                         'idProducto'        => $this->getIdFromHash($item['xid']) ?: null,
                         'cantidadProducto'  => $item['product_quantity'],
                         'precio'            => $item['price'],
+                        'precio_digitado'   => $item['precio_digitado'] ?? 0,
                     ]);
-
                 }
 
                 DB::commit();
@@ -86,6 +85,7 @@ class VentasController extends ApiBaseController
                         'idProducto'        => $this->getIdFromHash($item['xid']) ?: null,
                         'cantidadProducto'  => $item['product_quantity'],
                         'precio'            => $item['price'],
+                        'precio_digitado'   => $item['precio_digitado'] ?? 0,
                     ]);
                 }
             }

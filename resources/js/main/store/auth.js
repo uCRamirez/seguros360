@@ -2,6 +2,7 @@ import { notification } from "ant-design-vue";
 import moment from "moment";
 import router from "../router";
 const AUTH_USER = "auth_user";
+const AUTH_USER_UCONTCT = "auth_user_ucontact";
 const THEME_MODE = "theme_mode";
 const AUTH_TOKEN = "auth_token";
 const EXIPRES_KEY = "expire_key";
@@ -42,6 +43,7 @@ export default {
     state() {
         return {
             user: getJSONFromLocalStorage(AUTH_USER),
+            user_ucontact: getJSONFromLocalStorage(AUTH_USER_UCONTCT),
             themeMode: window.localStorage.getItem(THEME_MODE) || "light",
             allLangs: getJSONFromLocalStorage(ALL_LANGS) || [],
             lang: window.localStorage.getItem(SELECTED_LANG) || "en",
@@ -79,6 +81,10 @@ export default {
         updateUser(state, user) {
             state.user = user;
             window.localStorage.setItem(AUTH_USER, JSON.stringify(user));
+        },
+        updateUseruContact(state, data) {
+            state.user_ucontact = data;
+            window.localStorage.setItem(AUTH_USER_UCONTCT, JSON.stringify(data));
         },
         updateThemeMode(state, themeMode) {
             state.themeMode = themeMode;

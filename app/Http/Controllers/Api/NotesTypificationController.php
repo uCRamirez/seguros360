@@ -30,6 +30,34 @@ class NotesTypificationController extends ApiBaseController
     protected $updateRequest = UpdateRequest::class;
     protected $deleteRequest = DeleteRequest::class;
 
+    public function destroy(...$args)
+    {
+        \DB::beginTransaction();
+
+        $xid = last($args);
+        $id  = \Vinkla\Hashids\Facades\Hashids::decode($xid)[0];
+
+        // Validación del request delete
+        $this->validate();
+
+        /** @var \Illuminate\Database\Eloquent\Model $obj */
+        $this->setQuery(call_user_func($this->model . '::query'));
+        // $this->modify(); // respeta filtros/tenant si los hubiera
+        $obj = $this->getQuery()->findOrFail($id);
+
+        
+        $obj->status = 0;
+        $obj->save();
+
+        \DB::commit();
+
+        return \Examyou\RestAPI\ApiResponse::make(
+            'Resource inactivated instead of deleted',
+            ['xid' => $obj->xid],
+            $this->getMetaData(true)
+        );
+    }
+
     protected function modifyIndex($query)
     {
         $request = request();
@@ -38,6 +66,7 @@ class NotesTypificationController extends ApiBaseController
             $searchString = $request->name;
             $query = $query->where('notes_typifications.name', 'like', '%' . $searchString . '%');
         }
+        $query = $query->where('status', 1);
 
         return $query;
     }
