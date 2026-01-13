@@ -8,13 +8,13 @@ const fields = (props) => {
     const leadUrl =
         "lead{id,xid,cedula,nombre,apellido1,apellido2,fechaNacimiento,edad,nacionalidad,nombreBase,tel1,email,lead_data,started,campaign_id,x_campaign_id,time_taken,first_action_by,x_first_action_by,last_action_by,x_last_action_by,assign_to},lead:campaign{id,xid,name,status},lead:firstActioner{id,xid,name},lead:lastActioner{id,xid,name}";
     const url = 
-        `lead-logs?fields=id,xid,log_type,time_taken,campaign_id,x_campaign_id,next_contact,date_time,user_id,x_user_id,notes,phone,message,user{id,xid,name,profile_image,profile_image_url},lead_id,x_lead_id,notes_file,notes_file_url,${leadUrl},campaign_id,notes_typification_id_1,x_notes_typification_id_1,notes_typification_id_2,x_notes_typification_id_2,notes_typification_id_3,x_notes_typification_id_3,notes_typification_id_4,x_notes_typification_id_4,notes_typification_name_1,notes_typification_name_2,notes_typification_name_3,notes_typification_name_4,isSale{idVenta,idNota,idLead,user_id,telVenta,estadoVenta,tarjeta,aplicaBeneficiarios,cantidadBeneficiarios,beneficiarios,aplicaBeneficiariosAsist,cantidadBeneficiariosAsist,beneficiariosAsist,montoTotal,calidad},isSale:productos{x_id_producto,idProducto,cantidadProducto,precio,precio_digitado},isSale:user{id,xid,name}}&limit=300`;
+        `lead-logs?fields=id,xid,log_type,time_taken,campaign_id,x_campaign_id,next_contact,date_time,user_id,x_user_id,notes,guid,phone,message,user{id,xid,name,profile_image,profile_image_url},lead_id,x_lead_id,notes_file,notes_file_url,${leadUrl},campaign_id,notes_typification_id_1,x_notes_typification_id_1,notes_typification_id_2,x_notes_typification_id_2,notes_typification_id_3,x_notes_typification_id_3,notes_typification_id_4,x_notes_typification_id_4,notes_typification_name_1,notes_typification_name_2,notes_typification_name_3,notes_typification_name_4,isSale{idVenta,idNota,idLead,user_id,telVenta,estadoVenta,tarjeta,aplicaBeneficiarios,cantidadBeneficiarios,beneficiarios,aplicaBeneficiariosAsist,cantidadBeneficiariosAsist,beneficiariosAsist,montoTotal,calidad},isSale:productos{x_id_producto,idProducto,cantidadProducto,precio,precio_digitado},isSale:user{id,xid,name}}&limit=300`;
     const allFormFieldNames = ref([]);
     const addEditUrl = "lead-logs";
     const hashableColumns = ["lead_id", "campaign_id", "user_id", "notes_typification_id_1", "notes_typification_id_2", "notes_typification_id_3","notes_typification_id_4"];
     // const formFieldNamesUrl = "form-field-names/all";
     const urlProductos =
-    "products?fields=id,xid,name,coverage,price,campaign_id,x_campaign_id,product_type,tax_rate,tax_label,image,image_url,internal_code,digitar_precio,category_id,x_category_id,categories{id,xid,name},campaigns{id,xid,name}&limit=1000";
+    "products?fields=id,xid,name,coverage,price,campaign_id,x_campaign_id,product_type,tax_rate,tax_label,image,image_url,internal_code,digitar_precio,currency_id,x_currency_id,currency{id,xid,name,code,symbol,position},category_id,x_category_id,categories{id,xid,name},campaigns{id,xid,name}&limit=1000";
 
     const { t } = useI18n();
     const initData = {
@@ -27,6 +27,7 @@ const fields = (props) => {
         notes_typification_id_3: undefined,
         notes_typification_id_4: undefined,
         is_sale: undefined,
+        guid: "",
         phone: "",
         message: "",
         next_contact: ""
@@ -39,6 +40,7 @@ const fields = (props) => {
             {
                 title: t("lead.document"),
                 dataIndex: "cedula",
+                // width: 100,
             },
             {
                 title: t("lead.name"),
@@ -53,8 +55,8 @@ const fields = (props) => {
                 dataIndex: "notes",
                 width:
                     props.showLeadDetails && props.showFormFields
-                        ? "35%"
-                        : "40%",
+                        ? "30%"
+                        : "35%",
             },
             {
                 title: t("common.action"),

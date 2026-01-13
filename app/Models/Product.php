@@ -20,18 +20,20 @@ class Product extends BaseModel implements Auditable
 
     protected $hidden = ['category_id'];
 
-    protected $appends = ['xid', 'image_url','x_category_id','x_campaign_id'];
+    protected $appends = ['xid', 'image_url','x_category_id','x_campaign_id','x_currency_id'];
 
-    protected $filterable = ['name','coverage', 'internal_code','category_id','campaign_id','nombreBase','status','digitar_precio'];
+    protected $filterable = ['name','coverage', 'internal_code','category_id','campaign_id','currency_id','nombreBase','status','digitar_precio'];
 
     protected $hashableGetterFunctions = [
         'getXCategoryIdAttribute' => 'category_id',
         'getXCampaignIdAttribute' => 'campaign_id',
+        'getXCurrencyIdAttribute' => 'currency_id',
     ];
 
     protected $casts = [
         'category_id' => Hash::class . ':hash',
         'campaign_id' => Hash::class . ':hash',
+        'currency_id' => Hash::class . ':hash',
     ];
 
     protected static function boot()
@@ -56,5 +58,11 @@ class Product extends BaseModel implements Auditable
         $productImagePath = Common::getFolderPath('productImagePath');
 
         return $this->image == null ? asset('images/product.png') : Common::getFileUrl($productImagePath, $this->image);
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+        // return $this->belongsTo(Currency::class, 'currency_id', 'id');
     }
 }

@@ -357,7 +357,7 @@ const common = () => {
             var newAmountString = `${newAmount}${currency.symbol}`;
         }
 
-        return amount < 0 ? `- ${newAmountString}` : newAmountString;
+        return amount < 0 ? `${newAmountString}` : newAmountString;
     };
 
     const calculateFilterString = (filters) => {

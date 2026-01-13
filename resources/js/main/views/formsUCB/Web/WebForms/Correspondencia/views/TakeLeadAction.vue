@@ -5,7 +5,7 @@
         ">
 
         <a-row>
-            <a-col :xs="24" :sm="24" :md="24" :lg="6" :xl="6" class="bg-setting-sidebar" :style="themeMode == 'dark'
+            <a-col :xs="24" :sm="24" :md="24" :lg="5" :xl="5" class="bg-setting-sidebar" :style="themeMode == 'dark'
                     ? { background: '#141414 !important' }
                     : { background: '#fff !important' }
                 ">
@@ -115,7 +115,7 @@ campaignDetails, campaignDetailsKey
                     </perfect-scrollbar>
                 </div>
             </a-col>
-            <a-col :xs="24" :sm="24" :md="24" :lg="18" :xl="18">
+            <a-col :xs="24" :sm="24" :md="24" :lg="19" :xl="19">
                 <a-card class="callmanager-middle-sidebar" style="overflow: auto; scrollbar-width: none;">
                     <a-tabs v-model:activeKey="activeKey">
 

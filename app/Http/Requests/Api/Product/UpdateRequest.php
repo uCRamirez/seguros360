@@ -30,6 +30,7 @@ class UpdateRequest extends BaseRequest
             'price' => 'required|numeric',
             'internal_code' => 'required',
             'category_id' => 'required',
+            'currency_id' => 'required',
         ];
     }
 }

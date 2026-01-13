@@ -41,7 +41,7 @@ export default defineComponent({
             const actual = JSON.parse(localStorage.getItem("auth_user_ucontact") || "{}") ?? {};
 
             const { action, params } = e || {};
-            if (action === "agentLogin" || action === "agentLogout") return actual;
+            if (action === "agentLogin" || action === "agentLogout") return {};
 
             const normalizeHistory = (h) => {
                 if (Array.isArray(h)) {
@@ -122,25 +122,12 @@ export default defineComponent({
                     makeCallFunction(e);
                     break;
                 case "finishedCall":
-                    // validarGuid(e.data?.params);
                     break;
                 default:
                     break;
             }
 
         };
-
-        async function validarGuid(data) {
-            try {
-                let resp = await axiosAdmin.post('send-guid', { data });
-                if (!resp?.message === 'success') {
-                    console.error("Error al enviar GUID al backend");
-                    return;
-                }
-            } catch (e) {
-                console.error(e);
-            }
-        }
 
         function gettingCallFunction(e) {
             let phone = e.data.params.number;
@@ -413,6 +400,10 @@ export default defineComponent({
     height: calc(100vh);
     position: fixed;
     width: -webkit-fill-available;
+    z-index: 9999;
+    // top: 0;
+    // right: 0;
+    // pointer-events: auto;
 }
 
 .loader {

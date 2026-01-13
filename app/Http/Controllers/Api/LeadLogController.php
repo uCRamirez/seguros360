@@ -198,28 +198,6 @@ class LeadLogController extends ApiBaseController
         return $leadLog;
     }
 
-    public function addGuid(Request $request){
-        $data = $request->all();
-        \Log::info('addGuid', $data);
-
-        $campaign = $data['campaign'];
-        $campaign = $this->cleanCampaignName($campaign);
-        $campaign = Campaign::where('name', $campaign)->first();
-
-        $guid = $data['guid'];
-        $fecha = $data['date'];
-        $numero = $data['number'];
-
-        $tipificacion = LeadLog::where('campaign_id', $campaign->id)
-            ->where('log_type', 'notes');
-
-
-        
-
-        return ApiResponse::make('success');
-
-    }
-
     protected function cleanCampaignName(string $name): string
     {
         $name = preg_replace('/[-\s]*(<-|->)\s*$/i', '', $name);

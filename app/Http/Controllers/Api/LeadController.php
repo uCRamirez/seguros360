@@ -787,51 +787,7 @@ class LeadController extends ApiBaseController
 
         return ApiResponse::make('Lead not found', [], 404);
     }
-    // PARA OBTENER EL CODIGO VALIDANDO DE CUAL CAMPANA ESTA ENTRANDO LA LLAMADA
-    // public function findLeadByPhoneCampaign(Request $request)
-    // {
-    //     $phone = $request->input('phone');
-    //     $campaignName = $request->input('campaign');
 
-    //     if (!$phone) {
-    //         throw new ApiException("Phone number is required");
-    //     }
-    //     if (!$campaignName) {
-    //         throw new ApiException("Campaign is required");
-    //     }
-
-    //     $lead = Lead::join('campaigns', 'campaigns.id', '=', 'leads.campaign_id')
-    //         ->where('campaigns.name', $campaignName)
-    //         ->where(function ($q) use ($phone) {
-    //             $q->where('tel1', $phone)
-    //             ->orWhere('tel2', $phone)
-    //             ->orWhere('tel3', $phone)
-    //             ->orWhere('tel4', $phone)
-    //             ->orWhere('tel5', $phone)
-    //             ->orWhere('tel6', $phone);
-    //         })
-    //         ->select('leads.*')
-    //         ->latest('leads.id') // ordena por id descendente
-    //         ->first();           // trae el último
-
-
-    //     if ($lead) {
-    //         return ApiResponse::make('Lead found', [
-    //             'x_lead_id' => $lead->xid, // Ahora $lead es una instancia de Lead
-    //             'lead'      => $lead,
-    //     ]);
-    //     } else {
-    //         // Si no se encontró el lead, buscamos la campaña por nombre
-    //         $campaign = Campaign::where('name', $campaignName)->first();
-    //         if ($campaign) {
-    //             return ApiResponse::make('Campaign found', [
-    //                 'x_campaign_id' => $campaign->xid,
-    //             ]);
-    //         } else {
-    //             return ApiResponse::make('Campaign not found', [], 404);
-    //         }
-    //     }
-    // }
     public function findLeadByPhoneCampaign(Request $request)
     {
         $phone = $request->input('phone');

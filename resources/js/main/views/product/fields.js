@@ -5,24 +5,29 @@ import { ref } from "vue";
 
 const fields = () => {
     const url =
-        "products?fields=id,xid,name,coverage,digitar_precio,description,nombreBase,digitar_precio,price,status,campaign_id,x_campaign_id,product_type,tax_rate,tax_label,image,image_url,internal_code,category_id,x_category_id,categories{id,xid,name},campaigns{id,xid,name}&filters=status eq 1";
+        "products?fields=id,xid,name,coverage,digitar_precio,description,nombreBase,digitar_precio,price,status,campaign_id,x_campaign_id,product_type,tax_rate,tax_label,image,image_url,internal_code,currency_id,x_currency_id,currency{id,xid,name,code,symbol,position},category_id,x_category_id,categories{id,xid,name},campaigns{id,xid,name}&filters=status eq 1";
     const addEditUrl = "products";
     const { t } = useI18n();
-    const hashableColumns = ["category_id", "campaign_id"];
+    const hashableColumns = ["category_id", "campaign_id", "currency_id"];
     const allCampaigns = ref([]);
+    const currencies = ref([]);
     const { getCampaignUrl } = common();
 
     const getPrefetchData = () => {
         const campaignsUrl = getCampaignUrl();
         const campaignsPromise = axiosAdmin.get(campaignsUrl);
+        const currenciesPromise = axiosAdmin.get("currencies?fields=id,xid,name,symbol,position,code");
 
         return Promise.all([
             campaignsPromise,
+            currenciesPromise,
         ]).then(
             ([
                 campaignsResponse,
+                currenciesResponse,
             ]) => {
                 allCampaigns.value = campaignsResponse.data;
+                currencies.value = currenciesResponse.data;
             }
         );
     };
@@ -41,6 +46,7 @@ const fields = () => {
         internal_code: "",
         category_id: undefined,
         campaign_id: undefined,
+        currency_id: undefined,
         status: 1,
         digitar_precio: 0,
     };
@@ -132,6 +138,7 @@ const fields = () => {
         columns,
         filterableColumns,
         hashableColumns,
+        currencies,
     };
 };
 

@@ -298,6 +298,42 @@
                 </a-col>
             </a-row>
             <a-row :gutter="16">
+                <a-col :xs="24" :sm="24" :md="12" :lg="12">
+                    <a-form-item
+                        :label="$t('company.currency')"
+                        name="currency_id"
+                        :help="
+                            rules.currency_id ? rules.currency_id.message : null
+                        "
+                        :validateStatus="rules.currency_id ? 'error' : null"
+                        class="required"
+                    >
+                        <span style="display: flex">
+                            <a-select
+                                v-model:value="formData.currency_id"
+                                :placeholder="
+                                    $t('common.select_default_text', [
+                                        $t('company.currency'),
+                                    ])
+                                "
+                                :allowClear="true"
+                                optionFilterProp="label"
+                                show-search
+                            >
+                                <a-select-option
+                                    v-for="currency in currencies"
+                                    :key="currency.xid"
+                                    :value="currency.xid"
+                                    :label="currency.name"
+                                >
+                                    {{ currency.name }} ({{ currency.symbol }})
+                                </a-select-option>
+                            </a-select>
+                        </span>
+                    </a-form-item>
+                </a-col>
+            </a-row>
+            <a-row :gutter="16">
                 <a-col :xs="24" :sm="24" :md="24" :lg="24">
                     <a-form-item
                         :label="$t('product.description')"
@@ -370,6 +406,7 @@ export default defineComponent({
         "addEditType",
         "pageTitle",
         "successMessage",
+        "currencies"
     ],
     components: {
         PlusOutlined,

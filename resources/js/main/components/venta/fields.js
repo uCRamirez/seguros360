@@ -14,7 +14,7 @@ const fields = (props) => {
     const addEditUrl = "lead-logs";
     const hashableColumns = ["lead_id", "campaign_id", "user_id", "notes_typification_id_1", "notes_typification_id_2", "notes_typification_id_3","notes_typification_id_4"];
     const urlProductos =
-    "products?fields=id,xid,name,coverage,price,campaign_id,x_campaign_id,product_type,tax_rate,tax_label,image,image_url,internal_code,digitar_precio,category_id,x_category_id,categories{id,xid,name},campaigns{id,xid,name}";
+    "products?fields=id,xid,name,coverage,price,campaign_id,x_campaign_id,product_type,tax_rate,tax_label,image,image_url,internal_code,digitar_precio,currency_id,x_currency_id,currency{id,xid,name,code,symbol,position},category_id,x_category_id,categories{id,xid,name},campaigns{id,xid,name}";
 
     const { t } = useI18n();
     const initData = {

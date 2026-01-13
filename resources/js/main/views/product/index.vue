@@ -148,6 +148,7 @@
             :pageTitle="pageTitle"
             :successMessage="successMessage"
             @categoryReload="setUrlData"
+            :currencies="currencies"
         />
 
         <a-row>
@@ -191,7 +192,7 @@
                                 }}
                             </template>
                             <template v-if="column.dataIndex === 'price'">
-                                {{ formatAmountCurrency(record.price) }}
+                                {{ record.x_currency_id ? formatAmountUsingCurrencyObject(record.price, record.currency) : formatAmountCurrency(record.price) }}
                             </template>
                             <template v-if="column.dataIndex === 'status'">
                                 <a-tag
@@ -271,7 +272,7 @@ export default {
         ImportProducts,
     },
     setup() {
-        const { permsArray, appSetting, formatAmountCurrency } = common();
+        const { permsArray, appSetting, formatAmountCurrency, formatAmountUsingCurrencyObject } = common();
         const {
             url,
             addEditUrl,
@@ -281,6 +282,7 @@ export default {
             hashableColumns,
             getPrefetchData,
             allCampaigns,
+            currencies,
         } = fields();
 
         const { t } = useI18n();
@@ -335,6 +337,8 @@ export default {
             allCampaigns,
             categories,
             sampleFileUrl,
+            currencies,
+            formatAmountUsingCurrencyObject,
         };
     },
 };

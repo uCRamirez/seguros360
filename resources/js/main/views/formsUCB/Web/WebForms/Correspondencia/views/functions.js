@@ -55,8 +55,8 @@ function getEmptyClient() {
         isNew: true,
         toManage: false,
         managing: false,
-        showLogs:false,
-        call_log:{}
+        showLogs: false,
+        call_log: {}
     }
 };
 
@@ -158,26 +158,34 @@ const functionsCRM = () => {
     // message => key of the notification message
     // description => key of the decription 
     const showNotification = (type, message, description) => {
+        const config = {
+            message: t(`common.${message}`),
+            description: t(`lead.${description}`),
+            placement: 'top',
+        };
+
         switch (type) {
             case 'info':
-                notification.info({ message: t(`common.${message}`), description: t(`lead.${description}`) });
+                notification.info(config);
                 break;
 
             case 'success':
-                notification.success({ message: t(`common.${message}`), description: t(`lead.${description}`) });
+                notification.success(config);
                 break;
 
             case 'warning':
-                notification.warning({ message: t(`common.${message}`), description: t(`lead.${description}`) });
+                notification.warning(config);
                 break;
 
             case 'error':
-                notification.error({ message: t(`common.${message}`), description: t(`lead.${description}`) });
+                notification.error(config);
                 break;
+
             default:
                 break;
         }
     };
+
 
     // Funcion para validar parametros de un objeto
     const validarParametros = (val) => val !== undefined && val !== null && val.trim() !== '';
@@ -213,7 +221,7 @@ const functionsCRM = () => {
 
         // Filtro para que cada agente vea solo lo asignado a el, solo el admin o un usuario con permisos vea todo
         if (!permsArray.value.includes('admin')) {
-            
+
             if (!permsArray.value.includes('leads_view_all')) {
                 filters.push(`assign_to eq "${myId.value}"`);
             }
@@ -228,10 +236,10 @@ const functionsCRM = () => {
 
         const fields = [
             // campos base del lead
-            'id', 'xid', 'cedula', 'nombre','segundo_nombre', 'apellido1', 'apellido2','tipo_plan','fechaVencimiento','tipo_tarjeta','emisor','ultimos_digitos',
-            'mes_carga','anno_carga','foco_venta','genero','provincia_voto','etapa','email', 'tel1', 'tel2', 'tel3', 'tel4', 'tel5', 'tel6',
-            'provincia', 'canton', 'distrito', 'hijos', 'fechaNacimiento', 'edad', 'nacionalidad', 'nombreBase','tarjeta',
-            'estadoCivil_id','campaign_id', 'lead_status_id', 'assign_to', 'time_taken',
+            'id', 'xid', 'cedula', 'nombre', 'segundo_nombre', 'apellido1', 'apellido2', 'tipo_plan', 'fechaVencimiento', 'tipo_tarjeta', 'emisor', 'ultimos_digitos',
+            'mes_carga', 'anno_carga', 'foco_venta', 'genero', 'provincia_voto', 'etapa', 'email', 'tel1', 'tel2', 'tel3', 'tel4', 'tel5', 'tel6',
+            'provincia', 'canton', 'distrito', 'hijos', 'fechaNacimiento', 'edad', 'nacionalidad', 'nombreBase', 'tarjeta',
+            'estadoCivil_id', 'campaign_id', 'lead_status_id', 'assign_to', 'time_taken',
             // expansiones
             'campaign{id,xid,name,status,detail_fields,remaining_leads,total_leads,started_on,completed_on}',
             'estadoCivil{id,xid,name,type}',
@@ -335,7 +343,7 @@ const functionsCRM = () => {
     const clearClientSelection = () => {
         // Resetea todo el objeto cliente al estado inicial
         Object.assign(crmState.client, getEmptyClient())
-      
+
         // Resetea el timer si lo necesitas
         timer.reset(crmState.client.time_taken, false)
     };

@@ -73,7 +73,7 @@ const api = () => {
                         notification.success({
                             placement: appSetting.value.rtl
                                 ? "bottomLeft"
-                                : "bottomRight",
+                                : "topLeft",
                             message: t("common.success"),
                             description: configObject.successMessage,
                         });

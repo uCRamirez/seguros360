@@ -126,7 +126,6 @@ ApiRoute::group(['namespace' => 'App\Http\Controllers\Api'], function () {
         ApiRoute::get('message-providers/all', ['as' => 'api.message-providers.all', 'uses' => 'MessageProviderController@allProviders']);
         ApiRoute::resource('message-providers', 'MessageProviderController', $options);
 
-        ApiRoute::post('send-guid', ['as' => 'api.send.guid', 'uses' => 'LeadLogController@addGuid']);
         ApiRoute::resource('lead-logs', 'LeadLogController', $options);
 
         ApiRoute::resource('uphones', 'UphoneCallsController', ['as' => 'api', 'only' => ['index']]);

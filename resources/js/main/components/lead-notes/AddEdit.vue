@@ -1,6 +1,6 @@
 <template>
     <!-- :width="isSale ? 1550 : 600" -->
-    <a-drawer :width="drawerWidth" :open="visible" :closable="false" :centered="true" :title="pageTitle" @ok="onSubmit">
+    <a-drawer placement="left" :width="drawerWidth" :open="visible" :closable="false" :centered="true" :title="pageTitle" @ok="onSubmit">
         <a-form layout="vertical" ref="formRef" :model="datos.venta" :rules="isSale ? validationRules : null">
             <a-row :gutter="[16, 16]">
                 <!-- COLUMNA IZQUIERDA: formulario principal -->
@@ -280,19 +280,19 @@
                                             :placeholder="$t('common.select_default_text', [$t('lead.price')])"
                                             style="width: 100%;" show-search option-filter-prop="title" allowClear>
                                             <a-select-option v-for="p in matchingProducts" :key="p.xid" :value="p.price"
-                                                :title="formatAmountCurrency(p.price)">
-                                                {{ formatAmountCurrency(p.price) }}
+                                                :title="p.x_currency_id ? formatAmountUsingCurrencyObject(p.price,p.currency) : formatAmountCurrency(p.price)">
+                                                {{ p.x_currency_id ? formatAmountUsingCurrencyObject(p.price,p.currency) : formatAmountCurrency(p.price) }}
                                             </a-select-option>
                                         </a-select>
 
                                         <!-- 2) Si hay exactamente uno: lo mostramos en un input bloqueado -->
                                         <a-input-number v-else-if="matchingProducts.length === 1"
-                                            :value="formatAmountCurrency(datosProducto.producto.price)" disabled
+                                            :value="datosProducto.producto.x_currency_id ? formatAmountUsingCurrencyObject(datosProducto.producto.price,datosProducto.producto.currency) : formatAmountCurrency(datosProducto.producto.price)" disabled
                                             style="width:100%" />
 
                                         <!-- 3) Si aún no hay cobertura o candidatos: campo bloqueado vacío -->
                                         <a-input-number v-else
-                                            :value="formatAmountCurrency(datosProducto.producto.price)" disabled
+                                            :value="datosProducto.producto.x_currency_id ? formatAmountUsingCurrencyObject(datosProducto.producto.price,datosProducto.producto.currency) : formatAmountCurrency(datosProducto.producto.price)" disabled
                                             style="width:100%" />
                                     </a-form-item>
                                 </a-col>
@@ -322,8 +322,7 @@
                                     <template #bodyCell="{ column, record }">
 
                                         <template v-if="column.dataIndex === 'price'">
-                                            {{ formatAmountCurrency(record.precio_digitado > 0 ? record.precio_digitado
-                                                : record.price) }}
+                                            {{ record.x_currency_id ? formatAmountUsingCurrencyObject(record.precio_digitado > 0 ? record.precio_digitado : record.price, record?.currency) :formatAmountCurrency(record.precio_digitado > 0 ? record.precio_digitado : record.price) }}
                                         </template>
 
                                         <template v-if="column.dataIndex === 'action'">
@@ -340,8 +339,7 @@
                                     </template>
                                     <template #footer>
                                         <div class="text-center">
-                                            <strong>{{ $t('lead.total_amount') }} : {{
-                                                formatAmountCurrency(datos.venta.montoTotal) }}</strong>
+                                            <strong>{{ $t('lead.total_amount') }} : {{ datos.venta.montoTotal }}</strong>
                                         </div>
                                     </template>
                                 </a-table>
@@ -541,6 +539,8 @@ function getEmptyProducto() {
         precio_digitado: 0,
         cantidadProducto: 0,
         digitar_precio: false,
+        x_currency_id: null,
+        currency: null,
     };
 }
 
@@ -578,7 +578,7 @@ export default defineComponent({
     },
     setup(props, { emit }) {
         const { addEditRequestAdmin, loading, rules } = apiAdmin();
-        const { permsArray, formatAmountCurrency } = common();
+        const { permsArray, formatAmountCurrency, formatAmountUsingCurrencyObject } = common();
         const { locale, t } = useI18n();
         const soloVer = ref(props.soloVer);
 
@@ -678,6 +678,8 @@ export default defineComponent({
                 product_quantity: p.cantidadProducto,
                 precio_digitado: p.precio_digitado,
                 digitar_precio: p.digitar_precio,
+                x_currency_id: p?.x_currency_id,
+                currency: p?.currency,
             };
 
             table.data = [...table.data, nuevo];
@@ -828,6 +830,8 @@ export default defineComponent({
             }
             datosProducto.producto.coverage = null;
             datosProducto.producto.digitar_precio = false;
+            datosProducto.producto.x_currency_id = null;
+            datosProducto.producto.currency = null;
         });
 
         watch(() => datosProducto.producto.coverage, cov => {
@@ -840,6 +844,8 @@ export default defineComponent({
                     : 1
                 )
                 : 0;
+            datosProducto.producto.x_currency_id = finalProduct.value.x_currency_id;
+            datosProducto.producto.currency = finalProduct.value.currency;
             // datos.venta.montoTotal = precio * datosProducto.producto.cantidadProducto;
         });
 
@@ -926,6 +932,8 @@ export default defineComponent({
                         product_quantity: item?.cantidadProducto ?? 0,
                         precio_digitado: item?.precio_digitado ?? 0,
                         digitar_precio: item?.precio_digitado > 0 ? true : false,
+                        x_currency_id: prod?.x_currency_id ?? null,
+                        currency: prod?.currency ?? null,
                     };
                 });
 
@@ -1146,20 +1154,23 @@ export default defineComponent({
                 return;
             }
             try {
-                props.formData.phone = null;
-                props.formData.guid = null;
+                props.formData.phone = props.addEditType === 'add' ? null : props.formData.phone;
+                props.formData.guid = props.addEditType === 'add' ? null : props.formData.guid;
 
-                const phone = await getInteractionInfo('number');
-                const guid = await getInteractionInfo('guid');
-
-                const tels = [
-                    props.leadInfo.tel1, props.leadInfo.tel2, props.leadInfo.tel3,
-                    props.leadInfo.tel4, props.leadInfo.tel5, props.leadInfo.tel6
-                ];
-
-                if (phone && tels.includes(phone)) {
-                    props.formData.phone = phone;
-                    props.formData.guid = guid;
+                if(props.addEditType === 'add'){
+                    const phone = await getInteractionInfo('number');
+                    const guid = await getInteractionInfo('guid');
+    
+    
+                    const tels = [
+                        props.leadInfo?.tel1, props.leadInfo?.tel2, props.leadInfo?.tel3,
+                        props.leadInfo?.tel4, props.leadInfo?.tel5, props.leadInfo?.tel6
+                    ];
+    
+                    if (phone && tels.includes(phone)) {
+                        props.formData.phone = phone;
+                        props.formData.guid = guid;
+                    }
                 }
 
                 props.formData.isSale = isSale.value ? 1 : 0;
@@ -1281,8 +1292,12 @@ export default defineComponent({
         onUnmounted(() => window.removeEventListener('resize', onResize))
 
         const drawerWidth = computed(() => {
-            if (windowWidth.value <= 991) return '90%'
-            return isSale.value ? '86%' : '50%'
+
+            if(windowWidth.value >= 768 && windowWidth.value <= 1194) return '70%'
+            if(windowWidth.value >= 600 && windowWidth.value <= 767) return '60%'
+
+            // if (windowWidth.value <= 991) return '80%'
+            return isSale.value ? '80%' : '50%'
         })
 
         return {
@@ -1313,6 +1328,7 @@ export default defineComponent({
             coverageOptions,
             matchingProducts,
             formatAmountCurrency,
+            formatAmountUsingCurrencyObject,
             notesTypifications,
             parentTypificationData,
             childrenTypificationData,

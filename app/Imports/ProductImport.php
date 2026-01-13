@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Campaign;
+use App\Models\Currency;
 use Examyou\RestAPI\Exceptions\ApiException;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -25,6 +26,8 @@ class ProductImport implements ToArray, WithHeadingRow
             $company = company();
             $contador = 1;
 
+            $allCurrencies = Currency::all();
+
             foreach ($products as $row) {
                 $contador++;
 
@@ -37,7 +40,8 @@ class ProductImport implements ToArray, WithHeadingRow
                     !array_key_exists('price', $row) ||
                     !array_key_exists('tax_rate', $row) ||
                     !array_key_exists('internal_code', $row) ||
-                    !array_key_exists('enter_price', $row)
+                    !array_key_exists('enter_price', $row) ||
+                    !array_key_exists('currency', $row)
                 ) {
                     throw new ApiException('Field missing from header.');
                 }
@@ -118,9 +122,12 @@ class ProductImport implements ToArray, WithHeadingRow
                     $product = new Product();
                 }
 
+                $currencyId = $allCurrencies->where('code', $row['currency'])->value('id');
+
                 $product->name = $productName;
                 $product->coverage = $productCoverage;
                 $product->category_id = $category->id;
+                $product->currency_id = $currencyId ?? null;
                 $product->company_id = $company->id;
                 $product->tax_rate = $taxRate;
                 $product->price = $price;
