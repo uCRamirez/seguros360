@@ -70,7 +70,7 @@
         class="mb-20"
     >
         <!-- El btn de agregar tipificaciones  -->
-        <a-col v-if="showAddButton" :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
+        <a-col v-if="showAddButton" :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
             <a-button :disabled="managing === false" type="primary"  @click="addItem" block>
                 <PlusOutlined />
                 {{ $t("notes.add") }}
@@ -83,8 +83,8 @@
             :xs="24"
             :sm="24"
             :md="12"
-            :lg="6"
-            :xl="6"
+            :lg="12"
+            :xl="12"
         >
             <a-select
                 v-model:value="filters.user_id"

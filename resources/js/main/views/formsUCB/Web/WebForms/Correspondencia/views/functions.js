@@ -196,6 +196,8 @@ const functionsCRM = () => {
     const serchInformationClient = async () => {
         //clearSerchInformation();
         clearClientSelection();
+        tableClienteSerch.loading = true;
+        
         const { document, name, email, phone, campana, leadStatus } = crmSerch.clientSerch;
 
         const filters = [];
@@ -261,6 +263,8 @@ const functionsCRM = () => {
             fillSearchTable(data);
         } catch (err) {
             console.error('Error al buscar leads con expansiones:', err);
+        } finally {
+            tableClienteSerch.loading = false;
         }
     };
 
@@ -297,8 +301,8 @@ const functionsCRM = () => {
         crmSerch.clientSerch.phone = '';
         tableClienteSerch.data = [];
         tableClienteSerch.pagination.total = 0;
-
         tableClienteSerch.selectedRowKeys = [];
+        tableClienteSerch.loading = false;
 
         clearClientSelection();
     };
@@ -341,11 +345,14 @@ const functionsCRM = () => {
     }
 
     const clearClientSelection = () => {
-        // Resetea todo el objeto cliente al estado inicial
-        Object.assign(crmState.client, getEmptyClient())
-
-        // Resetea el timer si lo necesitas
-        timer.reset(crmState.client.time_taken, false)
+        try {
+            // Resetea todo el objeto cliente al estado inicial
+            Object.assign(crmState.client, getEmptyClient())
+            // Resetea el timer si lo necesitas
+            timer.reset(crmState.client.time_taken, false)
+        } catch (error) {
+            console.error("Error al limpiar la selección del cliente:", error);
+        }
     };
 
     // To manage a selected client from the search table

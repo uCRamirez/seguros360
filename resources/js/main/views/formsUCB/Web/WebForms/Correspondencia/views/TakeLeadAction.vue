@@ -1,121 +1,11 @@
 <template>
-    <a-layout :style="themeMode == 'dark'
-            ? { background: '#141414', height: '100vh' }
-            : { height: '100vh' }
-        ">
+    <!-- <a-layout :style="themeMode == 'dark'
+        ? { background: '#141414', height: '100vh' }
+        : { height: '100vh' }
+        "> -->
 
         <a-row>
-            <a-col :xs="24" :sm="24" :md="24" :lg="5" :xl="5" class="bg-setting-sidebar" :style="themeMode == 'dark'
-                    ? { background: '#141414 !important' }
-                    : { background: '#fff !important' }
-                ">
-                <div class="callmanager-left-sidebar">
-                    <a-card :bordered="false" :bodyStyle="{ paddingBottom: '0px' }">
-                        <a-row>
-                            <a-col :span="24" class="text-center">
-                                <a-typography-title :level="2">
-                                    <ClockCircleOutlined />
-                                    {{
-                                        timer.hours.value < 10 ? `0${timer.hours.value}` : timer.hours }}:{{
-                                        timer.minutes.value < 10 ? `0${timer.minutes.value}` : timer.minutes }}:{{
-                                            timer.seconds.value < 10 ? `0${timer.seconds.value}` : timer.seconds }}
-                                        </a-typography-title>
-                            </a-col>
-
-                        </a-row>
-
-                        <!-- <a-row class="mt-10">
-                            <a-col :span="24" style="margin-top: 1em;">
-                                <a-space>
-                                    <a-button
-                                        :style="{
-                                            background: '#faad14',
-                                            borderColor: '#faad14',
-                                            width: '10em'
-                                        }"
-                                        type="primary"
-                                        @click="takeLeadAction('previous')"
-                                    >
-                                        <ArrowLeftOutlined />
-                                        {{ $t("campaign.previous_lead") }}
-                                    </a-button>
-
-                                    <a-button
-                                        :style="{
-                                            background: '#52c41a',
-                                            borderColor: '#52c41a',
-                                            width: '11.5em'
-                                        }"
-                                        type="primary"
-                                        @click="takeLeadAction('next')"
-                                    >
-                                        {{ $t("campaign.next_lead") }}
-                                        <ArrowRightOutlined />
-                                    </a-button>
-                                </a-space>
-                            </a-col>
-                            
-                        </a-row> -->
-
-                        <a-divider />
-                    </a-card>
-
-                    <perfect-scrollbar :options="{
-                        wheelSpeed: 1,
-                        swipeEasing: true,
-                        suppressScrollX: true,
-                    }">
-                        <a-collapse v-model:activeKey="activeLeftPanelKey" :bordered="false">
-                            <!-- campaign details -->
-                            <a-collapse-panel key="campaign_details" :style="{
-                                background:
-                                    themeMode == 'dark' ? '#141414' : '#fff',
-                            }">
-                                <template #header>
-                                    <a-typography-title :level="5">
-                                        {{ $t("campaign.campaign_details") + ' : ' + crmState.client.campaign.name }}
-                                    </a-typography-title>
-                                </template>
-                                <a-row v-for="(
-campaignDetails, campaignDetailsKey
-                                    ) in crmState.client.campaign.detail_fields" :key="campaignDetails.id" :gutter="16"
-                                    :class="{ 'mt-25': campaignDetailsKey > 0 }">
-                                    <a-col :span="24">
-                                        <a-typography-text strong>
-                                            {{ campaignDetails.field_name }}
-                                        </a-typography-text>
-                                    </a-col>
-                                    <a-col :span="24" class="mt-5">
-                                        <a-typography-text v-if="campaignDetails.field_type != 'link'">
-                                            {{ campaignDetails.field_value }}
-                                        </a-typography-text>
-                                        <a-typography-text v-else>
-                                            <a :href="campaignDetails.field_value" target="_blank"
-                                                rel="noopener noreferrer">
-                                                {{ campaignDetails.field_value }}
-                                            </a>
-                                        </a-typography-text>
-                                    </a-col>
-                                </a-row>
-                            </a-collapse-panel>
-                            <!-- Lead history -->
-                            <a-card :bordered="true" class="callmanager-right-sidebar" :bodyStyle="{ padding: '15px' }">
-                                <template #title>
-                                    <a-typography-title :level="5" type="success" strong>
-                                        {{ $t("lead.lead_history") }}
-                                    </a-typography-title>
-
-                                </template>
-                                <a-skeleton v-if="newPageLoad" active />
-                                <LogTimeline v-else :key="crmState.client.xid" :leadId="crmState.client.xid"
-                                    :refresh="refreshTimeLine" @dataFetched="() => (refreshTimeLine = false)" />
-                            </a-card>
-
-                        </a-collapse>
-                    </perfect-scrollbar>
-                </div>
-            </a-col>
-            <a-col :xs="24" :sm="24" :md="24" :lg="19" :xl="19">
+            <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
                 <a-card class="callmanager-middle-sidebar" style="overflow: auto; scrollbar-width: none;">
                     <a-tabs v-model:activeKey="activeKey">
 
@@ -127,729 +17,741 @@ campaignDetails, campaignDetailsKey
                                     {{ $t("lead.mfisico") }}
                                 </span>
                             </template>
-                            <perfect-scrollbar :options="{
+                            <!-- <perfect-scrollbar :options="{
                                 wheelSpeed: 1,
                                 swipeEasing: true,
-                                suppressScrollX: true,
-                            }">
+                                suppressScrollX: false,
+                            }"> -->
                                 <a-form layout="vertical" class="mt-10">
                                     <a-row :gutter="10">
+                                        <!-- RELOJ -->
+                                        <a-col :xs="24" :sm="24" :md="6" :lg="6"
+                                            style="display: flex; justify-content: center; align-items: center;">
+                                            <a-typography-title :level="3">
+                                                {{
+                                                    timer.hours.value < 10 ? `0${timer.hours.value}` : timer.hours }}:{{
+                                                    timer.minutes.value < 10 ? `0${timer.minutes.value}` : timer.minutes
+                                                    }}:{{ timer.seconds.value < 10 ? `0${timer.seconds.value}` :
+                                                        timer.seconds }} </a-typography-title>
+                                        </a-col>
+
                                         <!-- proyecto -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item class="required" :label="$t('lead.proyect')" name="campaign_id" :help="rules.campaign_id
-                                                    ? $t('lead.proyect')
-                                                    : null
-                                                " :validateStatus="rules.campaign_id
-                                                            ? 'error'
-                                                            : null
-                                                        ">
-                                                <a-select v-model:value="crmState.client.campaign.id" show-search
-                                                    option-filter-prop="title" :allowClear="true"
-                                                    :placeholder="$t('common.select_default_text', [$t('lead.proyect')])">
-                                                    <a-select-option v-for="allAgentCamp in allAgentCamps"
-                                                        :key="allAgentCamp.xid" :value="allAgentCamp.id"
-                                                        :title="allAgentCamp.name">
-                                                        {{ allAgentCamp.name }}
-                                                    </a-select-option>
-                                                </a-select>
+                                            <a-form-item class="floating-form-item required" name="campaign_id"
+                                                :help="rules.campaign_id ? $t('lead.proyect') : null"
+                                                :validateStatus="rules.campaign_id ? 'error' : null">
+                                                <div class="floating-input" :class="{ 'has-value': crmState.client?.campaign?.id != null }">
+                                                    <a-select v-model:value="crmState.client.campaign.id" show-search
+                                                        option-filter-prop="title" :allowClear="true" placeholder=" "
+                                                        class="crm-select">
+                                                        <a-select-option v-for="allAgentCamp in allAgentCamps"
+                                                            :key="allAgentCamp.xid" :value="allAgentCamp.id"
+                                                            :title="allAgentCamp.name">
+                                                            {{ allAgentCamp.name }}
+                                                        </a-select-option>
+                                                    </a-select>
 
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.proyect') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
+
                                         <!-- documento -->
                                         <a-col :xs="24" :sm="24" :md="12" :lg="12">
-                                            <a-form-item :label="$t('lead.document')" name="cedula"
+                                            <a-form-item class="floating-form-item required" name="cedula"
                                                 :help="rules.cedula ? $t('lead.document') : null"
-                                                :validateStatus="rules.cedula ? 'error' : ''" class="required">
-                                                <a-input-group compact>
-                                                    <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.cedula
-                                                        " :placeholder="$t(
-                                                            'common.placeholder_default_text',
-                                                            [
-                                                                $t(
-                                                                    'lead.document'
-                                                                ),
-                                                            ]
-                                                        )
-                                                            " />
-                                                    <!-- <SearchLead /> style="width: calc(100% - 35px);" -->
-                                                </a-input-group>
-
+                                                :validateStatus="rules.cedula ? 'error' : ''">
+                                                <div class="floating-input" :class="{ 'has-value': crmState.client.cedula != null && crmState.client.cedula !== '' }">
+                                                    <a-input-group compact>
+                                                        <a-input
+                                                            :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                            v-model:value="crmState.client.cedula" placeholder=" " />
+                                                    </a-input-group>
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.document') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
+
                                         <!-- lead status -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.lead_status')" name="lead_status" :help="rules.lead_status
-                                                    ? $t('lead.lead_status')
-                                                    : null
-                                                " :validateStatus="rules.lead_status
-                                                            ? 'error'
-                                                            : null
-                                                        ">
-                                                <a-select v-model:value="leadStatusModel" show-search
-                                                    option-filter-prop="title" :allowClear="true"
-                                                    :placeholder="$t('common.select_default_text', [$t('lead.lead_status'),])">
-                                                    <a-select-option
-                                                        v-for="status in allLeadStatus.filter(s => s.type === 'lead_status')"
-                                                        :key="status.id" :value="status.id" :title="status.name">
-                                                        {{ status.name }}
-                                                    </a-select-option>
-                                                </a-select>
+                                            <a-form-item class="floating-form-item" name="lead_status"
+                                                :help="rules.lead_status ? $t('lead.lead_status') : null"
+                                                :validateStatus="rules.lead_status ? 'error' : null">
+                                                <div class="floating-input" :class="{ 'has-value': leadStatusModel != null }">
+                                                    <a-select v-model:value="leadStatusModel" show-search
+                                                        option-filter-prop="title" :allowClear="true" placeholder=" "
+                                                        class="crm-select">
+                                                        <a-select-option
+                                                            v-for="status in allLeadStatus.filter(s => s.type === 'lead_status')"
+                                                            :key="status.id" :value="status.id" :title="status.name">
+                                                            {{ status.name }}
+                                                        </a-select-option>
+                                                    </a-select>
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.lead_status') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
+
                                         <!-- etapa -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('bases.stage')
-                                                " name="etapa" :help="rules.etapa
-                                                        ? $t('bases.stage')
-                                                        : null
-                                                    " :validateStatus="rules.etapa
-                                                        ? 'error'
-                                                        : null
-                                                    ">
-                                                <a-input disabled v-model:value="crmState.client.etapa"/>
+                                            <a-form-item class="floating-form-item" name="etapa"
+                                                :help="rules.etapa ? $t('bases.stage') : null"
+                                                :validateStatus="rules.etapa ? 'error' : null">
+                                                <div class="floating-input">
+                                                    <a-input disabled v-model:value="crmState.client.etapa"
+                                                        placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('bases.stage') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
+
                                         <!-- nombre -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.name')
-                                                " name="name" :help="rules.name
-                                                        ? $t('lead.name') 
-                                                        : null
-                                                    " :validateStatus="rules.name
-                                                        ? 'error'
-                                                        : null
-                                                    ">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.nombre
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.name'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                            <a-form-item class="floating-form-item" name="name"
+                                                :help="rules.name ? $t('lead.name') : null"
+                                                :validateStatus="rules.name ? 'error' : null">
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.nombre" placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.name') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
+
                                         <!-- segundo nombre -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.middle_name')
-                                                " name="segundo_nombre" :help="rules.segundo_nombre
-                                                        ? $t('lead.middle_name')
-                                                        : null
-                                                    " :validateStatus="rules.segundo_nombre
-                                                        ? 'error'
-                                                        : null
+                                            <a-form-item class="floating-form-item" name="segundo_nombre" :help="rules.segundo_nombre
+                                                ? $t('lead.middle_name')
+                                                : null
+                                                " :validateStatus="rules.segundo_nombre
+                                                    ? 'error'
+                                                    : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.segundo_nombre
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.middle_name'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.segundo_nombre"
+                                                        placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.middle_name') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- apellido 1 -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.first_last_name')
-                                                " name="first_last_name" :help="rules.first_last_name
-                                                        ? $t('lead.first_last_name')
-                                                        : null
-                                                    " :validateStatus="rules.first_last_name
-                                                        ? 'error'
-                                                        : null
+                                            <a-form-item class="floating-form-item" name="first_last_name" :help="rules.first_last_name
+                                                ? $t('lead.first_last_name')
+                                                : null
+                                                " :validateStatus="rules.first_last_name
+                                                    ? 'error'
+                                                    : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.apellido1
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.first_last_name'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.apellido1" placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.first_last_name') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- apellido 2 -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.second_last_name')
-                                                " name="second_last_name" :help="rules.second_last_name
-                                                        ? $t('lead.second_last_name')
-                                                        : null
-                                                    " :validateStatus="rules.second_last_name
-                                                        ? 'error'
-                                                        : null
+                                            <a-form-item class="floating-form-item" name="second_last_name" :help="rules.second_last_name
+                                                ? $t('lead.second_last_name')
+                                                : null
+                                                " :validateStatus="rules.second_last_name
+                                                    ? 'error'
+                                                    : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.apellido2
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.second_last_name'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.apellido2" placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.second_last_name') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- genero -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.gender')
-                                                " name="genero" :help="rules.genero
-                                                        ? $t('lead.gender')
-                                                        : null
-                                                    " :validateStatus="rules.genero
-                                                        ? 'error'
-                                                        : null
+                                            <a-form-item class="floating-form-item" name="genero" :help="rules.genero
+                                                ? $t('lead.gender')
+                                                : null
+                                                " :validateStatus="rules.genero
+                                                    ? 'error'
+                                                    : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.genero
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.gender'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.genero" placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.gender') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- estado civil -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.marital_status')" name="marital_status" :help="rules.marital_status
+                                            <a-form-item class="floating-form-item crm-select" name="marital_status"
+                                                :help="rules.marital_status
                                                     ? $t('lead.marital_status')
                                                     : null
-                                                " :validateStatus="rules.marital_status
+                                                    " :validateStatus="rules.marital_status
                                                         ? 'error'
                                                         : null
-                                                    ">
-                                                <a-select v-model:value="maritalStatusModel" show-search
-                                                    option-filter-prop="title" :allowClear="true" :placeholder="$t(
-                                                        'common.select_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.marital_status'
-                                                            ),
-                                                        ]
-                                                    )
                                                         ">
-                                                    <!-- llenar este select con los estados civiles-->
-                                                    <a-select-option
-                                                        v-for="status in allLeadStatus.filter(s => s.type === 'marital_status')"
-                                                        :key="status.xid" :value="status.id" :title="status.name">
-                                                        {{ status.name }}
-                                                    </a-select-option>
-                                                </a-select>
+                                                <div class="floating-input" :class="{ 'has-value': maritalStatusModel != null }">
+                                                    <a-select v-model:value="maritalStatusModel" show-search
+                                                        option-filter-prop="title" :allowClear="true" placeholder=" ">
+                                                        <!-- llenar este select con los estados civiles-->
+                                                        <a-select-option
+                                                            v-for="status in allLeadStatus.filter(s => s.type === 'marital_status')"
+                                                            :key="status.xid" :value="status.id" :title="status.name">
+                                                            {{ status.name }}
+                                                        </a-select-option>
+                                                    </a-select>
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.marital_status') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- hijos -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.children')
-                                                " name="children" :help="rules.children
-                                                        ? $t('lead.children')
-                                                        : null
-                                                    " :validateStatus="rules.children
-                                                        ? 'error'
-                                                        : null
+                                            <a-form-item class="floating-form-item crm-select" name="children" :help="rules.children
+                                                ? $t('lead.children')
+                                                : null
+                                                " :validateStatus="rules.children
+                                                    ? 'error'
+                                                    : null
                                                     ">
-                                                <a-select v-model:value="crmState.client.hijos" style="width: 100%"
-                                                    :placeholder="$t('common.select_default_text')">
-                                                    <a-select-option :value="0">
-                                                        {{ $t('common.no') }}
-                                                    </a-select-option>
-                                                    <a-select-option :value="1">
-                                                        {{ $t('common.yes') }}
-                                                    </a-select-option>
-                                                </a-select>
+                                                <div class="floating-input" :class="{ 'has-value': crmState.client.hijos === 0 || crmState.client.hijos === 1 }">
+                                                    <a-select v-model:value="crmState.client.hijos" style="width: 100%"
+                                                        placeholder=" ">
+                                                        <a-select-option :value="0">
+                                                            {{ $t('common.no') }}
+                                                        </a-select-option>
+                                                        <a-select-option :value="1">
+                                                            {{ $t('common.yes') }}
+                                                        </a-select-option>
+                                                    </a-select>
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.children') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- tipo plan -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.plan_type')
-                                                " name="tipo_plan" :help="rules.tipo_plan
-                                                        ? $t('lead.plan_type')
-                                                        : null
-                                                    " :validateStatus="rules.tipo_plan
-                                                        ? 'error'
-                                                        : null
+                                            <a-form-item class="floating-form-item" name="tipo_plan" :help="rules.tipo_plan
+                                                ? $t('lead.plan_type')
+                                                : null
+                                                " :validateStatus="rules.tipo_plan
+                                                    ? 'error'
+                                                    : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tipo_plan
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.plan_type'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.tipo_plan" placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.plan_type') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- fecha vencimiento -->
                                         <a-config-provider :locale="antdLocale">
                                             <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                                <a-form-item :label="$t('lead.expiration_date')
-                                                    " name="fechaVencimiento" :help="rules.fechaVencimiento
-                                                            ? $t('lead.expiration_date')
-                                                            : null
-                                                        " :validateStatus="rules.fechaVencimiento
-                                                            ? 'error'
-                                                            : null
-                                                        ">
-                                                    <a-date-picker :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
-                                                        format="YYYY-MM-DD" value-format="YYYY-MM-DD"
-                                                        v-model:value="crmState.client.fechaVencimiento"
-                                                        style="width: 100%" />
+                                                <a-form-item class="floating-form-item" name="fechaVencimiento"
+                                                    :help="rules.fechaVencimiento ? $t('lead.expiration_date') : null"
+                                                    :validateStatus="rules.fechaVencimiento ? 'error' : null">
+                                                    <div class="floating-input"
+                                                        :class="{ 'has-value': !!crmState.client.fechaVencimiento }">
+                                                        <a-date-picker class="crm-control"
+                                                            :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                            format="YYYY-MM-DD" value-format="YYYY-MM-DD"
+                                                            v-model:value="crmState.client.fechaVencimiento"
+                                                            placeholder=" " style="width: 100%" />
+
+                                                        <label class="floating-label">
+                                                            {{ $t('lead.expiration_date') }}
+                                                        </label>
+                                                    </div>
                                                 </a-form-item>
                                             </a-col>
                                         </a-config-provider>
                                         <!-- fecha nacimiento y edad -->
                                         <a-config-provider :locale="antdLocale">
-                                            <a-col :xs="24" :sm="24" :md="12" :lg="12"
-                                                style="display: flex; gap: 16px;">
-                                                <div style="width: 50%;">
-                                                    <a-form-item :label="$t('lead.date_birth')
-                                                        " name="date_birth" :help="rules.date_birth
-                                                                ? $t('lead.date_birth')
-                                                                : null
-                                                            " :validateStatus="rules.date_birth
-                                                                ? 'error'
-                                                                : null
-                                                            ">
-                                                        <a-date-picker :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
-                                                            format="YYYY-MM-DD" value-format="YYYY-MM-DD"
-                                                            @change="calcularEdad"
-                                                            v-model:value="crmState.client.fechaNacimiento"
-                                                            style="width: 100%" />
+                                            <a-col :xs="24" :sm="24" :md="6" :lg="6">
+                                                    <a-form-item class="floating-form-item" name="date_birth"
+                                                        :help="rules.date_birth ? $t('lead.date_birth') : null"
+                                                        :validateStatus="rules.date_birth ? 'error' : null">
+
+                                                        <div class="floating-input"
+                                                            :class="{ 'has-value': !!crmState.client.fechaNacimiento }">
+
+                                                            <a-date-picker class="crm-control"
+                                                                :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                                format="YYYY-MM-DD" value-format="YYYY-MM-DD"
+                                                                @change="calcularEdad"
+                                                                v-model:value="crmState.client.fechaNacimiento"
+                                                                placeholder=" " style="width: 100%" />
+
+                                                            <label class="floating-label">{{ $t('lead.date_birth')
+                                                                }}</label>
+                                                        </div>
                                                     </a-form-item>
-                                                </div>
+                                            </a-col>
+                                            <a-col :xs="24" :sm="24" :md="6" :lg="6">
+                                                    <a-form-item class="floating-form-item" name="age"
+                                                        :help="rules.age ? $t('lead.age') : null"
+                                                        :validateStatus="rules.age ? 'error' : null">
+                                                        <div class="floating-input"
+                                                            :class="{ 'has-value': crmState.client.edad !== null && crmState.client.edad !== undefined && crmState.client.edad !== '' }">
 
-                                                <div style="width: 50%;">
-                                                    <a-form-item :label="$t('lead.age')
-                                                        " name="age" :help="rules.age
-                                                                ? $t('lead.age')
-                                                                : null
-                                                            " :validateStatus="rules.age
-                                                                ? 'error'
-                                                                : null
-                                                            " style="margin-left: auto;">
-                                                        <a-input-number :min="0" v-model:value="crmState.client.edad
-                                                            " style="width: 100%" />
+                                                            <a-input-number class="crm-control" :min="0"
+                                                                v-model:value="crmState.client.edad" placeholder=" "
+                                                                style="width: 100%" />
+
+                                                            <label class="floating-label">{{ $t('lead.age') }}</label>
+                                                        </div>
                                                     </a-form-item>
-                                                </div>
-
-
                                             </a-col>
                                         </a-config-provider>
                                         <!-- tarjeta -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.card')
-                                                " name="tarjeta" :help="rules.tarjeta
-                                                        ? $t('lead.card')
-                                                        : null
-                                                    " :validateStatus="rules.tarjeta
-                                                        ? 'error'
-                                                        : null
+                                            <a-form-item class="floating-form-item" name="tarjeta" :help="rules.tarjeta
+                                                ? $t('lead.card')
+                                                : null
+                                                " :validateStatus="rules.tarjeta
+                                                    ? 'error'
+                                                    : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tarjeta
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.card'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.tarjeta" placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.card') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- tipo tarjeta -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.card_type')
-                                                " name="tipo_tarjeta" :help="rules.tipo_tarjeta
-                                                        ? $t('lead.card_type')
-                                                        : null
-                                                    " :validateStatus="rules.tipo_tarjeta
-                                                        ? 'error'
-                                                        : null
+                                            <a-form-item class="floating-form-item" name="tipo_tarjeta" :help="rules.tipo_tarjeta
+                                                ? $t('lead.card_type')
+                                                : null
+                                                " :validateStatus="rules.tipo_tarjeta
+                                                    ? 'error'
+                                                    : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tipo_tarjeta
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.card_type'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.tipo_tarjeta" placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.card_type') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- emisor -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.transmitter')
-                                                " name="emisor" :help="rules.emisor
-                                                        ? $t('lead.transmitter')
-                                                        : null
-                                                    " :validateStatus="rules.emisor
-                                                        ? 'error'
-                                                        : null
+                                            <a-form-item class="floating-form-item" name="emisor" :help="rules.emisor
+                                                ? $t('lead.transmitter')
+                                                : null
+                                                " :validateStatus="rules.emisor
+                                                    ? 'error'
+                                                    : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.emisor
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.transmitter'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.emisor" placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.transmitter') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- ultimos digitos -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.last_digits')
-                                                " name="ultimos_digitos" :help="rules.ultimos_digitos
-                                                        ? $t('lead.last_digits')
-                                                        : null
-                                                    " :validateStatus="rules.ultimos_digitos
-                                                        ? 'error'
-                                                        : null
+                                            <a-form-item class="floating-form-item" name="ultimos_digitos" :help="rules.ultimos_digitos
+                                                ? $t('lead.last_digits')
+                                                : null
+                                                " :validateStatus="rules.ultimos_digitos
+                                                    ? 'error'
+                                                    : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.ultimos_digitos
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.last_digits'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.ultimos_digitos"
+                                                        placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.last_digits') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- mes carga -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.month_charge')
-                                                " name="mes_carga" :help="rules.mes_carga
-                                                        ? $t('lead.month_charge')
-                                                        : null
-                                                    " :validateStatus="rules.mes_carga
-                                                        ? 'error'
-                                                        : null
+                                            <a-form-item class="floating-form-item crm-select" name="mes_carga" :help="rules.mes_carga
+                                                ? $t('lead.month_charge')
+                                                : null
+                                                " :validateStatus="rules.mes_carga
+                                                    ? 'error'
+                                                    : null
                                                     ">
-                                                <a-select :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
-                                                    v-model:value="crmState.client.mes_carga"
-                                                    :placeholder="$t('common.select_default_text', [$t('lead.month_charge')])">
-                                                    <a-select-option value="1">{{ $t('common.january')
+                                                <div class="floating-input" :class="{ 'has-value': crmState.client.mes_carga != null }">
+                                                    <a-select
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.mes_carga" placeholder=" ">
+                                                        <a-select-option value="1">{{ $t('common.january')
                                                         }}</a-select-option>
-                                                    <a-select-option value="2">{{ $t('common.february')
+                                                        <a-select-option value="2">{{ $t('common.february')
                                                         }}</a-select-option>
-                                                    <a-select-option value="3">{{ $t('common.march')
+                                                        <a-select-option value="3">{{ $t('common.march')
                                                         }}</a-select-option>
-                                                    <a-select-option value="4">{{ $t('common.april')
+                                                        <a-select-option value="4">{{ $t('common.april')
                                                         }}</a-select-option>
-                                                    <a-select-option value="5">{{ $t('common.may') }}</a-select-option>
-                                                    <a-select-option value="6">{{ $t('common.june') }}</a-select-option>
-                                                    <a-select-option value="7">{{ $t('common.july') }}</a-select-option>
-                                                    <a-select-option value="8">{{ $t('common.august')
+                                                        <a-select-option value="5">{{ $t('common.may')
+                                                            }}</a-select-option>
+                                                        <a-select-option value="6">{{ $t('common.june')
+                                                            }}</a-select-option>
+                                                        <a-select-option value="7">{{ $t('common.july')
+                                                            }}</a-select-option>
+                                                        <a-select-option value="8">{{ $t('common.august')
                                                         }}</a-select-option>
-                                                    <a-select-option value="9">{{ $t('common.september')
+                                                        <a-select-option value="9">{{ $t('common.september')
                                                         }}</a-select-option>
-                                                    <a-select-option value="10">{{ $t('common.october')
+                                                        <a-select-option value="10">{{ $t('common.october')
                                                         }}</a-select-option>
-                                                    <a-select-option value="11">{{ $t('common.november')
+                                                        <a-select-option value="11">{{ $t('common.november')
                                                         }}</a-select-option>
-                                                    <a-select-option value="12">{{ $t('common.december')
+                                                        <a-select-option value="12">{{ $t('common.december')
                                                         }}</a-select-option>
-                                                </a-select>
+                                                    </a-select>
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.month_charge') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- año de carga -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.year_charge')
-                                                " name="anno_carga" :help="rules.anno_carga
-                                                        ? $t('lead.year_charge')
-                                                        : null
-                                                    " :validateStatus="rules.anno_carga
-                                                        ? 'error'
-                                                        : null
-                                                    ">
-                                                <a-date-picker :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" format="YYYY"
-                                                    value-format="YYYY" v-model:value="crmState.client.anno_carga"
-                                                    style="width: 100%" />
+                                            <a-form-item class="floating-form-item" name="anno_carga"
+                                                :help="rules.anno_carga ? $t('lead.year_charge') : null"
+                                                :validateStatus="rules.anno_carga ? 'error' : null">
+
+                                                <div class="floating-input"
+                                                    :class="{ 'has-value': !!crmState.client.anno_carga }">
+
+                                                    <a-date-picker class="crm-control"
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        picker="year" format="YYYY" value-format="YYYY"
+                                                        v-model:value="crmState.client.anno_carga" placeholder=" "
+                                                        style="width: 100%" />
+
+                                                    <label class="floating-label">{{ $t('lead.year_charge') }}</label>
+                                                </div>
                                             </a-form-item>
+
                                         </a-col>
                                         <!-- foco de venta -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.sales_focus')
-                                                " name="foco_venta" :help="rules.foco_venta
-                                                        ? $t('lead.sales_focus')
-                                                        : null
-                                                    " :validateStatus="rules.foco_venta
-                                                        ? 'error'
-                                                        : null
+                                            <a-form-item class="floating-form-item" name="foco_venta" :help="rules.foco_venta
+                                                ? $t('lead.sales_focus')
+                                                : null
+                                                " :validateStatus="rules.foco_venta
+                                                    ? 'error'
+                                                    : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.foco_venta
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.sales_focus'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.foco_venta" placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.sales_focus') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- nacionalidad -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.nationality')
-                                                " name="nationality" :help="rules.nationality
-                                                        ? $t('lead.nationality')
-                                                        : null
-                                                    " :validateStatus="rules.nationality
-                                                        ? 'error'
-                                                        : null
+                                            <a-form-item class="floating-form-item" name="nationality" :help="rules.nationality
+                                                ? $t('lead.nationality')
+                                                : null
+                                                " :validateStatus="rules.nationality
+                                                    ? 'error'
+                                                    : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.nacionalidad 
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.nationality'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.nacionalidad" placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.nationality') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- provincia voto -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.electoral_province')
-                                                " name="provincia_voto" :help="rules.provincia_voto
-                                                        ? $t('lead.electoral_province')
-                                                        : null
-                                                    " :validateStatus="rules.provincia_voto
-                                                        ? 'error'
-                                                        : null
+                                            <a-form-item class="floating-form-item" name="provincia_voto" :help="rules.provincia_voto
+                                                ? $t('lead.electoral_province')
+                                                : null
+                                                " :validateStatus="rules.provincia_voto
+                                                    ? 'error'
+                                                    : null
                                                     ">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.provincia_voto
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.electoral_province'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.provincia_voto"
+                                                        placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.electoral_province') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- Tel1 -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="`${$t('lead.phone')} 1`" name="tel1" :help="rules.tel1
-                                                    ? `${$t('lead.phone')} 1`
-                                                    : null
+                                            <a-form-item class="floating-form-item required" name="tel1" :help="rules.tel1
+                                                ? `${$t('lead.phone')} 1`
+                                                : null
                                                 " :validateStatus="rules.tel1
-                                                        ? 'error'
-                                                        : null
-                                                    " class="required">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tel1
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.phone'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                    ? 'error'
+                                                    : null">
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.tel1" placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.phone') }} 1
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- Tel2 -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="`${$t('lead.phone')} 2`" name="phone2" :help="rules.phone2
-                                                    ? `${$t('lead.phone')} 2`
-                                                    : null
+                                            <a-form-item class="floating-form-item" name="phone2" :help="rules.phone2
+                                                ? `${$t('lead.phone')} 2`
+                                                : null
                                                 " :validateStatus="rules.phone2
-                                                        ? 'error'
-                                                        : null
-                                                    ">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tel2
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.phone'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                    ? 'error'
+                                                    : null">
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.tel2" placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.phone') }} 2
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- Tel3 -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="`${$t('lead.phone')} 3`" name="phone3" :help="rules.phone3
-                                                    ? `${$t('lead.phone')} 3`
-                                                    : null
+                                            <a-form-item class="floating-form-item" name="phone3" :help="rules.phone3
+                                                ? `${$t('lead.phone')} 3`
+                                                : null
                                                 " :validateStatus="rules.phone3
-                                                        ? 'error'
-                                                        : null
-                                                    ">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tel3
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.phone'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                    ? 'error'
+                                                    : null">
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.tel3" placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.phone') }} 3
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- Tel4 -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="`${$t('lead.phone')} 4`" name="phone4" :help="rules.phone4
-                                                    ? `${$t('lead.phone')} 4`
-                                                    : null
+                                            <a-form-item class="floating-form-item" name="phone4" :help="rules.phone4
+                                                ? `${$t('lead.phone')} 4`
+                                                : null
                                                 " :validateStatus="rules.phone4
-                                                        ? 'error'
-                                                        : null
-                                                    ">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tel4
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.phone'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                    ? 'error'
+                                                    : null">
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.tel4" placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.phone') }} 4
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- Tel5 -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="`${$t('lead.phone')} 5`" name="phone5" :help="rules.phone5
-                                                    ? `${$t('lead.phone')} 5`
-                                                    : null
+                                            <a-form-item class="floating-form-item" name="phone5" :help="rules.phone5
+                                                ? `${$t('lead.phone')} 5`
+                                                : null
                                                 " :validateStatus="rules.phone5
-                                                        ? 'error'
-                                                        : null
-                                                    "
-                                            >
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tel5
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.phone'
-                                                            ),
-                                                        ]
-                                                    )" 
-                                                />
+                                                    ? 'error'
+                                                    : null">
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.tel5" placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.phone') }} 5
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- Tel6 -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="`${$t('lead.phone')} 6`" name="phone6" :help="rules.phone6
-                                                    ? `${$t('lead.phone')} 6`
-                                                    : null
+                                            <a-form-item class="floating-form-item" name="phone6" :help="rules.phone6
+                                                ? `${$t('lead.phone')} 6`
+                                                : null
                                                 " :validateStatus="rules.phone6
-                                                        ? 'error'
-                                                        : null
-                                                    ">
-                                                <a-input :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')" v-model:value="crmState.client.tel6
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.phone'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                                    ? 'error'
+                                                    : null">
+                                                <div class="floating-input">
+                                                    <a-input
+                                                        :disabled="!permsArray.includes('admin') && !permsArray.includes('leads_create')"
+                                                        v-model:value="crmState.client.tel6" placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.phone') }} 6
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
                                         <!-- email -->
                                         <a-col :xs="24" :sm="24" :md="6" :lg="6">
-                                            <a-form-item :label="$t('lead.email')
-                                                " name="email" :help="rules.email
-                                                        ? $t('lead.email')
-                                                        : null
-                                                    " :validateStatus="rules.email
-                                                        ? 'error'
-                                                        : null
-                                                    ">
-                                                <a-input v-model:value="crmState.client.email
-                                                    " :placeholder="$t(
-                                                        'common.placeholder_default_text',
-                                                        [
-                                                            $t(
-                                                                'lead.email'
-                                                            ),
-                                                        ]
-                                                    )
-                                                        " />
+                                            <a-form-item class="floating-form-item" name="email" :help="rules.email
+                                                ? $t('lead.email')
+                                                : null
+                                                " :validateStatus="rules.email
+                                                    ? 'error'
+                                                    : null">
+                                                <div class="floating-input">
+                                                    <a-input v-model:value="crmState.client.email" placeholder=" " />
+
+                                                    <label class="floating-label">
+                                                        {{ $t('lead.email') }}
+                                                    </label>
+                                                </div>
                                             </a-form-item>
                                         </a-col>
-                                        
+
                                         <!-- Provincia - Canton - Distrito -->
                                         <a-col :xxl="24" :xl="24" :xs="24" style="display: flex;">
                                             <!-- Provincia -->
                                             <a-col :xxl="8" :xs="8" :sm="8" :md="8" :lg="8">
-                                                <a-form-item :label="$t('lead.province')">
-                                                    <a-select v-model:value="crmState.client.provincia" show-search
-                                                        option-filter-prop="title" :allowClear="true" :placeholder="$t('common.select_default_text', [$t('lead.province'),])
-                                                            ">
-                                                        <a-select-option v-for="prov in provinceOptions" :key="prov"
-                                                            :value="prov" :title="prov">{{ prov }}</a-select-option>
-                                                    </a-select>
+                                                <a-form-item class="floating-form-item crm-select" name="provincia">
+                                                    <div class="floating-input" :class="{ 'has-value': !!crmState.client.provincia }">
+                                                        <a-select v-model:value="crmState.client.provincia" show-search
+                                                            option-filter-prop="title" :allowClear="true"
+                                                            placeholder=" ">
+                                                            <a-select-option v-for="prov in provinceOptions" :key="prov"
+                                                                :value="prov" :title="prov">{{
+                                                                    prov }}</a-select-option>
+                                                        </a-select>
+
+                                                        <label class="floating-label">
+                                                            {{ $t('lead.province') }}
+                                                        </label>
+                                                    </div>
                                                 </a-form-item>
                                             </a-col>
 
 
                                             <!-- Cantón -->
                                             <a-col :xxl="8" :xs="8" :sm="8" :md="8" :lg="8">
-                                                <a-form-item :label="$t('lead.canton')">
-                                                    <a-select v-model:value="crmState.client.canton" show-search
-                                                        option-filter-prop="title" :allowClear="true"
-                                                        :placeholder="$t('common.select_default_text', [$t('lead.canton')])"
-                                                        :disabled="!crmState.client.provincia">
-                                                        <a-select-option v-for="ct in cantonOptions" :key="ct"
-                                                            :value="ct" :title="ct">{{ ct }}</a-select-option>
-                                                    </a-select>
+                                                <a-form-item class="floating-form-item crm-select" name="canton">
+                                                    <div class="floating-input" :class="{ 'has-value': !!crmState.client.canton }">
+                                                        <a-select v-model:value="crmState.client.canton" show-search
+                                                            option-filter-prop="title" :allowClear="true"
+                                                            placeholder=" " :disabled="!crmState.client.provincia">
+                                                            <a-select-option v-for="ct in cantonOptions" :key="ct"
+                                                                :value="ct" :title="ct">{{ ct
+                                                                }}</a-select-option>
+                                                        </a-select>
+
+                                                        <label class="floating-label">
+                                                            {{ $t('lead.canton') }}
+                                                        </label>
+                                                    </div>
                                                 </a-form-item>
                                             </a-col>
 
                                             <!-- Distrito -->
                                             <a-col :xxl="8" :xs="8" :sm="8" :md="8" :lg="8">
-                                                <a-form-item :label="$t('lead.district')">
-                                                    <a-select v-model:value="crmState.client.distrito" show-search
-                                                        option-filter-prop="title" :allowClear="true"
-                                                        :placeholder="$t('common.select_default_text', [$t('lead.district')])"
-                                                        :disabled="!crmState.client.canton || !crmState.client.provincia">
-                                                        <a-select-option v-for="dist in districtOptions" :key="dist"
-                                                            :value="dist" :title="dist">{{ dist }}</a-select-option>
-                                                    </a-select>
+                                                <a-form-item class="floating-form-item crm-select" name="distrito">
+                                                    <div class="floating-input" :class="{ 'has-value': !!crmState.client.distrito }">
+                                                        <a-select v-model:value="crmState.client.distrito" show-search
+                                                            option-filter-prop="title" :allowClear="true"
+                                                            placeholder=" "
+                                                            :disabled="!crmState.client.canton || !crmState.client.provincia">
+                                                            <a-select-option v-for="dist in districtOptions" :key="dist"
+                                                                :value="dist" :title="dist">{{
+                                                                    dist }}</a-select-option>
+                                                        </a-select>
+
+                                                        <label class="floating-label">
+                                                            {{ $t('lead.district') }}
+                                                        </label>
+                                                    </div>
                                                 </a-form-item>
                                             </a-col>
                                         </a-col>
                                     </a-row>
                                 </a-form>
-                            </perfect-scrollbar>
+                            <!-- </perfect-scrollbar> -->
                             <div :style="{
                                 textAlign: 'center',
-                                right: 0,
-                                bottom: 0,
+                                // right: 0,
+                                // bottom: 0,
                                 width: '100%',
                                 borderTop: '1px solid #e9e9e9',
                                 padding: '10px',
@@ -858,9 +760,9 @@ campaignDetails, campaignDetailsKey
                                 zIndex: 1,
                             }">
                                 <a-row :gutter="16">
-                                    <a-col :xs="24" :sm="24" :md="20" :lg="20">
+                                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                         <a-space>
-                                            <a-button type="primary" :loading="loading" @click="saveLead('save')"> 
+                                            <a-button type="primary" :loading="loading" @click="saveLead('save')">
                                                 <template #icon>
                                                     <SaveOutlined />
                                                 </template>
@@ -872,7 +774,8 @@ campaignDetails, campaignDetailsKey
                                                 </template>
                                                 {{ $t("campaign.save_exit") }}
                                             </a-button>
-                                            <a-button type="primary" @click="addNote" :disabled="crmState.client.managing === false">
+                                            <a-button type="primary" @click="addNote"
+                                                :disabled="crmState.client.managing === false">
                                                 <template #icon>
                                                     <PlusOutlined />
                                                 </template>
@@ -915,40 +818,52 @@ campaignDetails, campaignDetailsKey
                                     {{ $t("menu.search_lead") }}
                                 </span>
                             </template>
+
                             <a-row :gutter="16">
+                                <!-- Document -->
+                                <a-col :xs="24" :sm="24" :md="12" :lg="8">
+                                    <a-form-item class="floating-form-item" name="txtInfoClient_document"
+                                        :help="rules.document ? rules.document.message : null"
+                                        :validateStatus="rules.document ? 'error' : null">
 
-                                <a-col :xs="24" :sm="24" :md="10" :lg="10">
+                                        <div class="floating-input"
+                                            :class="{ 'has-value': !!crmSerch.clientSerch.document }">
+                                            <a-input class="crm-control" v-model:value="crmSerch.clientSerch.document"
+                                                placeholder=" " />
+                                            <label class="floating-label">{{ $t('lead.document') }}</label>
+                                        </div>
 
-                                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                                        <a-form-item :label="$t('lead.document')" name="txtInfoClient_document"
-                                            :help="rules.document ? rules.document.message : null"
-                                            :validateStatus="rules.document ? 'error' : null">
-                                            <a-input v-model:value="crmSerch.clientSerch.document"
-                                                :placeholder="$t('common.placeholder_default_text', [$t('lead.document'),])" />
-                                        </a-form-item>
-                                    </a-col>
+                                    </a-form-item>
+                                </a-col>
 
-                                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                                        <a-form-item :label="$t('lead.name')" name="txtInfoClient_name"
-                                            :help="rules.name ? rules.name.message : null"
-                                            :validateStatus="rules.name ? 'error' : null">
-                                            <a-input v-model:value="crmSerch.clientSerch.name"
-                                                :placeholder="$t('common.placeholder_default_text', [$t('lead.name'),])" />
-                                        </a-form-item>
-                                    </a-col>
+                                <!-- Name -->
+                                <a-col :xs="24" :sm="24" :md="12" :lg="8">
+                                    <a-form-item class="floating-form-item" name="txtInfoClient_name"
+                                        :help="rules.name ? rules.name.message : null"
+                                        :validateStatus="rules.name ? 'error' : null">
 
-                                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                                        <a-form-item :label="$t('lead.proyect')" name="proyect" :help="rules.proyect
-                                                ? rules.proyect
-                                                    .message
-                                                : null
-                                            " :validateStatus="rules.proyect
-                                                        ? 'error'
-                                                        : null
-                                                    ">
-                                            <a-select v-model:value="crmSerch.clientSerch.campana" show-search
-                                                option-filter-prop="title" :allowClear="true"
-                                                :placeholder="$t('common.select_default_text', [$t('lead.proyect')])">
+                                        <div class="floating-input"
+                                            :class="{ 'has-value': !!crmSerch.clientSerch.name }">
+                                            <a-input class="crm-control" v-model:value="crmSerch.clientSerch.name"
+                                                placeholder=" " />
+                                            <label class="floating-label">{{ $t('lead.name') }}</label>
+                                        </div>
+
+                                    </a-form-item>
+                                </a-col>
+
+
+                                <!-- Project -->
+                                <a-col :xs="24" :sm="24" :md="12" :lg="8">
+                                    <a-form-item class="floating-form-item crm-select" name="proyect"
+                                        :help="rules.proyect ? rules.proyect.message : null"
+                                        :validateStatus="rules.proyect ? 'error' : null">
+
+                                        <div class="floating-input"
+                                            :class="{ 'has-value': !!crmSerch.clientSerch.campana }">
+                                            <a-select class="crm-control" v-model:value="crmSerch.clientSerch.campana"
+                                                show-search option-filter-prop="title" :allowClear="true"
+                                                placeholder=" ">
                                                 <a-select-option v-for="allAgentCamp in allAgentCamps"
                                                     :key="allAgentCamp.xid" :value="allAgentCamp.id"
                                                     :title="allAgentCamp.name">
@@ -956,77 +871,93 @@ campaignDetails, campaignDetailsKey
                                                 </a-select-option>
                                             </a-select>
 
-                                        </a-form-item>
-                                    </a-col>
+                                            <label class="floating-label">{{ $t('lead.proyect') }}</label>
+                                        </div>
 
+                                    </a-form-item>
                                 </a-col>
 
-                                <a-col :xs="24" :sm="24" :md="10" :lg="10">
 
-                                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                                        <a-form-item :label="$t('lead.email')" name="txtInfoClient_email"
-                                            :help="rules.mail ? rules.mail.message : null"
-                                            :validateStatus="rules.mail ? 'error' : null">
-                                            <a-input v-model:value="crmSerch.clientSerch.email"
-                                                :placeholder="$t('common.placeholder_default_text', [$t('lead.email'),])" />
-                                        </a-form-item>
-                                    </a-col>
+                                <!-- Email -->
+                                <a-col :xs="24" :sm="24" :md="12" :lg="8">
+                                    <a-form-item class="floating-form-item" name="txtInfoClient_email"
+                                        :help="rules.mail ? rules.mail.message : null"
+                                        :validateStatus="rules.mail ? 'error' : null">
 
-                                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                                        <a-form-item :label="$t('lead.phone')" name="txtInfoClient_phone">
+                                        <div class="floating-input"
+                                            :class="{ 'has-value': !!crmSerch.clientSerch.email }">
+                                            <a-input class="crm-control" v-model:value="crmSerch.clientSerch.email"
+                                                placeholder=" " />
+                                            <label class="floating-label">{{ $t('lead.email') }}</label>
+                                        </div>
 
-                                            <a-input style="flex: 1; margin-right: 8px;"
-                                                v-model:value="crmSerch.clientSerch.phone"
-                                                :placeholder="$t('common.placeholder_default_text', [$t('lead.phone'),])" />
+                                    </a-form-item>
+                                </a-col>
 
-                                        </a-form-item>
-                                    </a-col>
-                                    <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                                        <a-form-item :label="$t('lead.lead_status')" name="lead_status" :help="rules.lead_status
-                                                ? rules.lead_status
-                                                    .message
-                                                : null
-                                            " :validateStatus="rules.lead_status
-                                                    ? 'error'
-                                                    : null
-                                                ">
-                                            <a-select v-model:value="crmSerch.clientSerch.leadStatus" show-search
-                                                option-filter-prop="title" :allowClear="true"
-                                                :placeholder="$t('common.select_default_text', [$t('lead.lead_status'),])">
+
+                                <!-- Phone -->
+                                <a-col :xs="24" :sm="24" :md="12" :lg="8">
+                                    <a-form-item class="floating-form-item" name="txtInfoClient_phone">
+                                        <div class="floating-input"
+                                            :class="{ 'has-value': !!crmSerch.clientSerch.phone }">
+                                            <a-input class="crm-control" v-model:value="crmSerch.clientSerch.phone"
+                                                placeholder=" " />
+                                            <label class="floating-label">{{ $t('lead.phone') }}</label>
+                                        </div>
+                                    </a-form-item>
+                                </a-col>
+
+
+                                <!-- Lead Status -->
+                                <a-col :xs="24" :sm="24" :md="12" :lg="8">
+                                    <a-form-item class="floating-form-item crm-select" name="lead_status"
+                                        :help="rules.lead_status ? rules.lead_status.message : null"
+                                        :validateStatus="rules.lead_status ? 'error' : null">
+
+                                        <div class="floating-input"
+                                            :class="{ 'has-value': !!crmSerch.clientSerch.leadStatus }">
+                                            <a-select class="crm-control"
+                                                v-model:value="crmSerch.clientSerch.leadStatus" show-search
+                                                option-filter-prop="title" :allowClear="true" placeholder=" ">
                                                 <a-select-option
                                                     v-for="status in allLeadStatus.filter(s => s.type === 'lead_status')"
                                                     :key="status.xid" :value="status.id" :title="status.name">
                                                     {{ status.name }}
                                                 </a-select-option>
                                             </a-select>
-                                        </a-form-item>
-                                    </a-col>
 
+                                            <label class="floating-label">{{ $t('lead.lead_status') }}</label>
+                                        </div>
 
-
+                                    </a-form-item>
                                 </a-col>
-                                <!-- acciones de busqueda y gestion -->
-                                <a-col :xs="24" :sm="24" :md="4" :lg="4">
-                                    <div
-                                        style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%;">
+
+                                <!-- Acciones de busqueda y gestion -->
+                                <a-col :xs="24" :sm="24" :md="24" :lg="4">
+                                    <div class="lead-actions">
                                         <a-button @click="serchInformationClient"
                                             :disabled="crmState.client.managing === true" type="primary"
-                                            style="min-width: 130px;">{{ $t('common.search') }}</a-button>
+                                            class="lead-actions__btn">
+                                            {{ $t('common.search') }}
+                                        </a-button>
+
                                         <a-button @click="clearSerchInformation"
                                             :disabled="crmState.client.managing === true" type="primary"
-                                            style="margin-top: 10px;min-width: 130px;">{{ $t('common.clear') }}</a-button>
+                                            class="lead-actions__btn">
+                                            {{ $t('common.clear') }}
+                                        </a-button>
+
                                         <a-button @click="handleClientToManage"
                                             :disabled="crmState.client.toManage === false" type="primary"
-                                            style="margin-top: 10px;min-width: 130px;">{{ $t('common.management')
-                                            }}</a-button>
+                                            class="lead-actions__btn">
+                                            {{ $t('common.management') }}
+                                        </a-button>
                                     </div>
                                 </a-col>
-
 
                                 <!--######################################################-->
                                 <!--###########   TABLA DE BUSQUEDA   ##############-->
                                 <a-col :xs="24" :sm="24" :md="24" :lg="24" class="mt-10">
-
                                     <a-col :span="24">
                                         <div class="table-responsive">
                                             <a-table :row-key="record => record.id" :row-selection="{
@@ -1051,31 +982,31 @@ campaignDetails, campaignDetailsKey
                                                 @change="handleClientSerchTableChange" bordered size="small">
                                                 <template #bodyCell="{ column, record }">
                                                     <template v-if="column.dataIndex === 'campaign'">
-                                                        {{ record.campaign && record.campaign.name
-                                                            ? record.campaign.name
-                                                            : ''
+                                                        {{
+                                                            record.campaign && record.campaign.name
+                                                                ? record.campaign.name
+                                                                : ''
                                                         }}
                                                     </template>
+
                                                     <template v-if="column.dataIndex === 'assign_to'">
-                                                        {{ record.assign_to && record.assign_to.name
-                                                            ? record.assign_to.name
-                                                            : ''
+                                                        {{
+                                                            record.assign_to && record.assign_to.name
+                                                                ? record.assign_to.name
+                                                                : ''
                                                         }}
                                                     </template>
                                                 </template>
                                             </a-table>
                                         </div>
                                     </a-col>
-
                                 </a-col>
                                 <!--########### FIN TABLA DE BUSQUEDA ##############-->
                                 <!--######################################################-->
-
                             </a-row>
-
-
                         </a-tab-pane>
                         <!-- FIN Tab de busqueda de leads -->
+
 
                         <a-tab-pane key="call_logs" :disabled="!crmState.client.showLogs">
                             <template #tab>
@@ -1086,7 +1017,7 @@ campaignDetails, campaignDetailsKey
                             </template>
                             <LeadLogTable key="lead_logs" pageName="lead_action" logType="call_log"
                                 :leadId="crmState.client.xid" :showTableSearch="false" :showLeadDetails="false"
-                                :showAction="false" :scrollStyle="{ y: 'calc(100vh - 320px)' }"  />
+                                :showAction="false" :scrollStyle="{ y: 'calc(100vh - 320px)' }" />
                         </a-tab-pane>
 
                         <a-tab-pane key="uphone_calls" :disabled="!crmState.client.showLogs">
@@ -1096,10 +1027,7 @@ campaignDetails, campaignDetailsKey
                                     {{ $t("common.uphone_calls") }}
                                 </span>
                             </template>
-                            <UphoneCallTable
-                                :leadId="crmState.client.xid"
-                                :visible="true"
-                            />
+                            <UphoneCallTable :leadId="crmState.client.xid" :visible="true" />
                         </a-tab-pane>
 
                         <a-tab-pane key="lead_notes" :disabled="!crmState.client.showLogs">
@@ -1112,19 +1040,18 @@ campaignDetails, campaignDetailsKey
                             <LeadNotesTable pageName="lead_action" :leadId="crmState.client.xid"
                                 :leadInfo="crmState.client" :managing="crmState.client.managing"
                                 :scrollStyle="{ y: 'calc(100vh - 320px)' }" @success="() => (refreshTimeLine = true)"
-                                :showUserFilter="crmState.client.managing ? false : true"
-                                :showAddButton="leadDetails &&
-                                        leadDetails.campaign &&
-                                        leadDetails.campaign.status == 'completed'
-                                        ? false
-                                        : true
+                                :showUserFilter="crmState.client.managing ? false : true" :showAddButton="leadDetails &&
+                                    leadDetails.campaign &&
+                                    leadDetails.campaign.status == 'completed'
+                                    ? false
+                                    : true
                                     " :todos="false" />
                         </a-tab-pane>
                     </a-tabs>
                 </a-card>
             </a-col>
         </a-row>
-    </a-layout>
+    <!-- </a-layout> -->
 </template>
 
 <script>
@@ -1135,7 +1062,7 @@ import {
     ArrowRightOutlined,
     ArrowLeftOutlined,
     SearchOutlined,
-    ClockCircleOutlined,
+    // ClockCircleOutlined,
     ScheduleOutlined,
     FileTextOutlined,
     PhoneOutlined,
@@ -1168,7 +1095,7 @@ import SendMail from "./SendMail.vue";
 import SendMessage from "./SendMessage.vue";
 import Sidebar from "../../../../../../../common/layouts/Sidebar.vue";
 import SendCall from "./SendCall.vue";
-import SearchLead from "./SearchLead.vue";
+// import SearchLead from "./SearchLead.vue";
 import UphoneCallTable from "./UphoneCallsHistory.vue";
 import fields from "../fields";
 import functions from "./functions.js";
@@ -1192,7 +1119,7 @@ export default {
         MailOutlined,
         MobileOutlined,
         StepBackwardOutlined,
-        ClockCircleOutlined,
+        // ClockCircleOutlined,
         SearchOutlined,
         StepForwardOutlined,
         MessageOutlined,
@@ -1206,7 +1133,7 @@ export default {
         SendMessage,
         Sidebar,
         SendCall,
-        SearchLead,
+        // SearchLead,
         UphoneCallTable,
         PlusOutlined,
     },
@@ -1422,7 +1349,7 @@ export default {
         };
 
         const validarClienteSave = () => {
-            if(crmState.client.isNew || (!crmState.client.managing && !crmState.client.isNew)) {
+            if (crmState.client.isNew || (!crmState.client.managing && !crmState.client.isNew)) {
                 crmState.client.campaign_id = crmState.client.campaign.id;
                 crmState.client.assign_to = store.state.auth.user.id;
                 addEditRequestAdmin({
@@ -1448,8 +1375,8 @@ export default {
             }
 
             // Validar si el cliente es nuevo y guardar
-            if(validarClienteSave()){
-                if(saveType == "save_exit"){
+            if (validarClienteSave()) {
+                if (saveType == "save_exit") {
                     crmState.client.managing = false;
                     loading.value = false;
                     router.push({
@@ -1459,7 +1386,7 @@ export default {
                 return;
             }
 
-            if(crmState.client.managing){
+            if (crmState.client.managing) {
                 addEditRequestAdmin({
                     url: `campaigns/update-actioned-lead`,
                     data: {
@@ -1472,12 +1399,12 @@ export default {
                         autoSaved.value = true;
                         loading.value = false;
 
-                        if(parametroPhone) {
+                        if (parametroPhone) {
                             actualizarUphoneCall();
                             parametroPhone = false;
                             phoneNumber = '';
                         }
-                        
+
                         if (saveType == "save_exit") {
                             loading.value = false;
                             router.push({
@@ -1735,11 +1662,11 @@ export default {
 }
 
 .callmanager-middle-sidebar {
-    height: calc(110vh - 72px);
+    height: calc(100vh - 70px);
 }
 
 .callmanager-middle-sidebar .ps {
-    height: calc(110vh - 235px);
+    height: calc(100vh - 235px);
 }
 
 .callmanager-right-sidebar {
@@ -1747,16 +1674,179 @@ export default {
 }
 
 :deep(.callmanager-right-sidebar) {
-  overflow: hidden !important;
+    overflow: hidden !important;
 }
 
 :deep(.callmanager-right-sidebar .ant-card-body) {
-  overflow: hidden !important;
+    overflow: hidden !important;
 }
 
 :deep(.callmanager-right-sidebar .ps__rail-y),
 :deep(.callmanager-right-sidebar .ps__rail-x) {
-  display: none !important;
+    display: none !important;
 }
 
+/* Pegar en tu <style scoped> o global */
+.lead-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.lead-actions__btn {
+    min-width: 112px;
+}
+
+/* LABEL FLOTANTE */
+/* ------------------------------
+   Labels bold
+------------------------------ */
+.label-bold .ant-form-item-label>label {
+    font-weight: bold;
+}
+
+/* ------------------------------
+   Side panel layout
+------------------------------ */
+.side-panel {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+@media (max-width: 895px) {
+    .side-panel>.ant-col {
+        flex-wrap: wrap;
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ------------------------------
+   Floating input base
+------------------------------ */
+.floating-input {
+    position: relative;
+    /* importante para el label absoluto */
+}
+
+/* INPUT normal (Ant Input renderiza un <input>) */
+.floating-input input {
+    padding: 20px 12px 6px 12px;
+    border-top: none !important;
+}
+
+/* TEXTAREA (Ant Textarea renderiza <textarea>) */
+.floating-input textarea {
+    padding: 20px 12px 6px 12px;
+    border-top: none !important;
+}
+
+/* Label dentro del input */
+.floating-input label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: all 0.2s ease;
+    padding: 0 4px;
+    font-weight: bold;
+}
+
+/* Cuando tiene foco o valor (input/textarea) */
+.floating-input:focus-within label,
+.floating-input input:not(:placeholder-shown)+label,
+.floating-input textarea:not(:placeholder-shown)+label {
+    top: -6px;
+}
+
+/* ------------------------------
+   SELECT (AntD) - clave para que funcione
+   Esto es lo que "faltaba" en el otro.
+   Usamos :deep() para que funcione aunque el style sea scoped.
+------------------------------ */
+
+/* Quitar borde superior del selector visible del Select */
+.floating-input :deep(.ant-select-selector) {
+    border-top: none !important;
+    padding-top: 12px;
+    /* ayuda a que el label no choque */
+}
+
+/* Si querés mantener el label flotante con selects */
+.floating-input:focus-within .floating-label,
+.floating-select.has-value .floating-label {
+    top: -6px;
+}
+
+/* ------------------------------
+   INPUT-NUMBER (AntD) - también tiene wrapper propio
+------------------------------ */
+.floating-input :deep(.ant-input-number) {
+    border-top: none !important;
+}
+
+/* El input interno del input-number */
+.floating-input :deep(.ant-input-number-input) {
+    padding: 20px 12px 6px 12px !important;
+}
+
+/* ------------------------------
+   (Opcional) Mantener tu comportamiento previo de phone-select
+   Por si en algún lugar dependés de esa clase
+------------------------------ */
+.phone-select :deep(.ant-select-selector) {
+    border-top: none !important;
+}
+
+/* Control base: mismo alto/estética */
+.floating-input :deep(.ant-input),
+.floating-input :deep(.ant-select-selector),
+.floating-input :deep(.ant-picker),
+.floating-input :deep(.ant-input-number) {
+    height: 44px !important;
+    border-top: none !important;
+    display: flex;
+    align-items: center;
+}
+
+/* Input normal */
+.floating-input :deep(.ant-input) {
+    padding: 20px 12px 6px 12px !important;
+}
+
+/* Select */
+.floating-input :deep(.ant-select-selector) {
+    padding: 0 12px !important;
+}
+
+/* Texto dentro del select */
+.floating-input :deep(.ant-select-selection-search-input),
+.floating-input :deep(.ant-select-selection-item),
+.floating-input :deep(.ant-select-selection-placeholder) {
+    line-height: 44px !important;
+}
+
+/* DatePicker */
+.floating-input :deep(.ant-picker-input > input) {
+    padding: 20px 12px 6px 12px !important;
+}
+
+/* InputNumber */
+.floating-input :deep(.ant-input-number-input) {
+    height: 44px !important;
+    padding: 20px 12px 6px 12px !important;
+}
+
+/* Label flotante: cuando hay foco o valor */
+.floating-input:focus-within .floating-label,
+.floating-input.has-value .floating-label {
+    top: -6px;
+}
+
+/* Ajuste de posición inicial del label */
+.floating-input .floating-label {
+    top: 50%;
+    transform: translateY(-50%);
+}
 </style>

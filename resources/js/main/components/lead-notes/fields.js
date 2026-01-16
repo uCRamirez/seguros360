@@ -1,6 +1,5 @@
-import { ref, onBeforeMount } from "vue";
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { forEach } from "lodash-es";
 import common from "../../../common/composable/common";
 
 const fields = (props) => {
@@ -47,7 +46,7 @@ const fields = (props) => {
                 dataIndex: "nombre",
             },
             {
-                title: t("lead.campaign"),
+                title: t("campaign.campaign"),
                 dataIndex: "campaign",
             },
             {

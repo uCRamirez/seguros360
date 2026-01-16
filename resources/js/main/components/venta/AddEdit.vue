@@ -1213,7 +1213,7 @@ export default defineComponent({
 
         const drawerWidth = computed(() => {
         if (windowWidth.value <= 991) return '90%'
-            return isSale.value ? '86%' : '50%'
+            return isSale.value ? '100%' : '50%'
         })
 
         return {

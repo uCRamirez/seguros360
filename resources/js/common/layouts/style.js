@@ -140,18 +140,15 @@ const MainContentArea = Styled("div", props)`
 	`;
 //for right side bar//
 const RightSidebar = Styled("div", props)`
-	width: ${({ rightSidebarValue }) => (rightSidebarValue == false ? "0%" : "19.5%")};
+	width: ${({ rightSidebarValue }) => (rightSidebarValue == false ? "0%" : "20%")};
 	
 	// Tablets (iPad)
-	@media (min-width: 1194px) and (max-width: 1280px) {
-		width: ${({ rightSidebarValue }) => (rightSidebarValue == false ? "%" : "23%")};
-	}
-	@media (min-width: 768px) and (max-width: 1194px) {
-		width: ${({ rightSidebarValue }) => (rightSidebarValue == false ? "%" : "28%")};
+	@media (min-width: 834px) and (max-width: 1194px) {
+		width: ${({ rightSidebarValue }) => (rightSidebarValue == false ? "0%" : "30%")};
 	}
 	
 	// Tablets pequeñas
-	@media (min-width: 600px) and (max-width: 767px) {
+	@media (min-width: 600px) and (max-width: 834px) {
 		width: ${({ rightSidebarValue }) => (rightSidebarValue == false ? "0%" : "45%")};
 	}
 

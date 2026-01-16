@@ -1,6 +1,7 @@
 <template>
     <!-- :width="isSale ? 1550 : 600" -->
-    <a-drawer placement="left" :width="drawerWidth" :open="visible" :closable="false" :centered="true" :title="pageTitle" @ok="onSubmit">
+    <a-drawer placement="left" :width="drawerWidth" :open="visible" :closable="false" :centered="true"
+        :title="pageTitle" @ok="onSubmit">
         <a-form layout="vertical" ref="formRef" :model="datos.venta" :rules="isSale ? validationRules : null">
             <a-row :gutter="[16, 16]">
                 <!-- COLUMNA IZQUIERDA: formulario principal -->
@@ -8,96 +9,109 @@
                     <a-row :gutter="[16, 16]">
                         <!-- Nivel 1 -->
                         <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                            <a-form-item class="required label-bold" :label="$t('lead_notes.notes_typification_1')"
-                                name="notes_typification_id_1"
+                            <a-form-item class="required floating-form-item phone-select" name="notes_typification_id_1"
                                 :help="rules.notes_typification_id_1 ? rules.notes_typification_id_1.message : null"
                                 :validateStatus="rules.notes_typification_id_1 ? 'error' : null">
-                                <a-select v-model:value="formData.notes_typification_id_1"
-                                    :placeholder="$t('common.select_default_text', [$t('lead_notes.notes_typification_1')])"
-                                    optionFilterProp="title" show-search :allowClear="true" @change="() => {
-                                        formData.notes_typification_id_2 = undefined;
-                                        formData.notes_typification_id_3 = undefined;
-                                        formData.notes_typification_id_4 = undefined;
-                                        getChildTypification(formData.notes_typification_id_1);
-                                    }">
-                                    <a-select-option v-for="parentTypification in filteredParentTypifications"
-                                        :key="parentTypification.xid" :title="parentTypification.name"
-                                        :value="parentTypification.xid">
-                                        {{ parentTypification.name }}
-                                    </a-select-option>
-                                </a-select>
+                                <div class="floating-input floating-select"
+                                    :class="{ 'has-value': !!datos.venta.telVenta }">
+                                    <a-select v-model:value="formData.notes_typification_id_1"
+                                        :placeholder="$t('common.select_default_text', [$t('lead_notes.notes_typification_1')])"
+                                        optionFilterProp="title" show-search :allowClear="true" @change="() => {
+                                            formData.notes_typification_id_2 = undefined;
+                                            formData.notes_typification_id_3 = undefined;
+                                            formData.notes_typification_id_4 = undefined;
+                                            getChildTypification(formData.notes_typification_id_1);
+                                        }">
+                                        <a-select-option v-for="parentTypification in filteredParentTypifications"
+                                            :key="parentTypification.xid" :title="parentTypification.name"
+                                            :value="parentTypification.xid">
+                                            {{ parentTypification.name }}
+                                        </a-select-option>
+                                    </a-select>
+                                </div>
                             </a-form-item>
                         </a-col>
 
                         <!-- Nivel 2 -->
-                        <a-col class="required label-bold" v-if="childrenTypificationData.length > 0" :xs="24" :sm="24"
-                            :md="24" :lg="24">
-                            <a-form-item :label="$t('lead_notes.notes_typification_2')" name="notes_typification_id_2"
+                        <a-col v-if="childrenTypificationData.length > 0" :xs="24" :sm="24" :md="24" :lg="24">
+                            <a-form-item class="required floating-form-item phone-select" name="notes_typification_id_2"
                                 :help="rules.notes_typification_id_2 ? rules.notes_typification_id_2.message : null"
                                 :validateStatus="rules.notes_typification_id_2 ? 'error' : null">
-                                <a-select v-model:value="formData.notes_typification_id_2"
-                                    :placeholder="$t('common.select_default_text', [$t('lead_notes.notes_typification_2')])"
-                                    optionFilterProp="title" show-search :allowClear="true" @change="() => {
-                                        formData.notes_typification_id_3 = undefined;
-                                        formData.notes_typification_id_4 = undefined;
-                                        getChildrenChildTypification(formData.notes_typification_id_2);
-                                    }">
-                                    <a-select-option v-for="childrenTypification in childrenTypificationData"
-                                        :key="childrenTypification.xid" :title="childrenTypification.name"
-                                        :value="childrenTypification.xid">
-                                        {{ childrenTypification.name }}
-                                    </a-select-option>
-                                </a-select>
+                                <div class="floating-input floating-select"
+                                    :class="{ 'has-value': !!formData.notes_typification_id_2 }">
+                                    <a-select v-model:value="formData.notes_typification_id_2"
+                                        :placeholder="$t('common.select_default_text', [$t('lead_notes.notes_typification_2')])"
+                                        optionFilterProp="title" show-search :allowClear="true" @change="() => {
+                                            formData.notes_typification_id_3 = undefined;
+                                            formData.notes_typification_id_4 = undefined;
+                                            getChildrenChildTypification(formData.notes_typification_id_2);
+                                        }">
+                                        <a-select-option v-for="childrenTypification in childrenTypificationData"
+                                            :key="childrenTypification.xid" :title="childrenTypification.name"
+                                            :value="childrenTypification.xid">
+                                            {{ childrenTypification.name }}
+                                        </a-select-option>
+                                    </a-select>
+                                </div>
                             </a-form-item>
                         </a-col>
 
                         <!-- Nivel 3 -->
-                        <a-col class="required label-bold" v-if="childrenChildData.length > 0" :xs="24" :sm="24"
-                            :md="24" :lg="24">
-                            <a-form-item :label="$t('lead_notes.notes_typification_3')" name="notes_typification_id_3"
+                        <a-col v-if="childrenChildData.length > 0" :xs="24" :sm="24" :md="24" :lg="24">
+                            <a-form-item class="required floating-form-item phone-select" name="notes_typification_id_3"
                                 :help="rules.notes_typification_id_3 ? rules.notes_typification_id_3.message : null"
                                 :validateStatus="rules.notes_typification_id_3 ? 'error' : null">
-                                <a-select v-model:value="formData.notes_typification_id_3"
-                                    :placeholder="$t('common.select_default_text', [$t('lead_notes.notes_typification_3')])"
-                                    optionFilterProp="title" show-search :allowClear="true" @change="() => {
-                                        formData.notes_typification_id_4 = undefined;
-                                        getLastChildrenChildTypification(formData.notes_typification_id_3);
-                                    }">
-                                    <a-select-option v-for="childrenChild in childrenChildData" :key="childrenChild.xid"
-                                        :title="childrenChild.name" :value="childrenChild.xid">
-                                        {{ childrenChild.name }}
-                                    </a-select-option>
-                                </a-select>
+                                <div class="floating-input floating-select"
+                                    :class="{ 'has-value': !!formData.notes_typification_id_3 }">
+                                    <a-select v-model:value="formData.notes_typification_id_3"
+                                        :placeholder="$t('common.select_default_text', [$t('lead_notes.notes_typification_3')])"
+                                        optionFilterProp="title" show-search :allowClear="true" @change="() => {
+                                            formData.notes_typification_id_4 = undefined;
+                                            getLastChildrenChildTypification(formData.notes_typification_id_3);
+                                        }">
+                                        <a-select-option v-for="childrenChild in childrenChildData"
+                                            :key="childrenChild.xid" :title="childrenChild.name"
+                                            :value="childrenChild.xid">
+                                            {{ childrenChild.name }}
+                                        </a-select-option>
+                                    </a-select>
+                                </div>
                             </a-form-item>
                         </a-col>
 
                         <!-- Nivel 4 -->
-                        <a-col class="required label-bold" v-if="lastChildrenChildData.length > 0" :xs="24" :sm="24"
-                            :md="24" :lg="24">
-                            <a-form-item :label="$t('lead_notes.notes_typification_4')" name="notes_typification_id_4"
+                        <a-col v-if="lastChildrenChildData.length > 0" :xs="24" :sm="24" :md="24" :lg="24">
+                            <a-form-item class="required floating-form-item phone-select" name="notes_typification_id_4"
                                 :help="rules.notes_typification_id_4 ? rules.notes_typification_id_4.message : null"
                                 :validateStatus="rules.notes_typification_id_4 ? 'error' : null">
-                                <a-select v-model:value="formData.notes_typification_id_4"
-                                    :placeholder="$t('common.select_default_text', [$t('lead_notes.notes_typification_4')])"
-                                    optionFilterProp="title" show-search :allowClear="true"
-                                    @change="getAccion(formData.notes_typification_id_4)">
-                                    <a-select-option v-for="lastChildrenChild in lastChildrenChildData"
-                                        :key="lastChildrenChild.xid" :title="lastChildrenChild.name"
-                                        :value="lastChildrenChild.xid">
-                                        {{ lastChildrenChild.name }}
-                                    </a-select-option>
-                                </a-select>
+                                <div class="floating-input floating-select"
+                                    :class="{ 'has-value': !!formData.notes_typification_id_4 }">
+                                    <a-select v-model:value="formData.notes_typification_id_4"
+                                        :placeholder="$t('common.select_default_text', [$t('lead_notes.notes_typification_4')])"
+                                        optionFilterProp="title" show-search :allowClear="true"
+                                        @change="getAccion(formData.notes_typification_id_4)">
+                                        <a-select-option v-for="lastChildrenChild in lastChildrenChildData"
+                                            :key="lastChildrenChild.xid" :title="lastChildrenChild.name"
+                                            :value="lastChildrenChild.xid">
+                                            {{ lastChildrenChild.name }}
+                                        </a-select-option>
+                                    </a-select>
+                                </div>
                             </a-form-item>
                         </a-col>
 
+
                         <!-- Comentario de la nota -->
                         <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                            <a-form-item :label="$t('common.notes')" name="notes"
+                            <a-form-item class="floating-form-item" name="notes"
                                 :help="rules.notes ? rules.notes.message : null"
-                                :validateStatus="rules.notes ? 'error' : null" class="label-bold">
-                                <a-textarea v-model:value="formData.notes"
-                                    :placeholder="$t('common.placeholder_default_text', [$t('common.notes')])" :rows="4"
-                                    :maxlength="2000" />
+                                :validateStatus="rules.notes ? 'error' : null">
+                                <div class="floating-input">
+                                    <a-textarea v-model:value="formData.notes"
+                                        :placeholder="$t('common.placeholder_default_text', [$t('common.notes')])"
+                                        :rows="4" :maxlength="2000" />
+                                    <!-- <label>{{ $t('common.notes')}}</label> -->
+                                </div>
                             </a-form-item>
                         </a-col>
 
@@ -135,194 +149,261 @@
                 <a-col v-if="isSale" :xs="24" :sm="24" :md="19" :lg="19">
                     <div class="side-panel" style="display: flex; align-items: flex-start; gap: 12px;">
 
-                        <a-col :xs="16" :sm="16" :md="(esBeneficiario || esBeneficiarioAsist) ? 6 : 8"
-                            :lg="(esBeneficiario || esBeneficiarioAsist) ? 6 : 8">
+                        <a-col :xs="16" :sm="16" :md="8" :lg="8">
 
-                            <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                                <!-- ID -->
-                                <a-form-item class="label-bold" :label="$t('lead.id')">
-                                    <a-input :value="datos.venta.idLead" />
-                                </a-form-item>
-                            </a-col>
-                            <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                                <!-- Cedula -->
-                                <a-form-item class="label-bold" :label="$t('lead.document')">
-                                    <a-input :value="datos.venta.cedula" />
-                                </a-form-item>
-                            </a-col>
-                            <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                                <!-- Nombre cliente completo -->
-                                <a-form-item class="label-bold" :label="$t('lead.name')">
-                                    <a-input :value="datos.venta.nombre" />
-                                </a-form-item>
-                            </a-col>
-                            <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                                <!-- Email -->
-                                <a-form-item class="label-bold" :label="$t('lead.email')">
-                                    <a-input :value="datos.venta.email" />
-                                </a-form-item>
-                            </a-col>
-                            <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                                <!-- Agente -->
-                                <a-form-item class="label-bold" :label="$t('lead.agent')">
-                                    <a-input :value="datos.venta.agente" />
-                                </a-form-item>
-                            </a-col>
-                            <!-- <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                                <-- Nombre base --
-                                <a-form-item class="label-bold" :label="$t('lead.base_name')">
-                                    <a-input :value="datos.venta.nombreBase" />
+                            <!-- <a-col :xs="24">
+                                <a-form-item class="floating-form-item">
+                                    <div class="floating-input">
+                                        <a-input v-model:value="datos.venta.idLead" placeholder=" " />
+                                        <label>{{ $t('lead.id') }}</label>
+                                    </div>
                                 </a-form-item>
                             </a-col> -->
+
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                                <!-- Telefonos -->
-                                <a-form-item class="label-bold" v-if="leadInfo" name="telVenta"
-                                    :label="$t('lead.phone')">
-                                    <a-select v-model:value="datos.venta.telVenta"
-                                        :placeholder="$t('common.select_default_text', [$t('lead.phone'),])"
-                                        style="width: 100%;">
-                                        <a-select-option v-for="tel in [
-                                            leadInfo.tel1,
-                                            leadInfo.tel2,
-                                            leadInfo.tel3,
-                                            leadInfo.tel4,
-                                            leadInfo.tel5,
-                                            leadInfo.tel6
-                                        ].filter(t => t)" :key="tel" :value="tel">
-                                            {{ tel }}
-                                        </a-select-option>
-                                    </a-select>
-                                </a-form-item>
-                                <a-form-item class="label-bold" v-else name="telVenta" :label="$t('lead.phone')">
-                                    <a-form-item>
-                                        <a-input :value="datos.venta.telVenta" />
-                                    </a-form-item>
+                                <!-- Cédula -->
+                                <a-form-item class="floating-form-item">
+                                    <div class="floating-input">
+                                        <a-input v-model:value="datos.venta.cedula" placeholder=" " />
+                                        <label class="floating-label">
+                                            {{ $t('lead.document') }}
+                                        </label>
+                                    </div>
                                 </a-form-item>
                             </a-col>
+
+                            <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                <!-- Nombre cliente completo -->
+                                <a-form-item class="floating-form-item">
+                                    <div class="floating-input">
+                                        <a-input v-model:value="datos.venta.nombre" placeholder=" " />
+                                        <label class="floating-label">
+                                            {{ $t('lead.name') }}
+                                        </label>
+                                    </div>
+                                </a-form-item>
+                            </a-col>
+
+                            <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                <!-- Email -->
+                                <a-form-item class="floating-form-item">
+                                    <div class="floating-input">
+                                        <a-input v-model:value="datos.venta.email" placeholder=" " />
+                                        <label class="floating-label">
+                                            {{ $t('lead.email') }}
+                                        </label>
+                                    </div>
+                                </a-form-item>
+                            </a-col>
+
+                            <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                <!-- Agente -->
+                                <a-form-item class="floating-form-item">
+                                    <div class="floating-input">
+                                        <a-input v-model:value="datos.venta.agente" placeholder=" " />
+                                        <label class="floating-label">
+                                            {{ $t('lead.agent') }}
+                                        </label>
+                                    </div>
+                                </a-form-item>
+                            </a-col>
+
+                            <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                <!-- Teléfonos -->
+                                <a-form-item v-if="leadInfo" name="telVenta" class="floating-form-item">
+                                    <div class="floating-input floating-select"
+                                        :class="{ 'has-value': !!datos.venta.telVenta }">
+                                        <a-select v-model:value="datos.venta.telVenta" placeholder=" " class="phone-select"
+                                            style="width: 100%;">
+                                            <a-select-option v-for="tel in [
+                                                leadInfo.tel1,
+                                                leadInfo.tel2,
+                                                leadInfo.tel3,
+                                                leadInfo.tel4,
+                                                leadInfo.tel5,
+                                                leadInfo.tel6
+                                            ].filter(t => t)" :key="tel" :value="tel">
+                                                {{ tel }}
+                                            </a-select-option>
+                                        </a-select>
+
+                                        <label class="floating-label">
+                                            {{ $t('lead.phone') }}
+                                        </label>
+                                    </div>
+                                </a-form-item>
+
+                                <a-form-item v-else name="telVenta" class="floating-form-item">
+                                    <div class="floating-input">
+                                        <a-input v-model:value="datos.venta.telVenta" placeholder=" " />
+                                        <label class="floating-label">
+                                            {{ $t('lead.phone') }}
+                                        </label>
+                                    </div>
+                                </a-form-item>
+                            </a-col>
+
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- tarjeta -->
-                                <a-form-item class="label-bold" name="tarjeta" :label="$t('lead.card')">
-                                    <a-input v-model:value="datos.venta.tarjeta" />
+                                <a-form-item class="floating-form-item" name="tarjeta">
+                                    <div class="floating-input">
+                                        <a-input v-model:value="datos.venta.tarjeta" placeholder=" " />
+                                        <label class="floating-label">
+                                            {{ $t('lead.card') }}
+                                        </label>
+                                    </div>
                                 </a-form-item>
                             </a-col>
-                        </a-col>
 
-                        <a-col :xs="16" :sm="16" style="border-left: 1px solid #f0f0f0;"
-                            :md="(esBeneficiario || esBeneficiarioAsist) ? 11 : 16"
-                            :lg="(esBeneficiario || esBeneficiarioAsist) ? 11 : 16">
-                            <!-- cod y producto -->
-                            <div class="d-flex">
-                                <a-col :xs="24" :sm="24" :md="12" :lg="12">
-                                    <!-- Code -->
-                                    <a-form-item class="label-bold" name="internal_code"
-                                        :label="$t('lead.internal_code')">
-                                        <a-select v-model:value="datosProducto.producto.internal_code"
-                                            :placeholder="$t('common.select_default_text', [$t('lead.internal_code')])"
+                            <a-divider>{{ $t('common.product') }}</a-divider>
+
+                            <!-- Código -->
+                            <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                <a-form-item name="internal_code" class="floating-form-item">
+                                    <div class="floating-input floating-select"
+                                        :class="{ 'has-value': !!datosProducto.producto.internal_code }">
+                                        <a-select v-model:value="datosProducto.producto.internal_code" placeholder=" "
                                             style="width: 100%;" show-search option-filter-prop="title"
                                             :allowClear="true">
-                                            <a-select-option v-for="code in internalCodeOptions" :title="code"
-                                                :key="code" :value="code">
+                                            <a-select-option v-for="code in internalCodeOptions" :key="code"
+                                                :value="code" :title="code">
                                                 {{ code }}
                                             </a-select-option>
                                         </a-select>
-                                    </a-form-item>
-                                </a-col>
-                                <a-col :xs="24" :sm="24" :md="12" :lg="12">
-                                    <!-- Producto -->
-                                    <a-form-item class="label-bold" name="producto" :label="$t('lead.product')">
-                                        <a-select v-model:value="datosProducto.producto.name"
-                                            :placeholder="$t('common.select_default_text', [$t('lead.product')])"
+
+                                        <label class="floating-label">
+                                            {{ $t('lead.internal_code') }}
+                                        </label>
+                                    </div>
+                                </a-form-item>
+                            </a-col>
+
+                            <!-- Producto -->
+                            <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                <a-form-item name="producto" class="floating-form-item">
+                                    <div class="floating-input floating-select"
+                                        :class="{ 'has-value': !!datosProducto.producto.name }">
+                                        <a-select v-model:value="datosProducto.producto.name" placeholder=" "
                                             style="width: 100%;" show-search option-filter-prop="title"
                                             :allowClear="true">
-                                            <a-select-option v-for="name in productNameOptions" :title="name"
-                                                :key="name" :value="name">
+                                            <a-select-option v-for="name in productNameOptions" :key="name"
+                                                :value="name" :title="name">
                                                 {{ name }}
                                             </a-select-option>
                                         </a-select>
-                                    </a-form-item>
-                                </a-col>
-                            </div>
 
-                            <div class="d-flex">
-                                <!-- cobertura y cant producto -->
-                                <a-col :xs="24" :sm="24" :md="12" :lg="12">
-                                    <!-- Cobertura (aparece solo cuando code + product están definidos) -->
-                                    <a-form-item class="label-bold" name="coverage" :label="$t('lead.coverage')">
-                                        <a-select v-model:value="datosProducto.producto.coverage"
-                                            :placeholder="$t('common.select_default_text', [$t('lead.coverage')])"
+                                        <label class="floating-label">
+                                            {{ $t('lead.product') }}
+                                        </label>
+                                    </div>
+                                </a-form-item>
+                            </a-col>
+
+                            <!-- Cobertura -->
+                            <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                <a-form-item name="coverage" class="floating-form-item">
+                                    <div class="floating-input floating-select"
+                                        :class="{ 'has-value': !!datosProducto.producto.coverage }">
+                                        <a-select v-model:value="datosProducto.producto.coverage" placeholder=" "
                                             style="width: 100%;"
                                             :disabled="(!datosProducto.producto.internal_code || !datosProducto.producto.name)"
                                             show-search option-filter-prop="title" :allowClear="true">
-                                            <a-select-option v-for="cov in coverageOptions" :title="cov" :key="cov"
-                                                :value="cov">
+                                            <a-select-option v-for="cov in coverageOptions" :key="cov" :value="cov"
+                                                :title="cov">
                                                 {{ cov }}
                                             </a-select-option>
                                         </a-select>
-                                    </a-form-item>
-                                </a-col>
-                                <a-col :xs="24" :sm="24" :md="12" :lg="12">
-                                    <a-form-item class="label-bold" name="product_quantity"
-                                        :label="$t('lead.product_quantity')">
+
+                                        <label class="floating-label">
+                                            {{ $t('lead.coverage') }}
+                                        </label>
+                                    </div>
+                                </a-form-item>
+                            </a-col>
+
+                            <!-- Cantidad -->
+                            <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                <a-form-item name="product_quantity" class="floating-form-item">
+                                    <div class="floating-input"
+                                        :class="{ 'has-value': datosProducto.producto.cantidadProducto !== null && datosProducto.producto.cantidadProducto !== undefined && datosProducto.producto.cantidadProducto !== '' }">
                                         <a-input-number :min="1" v-model:value="datosProducto.producto.cantidadProducto"
                                             :disabled="!datosProducto.producto.price" style="width:100%" />
+                                    </div>
+                                </a-form-item>
+                            </a-col>
+
+                            <div class="d-flex">
+                                <!-- Precio -->
+                                <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                    <a-form-item name="precio" class="floating-form-item">
+                                        <div v-if="matchingProducts.length > 1" class="floating-input floating-select"
+                                            :class="{ 'has-value': !!datosProducto.producto.price }">
+                                            <a-select v-model:value="datosProducto.producto.price" placeholder=" "
+                                                style="width: 100%;" show-search option-filter-prop="title" allowClear>
+                                                <a-select-option v-for="p in matchingProducts" :key="p.xid"
+                                                    :value="p.price"
+                                                    :title="p.x_currency_id ? formatAmountUsingCurrencyObject(p.price, p.currency) : formatAmountCurrency(p.price)">
+                                                    {{
+                                                        p.x_currency_id
+                                                            ? formatAmountUsingCurrencyObject(p.price, p.currency)
+                                                            : formatAmountCurrency(p.price)
+                                                    }}
+                                                </a-select-option>
+                                            </a-select>
+
+                                            <label class="floating-label">
+                                                {{ $t('lead.price') }}
+                                            </label>
+                                        </div>
+
+                                        <div v-else class="floating-input" :class="{ 'has-value': true }">
+                                            <a-input-number :value="datosProducto.producto.x_currency_id
+                                                ? formatAmountUsingCurrencyObject(datosProducto.producto.price, datosProducto.producto.currency)
+                                                : formatAmountCurrency(datosProducto.producto.price)" disabled
+                                                style="width:100%" />
+                                        </div>
                                     </a-form-item>
                                 </a-col>
                             </div>
 
-                            <div class="d-flex">
-                                <!-- precio y monto total -->
-                                <a-col :xs="24" :sm="24" :md="datosProducto.producto.digitar_precio ? 6 : 12"
-                                    :lg="datosProducto.producto.digitar_precio ? 6 : 12">
-                                    <a-form-item class="label-bold" name="precio" :label="$t('lead.price')">
-                                        <!-- 1) Si hay más de un producto candidato: select de precios -->
-                                        <a-select v-if="matchingProducts.length > 1"
-                                            v-model:value="datosProducto.producto.price"
-                                            :placeholder="$t('common.select_default_text', [$t('lead.price')])"
-                                            style="width: 100%;" show-search option-filter-prop="title" allowClear>
-                                            <a-select-option v-for="p in matchingProducts" :key="p.xid" :value="p.price"
-                                                :title="p.x_currency_id ? formatAmountUsingCurrencyObject(p.price,p.currency) : formatAmountCurrency(p.price)">
-                                                {{ p.x_currency_id ? formatAmountUsingCurrencyObject(p.price,p.currency) : formatAmountCurrency(p.price) }}
-                                            </a-select-option>
-                                        </a-select>
-
-                                        <!-- 2) Si hay exactamente uno: lo mostramos en un input bloqueado -->
-                                        <a-input-number v-else-if="matchingProducts.length === 1"
-                                            :value="datosProducto.producto.x_currency_id ? formatAmountUsingCurrencyObject(datosProducto.producto.price,datosProducto.producto.currency) : formatAmountCurrency(datosProducto.producto.price)" disabled
-                                            style="width:100%" />
-
-                                        <!-- 3) Si aún no hay cobertura o candidatos: campo bloqueado vacío -->
-                                        <a-input-number v-else
-                                            :value="datosProducto.producto.x_currency_id ? formatAmountUsingCurrencyObject(datosProducto.producto.price,datosProducto.producto.currency) : formatAmountCurrency(datosProducto.producto.price)" disabled
-                                            style="width:100%" />
-                                    </a-form-item>
-                                </a-col>
-
-                                <!-- Monto a digitar -->
-                                <a-col :xs="24" :sm="24" :md="6" :lg="6" v-if="datosProducto.producto.digitar_precio">
-                                    <a-form-item class="label-bold" :label="$t('lead.price')">
+                            <!-- Monto a digitar -->
+                            <a-col :xs="24" :sm="24" :md="24" :lg="24" v-if="datosProducto.producto.digitar_precio">
+                                <a-form-item name="precio_digitado" class="floating-form-item">
+                                    <div class="floating-input"
+                                        :class="{ 'has-value': datosProducto.producto.precio_digitado !== null && datosProducto.producto.precio_digitado !== undefined && datosProducto.producto.precio_digitado !== '' }">
                                         <a-input-number v-model:value="datosProducto.producto.precio_digitado" :min="0"
                                             style="width:100%" />
-                                    </a-form-item>
-                                </a-col>
+                                    </div>
+                                </a-form-item>
+                            </a-col>
 
-                                <a-col :xs="24" :sm="24" :md="12" :lg="12">
-                                    <a-form-item class="label-bold" :label="$t('common.action')">
+                            <!-- Botón -->
+                            <a-col :xs="24" :sm="24" :md="24" :lg="24">
+                                <a-form-item class="floating-form-item">
+                                    <div class="floating-input has-value">
                                         <a-button :disabled="!datosProducto.producto.price" type="primary" block
                                             @click="addProducto">
                                             <ShoppingCartOutlined />
                                             {{ $t('common.add') }} {{ $t('common.product') }}
                                         </a-button>
-                                    </a-form-item>
-                                </a-col>
-                            </div>
+                                    </div>
+                                </a-form-item>
+                            </a-col>
+
+                        </a-col>
+                        <!-- Tabla de productos agregados -->
+                        <a-col :xs="16" :sm="16" style="border-left: 1px solid #f0f0f0;" :md="16" :lg="16">
 
                             <div class="table-responsive">
                                 <a-table :columns="columns" :data-source="table.data" :pagination="table.pagination"
                                     @change="handleTableChange" :scroll="scrollStyle" size="small">
                                     <template #bodyCell="{ column, record }">
-
                                         <template v-if="column.dataIndex === 'price'">
-                                            {{ record.x_currency_id ? formatAmountUsingCurrencyObject(record.precio_digitado > 0 ? record.precio_digitado : record.price, record?.currency) :formatAmountCurrency(record.precio_digitado > 0 ? record.precio_digitado : record.price) }}
+                                            {{ record.x_currency_id
+                                                ? formatAmountUsingCurrencyObject(record.precio_digitado > 0 ?
+                                                    record.precio_digitado : record.price, record?.currency)
+                                                : formatAmountCurrency(record.precio_digitado > 0 ? record.precio_digitado :
+                                                    record.price) }}
                                         </template>
 
                                         <template v-if="column.dataIndex === 'action'">
@@ -335,17 +416,18 @@
                                                 </a-button>
                                             </a-tooltip>
                                         </template>
-
                                     </template>
+
                                     <template #footer>
                                         <div class="text-center">
-                                            <strong>{{ $t('lead.total_amount') }} : {{ datos.venta.montoTotal }}</strong>
+                                            <strong>{{ $t('lead.total_amount') }} : {{ datos.venta.montoTotal
+                                            }}</strong>
                                         </div>
                                     </template>
                                 </a-table>
                             </div>
 
-
+                            <!-- Toggles beneficiarios -->
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
                                 <!-- Beneficiarios seguros % -->
                                 <a-row gutter="12" style="width:100%">
@@ -362,6 +444,7 @@
                                         </a-form-item>
                                     </a-col>
                                 </a-row>
+
                                 <!-- Beneficiarios asistencia % -->
                                 <a-row gutter="12" style="width:100%">
                                     <a-col :span="12">
@@ -379,94 +462,108 @@
                                     </a-col>
                                 </a-row>
                             </a-col>
-                        </a-col>
 
-                        <a-col v-if="esBeneficiario || esBeneficiarioAsist" style="border-left: 1px solid #f0f0f0;"
-                            :xs="16" :sm="16" :md="7" :lg="7">
+                            <a-col v-if="esBeneficiario || esBeneficiarioAsist" :xs="24" :sm="24" :md="24" :lg="24">
+                                <!-- Beneficiarios seguros -->
+                                <a-form-item v-if="esBeneficiario" class="label-bold" style="justify-content: center;"
+                                    :label="$t('lead.beneficiary_information')">
+                                    <a-space v-for="(benef, i) in datos.venta.beneficiarios" :key="i"
+                                        style="display: flex; align-items: center; width: 100%;">
 
-                            <a-form-item v-if="esBeneficiario" class="label-bold" style="justify-content: center;"
-                                :label="$t('lead.beneficiary_information')">
+                                        <!-- Nombre más ancho -->
+                                        <a-form-item :name="['beneficiarios', i, 'nombre']"
+                                            :rules="[{ required: true, message: $t('lead.name') }]"
+                                            style="margin-right: 8px;">
+                                            <a-input v-model:value="benef.nombre" :placeholder="$t('lead.name')" />
+                                        </a-form-item>
 
-                                <a-space v-for="(benef, i) in datos.venta.beneficiarios" :key="i"
-                                    style="display: flex; align-items: center;">
-                                    <a-form-item :name="['beneficiarios', i, 'nombre']"
-                                        :rules="[{ required: true, message: $t('lead.name') }]">
-                                        <a-input v-model:value="benef.nombre" :placeholder="$t('lead.name')" />
+                                        <!-- Porcentaje más angosto -->
+                                        <a-form-item :name="['beneficiarios', i, 'porcentaje']"
+                                            :rules="[{ required: true, type: 'number', message: $t('uphone_calls.number') }]">
+                                            <a-input-number @change="value => validarSumaMaxima(i, value)"
+                                                v-model:value="benef.porcentaje" :min="0" :max="100" :precision="0"
+                                                :step="1" :placeholder="$t('lead.percentage')" style="width: 100%;" />
+                                        </a-form-item>
+
+                                        <!-- Botón eliminar -->
+                                        <a-form-item>
+                                            <MinusCircleOutlined @click="removeUser(i)" />
+                                        </a-form-item>
+                                    </a-space>
+
+
+                                    <a-form-item class="text-center">
+                                        <h4 :style="{ color: suma > 100 ? 'red' : 'inherit', fontWeight: 'bold' }">
+                                            <a-tooltip :style="{ color: suma > 100 ? 'red' : 'inherit' }"
+                                                :title="$t('message_template.maximum_percentage_exceded')">
+                                                <InfoCircleOutlined />
+                                            </a-tooltip>
+                                            {{ $t('common.total') }}: {{ suma }}
+                                        </h4>
                                     </a-form-item>
-                                    <a-form-item :name="['beneficiarios', i, 'porcentaje']"
-                                        :rules="[{ required: true, type: 'number', message: $t('uphone_calls.number') }]">
-                                        <a-input-number @change="value => validarSumaMaxima(i, value)"
-                                            v-model:value="benef.porcentaje" :min="0" :max="100" :precision="0"
-                                            :step="1" :placeholder="$t('lead.percentage')" />
-                                    </a-form-item>
+
                                     <a-form-item>
-                                        <MinusCircleOutlined @click="removeUser(i)" />
+                                        <a-button :disabled="datos.venta.cantidadBeneficiarios === 5 || suma >= 100"
+                                            type="dashed" block @click="addUser">
+                                            <PlusOutlined />
+                                            {{ $t('common.add') }}
+                                        </a-button>
                                     </a-form-item>
-                                </a-space>
-                                <a-form-item class="text-center">
-                                    <h4 :style="{ color: suma > 100 ? 'red' : 'inherit', fontWeight: 'bold' }">
-                                        <a-tooltip :style="{ color: suma > 100 ? 'red' : 'inherit' }"
-                                            :title="$t('message_template.maximum_percentage_exceded')">
-                                            <InfoCircleOutlined />
-                                        </a-tooltip>
-                                        {{ $t('common.total') }}: {{ suma }}
-                                    </h4>
-                                </a-form-item>
-                                <a-form-item>
-                                    <a-button :disabled="datos.venta.cantidadBeneficiarios === 5 || suma >= 100"
-                                        type="dashed" block @click="addUser">
-                                        <PlusOutlined />
-                                        {{ $t('common.add') }}
-                                    </a-button>
                                 </a-form-item>
 
-                            </a-form-item>
+                                <!-- Beneficiarios asistencia -->
+                                <a-form-item v-if="esBeneficiarioAsist" class="label-bold"
+                                    style="justify-content: center; border-top: 1px solid #f0f0f0; padding-top: 12px;"
+                                    :label="$t('lead.beneficiary_asist_information')">
+                                    <a-space v-for="(benef, i) in datos.venta.beneficiariosAsist" :key="i"
+                                        style="display: flex; align-items: center; width: 100%;">
 
-                            <a-form-item v-if="esBeneficiarioAsist" class="label-bold"
-                                style="justify-content: center;border-top: 1px solid #f0f0f0;"
-                                :label="$t('lead.beneficiary_asist_information')">
+                                        <a-form-item :name="['beneficiariosAsist', i, 'nombre']"
+                                            :rules="[{ required: true, message: $t('lead.name') }]"
+                                            style="flex: 2; margin-right: 8px;">
+                                            <a-input v-model:value="benef.nombre" :placeholder="$t('lead.name')" />
+                                        </a-form-item>
 
-                                <a-space v-for="(benef, i) in datos.venta.beneficiariosAsist" :key="i"
-                                    style="display: flex; align-items: center;">
-                                    <a-form-item :name="['beneficiariosAsist', i, 'nombre']"
-                                        :rules="[{ required: true, message: $t('lead.name') }]">
-                                        <a-input v-model:value="benef.nombre" :placeholder="$t('lead.name')" />
+                                        <a-form-item :name="['beneficiariosAsist', i, 'porcentaje']"
+                                            :rules="[{ required: true, type: 'number', message: $t('uphone_calls.number') }]"
+                                            style="flex: 1; margin-right: 8px;">
+                                            <a-input-number @change="value => validarSumaMaximaAsist(i, value)"
+                                                v-model:value="benef.porcentaje" :min="0" :max="100" :precision="0"
+                                                :step="1" :placeholder="$t('lead.percentage')" style="width: 100%;" />
+                                        </a-form-item>
+
+                                        <a-form-item>
+                                            <MinusCircleOutlined @click="removeUserAsis(i)" />
+                                        </a-form-item>
+                                    </a-space>
+
+
+                                    <a-form-item class="text-center">
+                                        <h4 :style="{ color: sumaAsist > 100 ? 'red' : 'inherit', fontWeight: 'bold' }">
+                                            <a-tooltip :style="{ color: sumaAsist > 100 ? 'red' : 'inherit' }"
+                                                :title="$t('message_template.maximum_percentage_exceded')">
+                                                <InfoCircleOutlined />
+                                            </a-tooltip>
+                                            {{ $t('common.total') }}: {{ sumaAsist }}
+                                        </h4>
                                     </a-form-item>
-                                    <a-form-item :name="['beneficiariosAsist', i, 'porcentaje']"
-                                        :rules="[{ required: true, type: 'number', message: $t('uphone_calls.number') }]">
-                                        <a-input-number @change="value => validarSumaMaximaAsist(i, value)"
-                                            v-model:value="benef.porcentaje" :min="0" :max="100" :precision="0"
-                                            :step="1" :placeholder="$t('lead.percentage')" />
-                                    </a-form-item>
+
                                     <a-form-item>
-                                        <MinusCircleOutlined @click="removeUserAsis(i)" />
+                                        <a-button
+                                            :disabled="datos.venta.cantidadBeneficiariosAsist === 5 || sumaAsist >= 100"
+                                            type="dashed" block @click="addUserAsis">
+                                            <PlusOutlined />
+                                            {{ $t('common.add') }}
+                                        </a-button>
                                     </a-form-item>
-                                </a-space>
-                                <a-form-item class="text-center">
-                                    <h4 :style="{ color: sumaAsist > 100 ? 'red' : 'inherit', fontWeight: 'bold' }">
-                                        <a-tooltip :style="{ color: sumaAsist > 100 ? 'red' : 'inherit' }"
-                                            :title="$t('message_template.maximum_percentage_exceded')">
-                                            <InfoCircleOutlined />
-                                        </a-tooltip>
-                                        {{ $t('common.total') }}: {{ sumaAsist }}
-                                    </h4>
                                 </a-form-item>
-                                <a-form-item>
-                                    <a-button
-                                        :disabled="datos.venta.cantidadBeneficiariosAsist === 5 || sumaAsist >= 100"
-                                        type="dashed" block @click="addUserAsis">
-                                        <PlusOutlined />
-                                        {{ $t('common.add') }}
-                                    </a-button>
-                                </a-form-item>
-
-                            </a-form-item>
+                            </a-col>
 
                         </a-col>
-
 
                     </div>
                 </a-col>
+
             </a-row>
         </a-form>
 
@@ -1157,16 +1254,16 @@ export default defineComponent({
                 props.formData.phone = props.addEditType === 'add' ? null : props.formData.phone;
                 props.formData.guid = props.addEditType === 'add' ? null : props.formData.guid;
 
-                if(props.addEditType === 'add'){
+                if (props.addEditType === 'add') {
                     const phone = await getInteractionInfo('number');
                     const guid = await getInteractionInfo('guid');
-    
-    
+
+
                     const tels = [
                         props.leadInfo?.tel1, props.leadInfo?.tel2, props.leadInfo?.tel3,
                         props.leadInfo?.tel4, props.leadInfo?.tel5, props.leadInfo?.tel6
                     ];
-    
+
                     if (phone && tels.includes(phone)) {
                         props.formData.phone = phone;
                         props.formData.guid = guid;
@@ -1293,11 +1390,11 @@ export default defineComponent({
 
         const drawerWidth = computed(() => {
 
-            if(windowWidth.value >= 768 && windowWidth.value <= 1194) return '70%'
-            if(windowWidth.value >= 600 && windowWidth.value <= 767) return '60%'
+            if (windowWidth.value >= 768 && windowWidth.value <= 1194) return '70%'
+            if (windowWidth.value >= 600 && windowWidth.value <= 767) return '60%'
 
             // if (windowWidth.value <= 991) return '80%'
-            return isSale.value ? '80%' : '50%'
+            return isSale.value ? '76%' : '50%'
         })
 
         return {
@@ -1352,8 +1449,6 @@ export default defineComponent({
 });
 </script>
 
-
-
 <style>
 .label-bold .ant-form-item-label>label {
     font-weight: bold;
@@ -1375,5 +1470,37 @@ export default defineComponent({
         max-width: 100% !important;
         flex-wrap: wrap;
     }
+}
+
+.floating-input input {
+    padding: 20px 12px 6px 12px;
+    border-top: none;
+}
+
+/* Label dentro del input */
+.floating-input label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: all 0.2s ease;
+    padding: 0 4px;
+    font-weight: bold;
+}
+
+/* Cuando tiene foco o valor */
+.floating-input:focus-within label,
+.floating-input input:not(:placeholder-shown)+label {
+    top: -6px;
+}
+
+.floating-input:focus-within .floating-label,
+.floating-select.has-value .floating-label {
+    top: -6px;
+}
+
+.phone-select .ant-select-selector {
+  border-top: none !important;
 }
 </style>
