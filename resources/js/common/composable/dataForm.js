@@ -1,6 +1,4 @@
-import { ref, reactive, computed, watch } from "vue";
-import ucb_framework from "../../main/views/formsUCB/framework/ucb_framework";
-const { UCB_executeQuery, UCB_audit, UCB_uploadFile } = ucb_framework();
+import { ref } from "vue";
 
 var myAgent = ref('');
 var myId = ref('');

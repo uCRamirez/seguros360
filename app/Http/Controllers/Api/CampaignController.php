@@ -546,7 +546,7 @@ class CampaignController extends ApiBaseController
             throw new ApiException("Campaign is required");
         }
 
-        $campaign = Campaign::select('id', 'name', 'uc_campaigns')
+        $campaign = Campaign::select('id', 'name', 'uc_campaigns', 'form')
             ->whereRaw("LOCATE(?, uc_campaigns) > 0", [$campaignName])
             ->first();
 

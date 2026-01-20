@@ -1,0 +1,94 @@
+<template>
+    <a-upload-dragger v-model:fileList="fileList" name="file" :multiple="true" :customRequest="customRequest"
+        @change="handleChange" @drop="handleDrop">
+        <CloudUploadOutlined style="font-size: large;" />
+        <p class="ant-upload-text">{{ $t("cobranzas.upload_file") }}</p>
+        <p class="ant-upload-hint">
+            {{ $t("cobranzas.upload_file_description", [type]) }}
+        </p>
+    </a-upload-dragger>
+</template>
+
+<script>
+import { defineComponent, ref } from "vue";
+import { message } from "ant-design-vue";
+import { CloudUploadOutlined } from "@ant-design/icons-vue";
+import { useI18n } from "vue-i18n";
+
+export default defineComponent({
+    props: {
+        url: {
+            type: String,
+            default: "upload-file",
+        },
+        folder: {
+            type: String,
+            default: null,
+        },
+        type: {
+            type: String,
+            default: "",
+        },
+    },
+    components: {
+        CloudUploadOutlined,
+    },
+    setup(props, { emit }) {
+        const fileList = ref([]);
+        const { t } = useI18n();
+
+        const customRequest = (info) => {
+            const formData = new FormData();
+            formData.append("file", info.file);
+
+            if (props.folder) {
+                formData.append("folder", props.folder);
+            }
+
+            axiosAdmin
+                .post(props.url, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                })
+                .then((response) => {
+                    info.onSuccess(response.data);
+
+                    emit("onFileUploaded", {
+                        file: response.data.file,
+                        file_url: response.data.file_url,
+                    });
+
+                    message.success(
+                        `${info.file.name} ${t("messages.upload_success")}`
+                    );
+                })
+                .catch(() => {
+                    info.onError();
+                    message.error(
+                        `${info.file.name} ${t("messages.uploading_failed")}`
+                    );
+                });
+        };
+
+        const handleChange = (info) => {
+            const status = info.file.status;
+
+            if (status !== "uploading") {
+                console.log(info.file, info.fileList);
+            }
+        };
+
+        const handleDrop = (e) => {
+            console.log("Dropped files:", e);
+        };
+
+        return {
+            fileList,
+            customRequest,
+            handleChange,
+            handleDrop,
+        };
+    },
+});
+</script>

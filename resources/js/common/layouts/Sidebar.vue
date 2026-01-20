@@ -149,18 +149,25 @@ export default defineComponent({
                         axiosAdmin
                             .post("leads/find-by-phone-campaign", { phone, campaign })
                             .then((res) => {
+
+                                let formulario = res.data?.campaign?.form ?? null;
+                                if (!formulario || formulario == '') {
+                                    message.warning('La campaña homologada no tiene formulario asignado - INBOUND CALL');
+                                    return;
+                                }
+
                                 if (res.data?.x_lead_id) {
 
                                     if (res.data.count === 1) {
                                         leadIdRef.value = res.data.x_lead_id[0];
                                         // Se encontró el lead; redirigimos a la vista CRM con su ID
                                         router.push({
-                                            name: "admin.formsUCB.Correspondencia",
+                                            name: `admin.formsUCB.${formulario}`,
                                             params: { id: res.data.x_lead_id[0] },
                                         });
                                     } else {
                                         router.push({
-                                            name: "admin.formsUCB.Correspondencia",
+                                            name: `admin.formsUCB.${formulario}`,
                                             params: { id: 'phone' + phone },
                                         });
                                         console.warn('Mas de un lead con el numero telefonico asignado - INBOUN CALL');
@@ -174,7 +181,7 @@ export default defineComponent({
                                         successMessage: t("campaign.new_lead_added"),
                                         success: (res) => {
                                             router.push({
-                                                name: "admin.formsUCB.Correspondencia",
+                                                name: `admin.formsUCB.${formulario}`,
                                                 params: { id: res.x_lead_id },
                                             });
                                         },
@@ -212,6 +219,12 @@ export default defineComponent({
                                     ? res.data[0]
                                     : [res.data[0]]))
                             : [];
+                    
+                    let formulario =   array.length === 1 ? array[0].form : null;
+                    if (!formulario || formulario == '') {
+                        message.warning('La campaña homologada no tiene formulario asignado - INBOUND CALL');
+                        return;
+                    }
 
                     // Si encuentra solo una campana homologada
                     if (array.length === 1) {
@@ -223,13 +236,13 @@ export default defineComponent({
                                     leadIdRef.value = res.data.x_lead_id[0];
                                     // Se encontró el lead; redirigimos a la vista CRM con su ID
                                     router.push({
-                                        name: "admin.formsUCB.Correspondencia",
+                                        name: `admin.formsUCB.${formulario}`,
                                         params: { id: res.data.x_lead_id[0] },
                                     });
                                 } else if (res.data?.count > 1) {
                                     // Se encontró el lead; redirigimos a la vista CRM con su ID
                                     router.push({
-                                        name: "admin.formsUCB.Correspondencia",
+                                        name: `admin.formsUCB.${formulario}`,
                                         params: { id: 'phone' + phone },
                                     });
                                     message.warn('Mas de un lead con el numero telefonico asignado - OUTBOUND CALL');
@@ -241,7 +254,7 @@ export default defineComponent({
                                         successMessage: t("campaign.new_lead_added"),
                                         success: (res) => {
                                             router.push({
-                                                name: "admin.formsUCB.Correspondencia",
+                                                name: `admin.formsUCB.${formulario}`,
                                                 params: { id: res.x_lead_id },
                                             });
                                         },

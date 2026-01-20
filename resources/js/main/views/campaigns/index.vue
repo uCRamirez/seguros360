@@ -136,13 +136,7 @@
                                 <CampaignProgress :campaign="record" @success="fetch" />
                             </template> -->
                             <template v-if="column.dataIndex === 'form'">
-                                {{
-                                    record.x_form_id != "" &&
-                                        record.form &&
-                                        record.form.xid
-                                        ? record.form.name
-                                        : "-"
-                                }}
+                                {{ record?.form ?? '-' }}
                             </template>
                             <template v-if="column.dataIndex === 'members'">
                                 <CampaignMembers :members="record.campaign_users" />

@@ -817,8 +817,9 @@ class LeadController extends ApiBaseController
         if ($leads->isNotEmpty()) {
             return ApiResponse::make('Leads found', [
                 'count'       => $leads->count(),
-                'x_lead_id'  => $leads->pluck('xid'), // compatibilidad con tu respuesta anterior
-                'lead'       => $leads,               // colección completa
+                'x_lead_id'  => $leads->pluck('xid'), 
+                'lead'       => $leads,
+                'campaign'  =>  Campaign::where('name', $campaignName)->first()              
             ]);
         }
 

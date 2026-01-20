@@ -1033,7 +1033,7 @@
                         <a-tab-pane key="lead_notes" :disabled="!crmState.client.showLogs">
                             <template #tab>
                                 <span>
-                                    <FileTextOutlined />
+                                    <FileSearchOutlined />
                                     {{ $t("menu.correspondence") }}
                                 </span>
                             </template>
@@ -1065,6 +1065,7 @@ import {
     // ClockCircleOutlined,
     ScheduleOutlined,
     FileTextOutlined,
+    FileSearchOutlined,
     PhoneOutlined,
     ShoppingCartOutlined,
     ExclamationCircleOutlined,
@@ -1097,7 +1098,7 @@ import Sidebar from "../../../../../../../common/layouts/Sidebar.vue";
 import SendCall from "./SendCall.vue";
 // import SearchLead from "./SearchLead.vue";
 import UphoneCallTable from "./UphoneCallsHistory.vue";
-import fields from "../fields";
+import fields from "./fields.js";
 import functions from "./functions.js";
 import esES from 'ant-design-vue/es/locale/es_ES';
 import enUS from 'ant-design-vue/es/locale/en_US';
@@ -1111,6 +1112,7 @@ export default {
         ArrowLeftOutlined,
         ScheduleOutlined,
         FileTextOutlined,
+        FileSearchOutlined,
         PhoneOutlined,
         ShoppingCartOutlined,
         ExclamationCircleOutlined,

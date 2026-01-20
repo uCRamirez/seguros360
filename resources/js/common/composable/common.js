@@ -536,7 +536,7 @@ const common = () => {
 
 
     const getCampaignUrl = (campaignStatus = "active", viewType = "self") => {
-        var campaignsUrl = `call-managers?fields=id,xid,name,status,active,form_id,x_form_id,form{id,xid,name,form_fields},campaignUsers{id,xid,user_id,x_user_id,campaign_id,x_campaign_id},campaignUsers:user{id,xid,name,profile_image,profile_image_url}&campaign_status=${campaignStatus}&view_type=${viewType}&filters=active eq 1&limit=10000`;
+        var campaignsUrl = `call-managers?fields=id,xid,name,status,active,campaignUsers{id,xid,user_id,x_user_id,campaign_id,x_campaign_id},campaignUsers:user{id,xid,name,profile_image,profile_image_url}&campaign_status=${campaignStatus}&view_type=${viewType}&filters=active eq 1&limit=10000`;
 
         return campaignsUrl;
     };

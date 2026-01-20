@@ -21,23 +21,15 @@
             <template v-if="currentStep == 0">
                 <a-row :gutter="16" class="mt-20">
                     <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                        <a-form-item
-                            :label="$t('product.image')"
-                            name="image"
+                        <a-form-item :label="$t('product.image')" name="image"
                             :help="rules.image ? rules.image.message : null"
-                            :validateStatus="rules.image ? 'error' : null"
-                        >
-                            <Upload
-                                :formData="formData"
-                                folder="campaign"
-                                imageField="image"
-                                @onFileUploaded="
-                                    (file) => {
-                                        formData.image = file.file;
-                                        formData.image_url = file.file_url;
-                                    }
-                                "
-                            />
+                            :validateStatus="rules.image ? 'error' : null">
+                            <Upload :formData="formData" folder="campaign" imageField="image" @onFileUploaded="
+                                (file) => {
+                                    formData.image = file.file;
+                                    formData.image_url = file.file_url;
+                                }
+                            " />
                         </a-form-item>
                     </a-col>
                     <a-col :xs="24" :sm="24" :md="20" :lg="20">
@@ -51,27 +43,15 @@
                         </a-form-item>
                     </a-col>
                     <a-col :xs="24" :sm="24" :md="4" :lg="4">
-                        <a-form-item
-                                :label="$t('user.status')"
-                                name="active"
-                                :help="
-                                    rules.active ? rules.active.message : null
-                                "
-                                :validateStatus="rules.active ? 'error' : null"
-                                class="required"
-                            >
-                                <a-select
-                                    v-model:value="formData.active"
-                                    :placeholder="
-                                        $t('common.select_default_text', [
-                                            $t('user.status'),
-                                        ])
-                                    "
-                                    :allowClear="true"
-                                >
-                                    <a-select-option :value="1">{{ $t('common.enabled') }}</a-select-option>
-                                    <a-select-option :value="0">{{ $t('common.disabled') }}</a-select-option>
-                                </a-select>
+                        <a-form-item :label="$t('user.status')" name="active" :help="rules.active ? rules.active.message : null
+                            " :validateStatus="rules.active ? 'error' : null" class="required">
+                            <a-select v-model:value="formData.active" :placeholder="$t('common.select_default_text', [
+                                $t('user.status'),
+                            ])
+                                " :allowClear="true">
+                                <a-select-option :value="1">{{ $t('common.enabled') }}</a-select-option>
+                                <a-select-option :value="0">{{ $t('common.disabled') }}</a-select-option>
+                            </a-select>
                         </a-form-item>
                     </a-col>
                 </a-row>
@@ -99,8 +79,7 @@
 
                 <a-row :gutter="16">
                     <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                        <a-form-item :label="$t('menu.quality')" 
-                            name="plantilla_calidad_id"
+                        <a-form-item :label="$t('menu.quality')" name="plantilla_calidad_id"
                             :help="rules.plantilla_calidad_id ? rules.plantilla_calidad_id.message : null"
                             :validateStatus="rules.plantilla_calidad_id ? 'error' : null">
                             <span style="display: flex">
@@ -108,9 +87,8 @@
                                     $t('common.template'),
                                 ])
                                     " :allowClear="true">
-                                    <a-select-option v-for="calidadTemplate in allCalidadTemplates" 
-                                        :key="calidadTemplate.xid"
-                                        :value="calidadTemplate.xid">
+                                    <a-select-option v-for="calidadTemplate in allCalidadTemplates"
+                                        :key="calidadTemplate.xid" :value="calidadTemplate.xid">
                                         {{ calidadTemplate.nombre }} - <small>{{ calidadTemplate.descripcion }}</small>
                                     </a-select-option>
                                 </a-select>
@@ -128,7 +106,9 @@
                     </a-col>
 
                     <a-col v-if="isChecked" :xs="24" :sm="24" :md="16" :lg="16">
-                        <a-form-item :label="$t('campaign.campaign')" class="required">
+                        <a-form-item :label="$t('campaign.campaign')" class="required" name="uc_campaigns"
+                            :help="rules.uc_campaigns ? $t('campaign.campaign') : null"
+                            :validateStatus="rules.uc_campaigns ? 'error' : null">
                             <span style="display: flex">
                                 <a-select v-model:value="uc_campaignsArray" mode="multiple"
                                     :placeholder="$t('common.select_default_text', [$t('campaign.campaign')])"
@@ -137,6 +117,22 @@
                                         :value="campaign.queue_name"
                                         :disabled="isDisabledCampaign(formData.name, campaign.queue_name)">
                                         {{ campaign.queue_name }}
+                                    </a-select-option>
+                                </a-select>
+                            </span>
+                        </a-form-item>
+                    </a-col>
+                    <a-col v-if="isChecked" :xs="24" :sm="24" :md="24" :lg="24">
+                        <a-form-item :label="$t('menu.forms')" class="required" name="form"
+                            :help="rules.form ? rules.form.message : null"
+                            :validateStatus="rules.form ? 'error' : null">
+                            <span style="display: flex">
+                                <a-select v-model:value="formData.form" :placeholder="$t('common.select_default_text', [
+                                    $t('menu.forms'),
+                                ])
+                                    " :allowClear="true">
+                                    <a-select-option v-for="form in formFolders" :key="form.title" :value="form.title">
+                                        {{ form.title }}
                                     </a-select-option>
                                 </a-select>
                             </span>
@@ -205,14 +201,9 @@
             </template>
 
             <template v-if="currentStep == 2">
-                <ImportLeads 
-                    v-if="permsArray.includes('bases_view') || permsArray.includes('admin')"
-                    acceptFormat=".csv" 
-                    :allFields="selectedFormFields" 
-                    @fileUploaded="leadFileUploaded"
-                    @leadColumnChanged="leadColumnChanged"
-                    :addEditType="addEditType"
-                />
+                <ImportLeads v-if="permsArray.includes('bases_view') || permsArray.includes('admin')"
+                    acceptFormat=".csv" :allFields="selectedFormFields" @fileUploaded="leadFileUploaded"
+                    @leadColumnChanged="leadColumnChanged" :addEditType="addEditType" />
                 <h4 class="text-center" v-else>{{ $t('bases.not_permission') }}</h4>
             </template>
         </a-form>
@@ -260,6 +251,7 @@ import EmailTemplateAddButton from "../messaging/email-templates/AddButton.vue";
 import ImportLeads from "./ImportLeads.vue";
 import { useI18n } from "vue-i18n";
 import Upload from "../../../common/core/ui/file/Upload.vue";
+import common from "../../../common/composable/common";
 
 
 export default defineComponent({
@@ -312,7 +304,8 @@ export default defineComponent({
         const importLeadColumns = ref(undefined);
         const selectedFormFields = ref([]);
         const isChecked = ref(false);
-        const none_uc_campaigns = ref({}); 
+        const none_uc_campaigns = ref({});
+        const { formFolders } = common();
 
         onMounted(() => {
             props.formData.etapa = 'nueva';
@@ -325,7 +318,7 @@ export default defineComponent({
             // const formsPromise = axiosAdmin.get(formUrl);
             // const emailTemplatesPromise = axiosAdmin.get(emailTemplateUrl);
 
-            Promise.all([staffMemberPromise, calidadTemplatesPromise, all_uc_campaignsPromise,all_use_uc_campaignsPromise]).then(//formsPromise,, , emailTemplatesPromise
+            Promise.all([staffMemberPromise, calidadTemplatesPromise, all_uc_campaignsPromise, all_use_uc_campaignsPromise]).then(//formsPromise,, , emailTemplatesPromise
                 ([staffMemberResponse, calidadTemplatesResponse, all_uc_campaignsResponse, all_use_uc_campaignsResponse]) => {//formsResponse, , emailTemplatesResponse
                     allStaffMembers.value = staffMemberResponse.data;
                     allCalidadTemplates.value = calidadTemplatesResponse.data;
@@ -358,8 +351,8 @@ export default defineComponent({
             const allUsedUCs = new Set(); // Para recolectar todas las campañas usadas
             const namedUCs = new Set();   // Para evitar duplicados en Inabilitar
 
-            if(all_use_uc_campaigns.value){
-               all_use_uc_campaigns.value.forEach(c => {
+            if (all_use_uc_campaigns.value) {
+                all_use_uc_campaigns.value.forEach(c => {
                     const ucList = c.uc_campaigns
                         ? c.uc_campaigns.split(',').map(s => s.trim())
                         : [];
@@ -372,7 +365,7 @@ export default defineComponent({
                         allUsedUCs.add(uc);
                         namedUCs.add(`${c.name}:${uc}`); // combinación única para filtrar luego
                     });
-                }); 
+                });
             }
         };
 
@@ -415,19 +408,48 @@ export default defineComponent({
         };
 
         const onSubmit = () => {
-            if (currentStep.value == 0) {
-                if (
-                    props.formData.name == ""
-                ) {
-                    submitForm();
-                } else {
-                    rules.value = {};
-                    setStep(1);
-                }
-            } else {
+            // Solo validamos en el step 0 antes de avanzar
+            if (currentStep.value !== 0) {
                 setStep(currentStep.value + 1);
+                return;
             }
+
+            const errors = {};
+
+            if (!props.formData.name || props.formData.name.trim() === "") {
+                errors.name = { message: t("campaign.name") };
+            }
+
+            if (props.formData.active === null || props.formData.active === undefined) {
+                errors.active = { message: t("campaign.status") };
+            }
+
+            if (
+                props.formData.user_id === undefined ||
+                (Array.isArray(props.formData.user_id) && props.formData.user_id.length === 0)
+            ) {
+                errors.user_id = { message: t("campaign.members") };
+            }
+
+            // validación condicional uC
+            if (isChecked.value) {
+                if (!uc_campaignsArray.value || uc_campaignsArray.value.length === 0) {
+                    errors.uc_campaigns = { message: t("campaign.campaign") };
+                }
+                if (!props.formData.form) {
+                    errors.form = { message: t("campaign.form") };
+                }
+            }
+
+            rules.value = errors;
+
+            // si hay errores, NO avanzar
+            if (Object.keys(errors).length > 0) return;
+
+            // ok, avanzar al step 1
+            setStep(1);
         };
+
 
         const submitForm = () => {
             var newFormData = { ...props.formData };
@@ -447,14 +469,14 @@ export default defineComponent({
 
             newFormData.import_lead_fields = importLeadColumns.value;
 
-            let isCSV = newFormData.import_lead_fields ? { 
-                    data: newFormData.import_lead_fields, 
-                    file: newFormData.file.name,
-                    campaign_id: props.data.id,
-                    company_id: JSON.parse(localStorage.getItem('global_settings') || '{}').xid || '',
-                    myId:  JSON.parse(localStorage.getItem("auth_user") || "{}").id,
-                    etapa: newFormData.etapa ? newFormData.etapa : 'nueva',
-                } 
+            let isCSV = newFormData.import_lead_fields ? {
+                data: newFormData.import_lead_fields,
+                file: newFormData.file.name,
+                campaign_id: props.data.id,
+                company_id: JSON.parse(localStorage.getItem('global_settings') || '{}').xid || '',
+                myId: JSON.parse(localStorage.getItem("auth_user") || "{}").id,
+                etapa: newFormData.etapa ? newFormData.etapa : 'nueva',
+            }
                 : false;
 
             addEditFileRequestAdmin({
@@ -481,7 +503,7 @@ export default defineComponent({
                 });
             }
 
-            
+
         };
 
         const goBack = () => {
@@ -542,18 +564,18 @@ export default defineComponent({
         const formSelected = () => {
             axiosAdmin.get('columns/leads_aux')
                 .then(response => {
-                // AxiosAdmin parece devolverte el body ya parseado en `response`
-                const payload = response.message ?? response.data ?? response;
-                // convierto a array si es objeto
-                const allFields = Array.isArray(payload)
-                    ? payload
-                    : Object.values(payload);
-                selectedFormFields.value = allFields;
+                    // AxiosAdmin parece devolverte el body ya parseado en `response`
+                    const payload = response.message ?? response.data ?? response;
+                    // convierto a array si es objeto
+                    const allFields = Array.isArray(payload)
+                        ? payload
+                        : Object.values(payload);
+                    selectedFormFields.value = allFields;
                 })
                 .catch(err => {
-                console.error('Error cargando columnas', err);
-                selectedFormFields.value = [];
-            });
+                    console.error('Error cargando columnas', err);
+                    selectedFormFields.value = [];
+                });
         };
 
 
@@ -590,7 +612,7 @@ export default defineComponent({
                 });
 
                 // se consulta nuevamente las campanas en uso para poder actualizar el front del addEdit
-               
+
 
                 setStep(0);
             }
@@ -624,7 +646,7 @@ export default defineComponent({
             leadFileUploaded,
             leadColumnChanged,
             selectedFormFields,
-            // formSelected,
+            formFolders,
 
             drawerWidth: window.innerWidth <= 991 ? "90%" : "60%",
         };

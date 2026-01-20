@@ -1162,7 +1162,24 @@ class LangTrans
             'go_to_dashboard' => 'Go To Dashboard',
             'setup_running_message' => 'Please wait... we are setting up inital company settings.',
             'setup_complete_message' => 'Setup completed... Click on below link to view your app...',
-        ]
+        ],
+        'cobranzas' => [
+            'bases' => 'Bases',
+            'customer_bases' => 'Customer Bases',
+            'payment_bases' => 'Payment Bases',
+            'wallet_bases' => 'Wallet Bases',
+            'upload_file' => 'Click or drag the file to this area to upload it.',
+            'upload_file_description' => 'It accepts individual uploads. Uploading data from databases not corresponding to information about {0} is strictly prohibited.',
+            'date' => 'Date',
+            'records' => 'Records',
+            'base_name' => 'Base Name',
+            'status' => 'Status',
+            // '' => '',
+            // '' => '',
+            // '' => '',
+            // '' => '',
+            // '' => '',
+        ],
     ];
 
     public static $eStoreTranslations = [];

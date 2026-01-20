@@ -21,16 +21,16 @@ class Campaign extends BaseModel  implements Auditable
 
     protected $guarded = ['id', 'status', 'started_on', 'completed_on', 'completed_by', 'created_by', 'updated_by', 'last_action_by', 'created_at', 'updated_at'];
 
-    protected $hidden = ['company_id','plantilla_calidad_id', 'form_id', 'email_template_id', 'created_by', 'updated_by', 'last_actioner', 'completed_by'];
-
-    protected $appends = ['xid', 'x_company_id', 'image_url', 'x_plantilla_calidad_id','x_form_id', 'x_email_template_id', 'x_created_by', 'x_updated_by', 'x_last_action_by', 'x_completed_by', 'upcoming_lead_action', 'managed_data'];
-
+    protected $hidden = ['company_id','plantilla_calidad_id', 'email_template_id', 'created_by', 'updated_by', 'last_actioner', 'completed_by'];
+    // , 'form_id'
+    protected $appends = ['xid', 'x_company_id', 'image_url', 'x_plantilla_calidad_id', 'x_email_template_id', 'x_created_by', 'x_updated_by', 'x_last_action_by', 'x_completed_by', 'upcoming_lead_action', 'managed_data'];
+    // , 'x_form_id'
     protected $filterable = ['name', 'active'];
 
     protected $hashableGetterFunctions = [
         'getXCompanyIdAttribute' => 'company_id',
         'getXPlantillaCalidadIdAttribute' => 'plantilla_calidad_id',
-        'getXFormIdAttribute' => 'form_id',
+        // 'getXFormIdAttribute' => 'form_id',
         'getXEmailTemplateIdAttribute' => 'email_template_id',
         'getXCreatedByAttribute' => 'created_by',
         'getXUpdatedByAttribute' => 'updated_by',
@@ -41,7 +41,7 @@ class Campaign extends BaseModel  implements Auditable
     protected $casts = [
         'company_id' => Hash::class . ':hash',
         'plantilla_calidad_id' => Hash::class . ':hash',
-        'form_id' => Hash::class . ':hash',
+        // 'form_id' => Hash::class . ':hash',
         'email_template_id' => Hash::class . ':hash',
         'created_by' => Hash::class . ':hash',
         'updated_by' => Hash::class . ':hash',
@@ -116,10 +116,10 @@ class Campaign extends BaseModel  implements Auditable
         return $this->hasMany(CampaignUser::class, 'campaign_id', 'id');
     }
 
-    public function form()
-    {
-        return $this->belongsTo(Form::class);
-    }
+    // public function form()
+    // {
+    //     return $this->belongsTo(Form::class);
+    // }
 
     public function plantilla_calidad()
     {
