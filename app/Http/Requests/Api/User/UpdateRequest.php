@@ -66,8 +66,19 @@ class UpdateRequest extends BaseRequest
         }
         
         if($this->ucontact == 1){
-            $rules['ucontact_user'] = 'required';
+            $rules['ucontact_user'] = [
+                'required',
+                Rule::unique('users', 'ucontact_user')->where(function ($query) {
+                    return $query->where('user_type', 'staff_members')
+                        ->orWhere('user_type', 'super_admins');
+                })->ignore($id)];
             $rules['ucontact_password'] = 'required';
+            $rules['uc_ext'] = [
+                'required',
+                Rule::unique('users', 'uc_ext')->where(function ($query) {
+                    return $query->where('user_type', 'staff_members')
+                        ->orWhere('user_type', 'super_admins');
+                })->ignore($id)];
         }
       
 

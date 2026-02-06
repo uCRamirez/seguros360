@@ -20,7 +20,7 @@ axiosAdmin.interceptors.response.use(function (response) {
 }, function (error) {
 	console.error(error);
 	const errorCode = error.response.status;
-
+	let errMessage = '';
 	if (errorCode === 401) {
 		// If error 401 redirect to login
 		window.location.href = window.config.path + '/admin/login';
@@ -28,16 +28,18 @@ axiosAdmin.interceptors.response.use(function (response) {
 		localStorage.removeItem('auth_token');
 		localStorage.setItem('auth_user', null);
 		// throw new Error('Unauthorized');
-	} else if (errorCode === 400) {
-		var errMessage = error.response.data.error.message;
-		message.error(error.response.data.error.message.d);
-	} else if (errorCode === 403) {
-		var errMessage = error.response.data.error.message;
-		message.error(errMessage);
-	} else if (errorCode === 404) {
-		var errMessage = error.response.data.error.message;
-		message.error(errMessage);
+	} else{
+		errMessage = error.response.data.error.message;
 	}
+	// else if (errorCode === 400) {
+	// 	errMessage = error.response.data.error.message;
+	// } else if (errorCode === 403) {
+	// 	errMessage = error.response.data.error.message;
+	// } else if (errorCode === 404) {
+	// 	errMessage = error.response.data.error.message;
+	// }
+
+	message.error(errMessage);
 
 	return Promise.reject(error.response);
 });

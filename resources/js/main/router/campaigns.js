@@ -6,7 +6,7 @@ import CallManagerAction from '../views/formsUCB/Web/WebForms/Correspondencia/vi
 
 export default [
     {
-        path: '/admin/formsUCB/Correspondencia/:id?',
+        path: '/admin/forms/Correspondencia/:id?',
         component: CallManagerAction,
         name: 'admin.formsUCB.Correspondencia',
         props: true,

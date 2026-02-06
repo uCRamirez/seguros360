@@ -150,7 +150,35 @@
                 </a-form-item>
             </a-col>
 
-            <a-col :xs="24" :sm="24" :md="12" :lg="6">
+            <a-col :xs="24" :sm="24" :md="12" :lg="12">
+                <a-form-item>
+                    <a-form-item :label="$t('campaign.campaign')" class="required" name="uc_campaigns"
+                            :help="rules.uc_campaigns ? $t('campaign.campaign') : null"
+                            :validateStatus="rules.uc_campaigns ? 'error' : null">
+                            <span style="display: flex">
+                                <a-select v-model:value="uc_campaign_selected"
+                                    :placeholder="$t('common.select_default_text', [$t('campaign.campaign')])"
+                                    :allowClear="true" optionFilterProp="title" show-search>
+                                    <a-select-option v-for="campaign in all_uc_campaigns.filter(c => c.tipo === 'marcador' 
+                                        || c.queue_name.includes('M->') 
+                                        || c.queue_name.includes('M<-') 
+                                        // || c.queue_name.includes('_M')
+                                        // || c.queue_name.includes('M_')
+                                        )
+                                        " 
+                                        :key="campaign.queue_name"
+                                        :value="campaign.queue_name"
+                                        :title="campaign.queue_name"
+                                    >
+                                        {{ campaign.queue_name }}  -  <small>(Assig: <strong>{{ campaign.asignacion }}</strong>)</small>
+                                    </a-select-option>
+                                </a-select>
+                            </span>
+                        </a-form-item>
+                </a-form-item>
+            </a-col>
+
+            <!-- <a-col :xs="24" :sm="24" :md="12" :lg="6">
                 <a-form-item>
                     <a-checkbox v-model:checked="asignacionProgramada">
                         {{ $t('common.scheduled') }}
@@ -170,7 +198,7 @@
                         :placeholder="$t('common.scheduled')"
                     />
                 </a-form-item>
-            </a-col>
+            </a-col> -->
 
         </a-row>
 
@@ -244,6 +272,8 @@ export default defineComponent({
         const noContacto = ref(null);
         const asignacionProgramada = ref(false);
         const fechaProgramada = ref(null);
+        const all_uc_campaigns = ref([]);
+        var uc_campaign_selected = ref({});
 
         const tableClienteSerch = reactive({
             data: [],
@@ -354,7 +384,8 @@ export default defineComponent({
                     campaign_id: props.campaign.id,
                     assignments,
                     scheduled: asignacionProgramada.value ? 1 : 0,
-                    scheduled_at: asignacionProgramada.value ? fechaProgramada.value : null
+                    scheduled_at: asignacionProgramada.value ? fechaProgramada.value : null,
+                    uc_campaign_selected: all_uc_campaigns.value.find(c => c.queue_name === uc_campaign_selected.value),
                 });
 
                 serchInformationClient();
@@ -430,6 +461,7 @@ export default defineComponent({
             () => props.visible,
             (newVal) => {
                 if (newVal) {
+                    uc_campaign_selected.value = {};
                     filtros.value = [];
                     asignacionProgramada.value = false;
                     fechaProgramada.value = null;
@@ -450,9 +482,21 @@ export default defineComponent({
             }
         );
 
+        onMounted(() => {
+            all_uc_campaigns.value = [];
+            const all_uc_campaignsPromise = axiosAdmin.post('campaigns/uc-campaigns');
+            Promise.all([all_uc_campaignsPromise]).then(
+                ([all_uc_campaignsResponse]) => {
+                    all_uc_campaigns.value = all_uc_campaignsResponse.message.campaigns;
+                }
+            );
+        });
+
         const drawerWidth = window.innerWidth <= 991 ? "90%" : "70%";
 
         return {
+            uc_campaign_selected,
+            all_uc_campaigns,
             fechaProgramada,
             asignacionProgramada,
             filtrarAsigandos,

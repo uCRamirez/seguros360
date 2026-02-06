@@ -804,15 +804,15 @@ export default defineComponent({
         }
 
 
-        onMounted(() => {
+        onMounted(async () => {
             window.addEventListener('resize', onResize);
             axiosAdmin.get(notesTypificationUrl).then(res => {
                 notesTypifications.value = res.data;
-                getParentTypification();
             });
+            await getParentTypification();
         });
 
-        function getParentTypification() {
+        async function getParentTypification() {
             parentTypificationData.value = [];
             notesTypifications.value.forEach(p => {
                 if (p.x_parent_id == null && p.status === 1) parentTypificationData.value.push(p);
@@ -1283,7 +1283,7 @@ export default defineComponent({
                     }
 
                     addEditRequestAdmin({
-                        url: props.url,
+                        url: props.url == '' ? 'lead-logs' : props.url,
                         data: props.formData,
                         successMessage: null,
                         success: (res) => {

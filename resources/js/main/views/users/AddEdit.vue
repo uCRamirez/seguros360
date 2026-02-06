@@ -147,6 +147,30 @@
                                 />
                             </a-form-item>
                         </a-col>
+                        <a-col :xs="24" :sm="24" :md="12" :lg="12">
+                            <a-form-item
+                                :label="$t('user.extension')"
+                                name="uc_ext"
+                                :help="
+                                    rules.uc_ext
+                                        ? rules.uc_ext.message
+                                        : null
+                                "
+                                :validateStatus="
+                                    rules.uc_ext ? 'error' : null
+                                "
+                                class="required"
+                            >
+                                <a-input
+                                    v-model:value="formData.uc_ext"
+                                    :placeholder="
+                                        $t('common.placeholder_default_text', [
+                                            $t('user.uc_ext'),
+                                        ])
+                                    "
+                                />
+                            </a-form-item>
+                        </a-col>
                     </a-row>
 
                     <a-row :gutter="16">

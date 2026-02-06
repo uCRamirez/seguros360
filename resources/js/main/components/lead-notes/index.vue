@@ -224,6 +224,11 @@
                                 </a-tag>
                             </a-typography-link>
                         </template>
+                        <template v-if="column.dataIndex === 'guid'">
+                            <small>
+                                {{ record.guid ? record.guid : "-"}}
+                            </small>
+                        </template>
                         <template v-if="column.dataIndex === 'action'">
                             <a-space>
                                 <a-typography-link

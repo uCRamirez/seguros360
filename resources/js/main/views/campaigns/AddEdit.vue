@@ -131,7 +131,7 @@
                                     $t('menu.forms'),
                                 ])
                                     " :allowClear="true">
-                                    <a-select-option v-for="form in formFolders" :key="form.title" :value="form.title">
+                                    <a-select-option v-for="form in formFolders.filter(f => f.title === 'Correspondencia')" :key="form.title" :value="form.title">
                                         {{ form.title }}
                                     </a-select-option>
                                 </a-select>

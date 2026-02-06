@@ -77,7 +77,7 @@
                             </span>
                         </template>
 
-                        <a-menu-item v-for="form in formFolders" :key="form.title" @click="() => {
+                        <a-menu-item v-for="form in formFolders.filter(f => f.title === 'Correspondencia')" :key="form.title" @click="() => {
                             menuSelected();
                             $router.push({ name: form.name});
                         }">
@@ -190,7 +190,7 @@
                             <SoundOutlined />
                             <span>{{ $t("menu.leads") }}</span>
                         </a-menu-item>
-                        <a-menu-item @click="
+                        <!-- <a-menu-item @click="
                             () => {
                                 menuSelected();
                                 $router.push({
@@ -200,7 +200,7 @@
                         " key="call_logs">
                             <PhoneOutlined />
                             <span>{{ $t("menu.call_logs") }}</span>
-                        </a-menu-item>
+                        </a-menu-item> -->
                         <a-menu-item @click="
                             () => {
                                 menuSelected();

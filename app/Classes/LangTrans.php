@@ -311,7 +311,8 @@ class LangTrans
             'auditable_type' => 'Auditable Type',
             'ucontact_user' => 'Ucontact User',
             'ucontact_password' => 'Ucontact Password',
-            'id' => 'Id'
+            'id' => 'Id',
+            'extension' => 'Extension'
         ],
         'audit' => [
             'user_id' => 'User',
@@ -1134,7 +1135,8 @@ class LangTrans
             'email_setting_not_configured' => 'Email setting not configured',
             'please_configure_email_settings' => 'Please configure your email settings to send emails. Click Here to configure email settings.',
             'product_already_added' => 'This product is already added.',
-            'must_end_call' => 'You must end the call before saving.'
+            'must_end_call' => 'You must end the call before saving.',
+            'upload_success' => 'Upload success'
         ],
         'popover' => [
             'auto_detect_timezone' => 'Allow auto detect timezone from browser for currently logged in user.',
@@ -1174,11 +1176,22 @@ class LangTrans
             'records' => 'Records',
             'base_name' => 'Base Name',
             'status' => 'Status',
-            // '' => '',
-            // '' => '',
-            // '' => '',
-            // '' => '',
-            // '' => '',
+            'assignments' => 'Assignments',
+            'wallet' => 'Wallet',
+            'phone' => 'Phone',
+            'document' => 'Document',
+            'email' => 'Email',
+            'adviser' => 'Adviser',
+            'criterion' => 'Criterion',
+            'unassigned' => 'Unassigned',
+            'not_managed' => 'Not Managed',
+            'not_managed_month' => 'Not Managed IN THE MONTH',
+            'not_completed' => 'Not Completed',
+            'name' => 'Name',
+            'projects' => 'Projects',
+            'assign' => 'Assign',
+            'unassign' => 'Unassign',
+            'date_format' => 'Date Format',
         ],
     ];
 

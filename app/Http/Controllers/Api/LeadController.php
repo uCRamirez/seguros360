@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request; 
 use Illuminate\Support\Facades\DB;
+use App\Services\ApiServiceMarcador;
 
 class LeadController extends ApiBaseController
 {
@@ -958,41 +959,14 @@ class LeadController extends ApiBaseController
         ]);
     }
 
-
-
-    // public function pushAssign(Request $request)
-    // {
-
-    //     $campaignId  = $request->input('campaign_id');
-    //     $assignments = $request->input('assignments');
-
-    //     // \Log::info('campaignId:', [$campaignId]);
-    //     // \Log::info('assignments:', [$assignments]);
-
-    //     // Usamos transacción para asegurar consistencia
-    //     \DB::transaction(function() use ($campaignId, $assignments) {
-    //         foreach ($assignments as $grp) {
-    //             // Actualiza todos esos leads en una sola query
-    //             Lead::whereIn('id', $grp['lead_ids'])
-    //                 ->where('campaign_id', $campaignId)
-    //                 ->update(['assign_to' => $grp['agent_id']]);
-    //         }
-
-    //         // Recalcula totales de la campaña
-    //         Common::recalculateCampaignLeads($campaignId);
-    //     });
-
-    //     return ApiResponse::make('Leads assigned successfully');
-    // }
-
     public function pushAssign(Request $request)
     {
+        // \Log::info('pushAssign' , $request->all());
         $campaignId  = $request->input('campaign_id');
         $assignments = $request->input('assignments');
         $scheduled   = $request->boolean('scheduled');
         $scheduledAt = $request->input('scheduled_at'); // datetime (string)
-        // \Log::info('$scheduledAt:', [$scheduledAt]);
-        // \Log::info('$scheduledAt:', [Carbon::parse($scheduledAt)]);
+        $marcador = $request->input('uc_campaign_selected');
 
         if ($scheduled && $scheduledAt) {
             foreach ($assignments as $grp) {
@@ -1020,8 +994,83 @@ class LeadController extends ApiBaseController
             Common::recalculateCampaignLeads($campaignId);
         });
 
+        if($marcador){
+            $this->envioMarcador($assignments, $campaignId, $marcador);
+        }
+
         return ApiResponse::make('Leads assigned successfully');
     }
+
+    public function envioMarcador($assignments, $campaignId, $marcador)
+    {
+        $apiServiceMarcador = new ApiServiceMarcador();
+        // Recorre todos los grupos de asignación
+        foreach ($assignments as $grp) {
+            
+            // Recorre los leads asignados al grupo
+            foreach ($grp['lead_ids'] as $leadId) {
+                $leadInfo = Lead::where('id', $leadId)->where('campaign_id', $campaignId)->first();
+                if (!$leadInfo) continue;
+
+                $calldate = Carbon::now();
+                $campaign = $marcador["queue_name"];
+
+                $destination = "";
+                $alternatives = [];
+
+                // Recopila los números de teléfono del lead
+                $phones = [
+                    $leadInfo->tel1,
+                    $leadInfo->tel2,
+                    $leadInfo->tel3,
+                    $leadInfo->tel4,
+                    $leadInfo->tel5,
+                    $leadInfo->tel6
+                ];
+
+                // Asigna el primer teléfono válido a destination, el resto a alternatives
+                foreach ($phones as $phone) {
+                    if ($this->numeroValido($phone)) {
+                        if ($destination === "") {
+                            $destination = $phone;
+                        } else {
+                            $alternatives[] = $phone;
+                        }
+                    }
+                }
+
+                $alternatives = implode(":", $alternatives);
+
+                if ($destination === "") continue;
+
+                $agentphone = "";
+                if ($marcador["asignacion"] === 'si') {
+                    $agentphone = User::where('id', $grp['agent_id'])->value('uc_ext');
+                }
+
+                $array = [
+                    'calldate' => $calldate,
+                    'campaign' => $campaign,
+                    'destination' => $destination,
+                    'alternatives' => $alternatives,
+                    'agentphone' => $agentphone,
+                    'data' => "",
+                ];
+
+                $response = $apiServiceMarcador->scheduleCall($array);
+                if (!$response['success']) {
+                    \Log::error('Error al programar la llamada', ['leadId' => $leadId, 'response' => $response]);
+                }
+            }
+        }
+    }
+
+
+    private function numeroValido($phone)
+    {
+        return preg_match('/^\d{8,}$/', $phone);
+    }
+
 
 
 }

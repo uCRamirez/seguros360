@@ -25,7 +25,7 @@ return new class extends Migration
             $table->mediumText('detalle')->nullable()->comment('Descripción del pago');
             $table->dateTime('fecha_banco')->nullable()->comment('Fecha en que el banco registró el pago');
             $table->string('nombre_base', 200)->nullable()->index();
-
+            $table->boolean('activo')->default(true)->comment('1 para activo, 0 para inactivo')->index();
             $table->timestamps();
         });
     }

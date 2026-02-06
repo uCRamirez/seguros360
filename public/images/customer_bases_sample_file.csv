@@ -1,2 +1,2 @@
-role,name,email,phone,password,address,status
-Admin,Demo Staff Member,demostaffmember@gmail.com,997777777,12345678,india,enabled
+identificador(*),tipo_identificacion,nombre_completo(*),email,email2,tel1(*),tel2,tel3,tel4,tel5,tel6,provincia,canton,distrito,direccion,proyecto(*),agente
+X0X0X0X0X,X0X0X0X0X,X0X0X0X0X,X0X0X0@example.com,X0X0X0@example.com,11111111,22222222,33333333,44444444,55555555,66666666,X0X0X0X0X,X0X0X0X0X,X0X0X0X0X,X0X0X0X0X,X0X0X0X0X,X0X0X0X0X

@@ -595,7 +595,7 @@ const common = () => {
     // Obtener formularios dinámicamente desde las rutas definidas
     const formFolders = computed(() =>
         router.getRoutes()
-            .filter(route => route.path.startsWith("/admin/formsUCB/") && route.name !== "admin.formsUCB.index")
+            .filter(route => route.path.startsWith("/admin/forms/") && route.name !== "admin.formsUCB.index")
             .map(route => ({
                 name: route.name,
                 title: route.meta.menuKey, // Usa el nombre de la carpeta como título del menú

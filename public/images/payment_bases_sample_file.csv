@@ -1,2 +1,2 @@
-role,name,email,phone,password,address,status
-Admin,Demo Staff Member,demostaffmember@gmail.com,997777777,12345678,india,enabled
+proyecto(*),identificador_cartera(*),monto(*),detalle,fecha_banco(*)
+X0X0X0X0X,X0X0X0X0X,10000,Observaciones del pago,2026-01-31

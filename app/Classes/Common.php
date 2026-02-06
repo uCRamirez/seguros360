@@ -9,6 +9,7 @@ use App\Models\Lead;
 use App\Models\LeadLog;
 use App\Models\Settings;
 use App\Models\StaffMember;
+use App\Models\CobranzasBasesClientes;
 use App\Scopes\CompanyScope;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -569,5 +570,14 @@ class Common
         ])->asForm()->post($url, $formData);
 
         return $response;
+    }
+
+    public static function guardarBase($nombre_base, $registros, $modelo){
+        $user = user();
+        $modelo->nombre_base = $nombre_base;
+        $modelo->registros = $registros;
+        $modelo->user_id = $user->id;
+        $modelo->fecha_subida = date('Y-m-d H:i:s');
+        $modelo->save();
     }
 }

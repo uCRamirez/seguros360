@@ -75,8 +75,21 @@ class StoreRequest extends BaseRequest
         }
 
         if($this->ucontact == 1){
-            $rules['ucontact_user'] = 'required';
+            $rules['ucontact_user'] = [
+                'required',
+                Rule::unique('users', 'ucontact_user')
+                    ->where(function ($query) {
+                        $query->whereIn('user_type', ['staff_members', 'super_admins']);
+                    }),
+            ];
             $rules['ucontact_password'] = 'required';
+            $rules['uc_ext'] = [
+                'required',
+                Rule::unique('users', 'uc_ext')
+                    ->where(function ($query) {
+                        $query->whereIn('user_type', ['staff_members', 'super_admins']);
+                    }),
+            ];
         }
       
         if(!$password){

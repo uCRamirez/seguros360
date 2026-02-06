@@ -3,7 +3,7 @@ import { useI18n } from "vue-i18n";
 const fields = () => {
     const { t } = useI18n();
     const url =
-        "users?fields=id,xid,ucontact,ucontact_user,ucontact_password,is_sellers,notes,user_type,name,email,user,profile_image,profile_image_url,phone,address,status,created_at,role_id,x_role_id,role{id,xid,name,display_name}";
+        "users?fields=id,xid,ucontact,ucontact_user,ucontact_password,uc_ext,is_sellers,notes,user_type,name,email,user,profile_image,profile_image_url,phone,address,status,created_at,role_id,x_role_id,role{id,xid,name,display_name}";
     const addEditUrl = "users";
     const hashableColumns = ["role_id"];
 
@@ -24,6 +24,7 @@ const fields = () => {
         is_sellers: 1,
         ucontact_user: "",
         ucontact_password: "",
+        uc_ext: "",
     };
 
     const columns = [

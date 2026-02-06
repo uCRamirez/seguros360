@@ -23,7 +23,7 @@ class ExportReportInfo implements FromArray
         // 1) Definí encabezados "fijos" antes/después de variables
         $fixedBeforeVars = [
             'Venta',
-            'nombreCompleto',
+            'nombre_completo',
             'cedula',
             'telefono',
             'fecha',
@@ -98,7 +98,7 @@ class ExportReportInfo implements FromArray
                 )
                 SELECT 
                 CASE WHEN MAX(IFNULL(ll.isSale, 0)) = 1 THEN 'Sí' ELSE 'No' END AS Venta,
-                MAX(IFNULL(CONCAT(IFNULL(l.nombre,''),' ',IFNULL(l.segundo_nombre,''),' ',IFNULL(l.apellido1,''),' ',IFNULL(l.apellido2,'')),'')) AS nombreCompleto,
+                MAX(IFNULL(CONCAT(IFNULL(l.nombre,''),' ',IFNULL(l.segundo_nombre,''),' ',IFNULL(l.apellido1,''),' ',IFNULL(l.apellido2,'')),'')) AS nombre_completo,
                 MAX(IFNULL(l.cedula,'')) AS cedula,
                 MAX(IFNULL(uc.`number`,'-')) AS telefono,
                 MAX(IFNULL(ll.date_time,'')) AS fecha,

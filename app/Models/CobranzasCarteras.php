@@ -30,4 +30,12 @@ class CobranzasCarteras extends BaseModel
     {
         return $this->belongsTo(CobranzasClientes::class,'identificador_cliente','identificador');
     }
+
+    /**
+     * Una cartera pertenece a un proyecto
+     */
+    public function campaign()
+    {
+        return $this->belongsTo(Campaign::class,'campaign_id','id');
+    }
 }

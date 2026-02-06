@@ -11,7 +11,7 @@ const formRoutes = Object.keys(formFiles).map((path) => {
         // path: crmName === "CRM"
         //     ? `/admin/formsUCB/${crmName}/:id?` // <-- solo CRM lleva :id
         //     : `/admin/formsUCB/${crmName}`,
-        path: `/admin/formsUCB/${crmName}/:id?`, // <-- ruta
+        path: `/admin/forms/${crmName}/:id?`, // <-- ruta
         name: `admin.formsUCB.${crmName}`, // <-- nombre siempre es este
         component: FormIndex,
         props: crmName === "CRM", // permite pasar :id como prop
